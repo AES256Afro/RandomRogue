@@ -1,0 +1,328 @@
+[
+  {
+    "id": "cave_wrong_echo",
+    "locations": [
+      "cave"
+    ],
+    "text": "You shout 'HELLO' into the dark. The echo answers 'HELLO,' then, after a pause, 'WHO TOLD YOU THAT NAME?'",
+    "choices": [
+      {
+        "text": "Interrogate the echo",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Through careful questioning you determine the echo is guarding a stash it can't spend, being an echo. It trades coordinates for conversation.",
+            "effects": [
+              "money +10"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The echo answers every question with your own question, but smugger. You leave with a headache and existential doubts.",
+            "effects": [
+              "hp -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Apologize and keep walking",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "'THANK YOU,' says the echo, mollified. It guides you around a pit as a courtesy. Manners: still undefeated.",
+            "effects": []
+          }
+        ]
+      },
+      {
+        "text": "Shout something rude",
+        "outcomes": [
+          {
+            "weight": 50,
+            "text": "The echo repeats it to something bigger, deeper in the cave. You hear footsteps. You are suddenly very fast.",
+            "effects": [
+              "hp -3"
+            ]
+          },
+          {
+            "weight": 50,
+            "text": "The echo laughs. An ancient tension breaks. It shares the cave gossip, including where the previous adventurer dropped their purse.",
+            "effects": [
+              "money +7"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "cave_sleeping_something",
+    "locations": [
+      "cave"
+    ],
+    "text": "Something enormous is asleep across the passage. Its breathing sounds like a forge. A sign around its neck: 'DO NOT WAKE. SERIOUSLY. -MANAGEMENT.'",
+    "choices": [
+      {
+        "text": "Sneak past",
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You ghost past it, stepping between snores. On the far side, someone has left a tip jar labeled 'FOR THE QUIET ONES.' You take a cut.",
+            "effects": [
+              "money +6"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You step on the one crunchy rock in the cave. The something opens one eye, decides you're not worth digesting, and swats you into a wall.",
+            "effects": [
+              "hp -6"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Poke it",
+        "outcomes": [
+          {
+            "weight": 80,
+            "text": "Management was right. Management is always right. You survive on pure cardio.",
+            "effects": [
+              "hp -7"
+            ]
+          },
+          {
+            "weight": 20,
+            "text": "It purrs. It PURRS. You have adopted something the size of a barn, emotionally if not logistically. It gifts you a shiny thing from its hoard.",
+            "effects": [
+              "money +14"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Turn back",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You live to be a coward another day. The something snores approvingly.",
+            "effects": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "cave_glow_worms",
+    "locations": [
+      "cave"
+    ],
+    "text": "The ceiling is a galaxy of glow worms, blue-green constellations rearranging slowly. It is genuinely, unfairly beautiful for a hole in the ground.",
+    "choices": [
+      {
+        "text": "Harvest a few for the glow",
+        "check": {
+          "stat": "dex",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You bottle a soft constellation. Alchemists pay well for portable starlight.",
+            "effects": [
+              "money +8"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The worms coordinate. Every light goes out at once, and in the black something drips meaningfully. You leave with wet boots and an apology.",
+            "effects": [
+              "hp -2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Just watch for a while",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You lie on a flat rock and watch the ceiling drift. Whatever was wound tight in you unwinds a notch. The worms neither know nor care. Perfect.",
+            "effects": [
+              "hp +3",
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Eat one. For science",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "It tastes like mint and poor judgment. Your tongue glows for a day. Taverns will love you tonight.",
+            "effects": [
+              "stat cha +1"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "Science reports: no. Your stomach glows faintly, visibly, through you. Alarming for everyone.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "cave_underground_lake",
+    "locations": [
+      "cave"
+    ],
+    "text": "An underground lake, black and still as held breath. Something in the middle of it is faintly, patiently, ringing. Like a bell. Like an invitation.",
+    "choices": [
+      {
+        "text": "Swim to the ringing",
+        "check": {
+          "stat": "con",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The bell is a sunken shrine's. Around its clapper, offerings of centuries: coins, rings, one impressively preserved cheese. You tithe yourself a share.",
+            "effects": [
+              "money +13",
+              "hp -1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The cold gets a vote and vetoes you halfway. You crawl out shivering. The ringing sounds distinctly amused now.",
+            "effects": [
+              "hp -5"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Fish the shallows",
+        "outcomes": [
+          {
+            "weight": 70,
+            "text": "The fish are pale, eyeless, and delicious-looking in a way you choose to trust. Provisions acquired.",
+            "effects": [
+              "item rations"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "You catch a boot. Inside the boot: coins. Inside the coins: no further mysteries, thankfully. Just coins.",
+            "effects": [
+              "money +4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Skip a stone at the ringing",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Four skips, then silence. Total silence. The ringing does not resume. You feel you have won something and also ended something. The cave feels emptier on the way out.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "cave_crystal_choir",
+    "locations": [
+      "cave"
+    ],
+    "text": "A chamber of crystals, each humming a different note. Together they almost make a chord. Almost. One crystal is flat, and the whole cave seems embarrassed about it.",
+    "choices": [
+      {
+        "text": "Tune the flat crystal",
+        "check": {
+          "stat": "wis",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "A quarter-turn, a held breath, and the chord LOCKS. The harmonic wave that rolls through the cave shakes loose centuries of dropped coins from the ceiling cracks.",
+            "effects": [
+              "money +10",
+              "hp +2"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You make it worse. The dissonance is now weaponized. Every crystal turns its hum on you until you leave, ears ringing with disapproval.",
+            "effects": [
+              "hp -2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sing along",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "You supply the missing note yourself. For one shining minute, you are part of a geological choir. Nothing about your life feels small right now.",
+            "effects": [
+              "hp +3",
+              "stat cha +1"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "You are also flat. The cave now has two problems. The crystals dim pointedly.",
+            "effects": [
+              "stat cha -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Chip off a crystal to sell",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The note dies in your hand; loose crystals don't sing. It's still pretty, and pretty sells, but you'll remember the silence at odd moments for years.",
+            "effects": [
+              "money +6",
+              "stat wis -1"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

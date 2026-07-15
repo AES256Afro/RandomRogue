@@ -1,4 +1,6 @@
 #pragma once
+#include <map>
+#include <set>
 #include <string>
 #include <vector>
 #include "raylib.h"
@@ -37,6 +39,8 @@ private:
     void newRun(int classIdx);
     ItemInstance makeItem(const std::string& id);
     void bindQuirk(ItemInstance& item);
+    // Evaluates a `when` condition string against world + character state.
+    bool evalCond(const std::string& cond) const;
     void enterTravel();
     void dealEvent();
     bool resolveSlots(const Event& e, Grammar::Ctx& ctx);
@@ -100,6 +104,11 @@ private:
     int eventsLeftHere_ = 0;
     ResolvedOutcome outcome_;
     int pendingArtifact_ = -1;    // artifact bound by an artifact_here slot
+    int slotFigure_ = -1;         // figure bound by a figure_alive slot
+    bool blessingSpent_ = false;  // a blessed trait absorbed death this outcome
+    // Per-run NPC memory: chronicle figure index -> marks ("robbed", ...)
+    std::map<int, std::set<std::string>> npcMarks_;
+    std::map<std::string, std::string> traitNames_; // id -> display name
     bool pendingShop_ = false;    // "shop" effect fired this outcome
     std::string forcedNextId_;    // "goto <id>" effect: chain to this event
 

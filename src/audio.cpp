@@ -55,7 +55,7 @@ void AudioBank::init() {
 
 void AudioBank::shutdown() {
     if (!ready_) return;
-    for (auto& [tag, s] : tracks_) UnloadSound(s);
+    if (hasTrack_) UnloadSound(current_);
     UnloadSound(sBlip_); UnloadSound(sCoin_); UnloadSound(sThud_);
     UnloadSound(sDice_); UnloadSound(sChime_);
     CloseAudioDevice();
@@ -117,31 +117,26 @@ void AudioBank::playMusicFor(const std::string& tag, uint64_t worldSeed) {
     if (!ready_) return;
     std::string key = tag + "#" + std::to_string(worldSeed % 1000);
     if (key == currentTag_) return;
-    if (current_) StopSound(*current_);
-    auto it = tracks_.find(key);
-    if (it == tracks_.end()) {
-        // Cap the cache; worlds churn per run.
-        if (tracks_.size() > 12) {
-            for (auto& [k, s] : tracks_) UnloadSound(s);
-            tracks_.clear();
-        }
-        it = tracks_.emplace(key, generateTrack(tag, worldSeed)).first;
+    if (hasTrack_) {
+        StopSound(current_);
+        UnloadSound(current_); // regeneration is cheap; heap is not
     }
+    current_ = generateTrack(tag, worldSeed);
+    hasTrack_ = true;
     currentTag_ = key;
-    current_ = &it->second;
-    if (!muted_) PlaySound(*current_);
+    if (!muted_) PlaySound(current_);
 }
 
 void AudioBank::update() {
-    if (!ready_ || !current_ || muted_) return;
-    if (!IsSoundPlaying(*current_)) PlaySound(*current_); // loop, lofi seam included
+    if (!ready_ || !hasTrack_ || muted_) return;
+    if (!IsSoundPlaying(current_)) PlaySound(current_); // loop, lofi seam included
 }
 
 void AudioBank::toggleMute() {
     muted_ = !muted_;
-    if (!ready_ || !current_) return;
-    if (muted_) StopSound(*current_);
-    else PlaySound(*current_);
+    if (!ready_ || !hasTrack_) return;
+    if (muted_) StopSound(current_);
+    else PlaySound(current_);
 }
 
 void AudioBank::blip()  { if (ready_ && !muted_) PlaySound(sBlip_); }

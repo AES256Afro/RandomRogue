@@ -65,6 +65,7 @@ if(EMSCRIPTEN)
         "-sUSE_GLFW=3"
         "-sASYNCIFY"
         "-sFORCE_FILESYSTEM=1"
+        "-sALLOW_MEMORY_GROWTH=1"
         "--shell-file" "${CMAKE_SOURCE_DIR}/web/shell.html"
         "--preload-file" "${CMAKE_SOURCE_DIR}/assets@assets"
     )

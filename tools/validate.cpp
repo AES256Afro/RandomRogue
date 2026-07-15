@@ -27,7 +27,7 @@ static std::string readFile(const std::string& path) {
 
 static const std::set<std::string> kVerbs = {
     "hp", "maxhp", "money", "credits", "stat", "item", "loot", "removeitem",
-    "rep", "shop", "goto", "take_artifact", "die"};
+    "rep", "shop", "goto", "take_artifact", "die", "trait", "npc_mark"};
 static const std::set<std::string> kSlotQueries = {
     "chronicle_random", "artifact_here", "figure_alive", "figure_dead"};
 static const std::set<std::string> kDecks = {
@@ -41,20 +41,59 @@ static const std::set<std::string> kBuiltinCtx = {"site", "world", "placeword",
                                                   "faction2", "artifact",
                                                   "beast", "extra"};
 
+static bool validWhen(const std::string& w) {
+    std::istringstream ss(w);
+    std::string a, b, c;
+    ss >> a >> b >> c;
+    static const std::set<std::string> unary = {"carrying_artifact"};
+    static const std::set<std::string> named = {"trait", "!trait", "has", "!has", "npc"};
+    static const std::set<std::string> cmp = {"rep", "money", "credits", "hp", "day"};
+    static const std::set<std::string> ops = {">", "<", ">=", "<=", "=="};
+    if (unary.count(a)) return true;
+    if (named.count(a)) return !b.empty();
+    if (cmp.count(a)) return ops.count(b) && !c.empty();
+    if (a == "stat") {
+        std::string d;
+        ss >> d;
+        return kStats.count(b) && ops.count(c) && !d.empty();
+    }
+    return false;
+}
+
 int main(int argc, char** argv) {
     std::string assets = (argc > 1) ? argv[1] : "assets";
 
     json items = json::parse(readFile(assets + "/data/items.json"), nullptr, false);
-    json events = json::parse(readFile(assets + "/data/events.json"), nullptr, false);
     json prose = json::parse(readFile(assets + "/data/recipes/prose.json"), nullptr, false);
     json lang = json::parse(readFile(assets + "/data/recipes/language.json"), nullptr, false);
     json quirks = json::parse(readFile(assets + "/data/quirks.json"), nullptr, false);
+    json traits = json::parse(readFile(assets + "/data/traits.json"), nullptr, false);
     if (items.is_discarded()) fail("items.json", "does not parse");
-    if (events.is_discarded()) fail("events.json", "does not parse");
     if (prose.is_discarded()) fail("prose.json", "does not parse");
     if (lang.is_discarded()) fail("language.json", "does not parse");
     if (quirks.is_discarded()) fail("quirks.json", "does not parse");
+    if (traits.is_discarded()) fail("traits.json", "does not parse");
+
+    // Events assemble from the manifest's per-deck files.
+    json manifest = json::parse(readFile(assets + "/data/events/manifest.json"), nullptr, false);
+    if (manifest.is_discarded() || !manifest.contains("files")) {
+        fail("events/manifest.json", "missing or does not parse");
+        return 1;
+    }
+    json events = json::array();
+    for (auto& f : manifest["files"]) {
+        std::string fn = f.get<std::string>();
+        json part = json::parse(readFile(assets + "/data/events/" + fn), nullptr, false);
+        if (part.is_discarded() || !part.is_array()) {
+            fail(fn, "does not parse");
+            continue;
+        }
+        for (auto& e : part) events.push_back(e);
+    }
     if (errors) return 1;
+
+    std::set<std::string> traitIds;
+    for (auto& [k, v] : traits.items()) traitIds.insert(k);
 
     std::set<std::string> itemIds;
     for (auto& t : items) {
@@ -105,13 +144,42 @@ int main(int argc, char** argv) {
         }
     };
 
+    int conditionalOutcomes = 0, traitTouches = 0;
+    auto checkWhenList = [&](const std::string& id, const json& arr) {
+        if (!arr.is_array()) return;
+        for (auto& w : arr) {
+            std::string s = w.get<std::string>();
+            if (!validWhen(s)) fail(id, "bad when condition: " + s);
+            std::istringstream ss(s);
+            std::string a, b;
+            ss >> a >> b;
+            if ((a == "trait" || a == "!trait") && !traitIds.count(b))
+                fail(id, "when references unknown trait: " + b);
+        }
+    };
     auto checkOutcomes = [&](const std::string& id, const json& arr,
                              const std::set<std::string>& slots) {
         if (!arr.is_array() || arr.empty()) { fail(id, "empty outcome list"); return; }
+        bool hasDefault = false;
         for (auto& o : arr) {
             checkTokens(id, o.value("text", ""), slots);
             checkEffects(id, o.value("effects", json::array()));
+            if (o.contains("when")) {
+                checkWhenList(id, o["when"]);
+                conditionalOutcomes++;
+            } else {
+                hasDefault = true;
+            }
+            for (auto& fx : o.value("effects", json::array())) {
+                std::string s = fx.get<std::string>();
+                if (s.rfind("trait ", 0) == 0) {
+                    traitTouches++;
+                    std::string t = s.substr(7); // skip "trait +" / "trait -"
+                    if (!traitIds.count(t)) fail(id, "effect references unknown trait: " + t);
+                }
+            }
         }
+        if (!hasDefault) fail(id, "outcome pool has no default (unconditional) outcome");
     };
 
     for (auto& e : events) {
@@ -127,6 +195,7 @@ int main(int argc, char** argv) {
             for (auto& l : e["locations"])
                 if (!kDecks.count(l.get<std::string>()))
                     fail(id, "unknown deck tag: " + l.get<std::string>());
+        if (e.contains("when")) checkWhenList(id, e["when"]);
         checkTokens(id, e.value("text", ""), slots);
         const json& choices = e["choices"];
         if (!choices.is_array() || choices.empty() || choices.size() > 4)
@@ -141,6 +210,11 @@ int main(int argc, char** argv) {
                     fail(id, "requires unknown item: " + item);
                 std::string stat = r.value("stat", "");
                 if (!stat.empty() && !kStats.count(stat)) fail(id, "requires unknown stat: " + stat);
+                for (const char* key : {"trait", "nottrait"}) {
+                    std::string t = r.value(key, "");
+                    if (!t.empty() && !traitIds.count(t))
+                        fail(id, std::string("requires unknown ") + key + ": " + t);
+                }
             }
             if (c.contains("check")) {
                 std::string stat = c["check"].value("stat", "");
@@ -174,8 +248,11 @@ int main(int argc, char** argv) {
         }
     }
 
-    printf("validate: %d events, %d items, %d grammar keys -> %s\n",
-           (int)events.size(), (int)itemIds.size(), (int)grammarKeys.size(),
-           errors ? "FAILED" : "all good");
+    printf("validate: %d events (%d files), %d items, %d grammar keys, %d traits\n",
+           (int)events.size(), (int)manifest["files"].size(), (int)itemIds.size(),
+           (int)grammarKeys.size(), (int)traitIds.size());
+    printf("variance: %d conditional outcomes, %d trait-touching effects\n",
+           conditionalOutcomes, traitTouches);
+    printf("-> %s\n", errors ? "FAILED" : "all good");
     return errors ? 1 : 0;
 }

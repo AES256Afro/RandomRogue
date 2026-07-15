@@ -1,4 +1,5 @@
 #pragma once
+#include <set>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -32,9 +33,14 @@ struct Character {
     bool dead = false;
     std::string epitaph;
     std::vector<ItemInstance> pack;
+    // Afflictions & reputations-made-flesh: "cursed", "famous", "wanted"...
+    // Granted/removed by effects, gate choices/outcomes/events.
+    std::set<std::string> traits;
     static constexpr int kPackMax = 9;
 
     static int mod(int stat) { return (stat - 10) / 2; }
+
+    bool hasTrait(const std::string& t) const { return traits.count(t) > 0; }
 
     bool hasItem(const std::string& templateId) const {
         for (auto& i : pack)

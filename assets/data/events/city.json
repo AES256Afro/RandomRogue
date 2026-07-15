@@ -1,0 +1,947 @@
+[
+  {
+    "id": "city_book_stall",
+    "locations": [
+      "city"
+    ],
+    "text": "A book stall run by a woman with ink-stained fingers and the eyes of someone who has read ALL the footnotes. 'Histories,' she says. 'Real ones. Six gold and I don't answer questions about chapter four.'",
+    "choices": [
+      {
+        "text": "Buy a history book",
+        "requires": {
+          "money": 6
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The book is heavier than it looks. All the true ones are, she says, counting your coins.",
+            "effects": [
+              "money -6",
+              "item book"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask about chapter four",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "She stares at you until you leave. Somehow you know three new things about the world anyway, none of them comfortable.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Haggle",
+        "check": {
+          "stat": "cha",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Four gold, final offer, and she throws in a bookmark shaped like a curse. Deal.",
+            "effects": [
+              "money -4",
+              "item book"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "She raises the price to seven, citing 'haggling tax.' You pay it. Chapter four remains unavailable.",
+            "effects": [
+              "money -7",
+              "item book"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_doom_prophet",
+    "locations": [
+      "city"
+    ],
+    "text": "A street prophet grabs your sleeve. 'You will die on a TUESDAY,' she hisses. She's selling anti-Tuesday charms, 10 gold each.",
+    "choices": [
+      {
+        "text": "Buy the charm",
+        "requires": {
+          "money": 10
+        },
+        "outcomes": [
+          {
+            "weight": 70,
+            "text": "It's a rock with 'NO' painted on it. You feel scammed and yet, somehow, safer.",
+            "effects": [
+              "money -10"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "The rock hums faintly. It might actually be doing something. Unsettling value for money.",
+            "effects": [
+              "money -10",
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask which Tuesday",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "She consults her notes. 'One of them,' she admits. Refreshing honesty. She gives you a discount rock for free.",
+            "effects": []
+          }
+        ]
+      },
+      {
+        "text": "Point out it's currently Tuesday",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "She screams and sprints away. The crowd applauds. Someone hands you a celebratory pastry.",
+            "effects": [
+              "hp +2"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "She smiles. That's the worst possible response. You spend the rest of the day looking over your shoulder.",
+            "effects": [
+              "stat wis +1",
+              "hp -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_pickpocket",
+    "locations": [
+      "city"
+    ],
+    "text": "Fingers, light as regret, brush your coin purse. The pickpocket is already three steps away, whistling.",
+    "choices": [
+      {
+        "text": "Grab them",
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You catch their wrist mid-whistle. They surrender your purse and, embarrassingly for them, someone else's too.",
+            "effects": [
+              "money +8"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You grab air. They grab your purse. The whistling fades into the crowd like an insult.",
+            "effects": [
+              "money -8"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Shout 'STOP, THIEF!'",
+        "outcomes": [
+          {
+            "weight": 50,
+            "text": "The whole street tackles them out of civic enthusiasm. Your gold is returned, slightly dented.",
+            "effects": []
+          },
+          {
+            "weight": 50,
+            "text": "Three other pickpockets use the distraction. Somewhere, a guild quota is met.",
+            "effects": [
+              "money -6"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Respect the craft",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You nod. They nod. They keep 5 gold as a 'demonstration fee' and return the rest with a business card.",
+            "effects": [
+              "money -5",
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_guard_shakedown",
+    "locations": [
+      "city"
+    ],
+    "text": "A guard blocks your path. 'Walking tax,' he says, inventing it. 'Five gold.' His halberd suggests this is not a negotiation.",
+    "choices": [
+      {
+        "text": "Cite the nonexistent tax code",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You invent subsection 12-B, 'Exemptions for the Visibly Broke.' He writes it down, defeated by bureaucracy.",
+            "effects": [
+              "stat int +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "He invents a fine for 'citing.' Now you owe seven.",
+            "effects": [
+              "money -7"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Pay the 'tax'",
+        "requires": {
+          "money": 5
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "trait famous"
+            ],
+            "text": "He recognizes you mid-shakedown and turns the extortion into an escort. 'Can't have YOU walking unaccompanied.' No tax. A salute, even.",
+            "effects": [
+              "rep +2"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "trait wanted"
+            ],
+            "text": "He takes your coin, then squints. Then unrolls a poster. 'Well, well.' The walking tax becomes a 'fugitive processing fee,' and processing hurts.",
+            "effects": [
+              "money -12",
+              "hp -2",
+              "trait -wanted"
+            ]
+          },
+          {
+            "weight": 100,
+            "text": "He pockets it and waves you through. At least the corruption is efficient here.",
+            "effects": [
+              "money -5"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Run",
+        "check": {
+          "stat": "dex",
+          "dc": 11
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You vanish into an alley. The guard doesn't even give chase; armor is heavy and the day is long.",
+            "effects": []
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You run directly into a second guard. There's a fee for that, too.",
+            "effects": [
+              "money -6",
+              "hp -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_spaceship_parts",
+    "locations": [
+      "city"
+    ],
+    "text": "A vendor's stall displays gleaming junk: 'AUTHENTIC SKY-DEBRIS. FELL OFF A STAR-WAGON. NO REFUNDS.' One piece is blinking.",
+    "choices": [
+      {
+        "text": "Buy the blinking one",
+        "requires": {
+          "money": 8
+        },
+        "outcomes": [
+          {
+            "weight": 50,
+            "text": "It's a 'credit chip,' whatever that is. The vendor swears it's money somewhere. It does feel like money.",
+            "effects": [
+              "money -8",
+              "credits +15"
+            ]
+          },
+          {
+            "weight": 35,
+            "text": "It blinks faster in your hand, then stops forever. You have purchased a dead rectangle.",
+            "effects": [
+              "money -8"
+            ]
+          },
+          {
+            "weight": 15,
+            "text": "It chirps 'RECALIBRATED' and zaps your brain pleasantly. You suddenly understand fractions.",
+            "effects": [
+              "money -8",
+              "stat int +2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask where exactly it fell from",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The vendor points straight up and maintains eye contact. Technically unfalsifiable. You respect it.",
+            "effects": []
+          }
+        ]
+      },
+      {
+        "text": "Report the stall to a guard",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The guard is the vendor's cousin. Everyone is disappointed in you, including, somehow, the merchandise.",
+            "effects": [
+              "stat cha -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_lost_noble_child",
+    "locations": [
+      "city"
+    ],
+    "text": "A small child in absurdly expensive clothes tugs your sleeve. 'I am LOST,' they announce, with the confidence of someone who has never once faced a consequence.",
+    "choices": [
+      {
+        "text": "Escort them home",
+        "check": {
+          "stat": "wis",
+          "dc": 10
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The manor guards initially arrest you, then the child vouches: 'This one is MY SERVANT.' The reward is generous. The title is not.",
+            "effects": [
+              "money +15"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The child directs you, turn by turn, to a candy stall, a puppet show, and a duck pond. By the time you find the manor, the reward has been spent on the journey. By the child.",
+            "effects": [
+              "money -4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Deliver them to the city guard",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The guard sergeant recognizes the child, goes pale, and thanks you for making it someone else's problem. That's worth a small finder's fee from the guard's own purse.",
+            "effects": [
+              "money +4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Walk away. Not your circus",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The child watches you go, then declares, to the entire street, that you are their FAVORITE. You've never felt worse about a decision that cost nothing.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_smith_shop",
+    "locations": [
+      "city"
+    ],
+    "weight": 12,
+    "text": "The smithy of {site} rings with hammer-song. The smith looks up, appraises your gear with open pity, and gestures at the racks.",
+    "choices": [
+      {
+        "text": "Browse the wares",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The smith wipes their hands and starts the pitch.",
+            "effects": [
+              "shop"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Compliment the craftsmanship first",
+        "check": {
+          "stat": "cha",
+          "dc": 11
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The smith glows brighter than the forge. Word of your good taste spreads.",
+            "effects": [
+              "rep +5",
+              "shop"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You compliment the one piece their rival made. The temperature drops. The prices do not.",
+            "effects": [
+              "rep -3",
+              "shop"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Just warm your hands and leave",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The forge warms you to the bones. The smith nods. Some transactions are free.",
+            "effects": [
+              "hp +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_general_store",
+    "locations": [
+      "city"
+    ],
+    "weight": 12,
+    "text": "A general store, shelves packed floor to ceiling. The sign says 'EVERYTHING MUST GO', and has said so, by the fading, for decades.",
+    "choices": [
+      {
+        "text": "Shop the eternal clearance",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The shopkeeper emerges from behind a pyramid of jars, delighted to have a customer who isn't a cat.",
+            "effects": [
+              "shop"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask what must go, exactly",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "'Me,' says the shopkeeper, with the eyes of someone forty years into a going-out-of-business sale. You buy nothing but learn much.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_faction_recruiter",
+    "locations": [
+      "city"
+    ],
+    "weight": 8,
+    "text": "A recruiter at a folding table, banner overhead, quill ready. 'Sign here and be part of something. Benefits include belonging, a sash, and enemies you didn't choose.'",
+    "choices": [
+      {
+        "text": "Sign up enthusiastically",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "You're in. There's a stipend, a sash, and a meeting schedule you will never fully escape.",
+            "effects": [
+              "money +6",
+              "rep +8"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "The fine print includes dues. You've paid to join something you don't understand, which the recruiter calls 'tradition.'",
+            "effects": [
+              "money -4",
+              "rep +6"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Debate the philosophy of belonging",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You dismantle the pitch so thoroughly the recruiter takes the afternoon off to think. Onlookers applaud. One tips you.",
+            "effects": [
+              "money +3",
+              "stat int +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You lose a debate to a pamphlet. The pamphlet is well-written. You buy the pamphlet.",
+            "effects": [
+              "money -2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Take a pamphlet and flee",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The pamphlet is 90% sash diagrams. You feel you understand the organization completely now.",
+            "effects": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_fountain_wish",
+    "locations": [
+      "city"
+    ],
+    "text": "The city fountain. Locals swear it grants wishes. The bottom glitters with the copper of a thousand optimists.",
+    "choices": [
+      {
+        "text": "Toss a coin and wish",
+        "requires": {
+          "money": 1
+        },
+        "outcomes": [
+          {
+            "weight": 55,
+            "text": "Nothing happens, but the plink is satisfying and hope is technically renewable.",
+            "effects": [
+              "money -1"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "The fountain gurgles approvingly. You feel measurably luckier, which should be impossible, and yet.",
+            "effects": [
+              "money -1",
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 15,
+            "text": "The fountain spits your coin back with interest. Do not question the fountain's accounting.",
+            "effects": [
+              "money +3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Wade in and collect the coins",
+        "check": {
+          "stat": "dex",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "A swift, shameless harvest. You leave wet, richer, and cursed only by onlookers, which doesn't count.",
+            "effects": [
+              "money +9",
+              "rep -5"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The guard was watching. The fine is itemized: theft of wishes, per wish.",
+            "effects": [
+              "money -8",
+              "rep -6",
+              "trait +wanted"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Drink from it",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "It's fountain water. It tastes of copper and other people's dreams. You feel briefly connected to everything, then mostly to your stomach.",
+            "effects": [
+              "hp -1",
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_street_magician",
+    "locations": [
+      "city"
+    ],
+    "text": "A street magician is doing card tricks. The cards are floating. Actual levitation for copper tips, while three blocks away the guild sells the same magic for a fortune.",
+    "choices": [
+      {
+        "text": "Figure out the trick",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Threads of enchanted spider-silk. You catch the magician's eye; they wink and cut you in for keeping quiet.",
+            "effects": [
+              "money +5",
+              "stat int +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You stare so hard you volunteer yourself by accident. Your coin purse is now an egg. The crowd loves it. The magician cannot change it back.",
+            "effects": [
+              "money -6"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Tip generously",
+        "requires": {
+          "money": 2
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The magician makes your tip vanish, then makes a rose appear behind your ear. Net loss, gross delight.",
+            "effects": [
+              "money -2",
+              "hp +2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Heckle",
+        "outcomes": [
+          {
+            "weight": 50,
+            "text": "The magician makes your eyebrows swap places for an hour. The crowd sides with the magician. So do your eyebrows.",
+            "effects": [
+              "stat cha -1"
+            ]
+          },
+          {
+            "weight": 50,
+            "text": "Your heckle is so precise the magician hires you as a plant. Two shows later you've earned honest dishonest wages.",
+            "effects": [
+              "money +7"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_bathhouse",
+    "locations": [
+      "city"
+    ],
+    "slots": {
+      "rumor": "chronicle_random"
+    },
+    "text": "The public bathhouse: steam, echoes, and the total collapse of social rank. Somewhere in the fog a voice holds court: \"{rumor}\"",
+    "choices": [
+      {
+        "text": "Soak and listen",
+        "requires": {
+          "money": 2
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Two hours of heat, gossip, and mineral water. You emerge pruned, informed, and at peace.",
+            "effects": [
+              "money -2",
+              "hp +5"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Correct the storyteller from inside the fog",
+        "outcomes": [
+          {
+            "weight": 50,
+            "text": "An anonymous debate erupts across the steam. You win. Someone unseen slides you a respect pastry.",
+            "effects": [
+              "hp +2",
+              "stat int +1"
+            ]
+          },
+          {
+            "weight": 50,
+            "text": "The fog turns hostile. You are asked to leave by consensus splash.",
+            "effects": [
+              "stat cha -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Check the changing room for unattended purses",
+        "check": {
+          "stat": "dex",
+          "dc": 14
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "A professional sweep. You even leave the sentimental lockets, because you're a thief, not a monster.",
+            "effects": [
+              "money +11",
+              "rep -6"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The attendant was a retired adventurer. The towel-whip is a martial art here.",
+            "effects": [
+              "hp -4",
+              "money -3",
+              "rep -7",
+              "trait +wanted"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_execution_crowd",
+    "locations": [
+      "city"
+    ],
+    "weight": 7,
+    "text": "A crowd has gathered in the square. On the scaffold, a man is being sentenced for 'aggravated mime-craft.' The crowd's mood is somewhere between festival and refund.",
+    "choices": [
+      {
+        "text": "Petition for a pardon",
+        "check": {
+          "stat": "cha",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Your speech about proportionality moves the magistrate to tears and the sentence to community theater. The mime thanks you, silently but at length.",
+            "effects": [
+              "rep +6",
+              "stat cha +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The crowd boos you in unison. The mime, professionally, mimes booing you as well. Even the condemned have standards.",
+            "effects": [
+              "stat cha -1",
+              "rep -3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Work the distracted crowd",
+        "check": {
+          "stat": "dex",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Executions are a pickpocket's harvest festival. You tithe yourself generously from six pockets.",
+            "effects": [
+              "money +10",
+              "rep -4"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "Your target was the executioner, off-duty. There's a fine. He deducts it directly, by handshake.",
+            "effects": [
+              "money -8",
+              "hp -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Leave. This isn't entertainment",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You walk away from the roar of the square. Somewhere behind you, an invisible box gets its final performance. Your conscience travels light today.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_credit_exchange",
+    "locations": [
+      "city"
+    ],
+    "weight": 8,
+    "text": "A currency exchange run by a woman with an abacus, a sky-metal calculator, and visible contempt for both. The board lists today's rate for 'star money' in chalk, already crossed out twice.",
+    "choices": [
+      {
+        "text": "Sell 5 credits for gold",
+        "requires": {
+          "credits": 5
+        },
+        "outcomes": [
+          {
+            "weight": 70,
+            "text": "She counts out coins with the weariness of someone who's seen currencies die. Fair rate, all things considered.",
+            "effects": [
+              "credits -5",
+              "money +9"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "The rate improved while you stood there. She honors the chalk, cursing softly. Windfall.",
+            "effects": [
+              "credits -5",
+              "money +13"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Buy 10 credits with gold",
+        "requires": {
+          "money": 12
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "'Investing in the sky economy,' she says, deadpan, sliding the blinking chips across. 'Bold.'",
+            "effects": [
+              "money -12",
+              "credits +10"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask which currency will win",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You and she talk monetary theory for an hour. Her conclusion: 'turnips, eventually.' You leave smarter and vaguely alarmed.",
+            "effects": [
+              "stat int +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "She answers entirely in exchange-rate jargon. You nod along and accidentally agree to a small transaction fee for the lesson.",
+            "effects": [
+              "money -2"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

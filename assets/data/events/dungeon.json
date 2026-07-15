@@ -1,0 +1,541 @@
+[
+  {
+    "id": "dungeon_artifact_find",
+    "locations": [
+      "dungeon"
+    ],
+    "weight": 16,
+    "slots": {
+      "relic": "artifact_here"
+    },
+    "text": "Behind a collapsed wall, on a pedestal that has clearly eaten hands before: {relic}. It's real. It's here. The stories all end badly, but they do all mention it's worth a fortune.",
+    "choices": [
+      {
+        "text": "Take it",
+        "outcomes": [
+          {
+            "weight": 70,
+            "text": "Your fingers close around it. Nothing bites. Somewhere, several factions just felt a disturbance in their ledgers.",
+            "effects": [
+              "take_artifact"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "The pedestal WAS a mimic. You take the relic anyway, mid-wrestle, because you have your priorities straight.",
+            "effects": [
+              "take_artifact",
+              "hp -4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Check for traps first",
+        "check": {
+          "stat": "wis",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Three tripwires, a pressure plate, and a dart hole shaped like a disappointed face. You defeat them all with patience.",
+            "effects": [
+              "take_artifact"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You find the trap by triggering it. The dart's note reads 'told you.' You grab the relic while bleeding.",
+            "effects": [
+              "take_artifact",
+              "hp -5"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Leave it. Some things should stay legendary",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You walk away. The pedestal seems almost disappointed. Your restraint feels valuable, which is good, because it's all you're leaving with.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dungeon_no_refunds_door",
+    "locations": [
+      "dungeon"
+    ],
+    "text": "The entrance door bears a carved sign: 'WELCOME. NO REFUNDS. MIND THE GAP.' There is, as far as you can see, no gap.",
+    "choices": [
+      {
+        "text": "Enter confidently",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "There was a gap. You find it with your face. The dungeon's sense of humor is structural.",
+            "effects": [
+              "hp -3"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "You step over where a gap would be, on a hunch. Somewhere, a trap sighs in disappointment.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Probe ahead with a stick",
+        "check": {
+          "stat": "wis",
+          "dc": 10
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The stick finds the gap, then a second gap, then a mimic pretending to be a third gap. You proceed safely, stickless.",
+            "effects": []
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The stick was the mimic. It bites your hand and scampers off, offended.",
+            "effects": [
+              "hp -2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Knock politely",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "A voice from inside: 'It's open! Mind the gap!' Forewarned is forearmed. Whoever they are, you never find them.",
+            "effects": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dungeon_ribcage_sword",
+    "locations": [
+      "dungeon"
+    ],
+    "text": "A sword is wedged in a rib cage. The plaque reads: 'HERE LIES THE PREVIOUS OWNER OF THIS SWORD.' The sword looks excellent.",
+    "choices": [
+      {
+        "text": "Take the sword",
+        "outcomes": [
+          {
+            "weight": 55,
+            "text": "Nothing happens. It's just a great sword and a very honest plaque.",
+            "effects": [
+              "item decent_sword"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "The rib cage's original owner objects, briefly and skeletally. You keep the sword, but at a cost.",
+            "effects": [
+              "item decent_sword",
+              "hp -4"
+            ]
+          },
+          {
+            "weight": 15,
+            "text": "The sword whispers 'finally' in a voice like a satisfied tax auditor. You are now, apparently, in a partnership.",
+            "effects": [
+              "item decent_sword",
+              "stat wis -1",
+              "trait +cursed"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Add a coin to the grave and move on",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The skeleton's jaw creaks into what might be a smile. Somewhere ahead, a trap quietly disarms itself.",
+            "effects": [
+              "money -1",
+              "hp +2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Read the plaque's fine print",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "'...ESTATE SALE SATURDAY.' You come back Saturday. The estate includes a modest bag of gold.",
+            "effects": [
+              "money +12"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The fine print is in Skeletal. You nod like you understood. The rib cage nods back. You leave quickly.",
+            "effects": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dungeon_goblin_toll",
+    "locations": [
+      "dungeon",
+      "cave"
+    ],
+    "text": "A goblin sits at a tiny desk before a bridge. 'Toll bridge,' he says. 'Five gold. I don't make the rules.' He gestures at a rock labeled RULES.",
+    "choices": [
+      {
+        "text": "Pay the toll",
+        "requires": {
+          "money": 5
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "rep > 9"
+            ],
+            "text": "The goblin checks a list, finds your name on the GOOD side of it, and waves you through free. 'Friends of the region ride free. The rock insists.' The rock says nothing, benevolently.",
+            "effects": []
+          },
+          {
+            "weight": 100,
+            "text": "He stamps your hand with a mushroom. 'Receipt.' The bridge is sturdy and the transaction weirdly professional.",
+            "effects": [
+              "money -5"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Challenge the rock's authority",
+        "check": {
+          "stat": "cha",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You argue jurisdiction. The goblin consults the rock, loses the argument on your behalf, and waves you through, muttering about precedent.",
+            "effects": []
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The rock wins. Somehow. There's a surcharge now for 'contempt of rock.'",
+            "effects": [
+              "money -7"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Wade across the river below",
+        "check": {
+          "stat": "con",
+          "dc": 11
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Cold, wet, free. The goblin watches you the whole way, taking notes for a fee he'll invent later.",
+            "effects": [
+              "hp -1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The river is deeper, colder, and more opinionated than expected. You emerge downstream with less dignity and one fewer boot.",
+            "effects": [
+              "hp -4"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dungeon_forgotten_altar",
+    "locations": [
+      "dungeon"
+    ],
+    "text": "An altar to a forgotten god. The offering bowl holds three coins, a button, and a note: 'PLEASE. ANYTHING. I USED TO HAVE A WHOLE THING.'",
+    "choices": [
+      {
+        "text": "Donate generously",
+        "requires": {
+          "money": 5
+        },
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "Warmth floods the room. A voice, rusty with disuse: 'A CUSTOMER.' You are blessed with the enthusiasm of the recently remembered.",
+            "effects": [
+              "money -5",
+              "hp +6",
+              "stat cha +1",
+              "trait +blessed"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "The god overdoes the blessing, badly out of practice. Your hair will be golden for a month whether you like it or not.",
+            "effects": [
+              "money -5",
+              "hp +3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Take the three coins",
+        "outcomes": [
+          {
+            "weight": 50,
+            "text": "Nothing happens. The god can't afford consequences right now.",
+            "effects": [
+              "money +3"
+            ]
+          },
+          {
+            "weight": 50,
+            "text": "A whisper follows you for the rest of the day: 'rude. RUDE.' Your luck feels thinner.",
+            "effects": [
+              "money +3",
+              "stat wis -1",
+              "trait +cursed"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Leave the button. Take nothing. Say something kind",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "'...thank you,' says the dark, and means it. You leave feeling inexplicably taller.",
+            "effects": [
+              "stat wis +1",
+              "hp +2"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dungeon_slime_janitorial",
+    "locations": [
+      "dungeon"
+    ],
+    "text": "A gelatinous cube fills the corridor, drifting slowly, absorbing bones and debris. A sign taped to it reads: 'CLEANING IN PROGRESS. PLEASE USE OTHER HALL.' There is no other hall.",
+    "choices": [
+      {
+        "text": "Wait for it to pass",
+        "outcomes": [
+          {
+            "weight": 70,
+            "text": "Twenty minutes of respectful silence. The cube passes, leaving the corridor immaculate. You could eat off this floor. Something clearly has.",
+            "effects": []
+          },
+          {
+            "weight": 30,
+            "text": "While waiting, you notice a coin purse suspended in the cube, mid-digestion. You fish it out with a stick and quick hands. Finders keepers; the cube doesn't argue.",
+            "effects": [
+              "money +8"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Squeeze past it",
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You limbo along the wall, inches from digestion. The cube ripples, possibly in appreciation of your form.",
+            "effects": []
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "It got your sleeve. Just the sleeve. The dissolving noise will feature in your dreams, but the arm is fine.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Compliment its work",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The cube stops. Quivers. In eight hundred years, no one has ever. It extrudes a small, perfectly cleaned trinket from its interior: a tip, or a gift, or a hostage. You take it either way.",
+            "effects": [
+              "loot common",
+              "stat cha +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dungeon_puzzle_door",
+    "locations": [
+      "dungeon"
+    ],
+    "text": "A door with four dials and an inscription: 'SPEAK THE ANSWER: WHAT WALKS ON FOUR LEGS AT DAWN, TWO AT NOON, AND THREE AT DUSK?' Below, scratched by a previous visitor: 'ITS NOT MAN. WE TRIED MAN.'",
+    "choices": [
+      {
+        "text": "Reason it out",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "'A dog. A dog that learned to beg, then hurt its paw.' The door considers this, decides it respects you, and opens. Inside: the previous riddler's abandoned supplies.",
+            "effects": [
+              "loot fine",
+              "stat int +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You say 'man' anyway, with confidence. The door administers a corrective jolt. The scratched warning gains a tally mark, courtesy of your elbow.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Try the handle",
+        "outcomes": [
+          {
+            "weight": 50,
+            "text": "It was never locked. The riddle was decorative. Somewhere, an architect is still laughing.",
+            "effects": [
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 50,
+            "text": "The handle was the trap. The riddle was the distraction. Your hand is the lesson.",
+            "effects": [
+              "hp -2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Answer with your own riddle",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You pose one about a merchant, a wagon, and three crates labeled DO NOT ASK. The door thinks for a full minute, then opens out of intellectual courtesy. Doors get bored too.",
+            "effects": [
+              "stat cha +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dungeon_mimic_support_group",
+    "locations": [
+      "dungeon"
+    ],
+    "weight": 7,
+    "text": "You interrupt a circle of chests, barrels, and one apologetic bookshelf arranged in a ring. A banner droops overhead: 'DISGUISE-DEPENDENT PREDATORS ANONYMOUS. ALL FORMS WELCOME.'",
+    "choices": [
+      {
+        "text": "Sit in. Listen. Grow",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "A barrel shares its fear of being opened 'for the wrong reasons.' You cry a little. Everyone pretends not to notice, which for mimics is deeply on-brand. They gift you a member's token.",
+            "effects": [
+              "stat wis +1",
+              "loot common"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask which of them is the real treasure chest",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "A hurt silence. 'We're ALL real,' says the bookshelf, quivering. You have set the group back weeks and are asked to leave.",
+            "effects": [
+              "stat cha -1"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "One chest, new to the group and weak of will, cracks open to prove itself. Gold spills. The group sighs. Relapse.",
+            "effects": [
+              "money +12"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Share your own struggles with pretending",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You talk about smiling through tavern ballads about your life. The circle is moved. A chest dabs its lid. You leave lighter, with the group's blessing and a snack for the road.",
+            "effects": [
+              "hp +4",
+              "item rations"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,6 +1,7 @@
 ﻿#include "game.h"
 #include <ctime>
 #include <sstream>
+#include <nlohmann/json.hpp>
 
 namespace {
 
@@ -48,16 +49,30 @@ int DrawTextWrapped(const std::string& text, int x, int y, int width, Color colo
 } // namespace
 
 bool Game::init() {
-    auto loadText = [&](const char* path, auto&& fn) {
-        char* text = LoadFileText(path);
+    auto loadText = [&](const std::string& path, auto&& fn) {
+        char* text = LoadFileText(path.c_str());
         if (text) { fn(text); UnloadFileText(text); }
     };
     loadText("assets/data/recipes/prose.json", [&](const char* t) { grammar_.loadJsonText(t); });
     loadText("assets/data/recipes/language.json", [&](const char* t) { forge_.loadJsonText(t); });
-    loadText("assets/data/events.json", [&](const char* t) { deck_.loadJsonText(t); });
     loadText("assets/data/items.json", [&](const char* t) { items_.loadItemsJsonText(t); });
     loadText("assets/data/quirks.json", [&](const char* t) { items_.loadQuirksJsonText(t); });
-    if (deck_.size() == 0) dataError_ = "content missing: assets/data/events.json";
+    // Events live in per-deck files listed by a manifest.
+    loadText("assets/data/events/manifest.json", [&](const char* t) {
+        nlohmann::json m = nlohmann::json::parse(t, nullptr, false);
+        if (m.is_discarded() || !m.contains("files")) return;
+        for (auto& f : m["files"])
+            if (f.is_string())
+                loadText("assets/data/events/" + f.get<std::string>(),
+                         [&](const char* et) { deck_.loadJsonText(et); });
+    });
+    loadText("assets/data/traits.json", [&](const char* t) {
+        nlohmann::json j = nlohmann::json::parse(t, nullptr, false);
+        if (j.is_discarded() || !j.is_object()) return;
+        for (auto& [id, name] : j.items())
+            if (name.is_string()) traitNames_[id] = name.get<std::string>();
+    });
+    if (deck_.size() == 0) dataError_ = "content missing: assets/data/events/";
     if (items_.size() == 0) dataError_ = "content missing: assets/data/items.json";
     nextSeed_ = (uint64_t)time(nullptr) % 1000000000ULL;
     audio_.init();
@@ -140,6 +155,51 @@ void Game::bindQuirk(ItemInstance& item) {
         item.quirkPassive = runRng_.pick(items_.goodPassives());
 }
 
+// The `when` condition language. One condition per string; all must hold.
+bool Game::evalCond(const std::string& cond) const {
+    std::istringstream ss(cond);
+    std::string a, b, c;
+    ss >> a >> b >> c;
+    if (a == "trait") return ch_.hasTrait(b);
+    if (a == "!trait") return !ch_.hasTrait(b);
+    if (a == "has") return ch_.hasItem(b);
+    if (a == "!has") return !ch_.hasItem(b);
+    if (a == "carrying_artifact") {
+        for (auto& i : ch_.pack)
+            if (i.artifactId >= 0) return true;
+        return false;
+    }
+    if (a == "npc") {
+        auto it = npcMarks_.find(slotFigure_);
+        return it != npcMarks_.end() && it->second.count(b) > 0;
+    }
+    auto cmp = [&](int lhs) {
+        int rhs = atoi(c.c_str());
+        if (b == ">") return lhs > rhs;
+        if (b == "<") return lhs < rhs;
+        if (b == ">=") return lhs >= rhs;
+        if (b == "<=") return lhs <= rhs;
+        return lhs == rhs;
+    };
+    if (a == "rep") return cmp(localRep());
+    if (a == "money") return cmp(ch_.money);
+    if (a == "credits") return cmp(ch_.credits);
+    if (a == "hp") return cmp(ch_.hp);
+    if (a == "day") return cmp(ch_.day);
+    if (a == "stat") {
+        std::string d;
+        ss >> d; // "stat str >= 14": b=stat name, c=op, d=value
+        int lhs = ch_.stats[statFromName(b)];
+        int rhs = atoi(d.c_str());
+        if (c == ">") return lhs > rhs;
+        if (c == "<") return lhs < rhs;
+        if (c == ">=") return lhs >= rhs;
+        if (c == "<=") return lhs <= rhs;
+        return lhs == rhs;
+    }
+    return false; // unknown condition: never true, validator catches these
+}
+
 void Game::newRun(int classIdx) {
     masterSeed_ = nextSeed_;
     runCounter_++;
@@ -181,6 +241,9 @@ void Game::newRun(int classIdx) {
     pendingArtifact_ = -1;
     pendingShop_ = false;
     forcedNextId_.clear();
+    npcMarks_.clear();
+    slotFigure_ = -1;
+    blessingSpent_ = false;
     enterTravel();
 }
 
@@ -274,7 +337,9 @@ bool Game::resolveSlots(const Event& e, Grammar::Ctx& ctx) {
             for (int i = 0; i < (int)history_.figures.size(); i++)
                 if (history_.figures[i].died < 0) pool.push_back(i);
             if (pool.empty()) return false;
-            const Figure& f = history_.figures[pool[runRng_.range(0, (int)pool.size() - 1)]];
+            int fi = pool[runRng_.range(0, (int)pool.size() - 1)];
+            slotFigure_ = fi;
+            const Figure& f = history_.figures[fi];
             ctx[name] = f.name;
             ctx[name + "_trait"] = f.trait;
             ctx[name + "_prof"] = f.profession;
@@ -304,8 +369,14 @@ void Game::dealEvent() {
         current_ = deck_.draw(runRng_, tag);
         if (!current_ && tag == "dungeon_finale") { tag = "dungeon"; continue; }
         if (!current_) { enterTravel(); return; }
+        // Event-level gate: "trait wanted" events only find the wanted.
+        bool gated = false;
+        for (auto& w : current_->when)
+            if (!evalCond(w)) { gated = true; break; }
+        if (gated) continue;
         Grammar::Ctx ctx = {{"site", siteName_}, {"world", world_.name.conlang}};
         pendingArtifact_ = -1;
+        slotFigure_ = -1;
         if (!resolveSlots(*current_, ctx)) continue;
         currentCtx_ = ctx;
         currentText_ = grammar_.expand(current_->text, runRng_, ctx);
@@ -403,6 +474,13 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
                 item.provenance = prov;
                 ch_.pack.push_back(item);
             }
+        } else if (verb == "trait") {
+            std::string t; ss >> t;
+            if (!t.empty() && t[0] == '+') ch_.traits.insert(t.substr(1));
+            else if (!t.empty() && t[0] == '-') ch_.traits.erase(t.substr(1));
+        } else if (verb == "npc_mark") {
+            std::string mark; ss >> mark;
+            if (slotFigure_ >= 0) npcMarks_[slotFigure_].insert(mark);
         } else if (verb == "die") {
             std::string rest;
             std::getline(ss, rest);
@@ -412,6 +490,14 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
         }
     }
     if (ch_.hp <= 0) ch_.dead = true;
+    // A blessing is a one-time refusal to die. The gods take notes.
+    if (ch_.dead && ch_.hasTrait("blessed")) {
+        ch_.traits.erase("blessed");
+        ch_.dead = false;
+        ch_.hp = 1;
+        ch_.epitaph.clear();
+        blessingSpent_ = true;
+    }
 }
 
 void Game::chooseOption(int idx) {
@@ -419,7 +505,9 @@ void Game::chooseOption(int idx) {
     const Choice& choice = current_->choices[idx];
     if (!choice.requires_.met(ch_)) return;
     if (!choice.check.stat.empty()) audio_.dice();
-    outcome_ = EventDeck::resolve(choice, ch_, runRng_);
+    blessingSpent_ = false;
+    outcome_ = EventDeck::resolve(choice, ch_, runRng_,
+                                  [this](const std::string& c) { return evalCond(c); });
     outcome_.text = grammar_.expand(outcome_.text, runRng_, currentCtx_);
     applyEffects(outcome_.effects);
     ch_.eventsSurvived++;
@@ -492,6 +580,10 @@ void Game::frame(Vector2 mouse, bool pressed) {
         if (shake_ < 0.0f) shake_ = 0.0f;
     }
     if (!enteringSeed_ && screen_ != TITLE && IsKeyPressed(KEY_M)) audio_.toggleMute();
+    // Dev keys for content authoring: trait-gated events are untestable by
+    // dice alone. Undocumented, harmless (roguelike full of curses anyway).
+    if (IsKeyPressed(KEY_F9)) ch_.traits.insert("cursed");
+    if (IsKeyPressed(KEY_F10)) ch_.traits.insert("wanted");
 
     ClearBackground(PAL_BG);
     switch (screen_) {
@@ -650,6 +742,17 @@ void Game::drawTravel(Vector2 mouse) {
         stats += " " + std::to_string(ch_.stats[i]) + "  ";
     }
     y = DrawTextWrapped(stats, 8, y, kW - 16, PAL_DARK);
+    if (!ch_.traits.empty()) {
+        std::string tline = "You are: ";
+        bool first = true;
+        for (auto& t : ch_.traits) {
+            if (!first) tline += ", ";
+            auto it = traitNames_.find(t);
+            tline += (it != traitNames_.end()) ? it->second : t;
+            first = false;
+        }
+        y = DrawTextWrapped(tline, 8, y + 1, kW - 16, PAL_DIM);
+    }
     DrawText("Where to?", 8, y + 4, 10, PAL_GOLD);
     if (uiButton({(float)(kW - 52), (float)(y + 1), 48, 16}, "PACK", mouse)) {
         openInventory();
@@ -704,7 +807,10 @@ void Game::drawOutcome() {
     for (auto& e : outcome_.effects)
         if (e.rfind("die", 0) != 0 && e != "shop" && e.rfind("goto", 0) != 0)
             fx += "[" + e + "] ";
-    if (!fx.empty()) DrawTextWrapped(fx, 8, y + 4, kW - 16, PAL_DARK);
+    if (!fx.empty()) y = DrawTextWrapped(fx, 8, y + 4, kW - 16, PAL_DARK);
+    if (blessingSpent_)
+        DrawTextWrapped("The blessing spends itself. You live. Somewhere, a ledger updates.",
+                        8, y + 4, kW - 16, PAL_GOLD);
 
     const char* prompt = "[tap or Enter to continue]";
     DrawText(prompt, kW - MeasureText(prompt, 10) - 6, kH - 13, 10, PAL_DIM);

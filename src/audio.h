@@ -28,9 +28,11 @@ private:
     Sound generateTrack(const std::string& tag, uint64_t seed);
     Sound makeSfx(float baseFreq, float endFreq, float seconds, int kind);
 
-    std::map<std::string, Sound> tracks_;
+    // Exactly ONE track lives in memory. Decoded audio is ~16x the source
+    // wave (device-format resampling); caching tracks OOMs the wasm heap.
     std::string currentTag_;
-    Sound* current_ = nullptr;
+    Sound current_{};
+    bool hasTrack_ = false;
     Sound sBlip_{}, sCoin_{}, sThud_{}, sDice_{}, sChime_{};
     bool ready_ = false;
     bool muted_ = false;

@@ -1,0 +1,514 @@
+[
+  {
+    "id": "road_scooter_gang",
+    "locations": [
+      "road"
+    ],
+    "text": "A gang of goblins on rusty scooters circles you, engines buzzing like angry wasps. Their leader flips up her goggles: 'Tribute. Or race. Them's the roads.'",
+    "choices": [
+      {
+        "text": "Race for it",
+        "check": {
+          "stat": "dex",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You win on a borrowed scooter with a wobbling wheel. The gang is furious and deeply impressed. They pay tribute to YOU, as is the law of the roads.",
+            "effects": [
+              "money +10",
+              "stat cha +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You crash into the one bush on an otherwise empty plain. The gang laughs so hard two of them also crash. Tribute is waived for entertainment value, but the bush wants damages.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Pay tribute",
+        "requires": {
+          "money": 4
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The leader stamps your hand: road tax, paid. 'Valid till the next rain,' she says. It begins raining immediately.",
+            "effects": [
+              "money -4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask to join the gang",
+        "check": {
+          "stat": "cha",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "There's a form. Of course there's a form. You're now an associate member with scooter privileges and a cut of today's tribute.",
+            "effects": [
+              "money +8",
+              "stat cha +1",
+              "trait +gang_member"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "'We have standards,' says the goblin holding a scooter together with rope. The rejection stings more than it should.",
+            "effects": [
+              "stat cha -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "road_broken_wagon",
+    "locations": [
+      "road"
+    ],
+    "text": "A merchant sits beside a wagon with a shattered wheel, surrounded by crates labeled 'FRAGILE,' 'VERY FRAGILE,' and 'DO NOT ASK.'",
+    "choices": [
+      {
+        "text": "Help fix the wheel",
+        "check": {
+          "stat": "str",
+          "dc": 11
+        },
+        "success": [
+          {
+            "weight": 70,
+            "text": "The wheel goes on, the merchant beams, and you're paid from the DO NOT ASK crate. It's money. You don't ask.",
+            "effects": [
+              "money +8"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "Fixed! The merchant pays you in 'credits' - shiny rectangles from beyond the sky. 'Big somewhere,' they insist.",
+            "effects": [
+              "credits +12"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The wagon rolls off the jack and onto your foot. The merchant apologizes on behalf of gravity.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask what's in the crates",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "'The first two are pottery.' You wait. The merchant stares through you. 'The pottery is also not to be asked about.' You move on, enriched only by mystery.",
+            "effects": []
+          }
+        ]
+      },
+      {
+        "text": "Loot a crate while they're distracted",
+        "check": {
+          "stat": "dex",
+          "dc": 14
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You palm something small from DO NOT ASK. It's warm. It hums. It's worth money to somebody, ideally somebody far away.",
+            "effects": [
+              "money +11",
+              "stat wis -1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The crate SHRIEKS. Whatever's inside does not appreciate being burgled. The merchant charges you an 'awakening fee.'",
+            "effects": [
+              "money -7",
+              "hp -2"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "road_peddler",
+    "locations": [
+      "road"
+    ],
+    "weight": 11,
+    "text": "A peddler's cart lurches to a stop beside you. The whole thing unfolds like a wooden flower into a shopfront. Impressive. Structurally alarming, but impressive.",
+    "choices": [
+      {
+        "text": "See the goods",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "'Road prices,' the peddler warns, meaning higher.",
+            "effects": [
+              "shop"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask how the cart works",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "The demonstration re-folds the cart with the peddler inside. You help extract them. A discount is mentioned, emotionally, but a free sample is provided.",
+            "effects": [
+              "item bread"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "'Sky-metal hinges,' they whisper. 'Fell off a star-wagon.' Everything is sky-debris to salespeople now.",
+            "effects": []
+          }
+        ]
+      },
+      {
+        "text": "Travel on",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The cart refolds and trundles off, playing a tinny jingle that will live in your head for three days.",
+            "effects": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "road_hitchhiking_wizard",
+    "locations": [
+      "road"
+    ],
+    "text": "A wizard stands at the roadside, thumb out, beard tucked into his belt for travel. His sign reads 'ANYWHERE BUT HERE. WILL ENCHANT FOR RIDES.'",
+    "choices": [
+      {
+        "text": "Give him a lift",
+        "requires": {
+          "item": "scooter"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "He rides side-saddle with tremendous dignity and enchants your scooter in payment. It now refuses to tip over and hums show tunes.",
+            "effects": [
+              "stat dex +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Walk together a while",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "Two miles of wizard small talk, which is regular small talk but about portents. He teaches you a cantrip for keeping boots dry. Life-changing, honestly.",
+            "effects": [
+              "stat int +1"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "He talks the entire way about his ex-apprentice. THE ENTIRE WAY. At the crossroads he pays you for the therapy in coin, as is proper.",
+            "effects": [
+              "money +5"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask what he's fleeing",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "He looks back down the road. Far away, faintly, something honks. 'Geese,' he says. 'A grudge. Don't ask more.' You don't. The honking continues, patient.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "road_automated_toll",
+    "locations": [
+      "road"
+    ],
+    "text": "A gleaming pillar of sky-metal blocks the road. It projects glowing text: 'TOLL: 5 CREDITS. CASH NOT ACCEPTED. HAVE A PRODUCTIVE CYCLE.' It has clearly been here since before anyone knew what credits were.",
+    "choices": [
+      {
+        "text": "Pay 5 credits",
+        "requires": {
+          "credits": 5
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You wave the blinking chip. The pillar chimes, thanks you for your 'loyalty,' and awards points you can never spend.",
+            "effects": [
+              "credits -5"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Hack the interface",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You convince the pillar you're a maintenance worker. It apologizes, opens, and pays YOU a service fee from its dusty internal purse.",
+            "effects": [
+              "credits +8",
+              "stat int +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The pillar declares an 'unauthorized access event' and tases you politely. It then offers a customer satisfaction survey.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Walk around it through the brush",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The pillar watches you the whole way, projecting the word 'NOTED.' The brush is full of thorns and the moral high ground.",
+            "effects": [
+              "hp -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "wild_campfire",
+    "locations": [
+      "road",
+      "forest"
+    ],
+    "weight": 8,
+    "text": "Dusk. A good sheltered spot presents itself: flat stone, dry wood, the kind of quiet that makes camp sound like wisdom.",
+    "choices": [
+      {
+        "text": "Make camp properly",
+        "requires": {
+          "item": "campfire_kit"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Fire, food, and the deep sleep of someone who packed the right equipment. Morning finds you new.",
+            "effects": [
+              "removeitem campfire_kit",
+              "hp +7"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Rough it",
+        "check": {
+          "stat": "con",
+          "dc": 10
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Cold ground, warm cloak, decent stars. You wake stiff but restored.",
+            "effects": [
+              "hp +4"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "It rains. The shelter that looked wise redirects the water directly onto you, with craftsmanship.",
+            "effects": [
+              "hp -2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Push on through the night",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "You make good time in the dark and feel like a legend. An exhausted legend.",
+            "effects": [
+              "hp -1",
+              "money +3"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "Night travel introduces you to a ditch. Personally.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "road_funeral_procession",
+    "locations": [
+      "road"
+    ],
+    "weight": 8,
+    "slots": {
+      "gone": "figure_dead"
+    },
+    "text": "A funeral procession fills the road - for {gone}, dead these many years, whose remains are only now being moved to a fancier grave. The mourners are professionals; the grief is rented; the traffic is real.",
+    "choices": [
+      {
+        "text": "Join the procession for a while",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You walk a mile behind the casket of a stranger. The professional mourners teach you two harmonies and a surprising amount about {gone}. Attendance includes a wake-lunch.",
+            "effects": [
+              "hp +3",
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Cut through the procession",
+        "outcomes": [
+          {
+            "weight": 50,
+            "text": "You thread the gap between casket and clergy at a jog. Gasps. Someone faints professionally. You clear it, pursued only by reputation.",
+            "effects": [
+              "rep -4"
+            ]
+          },
+          {
+            "weight": 50,
+            "text": "You misjudge the pallbearers' pace. The collision is slow, ceremonial, and witnessed by everyone. {gone}'s remains are fine. Your standing is not.",
+            "effects": [
+              "hp -2",
+              "rep -6"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask why the upgrade after all these years",
+        "check": {
+          "stat": "cha",
+          "dc": 11
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "A mourner breaks character: the estate finally settled, and the lawyers took everything but the grave budget. You get the whole saga and a tip for listening to THEIR grief about it.",
+            "effects": [
+              "money +5",
+              "stat wis +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "'Ghoul,' hisses the head mourner, misunderstanding completely. You are moved along by six umbrellas.",
+            "effects": [
+              "stat cha -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "road_signpost_liar",
+    "locations": [
+      "road"
+    ],
+    "weight": 8,
+    "text": "A crossroads signpost with one arm too many. Three point to real places. The fourth, freshly painted, reads 'DEFINITELY NO TREASURE THIS WAY (BORING) (DO NOT)'. The handwriting is familiar. Nervous.",
+    "choices": [
+      {
+        "text": "Follow the suspicious sign",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The path winds into deep green quiet. Someone worked hard to keep people away from here.",
+            "effects": [
+              "goto hidden_glade"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Follow a real sign like a sensible person",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You take the boring road. It is boring. It is also entirely free of whatever that other path was about, and some days that's the whole victory.",
+            "effects": [
+              "hp +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Add your own fake sign",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You paint 'FREE SOUP AHEAD' pointing into a swamp. It's cruel. It's hilarious. Somewhere down the line, a berry-goblin nods in professional respect.",
+            "effects": [
+              "stat cha +1",
+              "stat wis -1"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,4 +1,4 @@
-#include "events.h"
+﻿#include "events.h"
 #include <nlohmann/json.hpp>
 #include <cstdio>
 
@@ -9,6 +9,8 @@ bool Requirement::met(const Character& c) const {
     if (moneyGte > 0 && c.money < moneyGte) return false;
     if (creditsGte > 0 && c.credits < creditsGte) return false;
     if (!item.empty() && !c.hasItem(item)) return false;
+    if (!trait.empty() && !c.hasTrait(trait)) return false;
+    if (!notTrait.empty() && c.hasTrait(notTrait)) return false;
     return true;
 }
 
@@ -21,10 +23,19 @@ std::string Requirement::label() const {
     if (moneyGte > 0) return "[" + std::to_string(moneyGte) + "g] ";
     if (creditsGte > 0) return "[" + std::to_string(creditsGte) + "c] ";
     if (!item.empty()) return "[needs " + item + "] ";
+    if (!trait.empty()) return "[" + trait + "] ";
     return "";
 }
 
 namespace {
+
+std::vector<std::string> parseStringArray(const json& arr) {
+    std::vector<std::string> out;
+    if (arr.is_array())
+        for (auto& v : arr)
+            if (v.is_string()) out.push_back(v.get<std::string>());
+    return out;
+}
 
 std::vector<Outcome> parseOutcomes(const json& arr) {
     std::vector<Outcome> out;
@@ -33,24 +44,38 @@ std::vector<Outcome> parseOutcomes(const json& arr) {
         Outcome oc;
         oc.weight = o.value("weight", 1);
         oc.text = o.value("text", "");
-        if (o.contains("effects") && o["effects"].is_array())
-            for (auto& e : o["effects"])
-                if (e.is_string()) oc.effects.push_back(e.get<std::string>());
+        if (o.contains("effects")) oc.effects = parseStringArray(o["effects"]);
+        if (o.contains("when")) oc.when = parseStringArray(o["when"]);
         out.push_back(std::move(oc));
     }
     return out;
 }
 
-const Outcome* pickWeighted(const std::vector<Outcome>& outcomes, Rng& rng) {
+// Special cases override: if any conditional outcome's `when` passes, the
+// pool is ONLY the passing conditional outcomes. Otherwise the defaults.
+const Outcome* pickWeighted(const std::vector<Outcome>& outcomes, Rng& rng,
+                            const CondEval& cond) {
     if (outcomes.empty()) return nullptr;
-    int total = 0;
-    for (auto& o : outcomes) total += o.weight;
-    int roll = rng.range(1, total > 0 ? total : 1);
+    std::vector<const Outcome*> pool;
     for (auto& o : outcomes) {
-        roll -= o.weight;
-        if (roll <= 0) return &o;
+        if (o.when.empty()) continue;
+        bool ok = true;
+        for (auto& w : o.when)
+            if (!cond(w)) { ok = false; break; }
+        if (ok) pool.push_back(&o);
     }
-    return &outcomes.back();
+    if (pool.empty())
+        for (auto& o : outcomes)
+            if (o.when.empty()) pool.push_back(&o);
+    if (pool.empty()) return nullptr;
+    int total = 0;
+    for (auto* o : pool) total += o->weight;
+    int roll = rng.range(1, total > 0 ? total : 1);
+    for (auto* o : pool) {
+        roll -= o->weight;
+        if (roll <= 0) return o;
+    }
+    return pool.back();
 }
 
 } // namespace
@@ -70,6 +95,7 @@ void EventDeck::loadJsonText(const char* jsonText) {
         if (e.contains("slots") && e["slots"].is_object())
             for (auto& [name, q] : e["slots"].items())
                 if (q.is_string()) ev.slots.emplace_back(name, q.get<std::string>());
+        if (e.contains("when")) ev.when = parseStringArray(e["when"]);
         if (e.contains("choices") && e["choices"].is_array()) {
             for (auto& c : e["choices"]) {
                 Choice ch;
@@ -81,6 +107,8 @@ void EventDeck::loadJsonText(const char* jsonText) {
                     ch.requires_.moneyGte = r.value("money", 0);
                     ch.requires_.creditsGte = r.value("credits", 0);
                     ch.requires_.item = r.value("item", "");
+                    ch.requires_.trait = r.value("trait", "");
+                    ch.requires_.notTrait = r.value("nottrait", "");
                 }
                 if (c.contains("check") && c["check"].is_object()) {
                     ch.check.stat = c["check"].value("stat", "");
@@ -144,7 +172,8 @@ const Event* EventDeck::draw(Rng& rng, const std::string& location) {
     return nullptr;
 }
 
-ResolvedOutcome EventDeck::resolve(const Choice& choice, const Character& c, Rng& rng) {
+ResolvedOutcome EventDeck::resolve(const Choice& choice, const Character& c, Rng& rng,
+                                   const CondEval& cond) {
     ResolvedOutcome r;
     const Outcome* picked = nullptr;
     if (!choice.check.stat.empty()) {
@@ -160,9 +189,9 @@ ResolvedOutcome EventDeck::resolve(const Choice& choice, const Character& c, Rng
                       statUp.c_str(), die, mod, totalRoll, choice.check.dc,
                       success ? "success!" : "failure");
         r.rollText = buf;
-        picked = pickWeighted(success ? choice.successOutcomes : choice.failOutcomes, rng);
+        picked = pickWeighted(success ? choice.successOutcomes : choice.failOutcomes, rng, cond);
     } else {
-        picked = pickWeighted(choice.outcomes, rng);
+        picked = pickWeighted(choice.outcomes, rng, cond);
     }
     if (picked) {
         r.text = picked->text;

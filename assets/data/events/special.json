@@ -1,0 +1,55 @@
+[
+  {
+    "id": "hidden_glade",
+    "locations": [],
+    "text": "The path opens into a hidden glade: a ring of wildflowers, a stone table, and a strongbox half-swallowed by moss. Whoever painted the sign lived here. Judging by the tin cups - two of everything - they didn't live alone. Judging by the dust, that was a long time ago.",
+    "choices": [
+      {
+        "text": "Open the strongbox",
+        "outcomes": [
+          {
+            "weight": 70,
+            "text": "Coins, a folded map, and a note: 'If you found this, we didn't come back. Spend it loudly.' You intend to honor that.",
+            "effects": [
+              "money +16",
+              "item treasure_map"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "The box holds coins and a stack of letters you have no right to read. You read one. Just one. Then you close the box, take the coins, and leave the words for the moss.",
+            "effects": [
+              "money +12",
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Rest in the glade without touching anything",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You eat lunch at a dead stranger's stone table and feel, oddly, like a guest rather than an intruder. The glade is good at that. You leave it exactly as found.",
+            "effects": [
+              "hp +6"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Set the fake signpost pointing here on fire on your way out",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Let the glade keep itself. Some secrets deserve better security than nervous handwriting. The flames feel like a favor to someone who can't say thanks.",
+            "effects": [
+              "stat wis +1",
+              "rep +2"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

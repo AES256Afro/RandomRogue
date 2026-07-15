@@ -192,8 +192,7 @@ The validator enforces the checklist.
 | Phase | Contents | Why first |
 |---|---|---|
 | **P1 — The Engine of Doubt** | Conditional outcomes (`when`), traits/afflictions, NPC memory, event file split + manifest, validator v2 | Everything else hangs off these hooks |
-| **P2 — The Living World** | Daily world tick, live rumors/news, war/plague runtime effects, seasons/weather/night | Biggest felt change per line of code |
-| **P3 — Legacy** | Persistent worlds, dead-PC absorption, relic scattering, heirs, save/load | The retention engine |
+| **P2+P3 — The Unbroken Chronicle** | Living World and Legacy merged: ONE timeline with two tick rates — daily while playing (wars, plagues, news, prices), yearly between runs. Dead PCs become figures inside the same sim, processed by the same rules: books written about them, their relics stolen and relocated, their killer beasts gaining fame, monuments raised. Persistent worlds, heirs, save/load. | One machine, two clocks; the retention engine |
 | **P4 — 10x Content Blitz I** | 1,000-yr eras + new history types, 5 cultures, item/quirk generation families, +100 event skeletons | Feeds on P1 hooks |
 | **P5 — Company & Purpose** | Companions, contracts, ambitions, deep encounters | Depth |
 | **P6 — The Wide World** | 30–60 regions, regional travel, vehicles-for-real, exploration chains, religion | Breadth |

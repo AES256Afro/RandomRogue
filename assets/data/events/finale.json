@@ -1,0 +1,303 @@
+[
+  {
+    "id": "dungeon_lich_taxes",
+    "locations": [
+      "dungeon_finale"
+    ],
+    "weight": 10,
+    "text": "The final chamber. An elderly lich sits at a desk buried in parchment. 'Adventurer,' it rasps, 'do you know ANYTHING about estate taxes? I've been dead for 300 years and they keep sending letters.'",
+    "choices": [
+      {
+        "text": "Help with the taxes",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Three hours later, you've found a deduction for 'phylactery depreciation.' The lich weeps dust and pays you from its hoard.",
+            "effects": [
+              "money +25",
+              "loot fine",
+              "stat int +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You make it worse. The lich now owes back taxes in two kingdoms, one of which no longer exists. It curses you out of pure administrative grief.",
+            "effects": [
+              "hp -5"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Attack while it's distracted",
+        "check": {
+          "stat": "str",
+          "dc": 14
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The lich crumbles, almost relieved. Its final words: 'tell them... I'm... exempt.' The hoard is yours, minus filing fees.",
+            "effects": [
+              "money +30",
+              "hp -3"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The lich hits you with a sheaf of parchment. It's the deadliest thing in the room and it knows it.",
+            "effects": [
+              "hp -8"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Suggest it just stop opening the letters",
+        "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "trait cursed"
+            ],
+            "text": "The lich freezes mid-shuffle. 'You carry a third-circle curse AND you dispense wisdom? Professional courtesy demands an exchange.' It plucks the curse off you like lint and files it under MISC.",
+            "effects": [
+              "trait -cursed",
+              "money +8"
+            ]
+          },
+          {
+            "weight": 100,
+            "text": "The lich stares at you. Three centuries of dread dissolve. 'I can... simply not?' It hands you gold with trembling claws. You've slain the real monster: obligation.",
+            "effects": [
+              "money +15",
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dungeon_finale_vault",
+    "locations": [
+      "dungeon_finale"
+    ],
+    "text": "The final door opens onto a vault. Actual treasure, actually glittering. A plaque reads: 'CONGRATULATIONS. PLEASE REVIEW YOUR EXPERIENCE ON THE WAY OUT.'",
+    "choices": [
+      {
+        "text": "Fill your pockets, professionally",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "Coins, trinkets, a thing that might be jewelry or dentistry. A clean haul.",
+            "effects": [
+              "money +22",
+              "loot fine"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "The floor was a scale. The exit fee is calculated by weight. Still profitable, barely.",
+            "effects": [
+              "money +25",
+              "loot fine",
+              "hp -4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Take only what fits in one hand",
+        "check": {
+          "stat": "wis",
+          "dc": 11
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Restraint! The vault's guardian, a tired spectral accountant, waves you through and rounds your haul UP for politeness.",
+            "effects": [
+              "money +18",
+              "loot fine"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "Your one hand cramps around the single heaviest object. You leave with it and a limp.",
+            "effects": [
+              "loot fine",
+              "hp -2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Leave a review instead",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You write 'atmospheric, good bones, gap unmarked' on the guest ledger. A small stipend of appreciation materializes. The dungeon has pride.",
+            "effects": [
+              "money +8",
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dungeon_finale_janitor",
+    "locations": [
+      "dungeon_finale"
+    ],
+    "text": "The last chamber holds no monster. It holds a janitor, mopping around the bones. 'Mind the wet bones,' he says. 'You here for the hoard? It's behind the mop closet. I don't make the rules but I do clean up after them.'",
+    "choices": [
+      {
+        "text": "Ask him to open the closet",
+        "check": {
+          "stat": "cha",
+          "dc": 11
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "He shrugs and unlocks it. 'Take the shiny ones. The cursed ones hum. You'll figure it out.' Solid professional advice.",
+            "effects": [
+              "money +15",
+              "loot fine"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "'Closet's for staff.' He mops you gently but firmly toward the exit. You grab a souvenir from the lost-and-found on the way out.",
+            "effects": [
+              "loot common"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Fight him. He's clearly the boss",
+        "outcomes": [
+          {
+            "weight": 70,
+            "text": "He deflects your entire offense with the mop. Decades of technique. You wake up outside, neatly propped against a rock, with a pity coin in your palm.",
+            "effects": [
+              "hp -6",
+              "money +1"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "You were right. He IS the boss. But so many years of mopping has left him mostly retired, and he yields the closet with grace and one devastating shoulder throw.",
+            "effects": [
+              "hp -4",
+              "money +20",
+              "loot fine"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Offer to help mop",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You mop. He talks. Three hours of dungeon gossip and a fair split of whatever rolls out from under the bones. Honest work.",
+            "effects": [
+              "money +10",
+              "stat wis +1",
+              "hp +2"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dungeon_finale_gift_shop",
+    "locations": [
+      "dungeon_finale"
+    ],
+    "text": "The final chamber is... a gift shop. Shelves of branded merchandise: tiny plush mimics, 'I SURVIVED {site}' mugs, novelty curse scrolls. A skeleton in a lanyard waves. 'Exit's through here. Everyone exits through here.'",
+    "choices": [
+      {
+        "text": "Buy a souvenir",
+        "requires": {
+          "money": 5
+        },
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "The plush mimic is soft, judgmental, and possibly load-bearing to your happiness now.",
+            "effects": [
+              "money -5",
+              "loot common"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "The mug is real. The curse scroll was also, it turns out, real. Complimentary with purchase.",
+            "effects": [
+              "money -5",
+              "loot common",
+              "stat wis -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask what happened to the actual boss",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "'Franchised,' says the skeleton, adjusting its lanyard. 'The margins on terror are awful. Retail is forever.' It comps you a keychain for asking.",
+            "effects": [
+              "money +3",
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Shoplift",
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You palm a snow globe of the dungeon itself. Inside it, a tiny you palms a tinier snow globe. Best not to think about it.",
+            "effects": [
+              "loot fine"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The plush mimics were real mimics. Of course they were. Store security is impeccable and has teeth.",
+            "effects": [
+              "hp -5"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

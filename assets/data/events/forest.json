@@ -1,0 +1,462 @@
+[
+  {
+    "id": "forest_talking_mushroom",
+    "locations": [
+      "forest"
+    ],
+    "text": "A mushroom the size of a stool clears its throat. 'I'll trade you a secret for a secret,' it says. 'That's the economy out here.'",
+    "choices": [
+      {
+        "text": "Trade secrets",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "You whisper yours. It whispers back the location of a buried coin cache. Fungal intel is shockingly reliable.",
+            "effects": [
+              "money +9"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "Your secret is now known to the entire mycelial network. Every mushroom for miles is judging you.",
+            "effects": [
+              "stat wis +1",
+              "stat cha -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask why a mushroom needs secrets",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "'Leverage,' it says instantly. You have no follow-up questions. You have learned something anyway.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Eat the mushroom",
+        "outcomes": [
+          {
+            "weight": 40,
+            "text": "It tastes like betrayal and umami. The forest goes very quiet. You feel amazing and hunted.",
+            "effects": [
+              "hp +4",
+              "stat cha -2"
+            ]
+          },
+          {
+            "weight": 60,
+            "text": "It was ready for this. It is, in fact, mildly toxic out of spite alone.",
+            "effects": [
+              "hp -6"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forest_bureaucratic_bear",
+    "locations": [
+      "forest"
+    ],
+    "text": "A bear blocks the path, holding a piece of paper upside down. It growls, then, haltingly: 'You... read?' It appears to be a summons.",
+    "choices": [
+      {
+        "text": "Read the summons for the bear",
+        "check": {
+          "stat": "int",
+          "dc": 10
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The bear is being evicted from its own cave by a beaver holding company. You explain. The bear nods grimly and pays you in salmon and one shiny rock.",
+            "effects": [
+              "money +5",
+              "hp +2"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You misread 'eviction' as 'invitation.' The bear attends the beaver gala. It does not go well. The bear blames you, physically.",
+            "effects": [
+              "hp -5"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Back away slowly",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The bear watches you go, paper still upside down, somehow disappointed in the entire literate world.",
+            "effects": []
+          }
+        ]
+      },
+      {
+        "text": "Offer legal representation",
+        "check": {
+          "stat": "cha",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You win on a technicality: beavers can't notarize. The forest pays you in prestige and buried acorn-gold.",
+            "effects": [
+              "money +12",
+              "stat cha +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You lose to a beaver in a tiny waistcoat. The bear's look of betrayal will haunt you longer than the bruises.",
+            "effects": [
+              "hp -3",
+              "stat cha -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forest_definitely_safe_berries",
+    "locations": [
+      "forest",
+      "road"
+    ],
+    "text": "A bush of plump berries, beside a hand-painted sign: 'DEFINITELY SAFE BERRIES.' The paint is fresh. The handwriting is nervous.",
+    "choices": [
+      {
+        "text": "Eat a handful",
+        "check": {
+          "stat": "con",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Sweet, harmless, delightful. The sign was telling the truth, which is somehow the biggest twist of your day.",
+            "effects": [
+              "hp +4"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The sign lied. Your tongue goes numb and your shadow looks wrong for an hour.",
+            "effects": [
+              "hp -4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Eat exactly one berry, scientifically",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "One berry's worth of poison is just a tingle. One berry's worth of delicious is still delicious. Science wins again, in miniature.",
+            "effects": [
+              "hp +1",
+              "stat int +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Find whoever painted the sign",
+        "check": {
+          "stat": "wis",
+          "dc": 11
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You find a goblin with purple-stained hands and zero remorse. He bribes you with real, verified rations to keep quiet.",
+            "effects": [
+              "hp +3",
+              "money +3"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The trail leads in a circle back to the sign, which you'd swear now reads 'DEFINITELY SAFE BERRIES :)'.",
+            "effects": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forest_witch_hut",
+    "locations": [
+      "forest"
+    ],
+    "text": "A hut on impressively muscular chicken legs settles down in front of you, blocking the path with intent. A witch leans out. 'Well? I don't stop for just anyone. The hut liked you.'",
+    "choices": [
+      {
+        "text": "Pay for a proper healing",
+        "requires": {
+          "money": 6
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Herbs, chanting, a soup that tastes like being twelve again. You leave whole and smelling faintly of thyme.",
+            "effects": [
+              "money -6",
+              "hp +8"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask what the hut eats",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The witch and the hut exchange a look. 'Corn,' says the witch, in the exact tone of a lie. The hut licks its doorstep. You've learned something you can't unlearn.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Compliment the hut's legs",
+        "check": {
+          "stat": "cha",
+          "dc": 11
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The hut does a small, devastating curtsy. The witch, disarmed, gives you a jar of something restorative 'for the road, and because it flexed.'",
+            "effects": [
+              "item healing_potion"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The hut takes it wrong and does a warning stomp. The resulting mud wave is personal.",
+            "effects": [
+              "hp -2"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forest_mushroom_circle",
+    "locations": [
+      "forest"
+    ],
+    "text": "A perfect circle of mushrooms in a clearing. Every childhood story you know screams in unison. The circle smells like rain and bad decisions.",
+    "choices": [
+      {
+        "text": "Step inside",
+        "outcomes": [
+          {
+            "weight": 40,
+            "text": "The world hiccups. You are somewhere else in the forest, three hours older, holding a flower you don't remember picking. Fair trade.",
+            "effects": [
+              "hp +3"
+            ]
+          },
+          {
+            "weight": 35,
+            "text": "Applause from nowhere. Something appreciated your confidence and left a tip.",
+            "effects": [
+              "money +7"
+            ]
+          },
+          {
+            "weight": 25,
+            "text": "You are ejected from the circle by consensus. The bruise is shaped like disapproval.",
+            "effects": [
+              "hp -4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Leave an offering at the edge",
+        "requires": {
+          "money": 2
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The coins sink into the moss with a sound like a purr. Your path out of the forest is inexplicably shorter and all downhill.",
+            "effects": [
+              "money -2",
+              "hp +3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Harvest the mushrooms for stew",
+        "outcomes": [
+          {
+            "weight": 50,
+            "text": "You monster. Delicious, delicious monster. The forest disapproves; your stomach files a dissent.",
+            "effects": [
+              "item stew_jar",
+              "stat wis -1"
+            ]
+          },
+          {
+            "weight": 50,
+            "text": "The mushrooms scream. Softly, but they scream. You stop immediately and pretend it never happened. The forest pretends with you.",
+            "effects": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forest_scooter_wreck",
+    "locations": [
+      "forest"
+    ],
+    "weight": 7,
+    "text": "A goblin scooter lies crashed against a stump, wheels still spinning. Its rider is gone. A note pinned to the seat: 'BACK IN FIVE MINUTES. DO NOT TOUCH. -DEATHWHEEL THE UNSTOPPABLE'. The note is weathered by months of rain.",
+    "choices": [
+      {
+        "text": "Repair it and claim it",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Bent forks, loose chain, mysterious lever that does nothing. An hour's work. Deathwheel's loss is your commute.",
+            "effects": [
+              "item scooter"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The mysterious lever did something after all. The scooter, briefly, flies. Then teaches you why it shouldn't.",
+            "effects": [
+              "hp -4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Wait the five minutes, respectfully",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You wait ten, out of courtesy. Deathwheel does not return. Deathwheel has not returned for some time, the moss implies. You leave a small stone as a memorial and feel briefly, unaccountably noble.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Strip it for parts",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Chain, bell, one good wheel, and a saddlebag containing Deathwheel's emergency stash. The forest reclaims the rest.",
+            "effects": [
+              "money +7",
+              "item repair_kit"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forest_beehive",
+    "locations": [
+      "forest"
+    ],
+    "text": "A beehive the size of a wardrobe hums in the crook of an oak. The bees seem organized. Suspiciously organized. There are little guard rotations.",
+    "choices": [
+      {
+        "text": "Raid it for honeycomb",
+        "check": {
+          "stat": "dex",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "In, out, one sting as a processing fee. The comb is heavy and golden and worth every welt.",
+            "effects": [
+              "item honeycomb",
+              "hp -1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The guard rotation was for exactly this. The swarm escorts you a full quarter mile with prejudice.",
+            "effects": [
+              "hp -5"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Leave an offering of your rations",
+        "requires": {
+          "item": "rations"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The bees inspect the trade, confer, and approve. Comb is lowered to you on a strand of wax like a tiny crane delivery. Commerce.",
+            "effects": [
+              "removeitem rations",
+              "item honeycomb",
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Observe the tiny government",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "An hour of watching reveals shift changes, a dance-based bureaucracy, and what is unmistakably a customs checkpoint. You take notes. Scholars will call you mad. Scholars weren't here.",
+            "effects": [
+              "stat int +1"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "files": [
+    "cave.json",
+    "city.json",
+    "dungeon.json",
+    "finale.json",
+    "forest.json",
+    "road.json",
+    "special.json",
+    "tavern.json",
+    "afflictions.json"
+  ]
+}

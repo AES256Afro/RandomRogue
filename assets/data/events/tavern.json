@@ -1,0 +1,847 @@
+[
+  {
+    "id": "tavern_rumor",
+    "locations": [
+      "tavern"
+    ],
+    "weight": 14,
+    "slots": {
+      "rumor": "chronicle_random"
+    },
+    "text": "The talk of {site} tonight, delivered by a patron who swears they were there: \"{rumor}\"",
+    "choices": [
+      {
+        "text": "Drink it in. History is free",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You commit it to memory, slightly wrong, continuing a proud oral tradition.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Buy the teller another round",
+        "requires": {
+          "money": 2
+        },
+        "outcomes": [
+          {
+            "weight": 70,
+            "text": "Lubricated, they add details: names, dates, a startling amount of slander. Someone slips you a coin for the entertainment.",
+            "effects": [
+              "money +1"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "The second round undoes them entirely. The story dissolves into weeping about a goose. You'll never know the ending.",
+            "effects": [
+              "money -2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Loudly declare it never happened",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "The tavern turns on you. Historical revisionism is a bar-fight offense here.",
+            "effects": [
+              "hp -2"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "An actual historian in the corner backs you up, citing sources. The teller buys YOU a drink out of shame.",
+            "effects": [
+              "hp +1",
+              "stat int +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tavern_fizzing_drink",
+    "locations": [
+      "tavern"
+    ],
+    "text": "A hooded figure at {site} slides you a drink. It is fizzing. Drinks here don't fizz.",
+    "choices": [
+      {
+        "text": "Drink it",
+        "outcomes": [
+          {
+            "weight": 55,
+            "text": "It's just soda. From space, apparently. Weirdly invigorating.",
+            "effects": [
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "Poison. Classic. You spend an hour befriending the floor.",
+            "effects": [
+              "hp -5"
+            ]
+          },
+          {
+            "weight": 15,
+            "text": "You can now taste colors. Purple is the worst one.",
+            "effects": [
+              "stat int +1",
+              "stat cha -1",
+              "trait +glowing"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Make them drink it first",
+        "requires": {
+          "stat": "cha",
+          "gte": 12
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "They vanish in a puff of embarrassment, leaving their coin purse.",
+            "effects": [
+              "money +12"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Leave immediately",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Coward. Effective, living coward.",
+            "effects": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tavern_arm_wrestle",
+    "locations": [
+      "tavern"
+    ],
+    "text": "A stone golem sits at the corner table of {site}, arm up, palm open. The chalkboard reads: 'BEAT GRUNDLE. WIN 20 GOLD. NO REFUNDS ON BONES.'",
+    "choices": [
+      {
+        "text": "Wrestle the golem",
+        "check": {
+          "stat": "str",
+          "dc": 15
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Grundle's arm hits the table with a sound like a landslide. The bar goes silent, then erupts. Grundle nods, respectfully.",
+            "effects": [
+              "money +20"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 70,
+            "text": "Your arm makes a noise arms should not make.",
+            "effects": [
+              "hp -4"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "You lose instantly, but with such style that someone buys you dinner.",
+            "effects": [
+              "hp -1",
+              "money +2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Bet on the next challenger instead",
+        "requires": {
+          "money": 5
+        },
+        "outcomes": [
+          {
+            "weight": 50,
+            "text": "The blacksmith beats Grundle on a technicality. Your bet pays out.",
+            "effects": [
+              "money +8"
+            ]
+          },
+          {
+            "weight": 50,
+            "text": "Grundle wins. Grundle always wins. The chalkboard was a warning, not a challenge.",
+            "effects": [
+              "money -5"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Buy Grundle a drink",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Golems don't drink. Grundle holds the mug anyway, touched. You've made a very heavy friend.",
+            "effects": [
+              "stat cha +1",
+              "money -2"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tavern_mystery_stew",
+    "locations": [
+      "tavern"
+    ],
+    "text": "Tonight's special at {site} is 'Stew.' No further details. The bowl is looking at you.",
+    "choices": [
+      {
+        "text": "Eat the stew",
+        "check": {
+          "stat": "con",
+          "dc": 11
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Delicious, restorative, and only mildly sentient. You feel great and vaguely guilty.",
+            "effects": [
+              "hp +5"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The stew wins. You spend the night negotiating with your own stomach.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask what's in it",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "The cook stares at you for a long time. 'Stew,' they say. You decide not to eat the stew. Wise.",
+            "effects": []
+          },
+          {
+            "weight": 40,
+            "text": "The cook is so impressed someone finally asked that dinner is free.",
+            "effects": [
+              "hp +3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Order bread instead",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The bread is fine. The bread is always fine. Boring, but fine.",
+            "effects": [
+              "hp +1",
+              "money -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tavern_bard_ballad",
+    "locations": [
+      "tavern"
+    ],
+    "text": "A bard at {site} is singing a ballad about your life. The facts are wrong, the rhymes are worse, and the crowd loves it.",
+    "choices": [
+      {
+        "text": "Own it. Take a bow",
+        "check": {
+          "stat": "cha",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You bow. The crowd roars. Hats fill with coins, and one of the hats is yours.",
+            "effects": [
+              "money +10",
+              "trait +famous"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You bow. A chair leg is thrown. History will remember the ballad, not the truth.",
+            "effects": [
+              "hp -2",
+              "stat cha -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Correct the bard's facts, loudly",
+        "outcomes": [
+          {
+            "weight": 50,
+            "text": "The bard incorporates your corrections into a new, crueler verse. It's catchy.",
+            "effects": [
+              "stat cha -1"
+            ]
+          },
+          {
+            "weight": 50,
+            "text": "The bard hires you as a fact-checker on the spot. Easiest coin you've ever made.",
+            "effects": [
+              "money +6"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Slip out the back",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You escape. Behind you, the ballad gains a verse about your mysterious vanishing. Cool points, technically.",
+            "effects": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tavern_tab_dispute",
+    "locations": [
+      "tavern"
+    ],
+    "text": "The barkeep of {site} slides you a tab as long as your arm. You ordered one drink. One item reads 'ambiance: 6 gold.'",
+    "choices": [
+      {
+        "text": "Dispute the ambiance charge",
+        "check": {
+          "stat": "cha",
+          "dc": 11
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You argue the ambiance was, at best, adequate. The barkeep, a professional, respects the negotiation and comps everything but the drink.",
+            "effects": [
+              "money -2"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The barkeep adds a 'dispute processing fee.' You pay it out of exhausted admiration.",
+            "effects": [
+              "money -9"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Pay it all like royalty",
+        "requires": {
+          "money": 12
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You pay in full with a flourish. Word spreads. By sundown, three taverns claim you drank there, and one has named a sandwich after you.",
+            "effects": [
+              "money -12",
+              "stat cha +2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Dine and dash",
+        "check": {
+          "stat": "dex",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Out the window, over the fence, gone. Somewhere behind you the tab flutters to the floor like a defeated bird.",
+            "effects": []
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The bouncer catches you by the collar mid-leap. The tab now includes 'window: 4 gold' and your dignity.",
+            "effects": [
+              "money -13",
+              "hp -2",
+              "trait +banned"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tavern_cartographer",
+    "locations": [
+      "tavern"
+    ],
+    "weight": 8,
+    "text": "A cartographer slumps at the bar of {site}, surrounded by rolled maps and empty mugs. 'Treasure maps,' she says. 'Real ones. Eight gold. The fakes are eleven; better paper.'",
+    "choices": [
+      {
+        "text": "Buy a real one",
+        "requires": {
+          "money": 8
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "She picks one seemingly at random, kisses it for luck, and hands it over with the solemnity of a state funeral.",
+            "effects": [
+              "money -8",
+              "item treasure_map"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Haggle her down",
+        "check": {
+          "stat": "cha",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Five gold and you have to listen to the story of her divorce. Worth it. Mostly.",
+            "effects": [
+              "money -5",
+              "item treasure_map"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "She counter-haggles UP, citing 'emotional labor.' You pay nine before you understand what happened.",
+            "effects": [
+              "money -9",
+              "item treasure_map"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask why the fakes cost more",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "'People trust expensive lies.' She taps her temple. You leave wiser and she orders another round on the strength of the lesson.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tavern_living_legend",
+    "locations": [
+      "tavern"
+    ],
+    "weight": 9,
+    "slots": {
+      "npc": "figure_alive"
+    },
+    "text": "The corner table of {site} has gone quiet. That's {npc} - THE {npc}, {npc_trait} {npc_prof} of {npc_faction} - nursing a drink and a reputation.",
+    "choices": [
+      {
+        "text": "Buy them a drink and ask for the true story",
+        "requires": {
+          "money": 3
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "npc robbed"
+            ],
+            "text": "They accept the drink, sip it, and say without looking up: 'Light purse tonight? Funny thing - mine was light once too. Same night I met you.' The room goes quiet. The exit seems very far away.",
+            "effects": [
+              "hp -3",
+              "money -6",
+              "rep -4"
+            ]
+          },
+          {
+            "weight": 60,
+            "text": "Two drinks in, the truth comes out: it was luck, mostly, and the ballads left out the running away. You feel better about your own odds.",
+            "effects": [
+              "money -3",
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "They tell the story with full theatrical staging, using your drink as a prop. It's spent by the end. So are you. Magnificent.",
+            "effects": [
+              "money -3",
+              "stat cha +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Challenge them to arm wrestling",
+        "check": {
+          "stat": "str",
+          "dc": 14
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You win. The tavern loses its mind. {npc} buys the room a round and announces your name like a herald. This will be a ballad.",
+            "effects": [
+              "money +6",
+              "stat cha +1",
+              "rep +5"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "Your arm is a footnote in their legend now. They're gracious about it, which is worse.",
+            "effects": [
+              "hp -2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Pick their pocket. Legends carry legendary coin",
+        "check": {
+          "stat": "dex",
+          "dc": 15
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You lift a purse heavy with story-money. You will never tell anyone how easy it was, because no one would believe you.",
+            "effects": [
+              "money +14",
+              "rep -5",
+              "npc_mark robbed"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "They catch your wrist without turning around. '{npc_trait},' they say, as if reading your file. The bouncer provides the rest of the lesson.",
+            "effects": [
+              "hp -4",
+              "money -5",
+              "rep -8"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tavern_descendant",
+    "locations": [
+      "tavern"
+    ],
+    "weight": 8,
+    "slots": {
+      "gone": "figure_dead"
+    },
+    "text": "A stranger at {site} is holding a portrait and a grudge. 'My grandparent, {gone}. Died in year {gone_year}. And do you know what the histories call it? A FOOTNOTE.'",
+    "choices": [
+      {
+        "text": "Offer sincere condolences",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You listen to the whole family history. All of it. The stranger, unburdened, pays for your dinner and calls you 'the only decent soul left.'",
+            "effects": [
+              "hp +3",
+              "rep +4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Claim you've heard great things about {gone}",
+        "check": {
+          "stat": "cha",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You improvise three flattering anecdotes on the spot. The stranger weeps, then insists on giving you a family heirloom over your polite objections.",
+            "effects": [
+              "loot fine",
+              "rep +3"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You get the year wrong, the deeds wrong, and, impressively, the name wrong, mid-sentence. The portrait gets involved. Frames hurt.",
+            "effects": [
+              "hp -3",
+              "rep -4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Point out that footnotes are still history",
+        "outcomes": [
+          {
+            "weight": 50,
+            "text": "The stranger blinks. 'Footnotes... are still history.' A tension generations deep dissolves over one round of drinks, which they buy.",
+            "effects": [
+              "stat wis +1",
+              "hp +1"
+            ]
+          },
+          {
+            "weight": 50,
+            "text": "Wrong crowd for nuance. You wear the drink they bought.",
+            "effects": [
+              "stat cha -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tavern_dice_game",
+    "locations": [
+      "tavern"
+    ],
+    "text": "A dice game in the back of {site}. The stakes are five gold, the dice are 'house dice,' and the dealer's smile has too many teeth in it.",
+    "choices": [
+      {
+        "text": "Play it straight",
+        "requires": {
+          "money": 5
+        },
+        "outcomes": [
+          {
+            "weight": 45,
+            "text": "The dice like you tonight. The dealer's smile loses a tooth of confidence.",
+            "effects": [
+              "money +8"
+            ]
+          },
+          {
+            "weight": 55,
+            "text": "The house dice do house things. You watch your coins join their family behind the counter.",
+            "effects": [
+              "money -5"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Cheat better than they do",
+        "check": {
+          "stat": "dex",
+          "dc": 14
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Your palm is quicker than their loaded pips. You win with THEIR crooked dice, which every code of honor agrees is beautiful.",
+            "effects": [
+              "money +12"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "Caught. The house takes your stake plus a 'cheater's tithe,' and everyone gets to watch.",
+            "effects": [
+              "money -9",
+              "rep -4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Just watch and learn",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You clock the loaded dice, the sleeve, and the mirror in the lamp. An education, free of charge.",
+            "effects": [
+              "stat int +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tavern_karaoke_bard",
+    "locations": [
+      "tavern"
+    ],
+    "text": "It's open-verse night at {site}. The bard's lute is passed from table to table like a dare. It is now in front of you. The room waits.",
+    "choices": [
+      {
+        "text": "Perform your heart out",
+        "check": {
+          "stat": "cha",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You bring the house down with a ballad about a goblin toll collector and his rock. Coins rain. The barkeep declares your tab 'historical fiction.'",
+            "effects": [
+              "money +9",
+              "stat cha +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You forget the words to a song you invented on the spot. The silence has texture. The lute is gently confiscated.",
+            "effects": [
+              "stat cha -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Play something instrumental. No words, no risk",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Wordless and haunting. Nobody can mock lyrics that don't exist. A tactician's performance, modestly tipped.",
+            "effects": [
+              "money +3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Pass the lute and buy the next performer a drink",
+        "requires": {
+          "money": 2
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The next performer, emboldened by your drink, is magnificent. You are remembered as part of the story. Adjacent glory still counts.",
+            "effects": [
+              "money -2",
+              "hp +2"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tavern_mystery_keg",
+    "locations": [
+      "tavern"
+    ],
+    "text": "Behind the bar of {site}, a keg is chained shut. Not locked. CHAINED. The barkeep follows your gaze. 'House special. Waiver's under the till.'",
+    "choices": [
+      {
+        "text": "Sign the waiver. Drink the special",
+        "check": {
+          "stat": "con",
+          "dc": 14
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "It tastes like lightning that's been through something. You remain standing. The bar applauds. The barkeep frames the waiver, unneeded.",
+            "effects": [
+              "hp +3",
+              "stat con +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You wake up two hours later under a table you don't recognize, holding a certificate that says 'PARTICIPANT.'",
+            "effects": [
+              "hp -5"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Read the waiver first",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Clause four covers 'temporary translucency.' Clause nine is written in a language that hurts. You learn everything you need to know without drinking anything.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask what's in it",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The barkeep leans in: 'The last three people who asked are the reason for the chain.' You order water. The water is excellent.",
+            "effects": [
+              "hp +1"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
