@@ -247,3 +247,33 @@ Everything at once, per the brief:
 - **Music stingers** - a dirge at the gate, a fanfare for slain beasts.
 
 Deferred: naval arc, Steam packaging.
+
+---
+
+## Release 4 (shipped) - The Online World
+
+Backed by Cloudflare D1 (database "random-rogue", table `deaths`), bound
+to the same worker as the KV site. Endpoints: POST /__score,
+GET /__scores?day=N, GET /__ghosts?day=N&n=3.
+
+- **Shared graveyard** - daily-world deaths carry name, epitaph, death
+  site, and relics to D1; other players' runs inject up to three
+  strangers as fresh graves (`stranger_here` events), figures, and
+  findable relics. No gap years simulated, so every player's daily
+  world stays the same age.
+- **Rival wanderer** - every world generates one more adventurer
+  (deterministic per seed+generation). The daily tick advances them:
+  they can slay YOUR bounty beast first, close contracts, win duels,
+  and occasionally die on the road. Meet them in taverns
+  (`rival_meeting`) or find their chalk taunts in dungeons.
+- **Predecessor ghosts** - stand where a previous life of yours died
+  (`ghost_here`) and they appear: cause of death, relic hints, or the
+  rarest thing - hearing how the story continued.
+- **Vendetta chains** - unsettled `robbed` marks (persisted per world)
+  spawn kin who hunt you across runs; pay, talk, or take the swing.
+  `npc_unmark` retires the grudge.
+- **The old tongue** - profile-persisted lexicon (`learn` verb, books
+  teach 2 words, study circles more). Artifacts carry script that
+  becomes readable when you know enough words.
+- **Death card PNG** - SAVE CARD on the death screen exports a 3x PNG
+  (browser download / next to the exe). F11 screenshots any screen.

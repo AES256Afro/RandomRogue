@@ -34,7 +34,8 @@ export default {
       return Response.json(out);
     }
     
-    // Daily leaderboard: the fallen of world <day>.
+    // Daily leaderboard + shared graveyard (D1 binding DB,
+    // database "random-rogue" id 6c93123a-db1e-497c-93c3-718a6b5a9f91).
     if (p === "__score" && req.method === "POST") {
       let body;
       try { body = await req.json(); } catch (e) { return new Response("bad", { status: 400, headers: CORS }); }
@@ -42,21 +43,37 @@ export default {
       const today = Math.floor(Date.now() / 86400000);
       if (!day || Math.abs(day - today) > 1) return new Response("stale", { status: 400, headers: CORS });
       const name = String(body.name || "anonymous").slice(0, 48);
+      const meaning = String(body.meaning || "").slice(0, 64);
       const days = Math.max(0, Math.min(999, parseInt(body.days) || 0));
       const epitaph = String(body.epitaph || "").slice(0, 120);
-      const key = "scores/" + day;
-      let list = [];
-      try { list = JSON.parse((await env.SITE.get(key)) || "[]"); } catch (e) {}
-      list.push({ name, days, epitaph });
-      list.sort((a, b) => b.days - a.days);
-      list = list.slice(0, 25);
-      await env.SITE.put(key, JSON.stringify(list), { expirationTtl: 259200 });
+      const site = String(body.site || "").slice(0, 64);
+      const finished = body.finished ? 1 : 0;
+      let relics = "[]";
+      try {
+        const r = Array.isArray(body.relics) ? body.relics.slice(0, 2) : [];
+        relics = JSON.stringify(r.map(x => ({ name: String(x.name || "").slice(0, 48), quirk: String(x.quirk || "").slice(0, 120) })));
+      } catch (e) {}
+      await env.DB.prepare(
+        "INSERT INTO deaths (day, name, meaning, days, epitaph, site, relics, finished) VALUES (?,?,?,?,?,?,?,?)"
+      ).bind(day, name, meaning, days, epitaph, site, relics, finished).run();
       return new Response("ok", { headers: CORS });
     }
     if (p === "__scores") {
       const day = parseInt(url.searchParams.get("day")) || Math.floor(Date.now() / 86400000);
-      const list = (await env.SITE.get("scores/" + day)) || "[]";
-      return new Response(list, { headers: Object.assign({ "content-type": "application/json" }, CORS) });
+      const rs = await env.DB.prepare(
+        "SELECT name, days, epitaph FROM deaths WHERE day = ? ORDER BY days DESC, ts ASC LIMIT 25"
+      ).bind(day).all();
+      return new Response(JSON.stringify(rs.results || []), { headers: Object.assign({ "content-type": "application/json" }, CORS) });
+    }
+    // Strangers fallen in this daily world: ghosts for other players.
+    if (p === "__ghosts") {
+      const day = parseInt(url.searchParams.get("day")) || Math.floor(Date.now() / 86400000);
+      const n = Math.max(1, Math.min(5, parseInt(url.searchParams.get("n")) || 3));
+      const not = String(url.searchParams.get("not") || "");
+      const rs = await env.DB.prepare(
+        "SELECT name, meaning, days, epitaph, site, relics FROM deaths WHERE day = ? AND name != ? ORDER BY RANDOM() LIMIT ?"
+      ).bind(day, not, n).all();
+      return new Response(JSON.stringify(rs.results || []), { headers: Object.assign({ "content-type": "application/json" }, CORS) });
     }
 if (p === "") p = "index.html";
     if (p === "play" || p === "play/") p = "play/index.html";

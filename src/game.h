@@ -24,6 +24,12 @@ public:
     void frame(Vector2 mouse, bool pressed);
     // Pixels of screen shake main.cpp should apply to the canvas blit.
     float shakeAmount() const { return shake_ > 0.0f ? shake_ : 0.0f; }
+    // Death-card export: true once when the player asked for a PNG this frame.
+    bool consumeCardRequest() {
+        bool r = cardRequested_;
+        cardRequested_ = false;
+        return r;
+    }
 
 private:
     enum Screen { TITLE, CLASSPICK, AMBITION, TRAVEL, EVENT, OUTCOME, DEATH,
@@ -57,6 +63,7 @@ private:
     };
     std::vector<StartClass> startClasses() const;
     void injectLegacy(int classIdx); // dead PCs -> figures, items -> relics
+    void injectStrangers(const std::string& json); // other players' fallen (R4)
     void dailyTick();                // the living world advances one day
 
     void newRun(int classIdx);
@@ -195,6 +202,24 @@ private:
     std::string scoresJson_;     // today's fallen (web leaderboard)
     bool scoresRequested_ = false;
     bool scoreSubmitted_ = false;
+
+    // R4: the online graveyard, the rival, the tongue you're learning.
+    struct Stranger { // another player's death, walked into this world
+        int figure = -1; // injected figure index
+        std::string name, epitaph;
+        int days = 0, site = -1;
+    };
+    std::vector<Stranger> strangers_;
+    std::string ghostsRaw_; // the JSON we injected, kept for the autosave
+    bool ghostsRequested_ = false;
+    bool suppressStrangers_ = false; // loadRun re-injects from the save instead
+    struct Rival { // the other wanderer this world generated
+        std::string name, meaning;
+        bool alive = true;
+        int deeds = 0;
+    };
+    Rival rival_;
+    bool cardRequested_ = false; // death-card PNG wanted (handled by main.cpp)
 
     // audio / juice / meta
     AudioBank audio_;

@@ -11,6 +11,7 @@ struct Profile {
     int booksRead = 0;
     int ambitionsDone = 0;
     int livesCompleted = 0;
+    int wordsLearned = 0; // lexicon of the old tongue, kept across runs (R4)
 
     std::string toJson() const;
     static Profile fromJson(const std::string& text);

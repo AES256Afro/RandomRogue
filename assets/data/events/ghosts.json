@@ -1,0 +1,148 @@
+[
+  {
+    "id": "stranger_grave",
+    "locations": ["city", "tavern", "cave", "dungeon", "forest", "road"],
+    "weight": 26,
+    "slots": { "fallen": "stranger_here" },
+    "text": "A fresh grave, right here, where no grave was this morning. The stone is already cut, which nobody can explain: {fallen}. {fallen_days} days on the road, it says. Below that, smaller: \"{fallen_epitaph}\" You did not know them. Somehow the grave knows you're the type to stop.",
+    "choices": [
+      { "text": "Pay your respects properly",
+        "outcomes": [
+          { "weight": 100, "text": "You clean the stone, straighten the earth, and say the traveler's words - the ones for strangers who died doing what you're currently doing. The wind holds still for exactly the length of the prayer. Somewhere, in some other world, someone's run just went a little luckier.", "effects": ["stat wis +1", "rep +2"] }
+        ] },
+      { "text": "Study how they died", "check": { "stat": "int", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "The grave-signs read like a report: what they carried, which direction they came from, what got them in the end. You adjust three of your own plans on the spot. The dead make excellent instructors; the tuition is theirs.", "effects": ["stat int +1", "stat wis +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You disturb the earth reading it and something under the soil takes hold of your ankle - a root. Probably a root. You leave at a speed that dishonors the dead slightly.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Leave a coin for the next one",
+        "outcomes": [
+          { "weight": 100, "text": "One coin on the stone, the old custom: paying forward the toll you'll owe someday. The coin settles with a sound far heavier than its weight. You walk on lighter than you arrived.", "effects": ["money -1", "trait +blessed"] }
+        ] }
+    ]
+  },
+  {
+    "id": "ghost_predecessor",
+    "locations": ["city", "tavern", "cave", "dungeon", "forest", "road"],
+    "weight": 30,
+    "slots": { "ghost": "ghost_here" },
+    "text": "The air goes cold in a shape you recognize. {ghost} - \"{ghost_meaning}\" - stands where they fell, {ghost_days} days into a life that ended HERE, on this exact ground. They look at you the way you'd look at a younger sibling wearing your old coat. 'Oh,' says your predecessor. 'It's you. It's always you, isn't it.'",
+    "choices": [
+      { "text": "Ask what killed them",
+        "outcomes": [
+          { "weight": 100, "text": "They tell you. All of it - the mistake before the mistake, the warning they ignored, the exact moment it was already too late. The dead are honest the way the living never manage. You will not die the way they died. (You'll find your own way.)", "effects": ["stat wis +2"] }
+        ] },
+      { "text": "Ask where their things went",
+        "outcomes": [
+          { "weight": 100, "text": "'{ghost_relic},' they say at once, the grip of it still ghosted into their hand. 'Someone carried it off - it rests in a collection now, somewhere in this world. It misses being used.' They describe the road to it while the light lasts. Family heirlooms should stay in the family.", "effects": ["stat int +1", "money +5"] }
+        ] },
+      { "text": "Tell them how the story continued",
+        "outcomes": [
+          { "weight": 100, "text": "You tell them everything since: the epitaph, who read it, what the taverns sing. They listen the whole way through, and at the end they do the thing the dead almost never get to do - they laugh. 'Good,' they say, going thin as morning. 'Make mine a footnote.' The cold lifts like a blessing, because it is one.", "effects": ["hp +3", "stat cha +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "rival_meeting",
+    "locations": ["tavern", "city"],
+    "weight": 16,
+    "slots": { "rival": "rival" },
+    "text": "There is one other person in this world doing what you do, and they are sitting at your favorite table drinking what you were about to order. {rival} \"{rival_meaning}\" - {rival_deeds} notable deeds and counting, if you believe the criers, and they clearly do. They raise the mug a courteous inch. 'The famous one arrives. I've been keeping your seat warm. And your bounties. And your reputation.'",
+    "choices": [
+      { "text": "Drink with them",
+        "outcomes": [
+          { "weight": 100, "text": "Two professionals, one table, and the only conversation in the world where nothing has to be explained. You trade routes, near-deaths, and the name of a fence neither of you will admit to using. It's the best evening you've had in weeks, and you'll both deny it forever.", "effects": ["money -3", "hp +3", "stat cha +1"] }
+        ] },
+      { "text": "Propose a wager: most gold by season's end", "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "They take the bet before you finish the terms, eyes bright. Stakes are shaken on in front of witnesses. You have never felt so motivated in your life, and judging by how fast they leave, neither have they.", "effects": ["stat cha +1", "money +5"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "'A wager? With YOUR ledger?' They say it fondly, which is worse, and buy your drink, which is unbearable. The whole tavern hears. The ballad has a new comic verse by closing.", "effects": ["rep -2"] }
+        ] },
+      { "text": "Settle who's better. Outside",
+        "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "First blood, cleanly yours, in front of a crowd that materialized from nowhere the way crowds do. They salute with the wounded arm - expensive gesture, respect intended - and limp off to be a legend somewhere you aren't. The story travels fast, wearing your name.", "effects": ["trait +famous", "rep +4", "stat dex +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "They are, it turns out, exactly as good as the criers say. You lose in four moves, the last of which will be taught in fencing schools. They help you up, which is the deepest cut of the night.", "effects": ["hp -4", "rep -2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "rival_at_the_door",
+    "locations": ["dungeon", "cave"],
+    "weight": 14,
+    "slots": { "rival": "rival" },
+    "text": "Fresh torch-stubs. Bootprints your size, but more confident. Halfway down the entry hall, chalked on the wall in a tidy professional hand: '{rival} WAS HERE FIRST. Left you the small chest out of pity. - R.' The nerve of it echoes.",
+    "choices": [
+      { "text": "Take the small chest with dignity",
+        "outcomes": [
+          { "weight": 100, "text": "It contains a modest sum and a note: 'See? Growth.' You pocket both. Dignity is a currency too, and today you can't afford it.", "effects": ["money +7"] }
+        ] },
+      { "text": "Find what they missed", "check": { "stat": "wis", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Confidence skips corners. Behind a panel their torchlight breezed past: the ACTUAL cache. You chalk a reply under their message - 'Left you the lesson out of pity' - and leave heavier than they did.", "effects": ["loot fine", "money +9", "stat wis +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "What they missed, it turns out, is the tripwire, and they missed it on purpose. The note under the rubble says 'Also left you that.' You lie in the dust admiring the craft of it.", "effects": ["hp -5"] }
+        ] },
+      { "text": "Erase their name from the wall",
+        "outcomes": [
+          { "weight": 60, "text": "Petty? Enormously. Satisfying? Completely. You improve the chalk record so history remembers this delve correctly. Historians deserve accuracy.", "effects": ["stat cha +1"] },
+          { "weight": 40, "text": "The chalk is some alchemical nonsense that will not smudge. You spend twenty minutes scrubbing a wall in a dungeon, which is, you realize slowly, the single least dignified thing you have ever done. The wall wins.", "effects": ["hp -1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "vendetta_shadow",
+    "locations": ["city", "tavern", "road"],
+    "weight": 28,
+    "slots": { "foe": "wronged_figure" },
+    "text": "Someone has been three steps behind you since the gate, and they want you to know it. Young, road-worn, and holding a grudge with both hands: kin of {foe}, the {foe_prof} - robbed once, remembered always. Maybe by you. Maybe by whoever wore your name before you. The family doesn't care about the distinction. 'The debt outlived the debtor,' they say. 'Convenient for the debt.'",
+    "choices": [
+      { "text": "Pay the family's price", "requires": { "money": 12 },
+        "outcomes": [
+          { "weight": 100, "text": "Twelve gold, counted into their palm coin by coin while they watch your face the whole time. It was never about the amount. When it's done, something old and cold in the air between your two families finally exhales. 'Settled,' they say, and mean it, and the word is worth more than the gold.", "effects": ["money -12", "npc_unmark robbed", "rep +5", "stat wis +1"] }
+        ] },
+      { "text": "Convince them the grudge is misfiled", "check": { "stat": "cha", "dc": 14 },
+        "success": [
+          { "weight": 100, "text": "You walk them through it: the years, the faces, the fact that the original thief is in the Chronicle and the Chronicle keeps better records than grief does. Slowly, the grip on the grudge loosens. 'The stone said otherwise,' they mutter, but they buy you a drink, which is how their family signs treaties.", "effects": ["npc_unmark robbed", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You get one name wrong. ONE. The grudge doubles on the spot with interest, and the whole tavern is now aware there's a bounty on your peace of mind. They'll be back, with cousins.", "effects": ["rep -4", "hp -2"] }
+        ] },
+      { "text": "Let them take their swing",
+        "outcomes": [
+          { "weight": 70, "text": "You put your hands down and let the kid have the moment their family raised them for. It costs you a magnificent bruise and it costs them everything they had planned to feel afterward, which turns out to be nothing. 'That's it?' they say, staring at their fist. That's it. The debt dies of anticlimax.", "effects": ["hp -4", "npc_unmark robbed", "rep +3"] },
+          { "weight": 30, "text": "The kid can HIT. You wake up minus your purse-weight in 'restitution' and plus one grudging respect. The mark stands, but softened - the next one who comes will talk first.", "effects": ["hp -6", "money -6"] }
+        ] }
+    ]
+  },
+  {
+    "id": "study_circle",
+    "locations": ["city", "tavern"],
+    "weight": 12,
+    "text": "In the back room, a circle of lamplit faces around a single battered primer: the old tongue, taught by a retired scribe at a copper a session. 'The words are all around you,' she's saying as you look in. 'On the blades, on the stones, on everything worth anything. You just haven't been introduced.'",
+    "choices": [
+      { "text": "Pay for a session", "requires": { "money": 2 },
+        "outcomes": [
+          { "weight": 100, "text": "An evening of syllables and burnt lamp-oil. The scribe drills you until three new words stop being sounds and become MEANINGS - and on the walk home, a sign you've passed a dozen times quietly introduces itself.", "effects": ["money -2", "learn 3"] }
+        ] },
+      { "text": "Trade a traveler's tale for tuition", "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Your story is worth two coppers of anyone's evening, and the scribe pays in the only currency she deals in: words. Five of them, old and load-bearing, the kind carved into things that outlast kingdoms.", "effects": ["learn 5", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You lose the room in the second act. The scribe, kindly and devastatingly, teaches you one word for free: the old tongue's term for a story that goes on too long. You will never forget it. That's one.", "effects": ["learn 1"] }
+        ] },
+      { "text": "The tongue can stay old",
+        "outcomes": [
+          { "weight": 100, "text": "Some people read the blade; you prefer to swing it. You leave the circle to their syllables. Behind you, quietly, the whole room says a word in unison that you choose to believe was not about you.", "effects": [] }
+        ] }
+    ]
+  }
+]

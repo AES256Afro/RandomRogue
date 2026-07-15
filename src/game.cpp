@@ -25,6 +25,16 @@ EM_JS(char*, rr_get_scores, (), {
 EM_JS(void, rr_copy_text, (const char* text), {
     try { navigator.clipboard.writeText(UTF8ToString(text)); } catch (e) {}
 });
+EM_JS(void, rr_fetch_ghosts, (int day, const char* notName), {
+    try { fetch('/__ghosts?day=' + day + '&n=3&not=' + encodeURIComponent(UTF8ToString(notName))).then(function(r){ return r.text(); }).then(function(t){ window.__rrGhosts = t; }).catch(function(){ window.__rrGhosts = "[]"; }); } catch (e) { window.__rrGhosts = "[]"; }
+});
+EM_JS(char*, rr_get_ghosts, (), {
+    var s = window.__rrGhosts || "";
+    var len = lengthBytesUTF8(s) + 1;
+    var buf = _malloc(len);
+    stringToUTF8(s, buf, len);
+    return buf;
+});
 #endif
 
 namespace {
@@ -325,7 +335,10 @@ void Game::saveRun() {
                   {"pb", comp_.packBonus}, {"active", comp_.active}}},
         {"finales", finalesSeen_}, {"books", booksThisRun_},
         {"cdone", contractsDone_}, {"wars", wars},
-        {"plague", history_.plaguedRegions}};
+        {"plague", history_.plaguedRegions},
+        {"rival", {{"name", rival_.name}, {"meaning", rival_.meaning},
+                   {"alive", rival_.alive}, {"deeds", rival_.deeds}}},
+        {"ghosts", ghostsRaw_}};
     SaveRawRun(j.dump());
 }
 
@@ -345,7 +358,21 @@ bool Game::loadRun() {
         ambition_.name = kAmbitions[ambition_.id].name;
         ambition_.desc = kAmbitions[ambition_.id].desc;
     }
+    suppressStrangers_ = true; // the save knows its own ghosts
     newRun(0);
+    suppressStrangers_ = false;
+    std::string gj = j.value("ghosts", std::string());
+    if (!gj.empty()) {
+        injectStrangers(gj);
+        ghostsRaw_ = gj;
+    }
+    if (j.contains("rival")) {
+        auto& r = j["rival"];
+        rival_.name = r.value("name", rival_.name);
+        rival_.meaning = r.value("meaning", rival_.meaning);
+        rival_.alive = r.value("alive", true);
+        rival_.deeds = r.value("deeds", 0);
+    }
     // Now overlay the saved life onto the fresh world.
     ch_.name.conlang = j.value("name", ch_.name.conlang);
     ch_.name.meaning = j.value("meaning", ch_.name.meaning);
@@ -631,6 +658,69 @@ void Game::injectLegacy(int classIdx) {
     history_.liveStartId = (int)history_.chron.size();
 }
 
+// Other players' fallen, walked into this daily world as fresh graves (R4).
+// No gap years are simulated: everyone's daily world must stay the same age
+// no matter how many ghosts their browser happened to fetch.
+void Game::injectStrangers(const std::string& json) {
+    strangers_.clear();
+    nlohmann::json list = nlohmann::json::parse(json, nullptr, false);
+    if (list.is_discarded() || !list.is_array()) return;
+    int n = 0;
+    for (auto& g : list) {
+        if (n >= 3) break;
+        Stranger s;
+        s.name = g.value("name", "");
+        s.epitaph = g.value("epitaph", "");
+        s.days = g.value("days", 0);
+        if (s.name.empty()) continue;
+        Rng inj(masterSeed_ + 977ULL * (n + 1), 99);
+        Figure f;
+        f.name = s.name;
+        f.faction = history_.factions.empty() ? 0 : inj.range(0, (int)history_.factions.size() - 1);
+        f.trait = "ill-fated";
+        f.profession = "wanderer";
+        f.born = history_.presentYear - inj.range(19, 40);
+        f.died = history_.presentYear; // they fell in this very world, today
+        history_.figures.push_back(f);
+        s.figure = (int)history_.figures.size() - 1;
+
+        std::string deathSite = g.value("site", "");
+        s.site = inj.range(0, (int)world_.sites.size() - 1);
+        for (int i = 0; i < (int)world_.sites.size(); i++)
+            if (world_.sites[i].name == deathSite) s.site = i;
+
+        ChronEntry death;
+        death.id = (int)history_.chron.size();
+        death.year = history_.presentYear;
+        death.type = "pc_died";
+        death.actor = s.figure;
+        death.site = s.site;
+        death.extra = s.epitaph;
+        history_.chron.push_back(death);
+
+        // Their relics rest where they fell, name attached, quirk intact.
+        nlohmann::json relics = nlohmann::json::parse(
+            g.value("relics", std::string("[]")), nullptr, false);
+        if (!relics.is_discarded() && relics.is_array()) {
+            int rn = 0;
+            for (auto& r : relics) {
+                if (rn++ >= 2) break;
+                HArtifact a;
+                a.conlang = r.value("name", "");
+                if (a.conlang.empty()) continue;
+                a.meaning = "";
+                a.material = "someone else's story";
+                a.forgedBy = s.figure;
+                a.forgedYear = history_.presentYear;
+                a.restingSite = s.site;
+                history_.artifacts.push_back(a);
+            }
+        }
+        strangers_.push_back(s);
+        n++;
+    }
+}
+
 void Game::newRun(int classIdx) {
     masterSeed_ = nextSeed_;
     runCounter_++;
@@ -732,6 +822,28 @@ void Game::newRun(int classIdx) {
     }
     if (classIdx == 5 && !pendingLegacy_.empty() && pendingLegacy_.back().blessing)
         ch_.traits.insert("blessed"); // the afterlife bargain, honored
+    // The other wanderer: every world generates one more adventurer than you.
+    GenName rn = forge_.person(runRng_);
+    rival_ = Rival{};
+    rival_.name = rn.conlang;
+    rival_.meaning = rn.meaning;
+    // The shared graveyard: daily worlds carry other players' fresh dead.
+    strangers_.clear();
+    ghostsRaw_.clear();
+#if defined(__EMSCRIPTEN__)
+    if (!suppressStrangers_) {
+        uint64_t dailySeed = (uint64_t)(time(nullptr) / 86400) % 1000000000ULL;
+        if (masterSeed_ == dailySeed) {
+            char* raw = rr_get_ghosts();
+            std::string gj(raw ? raw : "");
+            free(raw);
+            if (!gj.empty()) {
+                injectStrangers(gj);
+                if (!strangers_.empty()) ghostsRaw_ = gj;
+            }
+        }
+    }
+#endif
     currentRegion_ = runRng_.range(0, (int)world_.regions.size() - 1);
     visitedRegions_.insert(currentRegion_);
     enterTravel();
@@ -856,6 +968,60 @@ void Game::dailyTick() {
                                      grammar_, liveRng_);
         audio_.chime();
     }
+    // The rival is out there too, having a run of their own (R4).
+    if (rival_.alive && liveRng_.chance(16)) {
+        rival_.deeds++;
+        int act = liveRng_.range(1, 100);
+        if (act <= 20) {
+            // They get to the beast first, sometimes. That bounty is gone.
+            int bi = -1;
+            for (int i = 0; i < (int)history_.beasts.size(); i++)
+                if (history_.beasts[i].died < 0) bi = i;
+            if (bi >= 0) {
+                Beast& b = history_.beasts[bi];
+                b.died = history_.presentYear;
+                ChronEntry e;
+                e.id = (int)history_.chron.size();
+                e.year = history_.presentYear;
+                e.type = "pc_beast_slain";
+                e.beast = bi;
+                e.extra = rival_.name;
+                history_.chron.push_back(e);
+                newsLine_ = rival_.name + " slew " + b.name + ". Every tavern is buying their drinks tonight.";
+            } else {
+                newsLine_ = rival_.name + " went hunting and found nothing left to hunt.";
+            }
+        } else if (act <= 45) {
+            int si = liveRng_.range(0, (int)world_.sites.size() - 1);
+            newsLine_ = rival_.name + " was seen at " + world_.sites[si].name +
+                        ", asking the kind of questions you were saving.";
+        } else if (act <= 70 && !history_.factions.empty()) {
+            int fi = liveRng_.range(0, (int)history_.factions.size() - 1);
+            newsLine_ = rival_.name + " closed a contract for " +
+                        history_.factions[fi].name + ". The pay was insulting. They took it.";
+        } else if (act <= 96 || ch_.day <= 10) {
+            newsLine_ = rival_.name + " \"" + rival_.meaning + "\" won a duel over a matter of pronunciation.";
+        } else {
+            // The world is dangerous for everyone. Even the competition.
+            rival_.alive = false;
+            Figure f;
+            f.name = rival_.name;
+            f.faction = 0;
+            f.trait = "rash";
+            f.profession = "adventurer";
+            f.born = history_.presentYear - 25;
+            f.died = history_.presentYear;
+            history_.figures.push_back(f);
+            ChronEntry e;
+            e.id = (int)history_.chron.size();
+            e.year = history_.presentYear;
+            e.type = "pc_died";
+            e.actor = (int)history_.figures.size() - 1;
+            e.extra = "The road took them mid-boast.";
+            history_.chron.push_back(e);
+            newsLine_ = rival_.name + " is dead. You feel the strangest grief: who chases you now?";
+        }
+    }
     static const char* kSeasons[4] = {"spring", "summer", "autumn", "winter"};
     season_ = kSeasons[(ch_.day / 28) % 4];
     int roll = liveRng_.range(1, 100);
@@ -935,6 +1101,44 @@ bool Game::resolveSlots(const Event& e, Grammar::Ctx& ctx) {
             ctx[name] = f.name;
             ctx[name + "_trait"] = f.trait;
             ctx[name + "_year"] = std::to_string(f.died);
+        } else if (query == "stranger_here") {
+            // Another PLAYER died at this site today (daily worlds, R4).
+            int found = -1;
+            for (int i = 0; i < (int)strangers_.size(); i++)
+                if (strangers_[i].site == currentSite_) found = i;
+            if (found < 0) return false;
+            const Stranger& s = strangers_[found];
+            ctx[name] = s.name;
+            ctx[name + "_days"] = std::to_string(s.days);
+            ctx[name + "_epitaph"] = s.epitaph.empty()
+                ? "The stone is blank. Somehow that's worse." : s.epitaph;
+        } else if (query == "ghost_here") {
+            // One of YOUR previous lives died at this very site.
+            int found = -1;
+            for (int i = 0; i < (int)pendingLegacy_.size(); i++)
+                if (pendingLegacy_[i].deathSite == siteName_) found = i;
+            if (found < 0) return false;
+            const LegacyRecord& g = pendingLegacy_[found];
+            ctx[name] = g.name;
+            ctx[name + "_meaning"] = g.meaning;
+            ctx[name + "_days"] = std::to_string(g.days);
+            ctx[name + "_epitaph"] = g.epitaph;
+            ctx[name + "_relic"] = g.relics.empty() ? "nothing" : g.relics[0].first;
+        } else if (query == "rival") {
+            if (!rival_.alive) return false;
+            ctx[name] = rival_.name;
+            ctx[name + "_meaning"] = rival_.meaning;
+            ctx[name + "_deeds"] = std::to_string(rival_.deeds);
+        } else if (query == "wronged_figure") {
+            // Someone you (or a past you) robbed in THIS world. Kin remember.
+            int found = -1;
+            for (auto& [fi, marks] : npcMarks_)
+                if (marks.count("robbed") && !marks.count("settled") &&
+                    fi >= 0 && fi < (int)history_.figures.size()) found = fi;
+            if (found < 0) return false;
+            slotFigure_ = found;
+            ctx[name] = history_.figures[found].name;
+            ctx[name + "_prof"] = history_.figures[found].profession;
         } else {
             return false; // unknown query: skip the event, loudly absent
         }
@@ -1099,6 +1303,24 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
         } else if (verb == "npc_mark") {
             std::string mark; ss >> mark;
             if (slotFigure_ >= 0) npcMarks_[slotFigure_].insert(mark);
+        } else if (verb == "npc_unmark") {
+            // A grudge, formally retired. The family will find a new hobby.
+            std::string mark; ss >> mark;
+            if (slotFigure_ >= 0) {
+                npcMarks_[slotFigure_].erase(mark);
+                npcMarks_[slotFigure_].insert("settled");
+            }
+        } else if (verb == "learn") {
+            // Words of the old tongue, kept across every run and every world.
+            int n = 0; ss >> n;
+            profile_.wordsLearned += n;
+            SaveProfile(profile_);
+            audio_.chime();
+        } else if (verb == "rival_dies") {
+            if (rival_.alive) {
+                rival_.alive = false;
+                newsLine_ = rival_.name + " will not be racing anyone anywhere again.";
+            }
         } else if (verb == "die") {
             std::string rest;
             std::getline(ss, rest);
@@ -1240,6 +1462,7 @@ void Game::frame(Vector2 mouse, bool pressed) {
     // dice alone. Undocumented, harmless (roguelike full of curses anyway).
     if (IsKeyPressed(KEY_F9)) ch_.traits.insert("cursed");
     if (IsKeyPressed(KEY_F10)) ch_.traits.insert("wanted");
+    if (IsKeyPressed(KEY_F11)) cardRequested_ = true; // screenshot any screen
 
     ClearBackground(PAL_BG);
     switch (screen_) {
@@ -1392,6 +1615,11 @@ void Game::drawTitle(Vector2 mouse) {
             scoresRequested_ = true;
             rr_fetch_scores((int)(time(nullptr) / 86400));
         }
+        if (!ghostsRequested_) {
+            // Strangers' graves arrive while the player reads the title.
+            ghostsRequested_ = true;
+            rr_fetch_ghosts((int)(time(nullptr) / 86400), "");
+        }
         if (scoresJson_.empty()) {
             char* raw = rr_get_scores();
             if (raw) { scoresJson_ = raw; free(raw); }
@@ -1415,7 +1643,8 @@ void Game::drawTitle(Vector2 mouse) {
 #endif
     std::string runs = "deaths: " + std::to_string(profile_.deaths) +
                        "   completed: " + std::to_string(profile_.livesCompleted) +
-                       "   best: " + std::to_string(profile_.bestDays) + "d";
+                       "   best: " + std::to_string(profile_.bestDays) + "d" +
+                       "   lexicon: " + std::to_string(profile_.wordsLearned) + " words";
     DrawText(runs.c_str(), (kW - MeasureText(runs.c_str(), 10)) / 2, kH - 14, 10, PAL_DARK);
 
     if (reroll) {
@@ -1731,6 +1960,23 @@ void Game::drawInventory(Vector2 mouse) {
         y = DrawTextWrapped("It " + item.quirk + ".", 8, y + 2, kW - 16, PAL_DIM);
     if (!item.provenance.empty())
         y = DrawTextWrapped(item.provenance, 8, y + 2, kW - 16, PAL_INK);
+    // The old tongue on old things: readable once you've learned enough (R4).
+    if (item.artifactId >= 0 && item.artifactId < (int)history_.artifacts.size()) {
+        const HArtifact& a = history_.artifacts[item.artifactId];
+        if (!a.meaning.empty()) {
+            uint32_t h = 2166136261u;
+            for (char c : a.conlang) h = (h ^ (uint8_t)c) * 16777619u;
+            int need = 10 + (int)(h % 30);
+            if (profile_.wordsLearned >= need)
+                y = DrawTextWrapped("The script yields to you now. It reads: \"" +
+                                        a.meaning + "\".", 8, y + 2, kW - 16, PAL_GREEN);
+            else
+                y = DrawTextWrapped("There is script on it in the old tongue. You know " +
+                                        std::to_string(profile_.wordsLearned) + " of the " +
+                                        std::to_string(need) + " words you'd need.",
+                                    8, y + 2, kW - 16, PAL_DIM);
+        }
+    }
     if (!item.passive.empty())
         y = DrawTextWrapped("[" + item.passive + "]", 8, y + 2, kW - 16, PAL_DARK);
     std::string val = "Worth ~" + std::to_string(item.value) + "g";
@@ -1751,6 +1997,7 @@ void Game::drawInventory(Vector2 mouse) {
             if (isBook || isGossip || isMap) {
                 profile_.booksRead++;
                 booksThisRun_++;
+                if (isBook) profile_.wordsLearned += 2; // reading teaches the tongue
                 SaveProfile(profile_);
                 std::string name = item.name;
                 std::string text;
@@ -1940,9 +2187,12 @@ void Game::drawDeath(Vector2 mouse) {
         rr_copy_text(card.c_str());
         return;
     }
-#else
-    (void)mouse;
 #endif
+    // A PNG of this screen, exported by main.cpp after the frame renders.
+    if (uiButton({4, (float)(kH - 44), 96, 18}, "SAVE CARD", mouse)) {
+        cardRequested_ = true;
+        return;
+    }
     int y = DrawTextWrapped(ch_.epitaph, 30, 74, kW - 60, PAL_GOLD);
     std::string run = "Survived " + std::to_string(ch_.day) + " days and " +
                       std::to_string(ch_.eventsSurvived) + " questionable decisions. Died holding " +
@@ -1990,10 +2240,17 @@ void Game::drawDeath(Vector2 mouse) {
             uint64_t dailySeed = (uint64_t)(time(nullptr) / 86400) % 1000000000ULL;
             if (masterSeed_ == dailySeed && !scoreSubmitted_) {
                 scoreSubmitted_ = true;
+                nlohmann::json relics = nlohmann::json::array();
+                for (auto& [rn, rq] : rec.relics)
+                    relics.push_back({{"name", rn}, {"quirk", rq}});
                 nlohmann::json s = {{"day", (int)(time(nullptr) / 86400)},
                                     {"name", ch_.name.conlang + " \"" + ch_.name.meaning + "\""},
+                                    {"meaning", ch_.name.meaning},
                                     {"days", ch_.day},
-                                    {"epitaph", ch_.epitaph}};
+                                    {"epitaph", ch_.epitaph},
+                                    {"site", siteName_},
+                                    {"relics", relics},
+                                    {"finished", finishedWell_}};
                 rr_submit_score(s.dump().c_str());
             }
 #endif

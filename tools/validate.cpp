@@ -29,10 +29,11 @@ static const std::set<std::string> kVerbs = {
     "hp", "maxhp", "money", "credits", "stat", "item", "loot", "removeitem",
     "rep", "shop", "goto", "take_artifact", "die", "trait", "npc_mark",
     "companion", "companion_leave", "companion_dies", "contract", "finish",
-    "slay_beast", "legacy_bless"};
+    "slay_beast", "legacy_bless", "learn", "npc_unmark", "rival_dies"};
 static const std::set<std::string> kSlotQueries = {
     "chronicle_random", "chronicle_news", "artifact_here", "figure_alive",
-    "figure_dead", "god", "beast_here"};
+    "figure_dead", "god", "beast_here", "stranger_here", "ghost_here",
+    "rival", "wronged_figure"};
 static const std::set<std::string> kDecks = {
     "city", "tavern", "dungeon", "dungeon_finale", "cave", "forest", "road",
     "crash"};

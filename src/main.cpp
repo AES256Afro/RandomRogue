@@ -40,7 +40,34 @@ EM_BOOL onTouch(int type, const EmscriptenTouchEvent* e, void*) {
     if (type == EMSCRIPTEN_EVENT_TOUCHSTART) gPtrPressed = true;
     return EM_TRUE; // consume: no ghost mouse events / page gestures
 }
+
+// Hand a MEMFS file to the browser as a download (the death card).
+EM_JS(void, rr_download_file, (const char* path, const char* fname), {
+    try {
+        var data = FS.readFile(UTF8ToString(path));
+        var blob = new Blob([data], { type: 'image/png' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = UTF8ToString(fname);
+        a.click();
+        setTimeout(function(){ URL.revokeObjectURL(a.href); }, 5000);
+    } catch (e) {}
+});
 #endif
+
+// The death card: the virtual canvas, upscaled 3x, saved as a PNG.
+void ExportDeathCard() {
+    Image img = LoadImageFromTexture(gCanvas.texture);
+    ImageFlipVertical(&img); // render textures are stored upside down
+    ImageResizeNN(&img, kVirtualW * 3, kVirtualH * 3);
+#if defined(PLATFORM_WEB)
+    ExportImage(img, "/death_card.png");
+    rr_download_file("/death_card.png", "random_rogue_death.png");
+#else
+    ExportImage(img, "death_card.png"); // lands next to the exe
+#endif
+    UnloadImage(img);
+}
 
 void UpdateDrawFrame() {
     // Window-space -> virtual-canvas-space for the pointer.
@@ -80,6 +107,9 @@ void UpdateDrawFrame() {
     BeginTextureMode(gCanvas);
     gGame.frame(vm, pressed);
     EndTextureMode();
+
+    // The frame the player asked to keep (death card) is now in the texture.
+    if (gGame.consumeCardRequest()) ExportDeathCard();
 
     // Screen shake: jitter the blit, never the game state.
     float shake = gGame.shakeAmount();
