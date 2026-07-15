@@ -1,13 +1,13 @@
 #include "events.h"
 #include <nlohmann/json.hpp>
 #include <cstdio>
-#include <sstream>
 
 using json = nlohmann::json;
 
 bool Requirement::met(const Character& c) const {
     if (!stat.empty() && c.stats[statFromName(stat)] < gte) return false;
     if (moneyGte > 0 && c.money < moneyGte) return false;
+    if (!item.empty() && !c.hasItem(item)) return false;
     return true;
 }
 
@@ -18,6 +18,7 @@ std::string Requirement::label() const {
         return "[" + s + " " + std::to_string(gte) + "] ";
     }
     if (moneyGte > 0) return "[" + std::to_string(moneyGte) + "g] ";
+    if (!item.empty()) return "[needs " + item + "] ";
     return "";
 }
 
@@ -64,6 +65,9 @@ void EventDeck::loadJsonText(const char* jsonText) {
         if (e.contains("locations") && e["locations"].is_array())
             for (auto& l : e["locations"])
                 if (l.is_string()) ev.locations.push_back(l.get<std::string>());
+        if (e.contains("slots") && e["slots"].is_object())
+            for (auto& [name, q] : e["slots"].items())
+                if (q.is_string()) ev.slots.emplace_back(name, q.get<std::string>());
         if (e.contains("choices") && e["choices"].is_array()) {
             for (auto& c : e["choices"]) {
                 Choice ch;
@@ -73,6 +77,7 @@ void EventDeck::loadJsonText(const char* jsonText) {
                     ch.requires_.stat = r.value("stat", "");
                     ch.requires_.gte = r.value("gte", 0);
                     ch.requires_.moneyGte = r.value("money", 0);
+                    ch.requires_.item = r.value("item", "");
                 }
                 if (c.contains("check") && c["check"].is_object()) {
                     ch.check.stat = c["check"].value("stat", "");
@@ -135,7 +140,7 @@ ResolvedOutcome EventDeck::resolve(const Choice& choice, const Character& c, Rng
     const Outcome* picked = nullptr;
     if (!choice.check.stat.empty()) {
         int stat = statFromName(choice.check.stat);
-        int mod = Character::mod(c.stats[stat]);
+        int mod = Character::mod(c.stats[stat]) + c.checkBonus(stat);
         int die = rng.d(20);
         int totalRoll = die + mod;
         bool success = totalRoll >= choice.check.dc;
@@ -155,42 +160,4 @@ ResolvedOutcome EventDeck::resolve(const Choice& choice, const Character& c, Rng
         r.effects = picked->effects;
     }
     return r;
-}
-
-void EventDeck::apply(const std::vector<std::string>& effects, Character& c) {
-    for (auto& fx : effects) {
-        std::istringstream ss(fx);
-        std::string verb;
-        ss >> verb;
-        if (verb == "hp") {
-            int v = 0; ss >> v;
-            c.hp += v;
-            if (c.hp > c.maxHp) c.hp = c.maxHp;
-        } else if (verb == "maxhp") {
-            int v = 0; ss >> v;
-            c.maxHp += v;
-            if (c.hp > c.maxHp) c.hp = c.maxHp;
-        } else if (verb == "money") {
-            int v = 0; ss >> v;
-            c.money += v;
-            if (c.money < 0) c.money = 0;
-        } else if (verb == "credits") {
-            int v = 0; ss >> v;
-            c.credits += v;
-            if (c.credits < 0) c.credits = 0;
-        } else if (verb == "stat") {
-            std::string which; int v = 0;
-            ss >> which >> v;
-            int i = statFromName(which);
-            c.stats[i] += v;
-            if (c.stats[i] < 1) c.stats[i] = 1;
-        } else if (verb == "die") {
-            std::string rest;
-            std::getline(ss, rest);
-            if (!rest.empty() && rest[0] == ' ') rest.erase(0, 1);
-            c.dead = true;
-            if (!rest.empty()) c.epitaph = rest;
-        }
-    }
-    if (c.hp <= 0) c.dead = true;
 }

@@ -9,13 +9,14 @@
 struct Outcome {
     int weight = 1;
     std::string text;
-    std::vector<std::string> effects; // "hp -6", "money +25", "stat str +1", "die <epitaph>"
+    std::vector<std::string> effects; // "hp -6", "money +25", "item rope", "die <epitaph>"
 };
 
 struct Requirement {
     std::string stat; // empty = no stat requirement
     int gte = 0;
     int moneyGte = 0;
+    std::string item; // template id the player must carry
     bool met(const Character& c) const;
     std::string label() const; // "[CHA 12]" style tag, empty if none
 };
@@ -40,10 +41,14 @@ struct Event {
     int weight = 10;
     std::string text;
     std::vector<Choice> choices;
+    // Chronicle slot queries: name -> query ("chronicle_random",
+    // "artifact_here", ...). If a query can't be satisfied at deal time the
+    // event is skipped (WORLDGEN.md §4).
+    std::vector<std::pair<std::string, std::string>> slots;
 };
 
 struct ResolvedOutcome {
-    std::string rollText; // "d20+2 = 14 vs DC 12 -- success!" or empty
+    std::string rollText; // "STR check: d20(11)+2 = 13 vs DC 12 -- success!" or empty
     std::string text;
     std::vector<std::string> effects;
 };
@@ -51,14 +56,12 @@ struct ResolvedOutcome {
 class EventDeck {
 public:
     void loadJsonText(const char* jsonText);
-    // Draw an event for a location tag; avoids repeats until the pool empties.
     const Event* draw(Rng& rng, const std::string& location);
     void resetUsed() { used_.clear(); }
     size_t size() const { return events_.size(); }
 
+    // Picks the outcome; item passives feed the check modifier.
     static ResolvedOutcome resolve(const Choice& choice, const Character& c, Rng& rng);
-    // Returns a death epitaph if the effects killed the character, else "".
-    static void apply(const std::vector<std::string>& effects, Character& c);
 
 private:
     std::vector<Event> events_;

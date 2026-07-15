@@ -1,0 +1,39 @@
+{
+  "texts": [
+    "smells faintly of ozone",
+    "is slightly warm, always",
+    "hums when you're lying",
+    "has someone's name scratched out",
+    "is heavier than it looks",
+    "is lighter than it should be",
+    "whispers at dawn, allegedly",
+    "attracts moths",
+    "repels dogs",
+    "tastes purple, per a previous owner's note",
+    "has a faint heartbeat",
+    "smells like a thunderstorm's regret",
+    "is engraved 'PROPERTY OF THE MANAGEMENT'",
+    "glows only when nobody is watching",
+    "is always damp",
+    "makes a coin-counting sound at night",
+    "has teeth marks from something with opinions",
+    "vibrates near bureaucrats",
+    "is signed by the artist",
+    "smells of a kitchen you almost remember"
+  ],
+  "good": [
+    "check str +1",
+    "check dex +1",
+    "check con +1",
+    "check int +1",
+    "check wis +1",
+    "check cha +1",
+    "armor 1"
+  ],
+  "bad": [
+    "check str -1",
+    "check dex -1",
+    "check wis -1",
+    "check cha -1"
+  ]
+}

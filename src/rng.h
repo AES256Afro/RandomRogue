@@ -42,4 +42,5 @@ enum RngStream : uint64_t {
     STREAM_LANG    = 11,
     STREAM_WORLD   = 22,
     STREAM_RUNTIME = 33,
+    STREAM_HISTORY = 44,
 };

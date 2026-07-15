@@ -32,8 +32,23 @@ add_executable(random_rogue
     src/grammar.cpp
     src/language.cpp
     src/world.cpp
+    src/history.cpp
     src/events.cpp
+    src/items.cpp
 )
+
+# ---- chronicle_dump: worldgen dev tool (native only, no raylib) -------------
+if(NOT EMSCRIPTEN)
+    add_executable(chronicle_dump
+        tools/chronicle_dump.cpp
+        src/grammar.cpp
+        src/language.cpp
+        src/world.cpp
+        src/history.cpp
+    )
+    target_link_libraries(chronicle_dump PRIVATE nlohmann_json::nlohmann_json)
+    target_include_directories(chronicle_dump PRIVATE src)
+endif()
 target_link_libraries(random_rogue PRIVATE raylib nlohmann_json::nlohmann_json)
 target_include_directories(random_rogue PRIVATE src)
 

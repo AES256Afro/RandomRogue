@@ -41,6 +41,91 @@
     "Oubliette", "Mines"
   ],
 
+  "faction_name": [
+    "The Guild of {fnoun}", "The {adj} Company", "House {placeword}",
+    "The {fnoun} Syndicate", "Order of the {fnoun}", "The {placeword} Compact"
+  ],
+  "fnoun": ["Coin", "Ash", "Salt", "Ledger", "Thorn", "Lantern", "Chain", "Bellows", "Turnip"],
+  "beast_name": ["The {adj} {beast_kind}"],
+  "beast_kind": ["Wyrm", "Owlbear", "Basilisk", "Megaboar", "Stormcrab", "Diregoose", "Mireworm", "Cragmaw"],
+  "plague_name": ["The {adj} {plague_noun}"],
+  "plague_noun": ["Sniffles", "Rot", "Weep", "Itch", "Vapors", "Regret", "Hiccups"],
+  "cult_name": ["The {adj} Hand", "Cult of the {fnoun}", "The Children of {plague_noun}", "The {adj} Path"],
+  "crash_name": ["The Fallen Star of {placeword}", "The {adj} Crater", "The Sky-Wound at {placeword}"],
+  "material": ["cold iron", "singing bronze", "petrified oak", "salvaged sky-metal", "spite", "compressed regret", "good honest steel"],
+  "book_title": ["'On {fnoun}s'", "'The {adj} Question'", "'A Treatise Against {plague_noun}'", "'{fnoun} & {fnoun}: A Memoir'", "'1001 Uses for a Dead {beast_kind}'"],
+
+  "chron_faction_founded": [
+    "{faction} was founded in year {year}, in {extra}. It seemed like a good idea at the time.",
+    "In year {year}, {faction} first raised its banner over {extra}."
+  ],
+  "chron_figure_rise": [
+    "{actor}, {trait} {profession} of {faction}, first made a name in year {year}.",
+    "In year {year}, people started telling stories about {actor}. Most were true.",
+    "Year {year}: {faction} gained {actor}, famously {trait}. Time would tell."
+  ],
+  "chron_artifact_forged": [
+    "In year {year}, {actor} forged {artifact} and left it at {site}. {motive}",
+    "{artifact} left {actor}'s forge in year {year}. Everyone at {site} heard about it. Repeatedly."
+  ],
+  "motive": [
+    "They said it was for a rival. It was.",
+    "Officially, a gift. Unofficially, a threat.",
+    "Nobody asked why. That was the mistake."
+  ],
+  "chron_war_declared": [
+    "In year {year}, {faction} declared war on {faction2} over {war_reason}.",
+    "Year {year}: {faction} and {faction2} went to war. The cause was {war_reason}."
+  ],
+  "war_reason": [
+    "an insult at a wedding", "grazing rights", "a mistranslated treaty",
+    "a stolen soup recipe", "unpaid tavern tabs", "vibes"
+  ],
+  "chron_city_sacked": [
+    "{site} burned in year {year}. {faction} called it diplomacy.",
+    "In year {year}, {faction} sacked {site}. The survivors opened a very bitter tavern."
+  ],
+  "chron_peace_signed": [
+    "The war between {faction} and {faction2} ended in year {year}. Nobody remembers who won.",
+    "Peace, year {year}: {faction} and {faction2} agreed to hate each other quietly."
+  ],
+  "chron_beast_slain": [
+    "In year {year}, {actor} slew {beast}. The ballads exaggerate, but not by much.",
+    "{beast} died in year {year}, at the hands of {actor}, who never shut up about it."
+  ],
+  "chron_figure_eaten": [
+    "{beast} ate {actor} in year {year}. The beast reports no regrets.",
+    "In year {year}, {actor} discovered {beast} was not, in fact, asleep."
+  ],
+  "chron_book_written": [
+    "In year {year}, {actor} published {extra}. Critics called it 'a book.'",
+    "{extra}, by {actor}, appeared in year {year}. It remains required reading somewhere, as punishment."
+  ],
+  "chron_trade_pact": [
+    "{faction} and {faction2} signed a trade pact in year {year}. Prices rose anyway.",
+    "Year {year}: {faction} and {faction2} agreed to overcharge each other in a spirit of friendship."
+  ],
+  "chron_cult_founded": [
+    "In year {year}, {actor} founded {extra}. Membership includes robes.",
+    "{extra} first gathered in year {year}, led by {actor}, who had been acting weird for a while."
+  ],
+  "chron_artifact_stolen": [
+    "{artifact} vanished in year {year}. {actor} was coincidentally rich that season.",
+    "In year {year}, {actor} 'relocated' {artifact}. It rests now at {site}, officially by accident."
+  ],
+  "chron_plague": [
+    "{extra} swept the land in year {year}. Handshakes went out of fashion.",
+    "Year {year}: {extra}. The physicians recommended vinegar and distance."
+  ],
+  "chron_sky_debris": [
+    "In year {year}, something fell screaming from the sky and became {site}. The debris still blinks.",
+    "Year {year}: the stars dropped something. {site} marks where the world flinched."
+  ],
+  "chron_figure_died": [
+    "{actor} died in year {year} of natural causes, allegedly.",
+    "In year {year}, {actor} retired permanently from being alive."
+  ],
+
   "epitaph": [
     "Died as they lived: confused.",
     "The paperwork was fatal.",

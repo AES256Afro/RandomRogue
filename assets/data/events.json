@@ -1,5 +1,75 @@
 [
   {
+    "id": "tavern_rumor",
+    "locations": ["tavern"],
+    "weight": 14,
+    "slots": { "rumor": "chronicle_random" },
+    "text": "The talk of {site} tonight, delivered by a patron who swears they were there: \"{rumor}\"",
+    "choices": [
+      { "text": "Drink it in. History is free",
+        "outcomes": [
+          { "weight": 100, "text": "You commit it to memory, slightly wrong, continuing a proud oral tradition.", "effects": ["stat wis +1"] }
+        ] },
+      { "text": "Buy the teller another round", "requires": { "money": 2 },
+        "outcomes": [
+          { "weight": 70, "text": "Lubricated, they add details: names, dates, a startling amount of slander. Someone slips you a coin for the entertainment.", "effects": ["money +1"] },
+          { "weight": 30, "text": "The second round undoes them entirely. The story dissolves into weeping about a goose. You'll never know the ending.", "effects": ["money -2"] }
+        ] },
+      { "text": "Loudly declare it never happened",
+        "outcomes": [
+          { "weight": 60, "text": "The tavern turns on you. Historical revisionism is a bar-fight offense here.", "effects": ["hp -2"] },
+          { "weight": 40, "text": "An actual historian in the corner backs you up, citing sources. The teller buys YOU a drink out of shame.", "effects": ["hp +1", "stat int +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "dungeon_artifact_find",
+    "locations": ["dungeon"],
+    "weight": 16,
+    "slots": { "relic": "artifact_here" },
+    "text": "Behind a collapsed wall, on a pedestal that has clearly eaten hands before: {relic}. It's real. It's here. The stories all end badly, but they do all mention it's worth a fortune.",
+    "choices": [
+      { "text": "Take it",
+        "outcomes": [
+          { "weight": 70, "text": "Your fingers close around it. Nothing bites. Somewhere, several factions just felt a disturbance in their ledgers.", "effects": ["take_artifact"] },
+          { "weight": 30, "text": "The pedestal WAS a mimic. You take the relic anyway, mid-wrestle, because you have your priorities straight.", "effects": ["take_artifact", "hp -4"] }
+        ] },
+      { "text": "Check for traps first", "check": { "stat": "wis", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Three tripwires, a pressure plate, and a dart hole shaped like a disappointed face. You defeat them all with patience.", "effects": ["take_artifact"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You find the trap by triggering it. The dart's note reads 'told you.' You grab the relic while bleeding.", "effects": ["take_artifact", "hp -5"] }
+        ] },
+      { "text": "Leave it. Some things should stay legendary",
+        "outcomes": [
+          { "weight": 100, "text": "You walk away. The pedestal seems almost disappointed. Your restraint feels valuable, which is good, because it's all you're leaving with.", "effects": ["stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "city_book_stall",
+    "locations": ["city"],
+    "text": "A book stall run by a woman with ink-stained fingers and the eyes of someone who has read ALL the footnotes. 'Histories,' she says. 'Real ones. Six gold and I don't answer questions about chapter four.'",
+    "choices": [
+      { "text": "Buy a history book", "requires": { "money": 6 },
+        "outcomes": [
+          { "weight": 100, "text": "The book is heavier than it looks. All the true ones are, she says, counting your coins.", "effects": ["money -6", "item book"] }
+        ] },
+      { "text": "Ask about chapter four",
+        "outcomes": [
+          { "weight": 100, "text": "She stares at you until you leave. Somehow you know three new things about the world anyway, none of them comfortable.", "effects": ["stat wis +1"] }
+        ] },
+      { "text": "Haggle", "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Four gold, final offer, and she throws in a bookmark shaped like a curse. Deal.", "effects": ["money -4", "item book"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "She raises the price to seven, citing 'haggling tax.' You pay it. Chapter four remains unavailable.", "effects": ["money -7", "item book"] }
+        ] }
+    ]
+  },
+  {
     "id": "tavern_fizzing_drink",
     "locations": ["tavern"],
     "text": "A hooded figure at {site} slides you a drink. It is fizzing. Drinks here don't fizz.",
@@ -210,9 +280,9 @@
     "choices": [
       { "text": "Take the sword",
         "outcomes": [
-          { "weight": 55, "text": "Nothing happens. It's just a great sword and a very honest plaque. You feel stronger already.", "effects": ["stat str +1"] },
-          { "weight": 30, "text": "The rib cage's original owner objects, briefly and skeletally. You keep the sword, but at a cost.", "effects": ["stat str +1", "hp -4"] },
-          { "weight": 15, "text": "The sword whispers 'finally' in a voice like a satisfied tax auditor. You are now, apparently, in a partnership.", "effects": ["stat str +2", "stat wis -1"] }
+          { "weight": 55, "text": "Nothing happens. It's just a great sword and a very honest plaque.", "effects": ["item decent_sword"] },
+          { "weight": 30, "text": "The rib cage's original owner objects, briefly and skeletally. You keep the sword, but at a cost.", "effects": ["item decent_sword", "hp -4"] },
+          { "weight": 15, "text": "The sword whispers 'finally' in a voice like a satisfied tax auditor. You are now, apparently, in a partnership.", "effects": ["item decent_sword", "stat wis -1"] }
         ] },
       { "text": "Add a coin to the grave and move on",
         "outcomes": [
@@ -281,7 +351,7 @@
     "choices": [
       { "text": "Help with the taxes", "check": { "stat": "int", "dc": 13 },
         "success": [
-          { "weight": 100, "text": "Three hours later, you've found a deduction for 'phylactery depreciation.' The lich weeps dust and pays you from its hoard.", "effects": ["money +25", "stat int +1"] }
+          { "weight": 100, "text": "Three hours later, you've found a deduction for 'phylactery depreciation.' The lich weeps dust and pays you from its hoard.", "effects": ["money +25", "loot fine", "stat int +1"] }
         ],
         "fail": [
           { "weight": 100, "text": "You make it worse. The lich now owes back taxes in two kingdoms, one of which no longer exists. It curses you out of pure administrative grief.", "effects": ["hp -5"] }
