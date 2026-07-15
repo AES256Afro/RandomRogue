@@ -331,3 +331,32 @@ The last deferred feature. Deferred no more.
   and wake knowing six words of the old tongue.
 
 Steam packaging remains the only deferred item.
+
+---
+
+## Release 7 (shipped) - The Welcome Mat and the Whetstone
+
+- **New starts** - the class list is fixed-index now (Heir always #5,
+  shown locked until a life ends in this world) plus three earned
+  starts: Captain (own sloop; sail beyond the chart once), Anointed
+  (2 favor + incense; be saved by a miracle), Guildchild (agent badge,
+  stipend, one contract of credit; take the guildmaster's chair).
+  The profile tracks beasts slain, miracles, horizons, chairs taken,
+  and vendettas settled.
+- **New ambitions** - Beastslayer, Polyglot, Mariner, Peacemaker,
+  Devout join the original six; the roll now draws from eleven.
+- **Onboarding** - three how-to cards before your first-ever life
+  (replayable from OPTIONS). Settings: text speed, volume, music
+  toggle - all persisted in the profile.
+- **Difficulty ratchet** - each life a world takes from you sharpens
+  it: damage +1 per 3 generations, payouts up to match, extra live
+  history each day. Announced on the travel screen from gen 2.
+- **Weekly world** - a second shared world with a 7-day lifespan for
+  the long endings; its leaderboard/ghosts/deeds live in a separate
+  key namespace (7000000+week) so daily and weekly never mix.
+- **Real-player balance** - public /__stats aggregates (deaths, avg
+  days, completions per board, deadliest sites); deeper journey-mining
+  queries documented in scripts/balance-queries.md.
+- **Web mods** - ?mod=<url> fetches a community events file and merges
+  it into the deck ("mod: +N events" on the title). Data only, never
+  code. Documented in MODDING.md.

@@ -12,6 +12,17 @@ struct Profile {
     int ambitionsDone = 0;
     int livesCompleted = 0;
     int wordsLearned = 0; // lexicon of the old tongue, kept across runs (R4)
+    // Deeds that unlock starts (R7).
+    int beastsSlain = 0;
+    int miracles = 0;
+    int horizons = 0;    // sailed beyond the chart
+    int guildmaster = 0; // took the chair
+    int vendettas = 0;   // grudges settled
+    // Settings (R7). textSpeed/volume: 0 low, 1 normal, 2 high.
+    int textSpeed = 1;
+    int volume = 2;
+    bool musicOff = false;
+    bool seenIntro = false;
 
     std::string toJson() const;
     static Profile fromJson(const std::string& text);

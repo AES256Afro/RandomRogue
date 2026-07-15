@@ -16,7 +16,16 @@ std::string Profile::toJson() const {
               {"booksRead", booksRead},
               {"ambitionsDone", ambitionsDone},
               {"livesCompleted", livesCompleted},
-              {"wordsLearned", wordsLearned}};
+              {"wordsLearned", wordsLearned},
+              {"beastsSlain", beastsSlain},
+              {"miracles", miracles},
+              {"horizons", horizons},
+              {"guildmaster", guildmaster},
+              {"vendettas", vendettas},
+              {"textSpeed", textSpeed},
+              {"volume", volume},
+              {"musicOff", musicOff},
+              {"seenIntro", seenIntro}};
     return j.dump();
 }
 
@@ -31,6 +40,15 @@ Profile Profile::fromJson(const std::string& text) {
     p.ambitionsDone = j.value("ambitionsDone", 0);
     p.livesCompleted = j.value("livesCompleted", 0);
     p.wordsLearned = j.value("wordsLearned", 0);
+    p.beastsSlain = j.value("beastsSlain", 0);
+    p.miracles = j.value("miracles", 0);
+    p.horizons = j.value("horizons", 0);
+    p.guildmaster = j.value("guildmaster", 0);
+    p.vendettas = j.value("vendettas", 0);
+    p.textSpeed = j.value("textSpeed", 1);
+    p.volume = j.value("volume", 2);
+    p.musicOff = j.value("musicOff", false);
+    p.seenIntro = j.value("seenIntro", false);
     return p;
 }
 

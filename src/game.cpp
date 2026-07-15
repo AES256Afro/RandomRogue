@@ -59,6 +59,13 @@ EM_JS(char*, rr_get_deeds, (), {
     stringToUTF8(s, buf, len);
     return buf;
 });
+EM_JS(char*, rr_get_mod, (), {
+    var s = window.__rrMod || "";
+    var len = lengthBytesUTF8(s) + 1;
+    var buf = _malloc(len);
+    stringToUTF8(s, buf, len);
+    return buf;
+});
 #endif
 
 namespace {
@@ -164,6 +171,9 @@ bool Game::init() {
     nextSeed_ = (uint64_t)time(nullptr) % 1000000000ULL;
     audio_.init();
     profile_ = LoadProfile();
+    // Settings persist across sessions (R7).
+    SetMasterVolume(0.35f + 0.3f * (profile_.volume % 3));
+    if (profile_.musicOff && !audio_.muted()) audio_.toggleMute();
     return dataError_.empty();
 }
 
@@ -189,20 +199,35 @@ std::vector<Game::StartClass> Game::startClasses() const {
         blurb += last.relics.empty() ? "; a name to live down"
                                      : "; their " + last.relics[0].first;
         classes.push_back({"Heir", blurb, "", true});
+    } else {
+        // Index 5 is ALWAYS the Heir; newRun's special-casing depends on it.
+        classes.push_back({"Heir", "", "a previous life in this world", false});
     }
+    // The deeds of past lives open new doors (R7).
+    classes.push_back({"Captain", "a sloop of your own, sea legs",
+                       "sail beyond the chart", profile_.horizons >= 1});
+    classes.push_back({"Anointed", "incense, and a god already listening",
+                       "be saved by a miracle", profile_.miracles >= 1});
+    classes.push_back({"Guildchild", "a badge, a stipend, a family name",
+                       "take the guildmaster's chair", profile_.guildmaster >= 1});
     return classes;
 }
 
 // ---- company & purpose (P5) -------------------------------------------------
 
 struct AmbDef { const char* name; const char* desc; };
-static const AmbDef kAmbitions[6] = {
+static const AmbDef kAmbitions[11] = {
     {"Strike It Rich", "hold 120 gold at once"},
     {"Delver", "reach 3 dungeon finales"},
     {"Bookworm", "read 3 things in one life"},
     {"Survivor", "see day 15"},
     {"Relic Hunter", "carry a true artifact"},
     {"Beloved", "be loved somewhere (+20 rep)"},
+    {"Beastslayer", "slay a named beast"},
+    {"Polyglot", "learn 8 words in one life"},
+    {"Mariner", "make landfall on 3 shores"},
+    {"Peacemaker", "settle an old grudge"},
+    {"Devout", "reach 5 favor with one god"},
 };
 
 void Game::setCompanion(const std::string& id) {
@@ -299,6 +324,14 @@ void Game::checkPurposes() {
             case 5:
                 for (int r : rep_)
                     if (r >= 20) done = true;
+                break;
+            case 6: done = beastSlainThisRun_; break;
+            case 7: done = wordsThisRun_ >= 8; break;
+            case 8: done = landfalls_ >= 3; break;
+            case 9: done = settledThisRun_; break;
+            case 10:
+                for (auto& [gi, f] : favor_)
+                    if (f >= 5) done = true;
                 break;
         }
         if (done) {
@@ -783,6 +816,9 @@ void Game::newRun(int classIdx) {
         pendingLegacy_ = LoadLegacy(masterSeed_);
         cachedLegacySeed_ = masterSeed_;
     }
+    // World age: every life this world has taken sharpens it (R7 ratchet).
+    worldGen_ = (int)pendingLegacy_.size();
+    if (worldGen_ > 9) worldGen_ = 9;
     // Each generation is its own person living its own days — keyed by how
     // many came before, so a shared seed still means the same first life for
     // everyone, but your second life never replays your first.
@@ -840,6 +876,21 @@ void Game::newRun(int classIdx) {
             ch_.stats[STAT_CHA] += 1;
             break;
         }
+        case 6: // Captain: the sea already knows your name
+            ch_.pack.push_back(makeItem("sloop"));
+            ch_.pack.push_back(makeItem("rations"));
+            ch_.stats[STAT_CON] += 1;
+            break;
+        case 7: // Anointed: a god already listening (favor set post-reset)
+            ch_.pack.push_back(makeItem("incense"));
+            ch_.pack.push_back(makeItem("bread"));
+            ch_.stats[STAT_WIS] += 1;
+            break;
+        case 8: // Guildchild: born on the ladder (contract credit post-reset)
+            ch_.pack.push_back(makeItem("rations"));
+            ch_.traits.insert("agent");
+            ch_.money += 12;
+            break;
         default: // Drifter
             ch_.pack.push_back(makeItem("rations"));
             ch_.pack.push_back(makeItem(runRng_.chance(50) ? "rusty_sword" : "club"));
@@ -870,6 +921,14 @@ void Game::newRun(int classIdx) {
     journey_.clear();
     deeds_.clear();
     deedNext_ = 0;
+    beastSlainThisRun_ = false;
+    wordsThisRun_ = 0;
+    landfalls_ = 0;
+    settledThisRun_ = false;
+    // Class kits that touch post-reset state land here (R7).
+    if (classIdx == 7 && !history_.gods.empty())
+        favor_[runRng_.range(0, (int)history_.gods.size() - 1)] = 2;
+    if (classIdx == 8) contractsDone_ = 1;
     // NPC memory outlives you in this world (R3).
     npcMarks_.clear();
     {
@@ -891,8 +950,7 @@ void Game::newRun(int classIdx) {
     ghostsRaw_.clear();
 #if defined(__EMSCRIPTEN__)
     if (!suppressStrangers_) {
-        uint64_t dailySeed = (uint64_t)(time(nullptr) / 86400) % 1000000000ULL;
-        if (masterSeed_ == dailySeed) {
+        if (boardKeyFor(masterSeed_) >= 0) {
             char* raw = rr_get_ghosts();
             std::string gj(raw ? raw : "");
             free(raw);
@@ -1053,6 +1111,9 @@ void Game::dailyTick() {
     ch_.day++;
     size_t before = history_.chron.size();
     SimulateLiveDay(world_, history_, liveRng_, grammar_, forge_);
+    // Old worlds are restless worlds: extra live history per generation.
+    if (worldGen_ >= 2 && liveRng_.chance(worldGen_ * 6))
+        SimulateLiveDay(world_, history_, liveRng_, grammar_, forge_);
     if (history_.chron.size() > before) {
         newsLine_ = RenderChronEntry(history_.chron.back(), history_, world_,
                                      grammar_, liveRng_);
@@ -1297,6 +1358,9 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
         if (verb == "hp") {
             int v = 0; ss >> v;
             if (v < 0) {
+                // The ratchet: a world that has taken lives of yours hits
+                // harder every generation (R7).
+                v -= worldGen_ / 3;
                 int reduced = -v - ch_.armor();
                 v = -(reduced < 1 ? 1 : reduced);
                 audio_.thud();
@@ -1310,7 +1374,11 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
             if (ch_.hp > ch_.maxHp) ch_.hp = ch_.maxHp;
         } else if (verb == "money") {
             int v = 0; ss >> v;
-            if (v > 0) audio_.coin();
+            // ...and pays better, too. Risk and reward age together (R7).
+            if (v > 0) {
+                v += worldGen_ / 3;
+                audio_.coin();
+            }
             ch_.money += v;
             if (ch_.money < 0) ch_.money = 0;
         } else if (verb == "credits") {
@@ -1363,11 +1431,14 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
                 history_.chron.push_back(e);
                 newsLine_ = b.name + " is dead. You were there. You were the reason.";
                 audio_.fanfare();
+                beastSlainThisRun_ = true;
+                profile_.beastsSlain++;
+                SaveProfile(profile_);
 #if defined(__EMSCRIPTEN__)
-                // Daily world? The other players hear about this.
-                uint64_t dailySeed = (uint64_t)(time(nullptr) / 86400) % 1000000000ULL;
-                if (masterSeed_ == dailySeed) {
-                    nlohmann::json d = {{"day", (int)(time(nullptr) / 86400)},
+                // Shared world? The other players hear about this.
+                int bk = boardKeyFor(masterSeed_);
+                if (bk >= 0) {
+                    nlohmann::json d = {{"day", bk},
                                         {"text", ch_.name.conlang + " slew " + b.name +
                                                  " on day " + std::to_string(ch_.day) + "."}};
                     rr_submit_deed(d.dump().c_str());
@@ -1421,11 +1492,15 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
             if (slotFigure_ >= 0) {
                 npcMarks_[slotFigure_].erase(mark);
                 npcMarks_[slotFigure_].insert("settled");
+                settledThisRun_ = true;
+                profile_.vendettas++;
+                SaveProfile(profile_);
             }
         } else if (verb == "learn") {
             // Words of the old tongue, kept across every run and every world.
             int n = 0; ss >> n;
             profile_.wordsLearned += n;
+            wordsThisRun_ += n;
             SaveProfile(profile_);
             audio_.chime();
         } else if (verb == "rival_dies") {
@@ -1458,11 +1533,17 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
             ch_.dead = true;
             finishedWell_ = true;
             if (!rest.empty()) ch_.epitaph = rest;
+            // Grand endings open new beginnings (R7 unlocks).
+            if (current_) {
+                if (current_->id == "beyond_the_chart") profile_.horizons++;
+                if (current_->id == "guildmaster_offer") profile_.guildmaster++;
+                SaveProfile(profile_);
+            }
 #if defined(__EMSCRIPTEN__)
             // A completed life is front-page news in a shared world.
-            uint64_t dailySeed = (uint64_t)(time(nullptr) / 86400) % 1000000000ULL;
-            if (masterSeed_ == dailySeed) {
-                nlohmann::json d = {{"day", (int)(time(nullptr) / 86400)},
+            int bk = boardKeyFor(masterSeed_);
+            if (bk >= 0) {
+                nlohmann::json d = {{"day", bk},
                                     {"text", ch_.name.conlang + " finished their story on day " +
                                              std::to_string(ch_.day) + ", alive."}};
                 rr_submit_deed(d.dump().c_str());
@@ -1491,6 +1572,8 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
             ch_.dead = false;
             ch_.hp = 3;
             ch_.epitaph.clear();
+            profile_.miracles++;
+            SaveProfile(profile_);
             newsLine_ = history_.gods[best].name + " reaches down and puts you back on your feet. The debt is unspoken and enormous.";
             audio_.fanfare();
             shake_ = 3.0f;
@@ -1639,6 +1722,7 @@ void Game::frame(Vector2 mouse, bool pressed) {
         case CHRONICLE: drawChronicle(mouse); break;
         case SAGA:      drawSaga(mouse); break;
         case REPLAY:    drawReplay(mouse); break;
+        case OPTIONS:   drawOptions(mouse); break;
     }
 }
 
@@ -1699,12 +1783,32 @@ void Game::drawTopBar() {
 
 void Game::drawTitle(Vector2 mouse) {
     audio_.playMusicFor("title", 1);
+    if (introPage_ >= 0) {
+        drawIntro(mouse);
+        return;
+    }
     const char* title = "RANDOM ROGUE";
     DrawText(title, (kW - MeasureText(title, 20)) / 2, 38, 20, PAL_GOLD);
     if (!dataError_.empty()) {
         DrawTextWrapped(dataError_, 20, 90, kW - 40, PAL_RED);
         return;
     }
+#if defined(__EMSCRIPTEN__)
+    // A ?mod= deck arrives whenever its fetch lands; merge it once (R7).
+    if (!modLoaded_) {
+        char* raw = rr_get_mod();
+        std::string modText(raw ? raw : "");
+        free(raw);
+        if (!modText.empty()) {
+            modLoaded_ = true;
+            size_t before = deck_.size();
+            deck_.loadJsonText(modText.c_str());
+            size_t added = deck_.size() - before;
+            if (added > 0)
+                modLine_ = "mod: +" + std::to_string(added) + " events";
+        }
+    }
+#endif
     const char* sub = "a game of poor decisions";
     DrawText(sub, (kW - MeasureText(sub, 10)) / 2, 62, 10, PAL_DARK);
 
@@ -1736,31 +1840,40 @@ void Game::drawTitle(Vector2 mouse) {
     if (!pendingLegacy_.empty())
         hint = "this world remembers " + std::to_string(pendingLegacy_.size()) +
                " of your dead   S: set seed";
+    if (!modLine_.empty()) hint += "   " + modLine_;
     DrawText(hint.c_str(), (kW - MeasureText(hint.c_str(), 10)) / 2, 102, 10,
              pendingLegacy_.empty() ? PAL_DARK : PAL_GOLD);
 
     // Touch-friendly: buttons carry the whole flow on iPad.
-    bool play = uiButton({kW / 2 - 130, 118, 84, 18}, "BEGIN", mouse);
-    bool reroll = uiButton({kW / 2 - 42, 118, 84, 18}, "REROLL SEED", mouse);
-    uint64_t dailySeed = (uint64_t)(time(nullptr) / 86400) % 1000000000ULL;
-    // Everyone who presses DAILY today gets the same world.
-    if (uiButton({kW / 2 + 46, 118, 84, 18}, "DAILY WORLD", mouse)) {
-        nextSeed_ = dailySeed;
+    bool play = uiButton({8, 118, 72, 18}, "BEGIN", mouse);
+    bool reroll = uiButton({86, 118, 72, 18}, "REROLL", mouse);
+    // Everyone who presses DAILY today (or WEEKLY this week) shares a world.
+    if (uiButton({164, 118, 72, 18}, "DAILY", mouse)) {
+        nextSeed_ = dailySeed();
+        return;
+    }
+    if (uiButton({242, 118, 72, 18}, "WEEKLY", mouse)) {
+        nextSeed_ = weeklySeed();
         return;
     }
     bool hasSave = !LoadRawRun().empty();
-    if (hasSave && uiButton({kW / 2 - 130, 139, 84, 18}, "CONTINUE", mouse)) {
+    if (hasSave && uiButton({8, 139, 72, 18}, "CONTINUE", mouse)) {
         audio_.blip();
         if (loadRun()) return;
     }
-    if (uiButton({kW / 2 + 46, 139, 84, 18}, "YOUR SAGA", mouse)) {
+    if (uiButton({164, 139, 72, 18}, "SAGA", mouse)) {
         audio_.blip();
         sagaLives_ = LoadAllLegacy();
         sagaPage_ = 0;
         screen_ = SAGA;
         return;
     }
-    if (uiButton({kW / 2 - 42, 139, 84, 18}, "CHRONICLE", mouse)) {
+    if (uiButton({242, 139, 72, 18}, "OPTIONS", mouse)) {
+        audio_.blip();
+        screen_ = OPTIONS;
+        return;
+    }
+    if (uiButton({86, 139, 72, 18}, "CHRONICLE", mouse)) {
         audio_.blip();
         // Peek at the world before living in it.
         world_ = GenerateWorld(nextSeed_, grammar_, forge_);
@@ -1777,20 +1890,27 @@ void Game::drawTitle(Vector2 mouse) {
     }
 
 #if defined(__EMSCRIPTEN__)
-    // Today's fallen (daily leaderboard).
-    if (nextSeed_ == dailySeed) {
+    // The fallen of the shared world (daily or weekly leaderboard).
+    int boardKey = boardKeyFor(nextSeed_);
+    if (boardKey >= 0) {
+        if (boardKey != lastBoardKey_) {
+            // Switched boards (daily <-> weekly): refetch everything.
+            lastBoardKey_ = boardKey;
+            scoresRequested_ = ghostsRequested_ = deedsRequested_ = false;
+            scoresJson_.clear();
+        }
         if (!scoresRequested_) {
             scoresRequested_ = true;
-            rr_fetch_scores((int)(time(nullptr) / 86400));
+            rr_fetch_scores(boardKey);
         }
         if (!ghostsRequested_) {
             // Strangers' graves arrive while the player reads the title.
             ghostsRequested_ = true;
-            rr_fetch_ghosts((int)(time(nullptr) / 86400), "");
+            rr_fetch_ghosts(boardKey, "");
         }
         if (!deedsRequested_) {
             deedsRequested_ = true;
-            rr_fetch_deeds((int)(time(nullptr) / 86400));
+            rr_fetch_deeds(boardKey);
         }
         if (scoresJson_.empty()) {
             char* raw = rr_get_scores();
@@ -1801,7 +1921,8 @@ void Game::drawTitle(Vector2 mouse) {
             if (!list.is_discarded() && list.is_array() && !list.empty()) {
                 scoreIds_.clear();
                 scoreNames_.clear();
-                std::string line = "today's fallen: ";
+                std::string line = boardKey >= 7000000 ? "this week's fallen: "
+                                                       : "today's fallen: ";
                 for (int i = 0; i < (int)list.size() && i < 3; i++) {
                     if (i) line += "  |  ";
                     std::string nm = list[i].value("name", "?");
@@ -1848,7 +1969,85 @@ void Game::drawTitle(Vector2 mouse) {
         nextSeed_ = (nextSeed_ * 6364136223846793005ULL + 1442695040888963407ULL) % 1000000000ULL;
         return;
     }
-    if (play || key != 0) { audio_.blip(); screen_ = CLASSPICK; }
+    if (play || key != 0) {
+        audio_.blip();
+        // First life ever: three cards of how-to before the class pick (R7).
+        if (!profile_.seenIntro) {
+            introPage_ = 0;
+            return;
+        }
+        screen_ = CLASSPICK;
+    }
+}
+
+// The how-to cards: everything a first life needs, nothing more (R7).
+void Game::drawIntro(Vector2 mouse) {
+    static const char* kCards[3] = {
+        "HOW TO BE BRIEFLY ALIVE\n\nTravel between places. Each place deals "
+        "event cards; every card offers choices, and some choices roll dice "
+        "against your stats.\n\nYou will die. That is not failure - your name, "
+        "your deeds, and your death all become this world's permanent history. "
+        "TAB opens your pack.",
+        "THE WORLD REMEMBERS\n\nReplay the same seed and you return YEARS "
+        "later: your dead are historical figures, their lost things are "
+        "findable relics, and the folk you wronged hold grudges against your "
+        "heirs.\n\nDAILY and WEEKLY worlds are shared with every other player "
+        "alive right now - their graves, deeds, and falls appear in yours.",
+        "THE LONG GAME\n\nTraits change which cards find you. Gods bank favor "
+        "and may catch you when you fall - once. Contracts build careers, "
+        "words of the old tongue accumulate forever, and ships cross to other "
+        "shores.\n\nThere are ways out alive. One is up. One is past the edge "
+        "of the chart. Good luck.",
+    };
+    if (introPage_ < 0) introPage_ = 0;
+    DrawTextWrapped(kCards[introPage_], 16, 24, kW - 32, PAL_INK, kH - 26);
+    std::string pg = std::to_string(introPage_ + 1) + "/3";
+    DrawText(pg.c_str(), 8, kH - 16, 10, PAL_DARK);
+    const char* label = introPage_ < 2 ? "NEXT" : "BEGIN";
+    if (uiButton({(float)(kW - 56), (float)(kH - 22), 52, 18}, label, mouse) ||
+        IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
+        introPage_++;
+        if (introPage_ >= 3) {
+            introPage_ = -1;
+            profile_.seenIntro = true;
+            SaveProfile(profile_);
+            screen_ = CLASSPICK;
+        }
+    }
+}
+
+// Settings: small, persistent, and out of the way (R7).
+void Game::drawOptions(Vector2 mouse) {
+    const char* head = "OPTIONS";
+    DrawText(head, (kW - MeasureText(head, 10)) / 2, 24, 10, PAL_GOLD);
+    static const char* kSpeeds[3] = {"slow", "normal", "fast"};
+    static const char* kVols[3] = {"quiet", "medium", "loud"};
+    std::string r1 = std::string("Text speed: ") + kSpeeds[profile_.textSpeed % 3];
+    std::string r2 = std::string("Volume: ") + kVols[profile_.volume % 3];
+    std::string r3 = std::string("Music: ") + (profile_.musicOff ? "off" : "on");
+    if (uiButton({kW / 2 - 70, 56, 140, 18}, r1.c_str(), mouse)) {
+        profile_.textSpeed = (profile_.textSpeed + 1) % 3;
+        SaveProfile(profile_);
+    }
+    if (uiButton({kW / 2 - 70, 80, 140, 18}, r2.c_str(), mouse)) {
+        profile_.volume = (profile_.volume + 1) % 3;
+        SetMasterVolume(0.35f + 0.3f * profile_.volume);
+        SaveProfile(profile_);
+        audio_.coin(); // hear the new level immediately
+    }
+    if (uiButton({kW / 2 - 70, 104, 140, 18}, r3.c_str(), mouse)) {
+        profile_.musicOff = !profile_.musicOff;
+        if (profile_.musicOff != audio_.muted()) audio_.toggleMute();
+        SaveProfile(profile_);
+    }
+    if (uiButton({kW / 2 - 70, 134, 140, 18}, "REPLAY THE HOW-TO", mouse)) {
+        screen_ = TITLE;
+        introPage_ = 0;
+        return;
+    }
+    if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
+        IsKeyPressed(KEY_TAB) || IsKeyPressed(KEY_ESCAPE))
+        screen_ = TITLE;
 }
 
 void Game::drawClassPick(Vector2 mouse) {
@@ -1871,7 +2070,7 @@ void Game::drawClassPick(Vector2 mouse) {
         Rng ambRng(nextSeed_ ^ (pendingLegacy_.size() * 8191ULL), 99);
         ambitionChoices_.clear();
         while ((int)ambitionChoices_.size() < 3) {
-            int a = ambRng.range(0, 5);
+            int a = ambRng.range(0, 10);
             bool dup = false;
             for (int c : ambitionChoices_)
                 if (c == a) dup = true;
@@ -1927,6 +2126,9 @@ void Game::drawTravel(Vector2 mouse) {
     y = DrawTextWrapped(stats, 8, y, kW - 16, PAL_DARK);
     std::string sky = "It is " + season_ +
                       (weather_ == "clear" ? ", skies clear." : ", " + weather_ + ".");
+    if (worldGen_ >= 2)
+        sky += "  This world has taken " + std::to_string(worldGen_) +
+               " of your line; it hits harder and pays better.";
     if (!newsLine_.empty()) sky += "  NEWS: " + newsLine_;
     y = DrawTextWrapped(sky, 8, y + 1, kW - 16, PAL_DIM, y + 24);
     if (comp_.active) {
@@ -1984,6 +2186,7 @@ void Game::drawTravel(Vector2 mouse) {
                     coasts.push_back(r);
             if (!coasts.empty())
                 currentRegion_ = coasts[runRng_.range(0, (int)coasts.size() - 1)];
+            landfalls_++;
         }
         visitedRegions_.insert(currentRegion_);
         eventsLeftHere_ = (deckTag_ == "dungeon") ? runRng_.range(3, 4) : runRng_.range(2, 3);
@@ -2018,7 +2221,8 @@ void Game::drawEvent(Vector2 mouse) {
     // Typewriter: text arrives like someone is telling it to you.
     bool done = reveal_ >= (float)currentText_.size();
     if (!done) {
-        reveal_ += GetFrameTime() * 110.0f;
+        static const float kRevealSpeed[3] = {60.0f, 110.0f, 240.0f};
+        reveal_ += GetFrameTime() * kRevealSpeed[profile_.textSpeed % 3];
         if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE) ||
             pressed_)
             reveal_ = (float)currentText_.size();
@@ -2197,7 +2401,10 @@ void Game::drawInventory(Vector2 mouse) {
             if (isBook || isGossip || isMap) {
                 profile_.booksRead++;
                 booksThisRun_++;
-                if (isBook) profile_.wordsLearned += 2; // reading teaches the tongue
+                if (isBook) {
+                    profile_.wordsLearned += 2; // reading teaches the tongue
+                    wordsThisRun_ += 2;
+                }
                 SaveProfile(profile_);
                 std::string name = item.name;
                 std::string text;
@@ -2562,9 +2769,9 @@ void Game::drawDeath(Vector2 mouse) {
             SaveMarks(masterSeed_, marks.dump());
             clearRun();
 #if defined(__EMSCRIPTEN__)
-            // Daily world? Your epitaph joins today's fallen.
-            uint64_t dailySeed = (uint64_t)(time(nullptr) / 86400) % 1000000000ULL;
-            if (masterSeed_ == dailySeed && !scoreSubmitted_) {
+            // Shared world? Your epitaph joins the fallen.
+            int bk = boardKeyFor(masterSeed_);
+            if (bk >= 0 && !scoreSubmitted_) {
                 scoreSubmitted_ = true;
                 nlohmann::json relics = nlohmann::json::array();
                 for (auto& [rn, rq] : rec.relics)

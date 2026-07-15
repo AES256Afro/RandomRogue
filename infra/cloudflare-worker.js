@@ -27,6 +27,15 @@ const FILES = {
 const ORIGIN = "https://aes256afro.github.io/RandomRogue/";
 const CORS = { "access-control-allow-origin": "*", "access-control-allow-methods": "GET,POST,OPTIONS", "access-control-allow-headers": "content-type" };
 
+// Board keys (R7): plain day numbers for daily worlds; 7000000+week for
+// weekly worlds, so the two leaderboards never collide.
+function validKey(day) {
+  if (!day) return false;
+  const now = Date.now();
+  if (day >= 7000000) return Math.abs((day - 7000000) - Math.floor(now / (86400000 * 7))) <= 1;
+  return Math.abs(day - Math.floor(now / 86400000)) <= 1;
+}
+
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
@@ -50,8 +59,7 @@ export default {
       let body;
       try { body = await req.json(); } catch (e) { return new Response("bad", { status: 400, headers: CORS }); }
       const day = parseInt(body.day);
-      const today = Math.floor(Date.now() / 86400000);
-      if (!day || Math.abs(day - today) > 1) return new Response("stale", { status: 400, headers: CORS });
+      if (!validKey(day)) return new Response("stale", { status: 400, headers: CORS });
       const name = String(body.name || "anonymous").slice(0, 48);
       const meaning = String(body.meaning || "").slice(0, 64);
       const days = Math.max(0, Math.min(999, parseInt(body.days) || 0));
@@ -102,8 +110,7 @@ export default {
       let body;
       try { body = await req.json(); } catch (e) { return new Response("bad", { status: 400, headers: CORS }); }
       const day = parseInt(body.day);
-      const today = Math.floor(Date.now() / 86400000);
-      if (!day || Math.abs(day - today) > 1) return new Response("stale", { status: 400, headers: CORS });
+      if (!validKey(day)) return new Response("stale", { status: 400, headers: CORS });
       const text = String(body.text || "").slice(0, 140);
       if (!text) return new Response("bad", { status: 400, headers: CORS });
       await env.DB.prepare("INSERT INTO deeds (day, text) VALUES (?,?)").bind(day, text).run();
@@ -115,6 +122,17 @@ export default {
         "SELECT text FROM deeds WHERE day = ? ORDER BY ts DESC LIMIT 12"
       ).bind(day).all();
       return new Response(JSON.stringify(rs.results || []), { headers: { "content-type": "application/json", ...CORS } });
+    }
+    // Public aggregate stats: how the fallen are actually falling (R7).
+    if (p === "__stats") {
+      const rs = await env.DB.prepare(
+        "SELECT day, COUNT(*) AS deaths, ROUND(AVG(days),1) AS avg_days, MAX(days) AS best, SUM(finished) AS completed FROM deaths GROUP BY day ORDER BY day DESC LIMIT 14"
+      ).all();
+      const sites = await env.DB.prepare(
+        "SELECT site, COUNT(*) AS n FROM deaths WHERE site != '' GROUP BY site ORDER BY n DESC LIMIT 10"
+      ).all();
+      return new Response(JSON.stringify({ boards: rs.results || [], deadliest_sites: sites.results || [] }),
+        { headers: Object.assign({ "content-type": "application/json" }, CORS) });
     }
     if (p === "") p = "index.html";
     if (p === "play" || p === "play/") p = "play/index.html";

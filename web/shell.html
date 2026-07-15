@@ -37,6 +37,17 @@
     var Module = {
       canvas: (function () { return document.getElementById('canvas'); })()
     };
+    // Community mods: ?mod=<url-of-events-json> merges an extra deck (R7).
+    // Data only - the file is parsed as event JSON, never executed.
+    window.__rrMod = "";
+    try {
+      var modUrl = new URLSearchParams(location.search).get('mod');
+      if (modUrl) {
+        fetch(modUrl).then(function (r) { return r.text(); })
+          .then(function (t) { if (t && t.length < 2000000) window.__rrMod = t; })
+          .catch(function () {});
+      }
+    } catch (e) {}
     // iOS Safari: block double-tap-to-zoom inside the game.
     document.addEventListener('dblclick', function (e) { e.preventDefault(); }, { passive: false });
     document.addEventListener('gesturestart', function (e) { e.preventDefault(); });

@@ -33,7 +33,8 @@ public:
 
 private:
     enum Screen { TITLE, CLASSPICK, AMBITION, TRAVEL, EVENT, OUTCOME, DEATH,
-                  INVENTORY, INFO, VENDOR, WORLDMAP, CHRONICLE, SAGA, REPLAY };
+                  INVENTORY, INFO, VENDOR, WORLDMAP, CHRONICLE, SAGA, REPLAY,
+                  OPTIONS };
 
     // A hired sword, a talking badger, a disgraced accountant (P5).
     struct Companion {
@@ -106,6 +107,22 @@ private:
     void drawChronicle(Vector2 mouse);
     void drawSaga(Vector2 mouse);
     void drawReplay(Vector2 mouse);
+    void drawOptions(Vector2 mouse);
+    void drawIntro(Vector2 mouse); // first-run how-to cards (R7)
+    // Shared worlds (R7): daily and weekly seeds and their board keys.
+    // Weekly board keys live in the 7,000,000+ namespace so the two
+    // leaderboards never collide in D1.
+    static uint64_t dailySeed() {
+        return (uint64_t)(time(nullptr) / 86400) % 1000000000ULL;
+    }
+    static uint64_t weeklySeed() {
+        return ((uint64_t)(time(nullptr) / (86400 * 7)) * 7777777ULL) % 1000000000ULL;
+    }
+    int boardKeyFor(uint64_t seed) const {
+        if (seed == dailySeed()) return (int)(time(nullptr) / 86400);
+        if (seed == weeklySeed()) return 7000000 + (int)(time(nullptr) / (86400 * 7));
+        return -1;
+    }
     void drawPortrait(int x, int y, int scale, const std::string& name);
     void saveRun();
     bool loadRun();
@@ -242,6 +259,17 @@ private:
     std::vector<std::string> deeds_;    // live deeds feed (daily worlds)
     size_t deedNext_ = 0;
     bool deedsRequested_ = false;
+
+    // R7: ambition counters, world age, weekly worlds, mods, onboarding.
+    bool beastSlainThisRun_ = false;
+    int wordsThisRun_ = 0;
+    int landfalls_ = 0;
+    bool settledThisRun_ = false;
+    int worldGen_ = 0;    // lives this world has taken from you already
+    int introPage_ = -1;  // >=0: the how-to cards are showing
+    bool modLoaded_ = false;
+    std::string modLine_; // "mod loaded: N events" on the title
+    int lastBoardKey_ = -2; // refetch scores/ghosts/deeds when this changes
 
     // audio / juice / meta
     AudioBank audio_;

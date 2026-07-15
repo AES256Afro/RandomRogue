@@ -103,3 +103,21 @@ so slot events are automatically situational.
 
 Share your mod as a zip of changed files. Determinism note: content changes
 worlds — two players need matching data for a shared seed to match.
+
+## Loading mods in the browser (R7)
+
+Host an events file anywhere with CORS (a GitHub gist's raw URL works) and
+append `?mod=<url>` to the play address:
+
+```
+https://random-rogue.com/play/?mod=https://gist.githubusercontent.com/you/abc/raw/myevents.json
+```
+
+The file is fetched at load, parsed as a standard events array (same schema
+as `assets/data/events/*.json`), and merged into the deck. The title screen
+shows `mod: +N events` when it lands. Data only — mods are event JSON, never
+code. Duplicate event ids shadow nothing; both copies enter the deck, so
+namespace your ids (`mymod_goblin_tea_party`).
+
+Validate your file before sharing: drop it in `assets/data/events/`, add it
+to `manifest.json`, and run the `validate` tool.
