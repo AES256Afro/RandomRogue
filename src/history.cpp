@@ -17,7 +17,7 @@ const std::vector<std::string>& professions() {
 
 struct Sim {
     World& w;
-    History h;
+    History& h;
     Rng rng;
     const Grammar& g;
     const NameForge& forge;
@@ -26,8 +26,9 @@ struct Sim {
     struct War { int a, b, endYear, declaredEntry; };
     std::vector<War> wars;
 
-    Sim(World& world, uint64_t seed, const Grammar& grammar, const NameForge& f)
-        : w(world), rng(seed, STREAM_HISTORY), g(grammar), forge(f) {}
+    Sim(World& world, History& hist, uint64_t seed, const Grammar& grammar,
+        const NameForge& f)
+        : w(world), h(hist), rng(seed, STREAM_HISTORY), g(grammar), forge(f) {}
 
     ChronEntry& log(const std::string& type) {
         ChronEntry e;
@@ -344,9 +345,8 @@ struct Sim {
                 if (rng.chance(14)) newFigure(fa, true);
     }
 
-    History run(int years) {
-        setup();
-        for (year = 1; year <= years; year++) {
+    void run(int fromYear, int toYear) {
+        for (year = fromYear; year <= toYear; year++) {
             for (int i = 0; i < (int)h.figures.size(); i++)
                 if (h.figures[i].died < 0 && rng.chance(6)) figureActs(i);
             factionPolitics();
@@ -354,8 +354,8 @@ struct Sim {
             society();
             agingAndBirths();
         }
-        h.years = years;
-        return std::move(h);
+        h.years = toYear;
+        h.presentYear = toYear;
     }
 };
 
@@ -363,8 +363,136 @@ struct Sim {
 
 History SimulateHistory(World& world, uint64_t seed, const Grammar& grammar,
                         const NameForge& forge) {
-    Sim sim(world, seed, grammar, forge);
-    return sim.run(250);
+    History h;
+    Sim sim(world, h, seed, grammar, forge);
+    sim.setup();
+    sim.run(1, 250);
+    return h;
+}
+
+void SimulateYears(World& world, History& h, uint64_t seed, int fromYear,
+                   int toYear, const Grammar& grammar, const NameForge& forge) {
+    Sim sim(world, h, seed, grammar, forge);
+    sim.run(fromYear, toYear);
+}
+
+// The living world. Probabilities are tuned so a 30-day run sees a handful of
+// headlines, not an apocalypse. Entries land at presentYear and count as NEWS.
+void SimulateLiveDay(World& world, History& h, Rng& rng, const Grammar& grammar,
+                     const NameForge& forge) {
+    (void)forge;
+    int year = h.presentYear;
+    auto log = [&](const std::string& type) -> ChronEntry& {
+        ChronEntry e;
+        e.id = (int)h.chron.size();
+        e.year = year;
+        e.type = type;
+        h.chron.push_back(e);
+        return h.chron.back();
+    };
+    auto aliveFigure = [&]() {
+        std::vector<int> pool;
+        for (int i = 0; i < (int)h.figures.size(); i++)
+            if (h.figures[i].died < 0) pool.push_back(i);
+        return pool.empty() ? -1 : pool[rng.range(0, (int)pool.size() - 1)];
+    };
+
+    // Wars ignite...
+    if ((int)h.liveWars.size() < 2 && h.factions.size() > 1 && rng.chance(4)) {
+        int a = rng.range(0, (int)h.factions.size() - 1);
+        int b = a;
+        while (b == a) b = rng.range(0, (int)h.factions.size() - 1);
+        ChronEntry& e = log("war_declared");
+        e.faction = a;
+        e.faction2 = b;
+        h.liveWars.push_back({a, b, rng.range(12, 35), e.id});
+    }
+    // ...burn...
+    for (size_t i = 0; i < h.liveWars.size();) {
+        LiveWar& war = h.liveWars[i];
+        if (rng.chance(6)) {
+            int loser = rng.chance(50) ? war.a : war.b;
+            int winner = (loser == war.a) ? war.b : war.a;
+            std::vector<int> cities;
+            for (int s = 0; s < (int)world.sites.size(); s++)
+                if (world.sites[s].type == "city" &&
+                    world.sites[s].region == h.factions[loser].home)
+                    cities.push_back(s);
+            if (!cities.empty()) {
+                int s = cities[rng.range(0, (int)cities.size() - 1)];
+                ChronEntry& e = log("city_sacked");
+                e.faction = winner;
+                e.faction2 = loser;
+                e.site = s;
+                e.cause = war.declaredEntry;
+                world.sites[s].name = "The Ruins of " + world.sites[s].name;
+                world.sites[s].type = "ruins";
+                world.sites[s].deck = "dungeon";
+            }
+        }
+        if (--war.daysLeft <= 0) {
+            ChronEntry& e = log("peace_signed");
+            e.faction = war.a;
+            e.faction2 = war.b;
+            e.cause = war.declaredEntry;
+            h.liveWars.erase(h.liveWars.begin() + i);
+        } else {
+            i++;
+        }
+    }
+    // Plagues spread and fade.
+    if (h.plaguedRegions.size() < 2 && rng.chance(3)) {
+        int r = rng.range(0, (int)world.regions.size() - 1);
+        if (!h.plaguedRegions.count(r)) {
+            h.plaguedRegions[r] = rng.range(8, 20);
+            ChronEntry& e = log("plague");
+            e.extra = grammar.expand("{plague_name}", rng) + " (in " +
+                      world.regions[r].name + ")";
+        }
+    }
+    for (auto it = h.plaguedRegions.begin(); it != h.plaguedRegions.end();) {
+        if (--it->second <= 0) it = h.plaguedRegions.erase(it);
+        else ++it;
+    }
+    // Petty history continues without you.
+    if (rng.chance(3)) {
+        std::vector<int> loose;
+        for (int i = 0; i < (int)h.artifacts.size(); i++)
+            if (h.artifacts[i].restingSite >= 0 && !h.artifacts[i].claimed)
+                loose.push_back(i);
+        int fi = aliveFigure();
+        if (!loose.empty() && fi >= 0) {
+            int ai = loose[rng.range(0, (int)loose.size() - 1)];
+            h.artifacts[ai].restingSite = rng.range(0, (int)world.sites.size() - 1);
+            ChronEntry& e = log("artifact_stolen");
+            e.actor = fi;
+            e.artifact = ai;
+            e.site = h.artifacts[ai].restingSite;
+            h.artifacts[ai].deeds.push_back(e.id);
+        }
+    }
+    if (rng.chance(2)) {
+        int fi = aliveFigure();
+        std::vector<int> beasts;
+        for (int i = 0; i < (int)h.beasts.size(); i++)
+            if (h.beasts[i].died < 0) beasts.push_back(i);
+        if (fi >= 0 && !beasts.empty()) {
+            int bi = beasts[rng.range(0, (int)beasts.size() - 1)];
+            h.figures[fi].died = year;
+            h.beasts[bi].kills++;
+            ChronEntry& e = log("figure_eaten");
+            e.actor = fi;
+            e.beast = bi;
+        }
+    }
+    if (rng.chance(1)) {
+        int fi = aliveFigure();
+        if (fi >= 0) {
+            ChronEntry& e = log("book_written");
+            e.actor = fi;
+            e.extra = grammar.expand("{book_title}", rng);
+        }
+    }
 }
 
 std::string RenderChronEntry(const ChronEntry& e, const History& h, const World& w,

@@ -29,7 +29,8 @@ static const std::set<std::string> kVerbs = {
     "hp", "maxhp", "money", "credits", "stat", "item", "loot", "removeitem",
     "rep", "shop", "goto", "take_artifact", "die", "trait", "npc_mark"};
 static const std::set<std::string> kSlotQueries = {
-    "chronicle_random", "artifact_here", "figure_alive", "figure_dead"};
+    "chronicle_random", "chronicle_news", "artifact_here", "figure_alive",
+    "figure_dead"};
 static const std::set<std::string> kDecks = {
     "city", "tavern", "dungeon", "dungeon_finale", "cave", "forest", "road"};
 static const std::set<std::string> kStats = {"str", "dex", "con", "int", "wis", "cha"};
@@ -45,8 +46,10 @@ static bool validWhen(const std::string& w) {
     std::istringstream ss(w);
     std::string a, b, c;
     ss >> a >> b >> c;
-    static const std::set<std::string> unary = {"carrying_artifact"};
-    static const std::set<std::string> named = {"trait", "!trait", "has", "!has", "npc"};
+    static const std::set<std::string> unary = {"carrying_artifact", "war_here",
+                                                "plague_here", "raining", "snowing"};
+    static const std::set<std::string> named = {"trait", "!trait", "has", "!has", "npc",
+                                                "season"};
     static const std::set<std::string> cmp = {"rep", "money", "credits", "hp", "day"};
     static const std::set<std::string> ops = {">", "<", ">=", "<=", "=="};
     if (unary.count(a)) return true;

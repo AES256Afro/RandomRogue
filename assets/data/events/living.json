@@ -1,0 +1,98 @@
+[
+  {
+    "id": "road_war_refugees",
+    "locations": ["road", "forest"],
+    "weight": 18,
+    "when": ["war_here"],
+    "text": "A column of refugees fills the road, carts stacked with mattresses, chickens, and one defiantly rescued piano. The war you keep hearing about has faces now, and they're all walking the other way.",
+    "choices": [
+      { "text": "Share your supplies", "requires": { "item": "rations" },
+        "outcomes": [
+          { "weight": 100, "text": "Your rations vanish into a dozen grateful hands. An old woman presses something into your palm 'for luck' - a coin from a kingdom that no longer exists as of Tuesday.", "effects": ["removeitem rations", "rep +6", "item lucky_rock"] }
+        ] },
+      { "text": "Ask what happened",
+        "outcomes": [
+          { "weight": 100, "text": "Everyone answers at once. The siege, the fire, the piano (it's a long story). You leave knowing more about this war than its generals do.", "effects": ["stat wis +1"] }
+        ] },
+      { "text": "Buy the piano", "requires": { "money": 10 },
+        "outcomes": [
+          { "weight": 60, "text": "The family weeps with relief - it was grandmother's, and carrying it was killing them. You now own a war piano. You cannot carry a piano. You donate it to the next tavern for a hero's welcome.", "effects": ["money -10", "rep +8", "stat cha +1"] },
+          { "weight": 40, "text": "Money changes hands. The piano immediately loses a leg in protest. The family waves goodbye to it without visible grief. You've been piano'd.", "effects": ["money -10"] }
+        ] }
+    ]
+  },
+  {
+    "id": "city_plague_gate",
+    "locations": ["city"],
+    "weight": 18,
+    "when": ["plague_here"],
+    "text": "The city gate is hung with vinegar-soaked sheets and a sign: 'PLAGUE PRECAUTIONS IN EFFECT. STATE YOUR HUMORS.' A masked warden eyes you through the fumes, holding a very long spoon for prodding.",
+    "choices": [
+      { "text": "Submit to inspection",
+        "outcomes": [
+          { "weight": 70, "text": "You are prodded, sniffed at a distance, and declared 'adequately balanced.' The vinegar smell will follow you for a day, which honestly keeps the crowds off.", "effects": [] },
+          { "weight": 30, "text": "The warden doesn't like your pallor. You're quarantined in a tent for observation with excellent soup and terrible company. A day lost, oddly restful.", "effects": ["hp +3"] }
+        ] },
+      { "text": "Claim to be a physician", "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You improvise enough humoral theory that the warden takes NOTES. You're waved through and handed a consultation fee for your trouble.", "effects": ["money +7", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your diagnosis of 'too much blood, probably' earns you a spoon-prod and a fine for practicing medicine without a theory.", "effects": ["money -5"] }
+        ] },
+      { "text": "Sell your medicine at the gate", "requires": { "item": "bandages" },
+        "outcomes": [
+          { "weight": 100, "text": "Clean bandages, in a plague town, at the gate. You could charge anything. You charge a lot.", "effects": ["removeitem bandages", "money +14", "rep +3"] }
+        ] }
+    ]
+  },
+  {
+    "id": "tavern_news",
+    "locations": ["tavern"],
+    "weight": 16,
+    "slots": { "news": "chronicle_news" },
+    "text": "A crier bursts into {site}, still catching his breath, waving a fresh broadsheet: \"{news}\" The room erupts into opinions.",
+    "choices": [
+      { "text": "Buy the broadsheet", "requires": { "money": 1 },
+        "outcomes": [
+          { "weight": 100, "text": "Fresh ink, breathless prose, one factual error you catch immediately. Knowing things first is its own currency.", "effects": ["money -1", "stat int +1"] }
+        ] },
+      { "text": "Argue with the room about what it means",
+        "outcomes": [
+          { "weight": 55, "text": "Your analysis carries the bar. Someone calls you 'the sensible one,' which in this tavern is a coronation.", "effects": ["stat cha +1"] },
+          { "weight": 45, "text": "The room splits into factions. You are somehow blamed for the schism AND both factions' positions.", "effects": ["stat cha -1"] }
+        ] },
+      { "text": "Ask the crier what he ISN'T reporting", "check": { "stat": "wis", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "He goes pale, glances at the door, and whispers the part his editor cut. It's worth money to the right people, and you know some wrong ones.", "effects": ["money +8", "stat wis +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "'I report EVERYTHING,' he says, wounded, and dedicates the next broadsheet to 'suspicious strangers asking suspicious questions.'", "effects": ["rep -3"] }
+        ] }
+    ]
+  },
+  {
+    "id": "wild_snowfall",
+    "locations": ["road", "forest"],
+    "weight": 8,
+    "when": ["snowing"],
+    "text": "The snow arrives sideways, the road disappears politely, and the world goes quiet in a way that would be beautiful if your boots were better.",
+    "choices": [
+      { "text": "Push through it", "check": { "stat": "con", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Cold to the bone, but you make the next shelter with a story and all your toes.", "effects": [] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The snow wins on points. You arrive eventually, shaking, having renamed several gods after your extremities.", "effects": ["hp -3"] }
+        ] },
+      { "text": "Shelter and wait it out",
+        "outcomes": [
+          { "weight": 100, "text": "You find an overhang, build a small fire, and watch the world be erased and redrawn. Some delays are gifts.", "effects": ["hp +2", "stat wis +1"] }
+        ] },
+      { "text": "Catch snowflakes on your tongue",
+        "outcomes": [
+          { "weight": 100, "text": "You are an adult. You are a hardened survivor of dungeons and audits. You catch eleven and count each one aloud. The wilderness keeps your secret.", "effects": ["hp +1"] }
+        ] }
+    ]
+  }
+]

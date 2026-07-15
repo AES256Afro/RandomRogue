@@ -271,6 +271,18 @@
     "{faction} raised {extra} in year {year} to commemorate something no one now recalls."
   ],
 
+  "chron_pc_died": [
+    "In year {year}, the adventurer {actor} died. The record notes only: '{extra}'",
+    "{actor} fell in year {year}. {extra}",
+    "Year {year}: {actor}, adventurer, ran out of luck. The epitaph reads '{extra}'",
+    "The wanderer {actor} met their end in year {year}. Taverns still argue about the details. The stone just says '{extra}'"
+  ],
+  "chron_pc_relic": [
+    "{artifact} - {actor}'s, until the end - surfaced at {site}.",
+    "In year {year}, {actor}'s {artifact} turned up at {site}. Nobody claimed it. Nobody dared.",
+    "{artifact} rests at {site}, still waiting for {actor} to come back for it."
+  ],
+
   "epitaph": [
     "Died as they lived: confused.",
     "The paperwork was fatal.",

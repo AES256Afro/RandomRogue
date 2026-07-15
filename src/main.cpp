@@ -46,12 +46,21 @@ void UpdateDrawFrame() {
     // Window-space -> virtual-canvas-space for the pointer.
     int screenW = GetScreenWidth();
     int screenH = GetScreenHeight();
-    int scale = 1;
-    while ((scale + 1) * kVirtualW <= screenW && (scale + 1) * kVirtualH <= screenH) scale++;
-    int drawW = kVirtualW * scale;
-    int drawH = kVirtualH * scale;
-    int offX = (screenW - drawW) / 2;
-    int offY = (screenH - drawH) / 2;
+    int intScale = 1;
+    while ((intScale + 1) * kVirtualW <= screenW && (intScale + 1) * kVirtualH <= screenH)
+        intScale++;
+    // Integer scaling keeps pixels perfect on big screens; on small ones
+    // (phones, split-screen iPad) it wastes most of the viewport, so fall
+    // back to exact-fit fractional scaling below 2x.
+    float scale = (float)intScale;
+    if (intScale < 2) {
+        float fit = fminf((float)screenW / kVirtualW, (float)screenH / kVirtualH);
+        if (fit > 0.1f) scale = fit;
+    }
+    float drawW = kVirtualW * scale;
+    float drawH = kVirtualH * scale;
+    float offX = (screenW - drawW) / 2.0f;
+    float offY = (screenH - drawH) / 2.0f;
 
 #if defined(PLATFORM_WEB)
     // Canvas CSS pixels -> framebuffer pixels (they can differ on retina).
@@ -76,12 +85,12 @@ void UpdateDrawFrame() {
     float shake = gGame.shakeAmount();
     if (shake > 0.0f) {
         double t = GetTime();
-        offX += (int)(sinf((float)t * 61.0f) * shake * scale);
-        offY += (int)(cosf((float)t * 83.0f) * shake * scale);
+        offX += sinf((float)t * 61.0f) * shake * scale;
+        offY += cosf((float)t * 83.0f) * shake * scale;
     }
 
     Rectangle src{0, 0, (float)kVirtualW, (float)-kVirtualH};
-    Rectangle dst{(float)offX, (float)offY, (float)drawW, (float)drawH};
+    Rectangle dst{offX, offY, drawW, drawH};
     BeginDrawing();
     ClearBackground(BLACK);
     DrawTexturePro(gCanvas.texture, src, dst, Vector2{0, 0}, 0.0f, WHITE);

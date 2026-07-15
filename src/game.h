@@ -29,12 +29,14 @@ private:
     enum Screen { TITLE, CLASSPICK, TRAVEL, EVENT, OUTCOME, DEATH, INVENTORY, INFO, VENDOR };
 
     struct StartClass {
-        const char* name;
-        const char* blurb;
-        const char* lockHint; // requirement text when locked
+        std::string name;
+        std::string blurb;
+        std::string lockHint; // requirement text when locked
         bool unlocked;
     };
     std::vector<StartClass> startClasses() const;
+    void injectLegacy(int classIdx); // dead PCs -> figures, items -> relics
+    void dailyTick();                // the living world advances one day
 
     void newRun(int classIdx);
     ItemInstance makeItem(const std::string& id);
@@ -127,6 +129,14 @@ private:
     std::string seedInput_;
 
     bool pressed_ = false; // unified click/tap edge for this frame
+
+    // the unbroken chronicle (P2+P3)
+    std::vector<LegacyRecord> pendingLegacy_; // ghosts of nextSeed_'s world
+    uint64_t cachedLegacySeed_ = ~0ULL;
+    Rng liveRng_;
+    std::string season_ = "spring", weather_ = "clear";
+    std::string newsLine_;
+    bool legacySaved_ = false; // this death already recorded
 
     // audio / juice / meta
     AudioBank audio_;

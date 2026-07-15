@@ -3,6 +3,7 @@
 // facts. Runtime content (rumors, books, artifact provenance) renders from it.
 // Notable side effect: sacked cities become dungeons.
 #pragma once
+#include <map>
 #include <string>
 #include <vector>
 #include "grammar.h"
@@ -30,7 +31,9 @@ struct HArtifact {
     int restingSite = -1; // world site index
     bool claimed = false; // taken by the player this run
     std::vector<int> deeds; // chronicle entry ids
-    std::string display() const { return conlang + " \"" + meaning + "\""; }
+    std::string display() const {
+        return meaning.empty() ? conlang : conlang + " \"" + meaning + "\"";
+    }
 };
 
 struct Beast {
@@ -48,19 +51,42 @@ struct ChronEntry {
     std::string extra;     // book title, plague name, cult name, region name...
 };
 
+// A war burning RIGHT NOW, while the player walks around in it.
+struct LiveWar {
+    int a = -1, b = -1;
+    int daysLeft = 0;
+    int declaredEntry = -1;
+};
+
 struct History {
     std::vector<Faction> factions;
     std::vector<Figure> figures;
     std::vector<HArtifact> artifacts;
     std::vector<Beast> beasts;
     std::vector<ChronEntry> chron;
-    int years = 0;
+    int years = 0;       // last simulated year
+    int presentYear = 0; // the year the player walks in
+
+    // The living world (P2): state that changes daily during play.
+    std::vector<LiveWar> liveWars;
+    std::map<int, int> plaguedRegions; // region index -> days remaining
+    int liveStartId = 0; // chron entries >= this are NEWS, not history
 };
 
 // Mutates world: sacked cities become ruins (dungeon deck), sky debris adds
 // crash sites.
 History SimulateHistory(World& world, uint64_t seed, const Grammar& grammar,
                         const NameForge& forge);
+
+// Continue an existing history for [fromYear+1 .. toYear] — the gap between
+// player runs. Same rules, same world, new scars.
+void SimulateYears(World& world, History& h, uint64_t seed, int fromYear,
+                   int toYear, const Grammar& grammar, const NameForge& forge);
+
+// One in-game day of the living world: wars ignite and burn, plagues spread
+// and fade, artifacts get stolen, beasts eat someone's favorite scholar.
+void SimulateLiveDay(World& world, History& h, Rng& rng, const Grammar& grammar,
+                     const NameForge& forge);
 
 std::string RenderChronEntry(const ChronEntry& e, const History& h, const World& w,
                              const Grammar& grammar, Rng& rng);

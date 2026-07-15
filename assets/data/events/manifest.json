@@ -8,6 +8,7 @@
     "road.json",
     "special.json",
     "tavern.json",
-    "afflictions.json"
+    "afflictions.json",
+    "living.json"
   ]
 }

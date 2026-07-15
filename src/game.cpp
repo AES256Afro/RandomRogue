@@ -16,17 +16,29 @@ const Color PAL_RED   = {231, 82, 86, 255};
 const Color PAL_GREEN = {126, 196, 93, 255};
 const Color PAL_ROW   = {38, 33, 55, 255};
 
-// Wrap by words; honors '\n'. Returns y after the last line.
-int DrawTextWrapped(const std::string& text, int x, int y, int width, Color color) {
+// Wrap by words; honors '\n'. Never draws past maxY: the final visible line
+// gets a ".." marker instead of spilling into buttons or off the canvas.
+int DrawTextWrapped(const std::string& text, int x, int y, int width, Color color,
+                    int maxY = kH) {
     const int fs = 10, lineH = 11;
     std::string line;
+    bool clipped = false;
     auto flush = [&]() {
+        if (clipped) return;
+        if (y + lineH * 2 > maxY) {
+            // Last line that fits: mark the cut.
+            if (!line.empty()) DrawText((line + " ..").c_str(), x, y, fs, color);
+            y += lineH;
+            clipped = true;
+            line.clear();
+            return;
+        }
         if (!line.empty()) DrawText(line.c_str(), x, y, fs, color);
         y += lineH;
         line.clear();
     };
     std::string word;
-    for (size_t i = 0; i <= text.size(); i++) {
+    for (size_t i = 0; i <= text.size() && !clipped; i++) {
         char c = (i < text.size()) ? text[i] : ' ';
         if (c == ' ' || c == '\n') {
             std::string candidate = line.empty() ? word : line + " " + word;
@@ -42,7 +54,10 @@ int DrawTextWrapped(const std::string& text, int x, int y, int width, Color colo
             word += c;
         }
     }
-    if (!line.empty()) flush();
+    if (!line.empty() && !clipped) {
+        if (y + lineH <= maxY) DrawText(line.c_str(), x, y, fs, color);
+        y += lineH;
+    }
     return y;
 }
 
@@ -85,7 +100,7 @@ void Game::shutdown() {
 }
 
 std::vector<Game::StartClass> Game::startClasses() const {
-    return {
+    std::vector<StartClass> classes = {
         {"Drifter", "rations, a weapon, no expectations", "", true},
         {"Scavenger", "satchel, rope, lockpick, an eye for trash", "die 5 times",
          profile_.deaths >= 5},
@@ -96,6 +111,14 @@ std::vector<Game::StartClass> Game::startClasses() const {
         {"Tourist", "fancy hat, spyglass, spending money", "live 25 days total",
          profile_.daysTotal >= 25},
     };
+    if (!pendingLegacy_.empty()) {
+        const LegacyRecord& last = pendingLegacy_.back();
+        std::string blurb = "heir of " + last.name;
+        blurb += last.relics.empty() ? "; a name to live down"
+                                     : "; their " + last.relics[0].first;
+        classes.push_back({"Heir", blurb, "", true});
+    }
+    return classes;
 }
 
 ItemInstance Game::makeItem(const std::string& id) {
@@ -181,6 +204,19 @@ bool Game::evalCond(const std::string& cond) const {
         if (b == "<=") return lhs <= rhs;
         return lhs == rhs;
     };
+    if (a == "war_here") {
+        int owner = regionOwner(currentSite_ >= 0 ? world_.sites[currentSite_].region : -1);
+        for (auto& w : history_.liveWars)
+            if (w.a == owner || w.b == owner) return owner >= 0;
+        return false;
+    }
+    if (a == "plague_here") {
+        int region = currentSite_ >= 0 ? world_.sites[currentSite_].region : -1;
+        return region >= 0 && history_.plaguedRegions.count(region) > 0;
+    }
+    if (a == "raining") return weather_ == "raining";
+    if (a == "snowing") return weather_ == "snowing";
+    if (a == "season") return season_ == b;
     if (a == "rep") return cmp(localRep());
     if (a == "money") return cmp(ch_.money);
     if (a == "credits") return cmp(ch_.credits);
@@ -200,14 +236,91 @@ bool Game::evalCond(const std::string& cond) const {
     return false; // unknown condition: never true, validator catches these
 }
 
+// Dead characters of this seed become historical figures; the world simulates
+// the years between attempts. Deterministic: same seed + same legacy list =
+// same world, every time, on every platform.
+void Game::injectLegacy(int classIdx) {
+    int yearCursor = history_.years;
+    for (size_t i = 0; i < pendingLegacy_.size(); i++) {
+        const LegacyRecord& rec = pendingLegacy_[i];
+        Rng inj(masterSeed_ + (i + 1) * 31337ULL, 88);
+        int deathYear = yearCursor + 1;
+
+        Figure f;
+        f.name = rec.name;
+        f.faction = history_.factions.empty()
+                        ? 0 : (int)(i % history_.factions.size());
+        f.trait = "legendary";
+        f.profession = "adventurer";
+        f.born = deathYear - inj.range(19, 40);
+        f.died = deathYear;
+        history_.figures.push_back(f);
+        int fi = (int)history_.figures.size() - 1;
+
+        ChronEntry death;
+        death.id = (int)history_.chron.size();
+        death.year = deathYear;
+        death.type = "pc_died";
+        death.actor = fi;
+        death.extra = rec.epitaph;
+        for (int s = 0; s < (int)world_.sites.size(); s++)
+            if (world_.sites[s].name == rec.deathSite) death.site = s;
+        history_.chron.push_back(death);
+
+        // Their things scatter into the world, findable, name attached.
+        for (size_t r = 0; r < rec.relics.size(); r++) {
+            // The heir carries the newest ghost's first relic instead.
+            bool heirTakesIt = (classIdx == 5) && (i + 1 == pendingLegacy_.size()) && r == 0;
+            if (heirTakesIt) continue;
+            HArtifact a;
+            a.conlang = rec.relics[r].first;
+            a.meaning = "";
+            a.material = "memory and " + std::string(r == 0 ? "stubbornness" : "rust");
+            a.forgedBy = fi;
+            a.forgedYear = deathYear;
+            a.restingSite = inj.range(0, (int)world_.sites.size() - 1);
+            history_.artifacts.push_back(a);
+            ChronEntry relic;
+            relic.id = (int)history_.chron.size();
+            relic.year = deathYear;
+            relic.type = "pc_relic";
+            relic.actor = fi;
+            relic.artifact = (int)history_.artifacts.size() - 1;
+            relic.site = a.restingSite;
+            history_.chron.push_back(relic);
+            history_.artifacts.back().deeds.push_back(relic.id);
+        }
+
+        int gap = 2 + (int)(i % 4);
+        SimulateYears(world_, history_, masterSeed_ + (i + 1) * 7919ULL,
+                      yearCursor + 1, yearCursor + gap, grammar_, forge_);
+        yearCursor += gap;
+    }
+    history_.presentYear = yearCursor;
+    history_.liveStartId = (int)history_.chron.size();
+}
+
 void Game::newRun(int classIdx) {
     masterSeed_ = nextSeed_;
     runCounter_++;
-    runRng_ = Rng(masterSeed_, STREAM_RUNTIME);
-    Rng langRng(masterSeed_, STREAM_LANG);
     world_ = GenerateWorld(masterSeed_, grammar_, forge_);
     history_ = SimulateHistory(world_, masterSeed_, grammar_, forge_);
+    if (cachedLegacySeed_ != masterSeed_) {
+        pendingLegacy_ = LoadLegacy(masterSeed_);
+        cachedLegacySeed_ = masterSeed_;
+    }
+    // Each generation is its own person living its own days — keyed by how
+    // many came before, so a shared seed still means the same first life for
+    // everyone, but your second life never replays your first.
+    Rng langRng(masterSeed_ + pendingLegacy_.size() * 131071ULL, STREAM_LANG);
+    runRng_ = Rng(masterSeed_ + pendingLegacy_.size() * 524287ULL, STREAM_RUNTIME);
+    liveRng_ = Rng(masterSeed_ ^ ((pendingLegacy_.size() + 1) * 1013904223ULL), 77);
+    injectLegacy(classIdx);
     rep_.assign(history_.factions.size(), 0);
+    season_ = "spring";
+    weather_ = "clear";
+    newsLine_.clear();
+    legacySaved_ = false;
     ch_ = Character::roll(langRng, forge_);
     switch (classIdx) {
         case 1: // Scavenger
@@ -232,6 +345,27 @@ void Game::newRun(int classIdx) {
             ch_.money += 15;
             ch_.credits += 5;
             break;
+        case 5: { // Heir: the newest ghost's heirloom, quirk intact
+            ch_.pack.push_back(makeItem("bread"));
+            if (!pendingLegacy_.empty() && !pendingLegacy_.back().relics.empty()) {
+                const auto& [name, quirk] = pendingLegacy_.back().relics[0];
+                ItemInstance heirloom;
+                heirloom.templateId = "heirloom";
+                heirloom.name = name;
+                heirloom.type = "weapon";
+                heirloom.value = 18;
+                heirloom.passive = "check str +1";
+                heirloom.quirk = quirk.empty()
+                                     ? "still smells faintly of " +
+                                           pendingLegacy_.back().name : quirk;
+                heirloom.provenance = "Carried by " + pendingLegacy_.back().name +
+                                      " until the end. " + pendingLegacy_.back().epitaph;
+                ch_.pack.push_back(heirloom);
+            }
+            ch_.stats[STAT_STR] += 1;
+            ch_.stats[STAT_CHA] += 1;
+            break;
+        }
         default: // Drifter
             ch_.pack.push_back(makeItem("rations"));
             ch_.pack.push_back(makeItem(runRng_.chance(50) ? "rusty_sword" : "club"));
@@ -299,11 +433,33 @@ int Game::sellPrice(const ItemInstance& item) const {
 
 std::string Game::randomRumor() {
     if (history_.chron.empty()) return "Nobody is talking. Suspicious, honestly.";
-    const ChronEntry& e = history_.chron[runRng_.range(0, (int)history_.chron.size() - 1)];
+    // Fresh news travels faster than old history.
+    int lo = 0;
+    int liveCount = (int)history_.chron.size() - history_.liveStartId;
+    if (liveCount > 0 && runRng_.chance(40)) lo = history_.liveStartId;
+    const ChronEntry& e = history_.chron[runRng_.range(lo, (int)history_.chron.size() - 1)];
     std::string rumor = RenderChronEntry(e, history_, world_, grammar_, runRng_);
     if (runRng_.chance(15))
         rumor += " (At least, that's the version going around.)";
     return rumor;
+}
+
+// One day passes: the world does not wait for you.
+void Game::dailyTick() {
+    ch_.day++;
+    size_t before = history_.chron.size();
+    SimulateLiveDay(world_, history_, liveRng_, grammar_, forge_);
+    if (history_.chron.size() > before) {
+        newsLine_ = RenderChronEntry(history_.chron.back(), history_, world_,
+                                     grammar_, liveRng_);
+        audio_.chime();
+    }
+    static const char* kSeasons[4] = {"spring", "summer", "autumn", "winter"};
+    season_ = kSeasons[(ch_.day / 28) % 4];
+    int roll = liveRng_.range(1, 100);
+    weather_ = "clear";
+    if (season_ == "winter") { if (roll <= 35) weather_ = "snowing"; }
+    else if (roll <= 25) weather_ = "raining";
 }
 
 std::string Game::chronicleExcerpt(int entries) {
@@ -321,6 +477,13 @@ bool Game::resolveSlots(const Event& e, Grammar::Ctx& ctx) {
     for (auto& [name, query] : e.slots) {
         if (query == "chronicle_random") {
             ctx[name] = randomRumor();
+        } else if (query == "chronicle_news") {
+            // Only satisfiable when something has actually HAPPENED lately.
+            int liveCount = (int)history_.chron.size() - history_.liveStartId;
+            if (liveCount <= 0) return false;
+            const ChronEntry& e = history_.chron[runRng_.range(
+                history_.liveStartId, (int)history_.chron.size() - 1)];
+            ctx[name] = RenderChronEntry(e, history_, world_, grammar_, runRng_);
         } else if (query == "artifact_here") {
             int found = -1;
             for (int i = 0; i < (int)history_.artifacts.size(); i++) {
@@ -683,10 +846,18 @@ void Game::drawTitle(Vector2 mouse) {
         return;
     }
 
+    if (cachedLegacySeed_ != nextSeed_) {
+        pendingLegacy_ = LoadLegacy(nextSeed_);
+        cachedLegacySeed_ = nextSeed_;
+    }
     std::string seedLine = "world seed: " + std::to_string(nextSeed_);
     DrawText(seedLine.c_str(), (kW - MeasureText(seedLine.c_str(), 10)) / 2, 88, 10, PAL_DIM);
-    const char* hint = "S: set seed   M: mute";
-    DrawText(hint, (kW - MeasureText(hint, 10)) / 2, 102, 10, PAL_DARK);
+    std::string hint = "S: set seed   M: mute";
+    if (!pendingLegacy_.empty())
+        hint = "this world remembers " + std::to_string(pendingLegacy_.size()) +
+               " of your dead   S: set seed";
+    DrawText(hint.c_str(), (kW - MeasureText(hint.c_str(), 10)) / 2, 102, 10,
+             pendingLegacy_.empty() ? PAL_DARK : PAL_GOLD);
 
     // Touch-friendly: buttons carry the whole flow on iPad.
     bool play = uiButton({kW / 2 - 90, 122, 84, 20}, "BEGIN", mouse);
@@ -742,6 +913,10 @@ void Game::drawTravel(Vector2 mouse) {
         stats += " " + std::to_string(ch_.stats[i]) + "  ";
     }
     y = DrawTextWrapped(stats, 8, y, kW - 16, PAL_DARK);
+    std::string sky = "It is " + season_ +
+                      (weather_ == "clear" ? ", skies clear." : ", " + weather_ + ".");
+    if (!newsLine_.empty()) sky += "  NEWS: " + newsLine_;
+    y = DrawTextWrapped(sky, 8, y + 1, kW - 16, PAL_DIM, y + 24);
     if (!ch_.traits.empty()) {
         std::string tline = "You are: ";
         bool first = true;
@@ -768,7 +943,7 @@ void Game::drawTravel(Vector2 mouse) {
         deckTag_ = travelOptions_[pick].deck;
         currentSite_ = travelOptions_[pick].site;
         eventsLeftHere_ = (deckTag_ == "dungeon") ? runRng_.range(3, 4) : runRng_.range(2, 3);
-        ch_.day++;
+        dailyTick();
         dealEvent();
         return;
     }
@@ -785,7 +960,9 @@ void Game::drawEvent(Vector2 mouse) {
             pressed_)
             reveal_ = (float)currentText_.size();
     }
-    DrawTextWrapped(currentText_.substr(0, (size_t)reveal_), 8, 22, kW - 16, PAL_INK);
+    int choicesTop = kH - (int)current_->choices.size() * 13 - 6;
+    DrawTextWrapped(currentText_.substr(0, (size_t)reveal_), 8, 22, kW - 16, PAL_INK,
+                    choicesTop);
 
     std::vector<bool> ok;
     for (auto& c : current_->choices) ok.push_back(c.requires_.met(ch_));
@@ -799,18 +976,19 @@ void Game::drawOutcome() {
     int y = 22;
     if (!outcome_.rollText.empty()) {
         bool success = outcome_.rollText.find("success") != std::string::npos;
-        y = DrawTextWrapped(outcome_.rollText, 8, y, kW - 16, success ? PAL_GREEN : PAL_RED);
+        y = DrawTextWrapped(outcome_.rollText, 8, y, kW - 16,
+                            success ? PAL_GREEN : PAL_RED, kH - 18);
         y += 4;
     }
-    y = DrawTextWrapped(outcome_.text, 8, y, kW - 16, PAL_INK);
+    y = DrawTextWrapped(outcome_.text, 8, y, kW - 16, PAL_INK, kH - 18);
     std::string fx;
     for (auto& e : outcome_.effects)
         if (e.rfind("die", 0) != 0 && e != "shop" && e.rfind("goto", 0) != 0)
             fx += "[" + e + "] ";
-    if (!fx.empty()) y = DrawTextWrapped(fx, 8, y + 4, kW - 16, PAL_DARK);
+    if (!fx.empty()) y = DrawTextWrapped(fx, 8, y + 4, kW - 16, PAL_DARK, kH - 18);
     if (blessingSpent_)
         DrawTextWrapped("The blessing spends itself. You live. Somewhere, a ledger updates.",
-                        8, y + 4, kW - 16, PAL_GOLD);
+                        8, y + 4, kW - 16, PAL_GOLD, kH - 18);
 
     const char* prompt = "[tap or Enter to continue]";
     DrawText(prompt, kW - MeasureText(prompt, 10) - 6, kH - 13, 10, PAL_DIM);
@@ -978,7 +1156,7 @@ void Game::drawInventory(Vector2 mouse) {
 
 void Game::drawInfo() {
     drawTopBar();
-    DrawTextWrapped(infoText_, 8, 22, kW - 16, PAL_INK);
+    DrawTextWrapped(infoText_, 8, 22, kW - 16, PAL_INK, kH - 18);
     const char* prompt = "[Enter]";
     DrawText(prompt, kW - MeasureText(prompt, 10) - 6, kH - 13, 10, PAL_DIM);
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_TAB) ||
@@ -1009,7 +1187,25 @@ void Game::drawDeath() {
         profile_.daysTotal += ch_.day;
         if (ch_.day > profile_.bestDays) profile_.bestDays = ch_.day;
         SaveProfile(profile_);
-        nextSeed_ = (masterSeed_ * 2654435761ULL + runCounter_ * 977ULL) % 1000000000ULL;
+        // The Chronicle absorbs you: this death becomes this world's history.
+        if (!legacySaved_) {
+            LegacyRecord rec;
+            rec.name = ch_.name.conlang;
+            rec.meaning = ch_.name.meaning;
+            rec.epitaph = ch_.epitaph;
+            rec.deathSite = siteName_;
+            rec.days = ch_.day;
+            for (auto& item : ch_.pack) {
+                if (rec.relics.size() >= 2) break;
+                if (item.artifactId >= 0 || item.type == "weapon" || item.type == "armor")
+                    rec.relics.emplace_back(item.name, item.quirk);
+            }
+            AppendLegacy(masterSeed_, rec);
+            legacySaved_ = true;
+            cachedLegacySeed_ = ~0ULL; // force reload next time
+        }
+        // Same world by default: go back in, years later, among your ghosts.
+        nextSeed_ = masterSeed_;
         screen_ = TITLE;
     }
 }
