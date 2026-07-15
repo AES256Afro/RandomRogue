@@ -49,6 +49,17 @@ to read, the game is working. Native and WASM dumps are byte-identical for
 the same seed — that's load-bearing; see the determinism note in
 src/language.cpp before touching RNG call sites.
 
+## Hosting (random-rogue.com)
+
+The domain is served by a Cloudflare Worker (`random-rogue-site`) that reads
+the landing page + game from a KV namespace — independent of GitHub, so repo
+visibility never affects the site. Zone routes: `random-rogue.com/*` and
+`www.random-rogue.com/*`.
+
+To publish a site/game update: push to `main` (CI deploys GitHub Pages at
+aes256afro.github.io/RandomRogue), then hit the worker's `/__load` endpoint
+(URL with key kept privately) to sync the new files into KV.
+
 ## Releasing
 
 - **CI:** pushing to GitHub runs `.github/workflows/build.yml`, producing
