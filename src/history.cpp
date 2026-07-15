@@ -132,7 +132,31 @@ struct Sim {
                 if (h.beasts[i].died < 0) alive.push_back(i);
             if (alive.empty()) return;
             int bi = alive[rng.range(0, (int)alive.size() - 1)];
-            if (rng.chance(45)) {
+            // A hero may take up an artifact resting nearby; it tips the odds
+            // and the deed attaches to the artifact's provenance forever.
+            int wielded = -1;
+            for (int i = 0; i < (int)h.artifacts.size(); i++) {
+                int rs = h.artifacts[i].restingSite;
+                if (rs >= 0 && rs < (int)w.sites.size() &&
+                    w.sites[rs].region == h.factions[f.faction].home) { wielded = i; break; }
+            }
+            int slayChance = (wielded >= 0 && rng.chance(60)) ? 70 : 45;
+            if (slayChance == 70) {
+                if (rng.chance(70)) {
+                    h.beasts[bi].died = year;
+                    ChronEntry& e = log("artifact_slaying");
+                    e.actor = fi;
+                    e.beast = bi;
+                    e.artifact = wielded;
+                    h.artifacts[wielded].deeds.push_back(e.id);
+                } else {
+                    f.died = year;
+                    h.beasts[bi].kills++;
+                    ChronEntry& e = log("figure_eaten");
+                    e.actor = fi;
+                    e.beast = bi;
+                }
+            } else if (rng.chance(45)) {
                 h.beasts[bi].died = year;
                 ChronEntry& e = log("beast_slain");
                 e.actor = fi;
@@ -263,6 +287,48 @@ struct Sim {
         }
     }
 
+    void society() {
+        // Monuments: pure flavor, and future rumor fodder.
+        for (int fa = 0; fa < (int)h.factions.size(); fa++) {
+            if (!rng.chance(1)) continue;
+            ChronEntry& e = log("monument_built");
+            e.faction = fa;
+            e.extra = g.expand("{monument_name}", rng);
+        }
+        // Duels: two notable people, one grudge, zero mediation.
+        if (rng.chance(3)) {
+            int a = randomAliveFigure();
+            int b = randomAliveFigure();
+            if (a >= 0 && b >= 0 && a != b) {
+                h.figures[b].died = year;
+                ChronEntry& e = log("duel_fought");
+                e.actor = a;
+                e.extra = h.figures[b].name;
+            }
+        }
+        // Exiles: the petty and the spiteful eventually wear out their welcome.
+        if (rng.chance(2)) {
+            std::vector<int> pool;
+            for (int i = 0; i < (int)h.figures.size(); i++) {
+                const Figure& f = h.figures[i];
+                if (f.died < 0 && (f.trait == "petty" || f.trait == "spiteful" || f.trait == "smug"))
+                    pool.push_back(i);
+            }
+            if (!pool.empty() && h.factions.size() > 1) {
+                int fi = pool[rng.range(0, (int)pool.size() - 1)];
+                int oldFaction = h.figures[fi].faction;
+                int newFaction = oldFaction;
+                while (newFaction == oldFaction)
+                    newFaction = rng.range(0, (int)h.factions.size() - 1);
+                h.figures[fi].faction = newFaction;
+                ChronEntry& e = log("figure_exiled");
+                e.actor = fi;
+                e.faction = oldFaction;
+                e.faction2 = newFaction;
+            }
+        }
+    }
+
     void agingAndBirths() {
         for (int i = 0; i < (int)h.figures.size(); i++) {
             Figure& f = h.figures[i];
@@ -285,6 +351,7 @@ struct Sim {
                 if (h.figures[i].died < 0 && rng.chance(6)) figureActs(i);
             factionPolitics();
             disasters();
+            society();
             agingAndBirths();
         }
         h.years = years;

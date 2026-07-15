@@ -31,26 +31,43 @@ std::string NameForge::word(Rng& rng, int syllables) const {
     return w;
 }
 
+// NOTE: every rng draw below is sequenced into its own statement on purpose.
+// Operand order in `a + b` is unspecified in C++, and GCC vs Clang/Emscripten
+// disagree — which silently breaks cross-platform seed determinism.
+
 GenName NameForge::person(Rng& rng) const {
     GenName n;
-    n.conlang = capitalize(word(rng, 2)) + " " + capitalize(word(rng, 2));
-    if (!adjectives_.empty() && !nouns_.empty())
-        n.meaning = capitalize(rng.pick(adjectives_)) + rng.pick(nouns_);
+    std::string given = capitalize(word(rng, 2));
+    std::string sur = capitalize(word(rng, 2));
+    n.conlang = given + " " + sur;
+    if (!adjectives_.empty() && !nouns_.empty()) {
+        std::string adj = capitalize(rng.pick(adjectives_));
+        std::string noun = rng.pick(nouns_);
+        n.meaning = adj + noun;
+    }
     return n;
 }
 
 GenName NameForge::place(Rng& rng) const {
     GenName n;
-    n.conlang = capitalize(word(rng, rng.range(2, 3)));
-    if (!adjectives_.empty() && !nouns_.empty())
-        n.meaning = "the " + rng.pick(adjectives_) + " " + rng.pick(nouns_);
+    int sylls = rng.range(2, 3);
+    n.conlang = capitalize(word(rng, sylls));
+    if (!adjectives_.empty() && !nouns_.empty()) {
+        std::string adj = rng.pick(adjectives_);
+        std::string noun = rng.pick(nouns_);
+        n.meaning = "the " + adj + " " + noun;
+    }
     return n;
 }
 
 GenName NameForge::artifact(Rng& rng) const {
     GenName n;
-    n.conlang = capitalize(word(rng, rng.range(2, 3)));
-    if (!nouns_.empty())
-        n.meaning = capitalize(rng.pick(nouns_)) + rng.pick(nouns_);
+    int sylls = rng.range(2, 3);
+    n.conlang = capitalize(word(rng, sylls));
+    if (!nouns_.empty()) {
+        std::string first = capitalize(rng.pick(nouns_));
+        std::string second = rng.pick(nouns_);
+        n.meaning = first + second;
+    }
     return n;
 }

@@ -16,6 +16,7 @@ struct Requirement {
     std::string stat; // empty = no stat requirement
     int gte = 0;
     int moneyGte = 0;
+    int creditsGte = 0;
     std::string item; // template id the player must carry
     bool met(const Character& c) const;
     std::string label() const; // "[CHA 12]" style tag, empty if none
@@ -57,6 +58,7 @@ class EventDeck {
 public:
     void loadJsonText(const char* jsonText);
     const Event* draw(Rng& rng, const std::string& location);
+    const Event* find(const std::string& id) const;
     void resetUsed() { used_.clear(); }
     size_t size() const { return events_.size(); }
 

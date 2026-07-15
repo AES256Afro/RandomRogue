@@ -7,6 +7,7 @@ using json = nlohmann::json;
 bool Requirement::met(const Character& c) const {
     if (!stat.empty() && c.stats[statFromName(stat)] < gte) return false;
     if (moneyGte > 0 && c.money < moneyGte) return false;
+    if (creditsGte > 0 && c.credits < creditsGte) return false;
     if (!item.empty() && !c.hasItem(item)) return false;
     return true;
 }
@@ -18,6 +19,7 @@ std::string Requirement::label() const {
         return "[" + s + " " + std::to_string(gte) + "] ";
     }
     if (moneyGte > 0) return "[" + std::to_string(moneyGte) + "g] ";
+    if (creditsGte > 0) return "[" + std::to_string(creditsGte) + "c] ";
     if (!item.empty()) return "[needs " + item + "] ";
     return "";
 }
@@ -77,6 +79,7 @@ void EventDeck::loadJsonText(const char* jsonText) {
                     ch.requires_.stat = r.value("stat", "");
                     ch.requires_.gte = r.value("gte", 0);
                     ch.requires_.moneyGte = r.value("money", 0);
+                    ch.requires_.creditsGte = r.value("credits", 0);
                     ch.requires_.item = r.value("item", "");
                 }
                 if (c.contains("check") && c["check"].is_object()) {
@@ -93,6 +96,12 @@ void EventDeck::loadJsonText(const char* jsonText) {
         if (!ev.id.empty() && !ev.choices.empty())
             events_.push_back(std::move(ev));
     }
+}
+
+const Event* EventDeck::find(const std::string& id) const {
+    for (auto& e : events_)
+        if (e.id == id) return &e;
+    return nullptr;
 }
 
 const Event* EventDeck::draw(Rng& rng, const std::string& location) {

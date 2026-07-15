@@ -45,14 +45,9 @@ int DrawTextWrapped(const std::string& text, int x, int y, int width, Color colo
     return y;
 }
 
-bool anyKeyPressed() {
-    return GetKeyPressed() != 0 || IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
-}
-
 } // namespace
 
 bool Game::init() {
-    struct Loader { const char* path; void (*fn)(Game*, const char*); };
     auto loadText = [&](const char* path, auto&& fn) {
         char* text = LoadFileText(path);
         if (text) { fn(text); UnloadFileText(text); }
@@ -64,20 +59,25 @@ bool Game::init() {
     loadText("assets/data/quirks.json", [&](const char* t) { items_.loadQuirksJsonText(t); });
     if (deck_.size() == 0) dataError_ = "content missing: assets/data/events.json";
     if (items_.size() == 0) dataError_ = "content missing: assets/data/items.json";
+    nextSeed_ = (uint64_t)time(nullptr) % 1000000000ULL;
     return dataError_.empty();
 }
 
 void Game::newRun() {
-    masterSeed_ = (uint64_t)time(nullptr) * 2654435761u + (++runCounter_) * 40503u;
+    masterSeed_ = nextSeed_;
+    runCounter_++;
     runRng_ = Rng(masterSeed_, STREAM_RUNTIME);
     Rng langRng(masterSeed_, STREAM_LANG);
     world_ = GenerateWorld(masterSeed_, grammar_, forge_);
     history_ = SimulateHistory(world_, masterSeed_, grammar_, forge_);
+    rep_.assign(history_.factions.size(), 0);
     ch_ = Character::roll(langRng, forge_);
     ch_.pack.push_back(items_.make("rations", runRng_));
     ch_.pack.push_back(items_.make(runRng_.chance(50) ? "rusty_sword" : "club", runRng_));
     deck_.resetUsed();
     pendingArtifact_ = -1;
+    pendingShop_ = false;
+    forcedNextId_.clear();
     enterTravel();
 }
 
@@ -88,11 +88,13 @@ void Game::enterTravel() {
     for (int i = 0; i < (int)world_.sites.size(); i++) pool.push_back(i);
     for (int n = 0; n < 3 && !pool.empty(); n++) {
         int pi = runRng_.range(0, (int)pool.size() - 1);
-        const Site& s = world_.sites[pool[pi]];
+        int si = pool[pi];
+        const Site& s = world_.sites[si];
         pool.erase(pool.begin() + pi);
         TravelOption o;
         o.deck = s.deck;
         o.siteName = s.name;
+        o.site = si;
         o.label = s.name + "  (" + s.type + ", " + world_.regions[s.region].name + ")";
         travelOptions_.push_back(o);
     }
@@ -101,6 +103,32 @@ void Game::enterTravel() {
     wander.siteName = "the wilds";
     wander.label = "Wander off in a random direction";
     travelOptions_.push_back(wander);
+}
+
+int Game::regionOwner(int region) const {
+    if (region < 0) return -1;
+    for (int i = 0; i < (int)history_.factions.size(); i++)
+        if (history_.factions[i].home == region) return i;
+    return -1;
+}
+
+int Game::localRep() const {
+    int region = (currentSite_ >= 0) ? world_.sites[currentSite_].region : -1;
+    int owner = regionOwner(region);
+    if (owner < 0) return 0;
+    return rep_[owner];
+}
+
+int Game::buyPrice(const ItemInstance& item) const {
+    int rep = localRep();
+    int price = item.value * (135 - rep * 2) / 100;
+    return price < 1 ? 1 : price;
+}
+
+int Game::sellPrice(const ItemInstance& item) const {
+    int rep = localRep();
+    int price = item.value * (40 + rep) / 100;
+    return price < 1 ? 1 : price;
 }
 
 std::string Game::randomRumor() {
@@ -138,12 +166,25 @@ bool Game::resolveSlots(const Event& e, Grammar::Ctx& ctx) {
             const HArtifact& a = history_.artifacts[found];
             ctx[name] = a.display();
             ctx[name + "_material"] = a.material;
+        } else if (query == "figure_alive") {
+            std::vector<int> pool;
+            for (int i = 0; i < (int)history_.figures.size(); i++)
+                if (history_.figures[i].died < 0) pool.push_back(i);
+            if (pool.empty()) return false;
+            const Figure& f = history_.figures[pool[runRng_.range(0, (int)pool.size() - 1)]];
+            ctx[name] = f.name;
+            ctx[name + "_trait"] = f.trait;
+            ctx[name + "_prof"] = f.profession;
+            if (f.faction >= 0) ctx[name + "_faction"] = history_.factions[f.faction].name;
         } else if (query == "figure_dead") {
             std::vector<int> pool;
             for (int i = 0; i < (int)history_.figures.size(); i++)
                 if (history_.figures[i].died >= 0) pool.push_back(i);
             if (pool.empty()) return false;
-            ctx[name] = history_.figures[pool[runRng_.range(0, (int)pool.size() - 1)]].name;
+            const Figure& f = history_.figures[pool[runRng_.range(0, (int)pool.size() - 1)]];
+            ctx[name] = f.name;
+            ctx[name + "_trait"] = f.trait;
+            ctx[name + "_year"] = std::to_string(f.died);
         } else {
             return false; // unknown query: skip the event, loudly absent
         }
@@ -152,9 +193,12 @@ bool Game::resolveSlots(const Event& e, Grammar::Ctx& ctx) {
 }
 
 void Game::dealEvent() {
-    // A few tries to find an event whose slots can be satisfied here.
+    // Dungeons escalate: the last event of a visit draws from the finale deck.
+    std::string tag = deckTag_;
+    if (deckTag_ == "dungeon" && eventsLeftHere_ == 1) tag = "dungeon_finale";
     for (int attempt = 0; attempt < 6; attempt++) {
-        current_ = deck_.draw(runRng_, deckTag_);
+        current_ = deck_.draw(runRng_, tag);
+        if (!current_ && tag == "dungeon_finale") { tag = "dungeon"; continue; }
         if (!current_) { enterTravel(); return; }
         Grammar::Ctx ctx = {{"site", siteName_}, {"world", world_.name.conlang}};
         pendingArtifact_ = -1;
@@ -208,6 +252,19 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
         } else if (verb == "removeitem") {
             std::string id; ss >> id;
             ch_.removeItem(id);
+        } else if (verb == "rep") {
+            int v = 0; ss >> v;
+            int region = (currentSite_ >= 0) ? world_.sites[currentSite_].region : -1;
+            int owner = regionOwner(region);
+            if (owner >= 0) {
+                rep_[owner] += v;
+                if (rep_[owner] > 50) rep_[owner] = 50;
+                if (rep_[owner] < -50) rep_[owner] = -50;
+            }
+        } else if (verb == "shop") {
+            pendingShop_ = true;
+        } else if (verb == "goto") {
+            ss >> forcedNextId_;
         } else if (verb == "take_artifact") {
             if (pendingArtifact_ >= 0 && (int)ch_.pack.size() < Character::kPackMax) {
                 HArtifact& a = history_.artifacts[pendingArtifact_];
@@ -252,10 +309,46 @@ void Game::chooseOption(int idx) {
     screen_ = OUTCOME;
 }
 
+void Game::continueAfterOutcome() {
+    if (ch_.dead) { screen_ = DEATH; return; }
+    if (pendingShop_) {
+        pendingShop_ = false;
+        openVendor();
+        return;
+    }
+    if (!forcedNextId_.empty()) {
+        const Event* next = deck_.find(forcedNextId_);
+        forcedNextId_.clear();
+        if (next) {
+            current_ = next;
+            Grammar::Ctx ctx = {{"site", siteName_}, {"world", world_.name.conlang}};
+            pendingArtifact_ = -1;
+            if (resolveSlots(*next, ctx)) {
+                currentText_ = grammar_.expand(next->text, runRng_, ctx);
+                screen_ = EVENT;
+                return;
+            }
+        }
+    }
+    eventsLeftHere_--;
+    if (eventsLeftHere_ > 0) dealEvent();
+    else enterTravel();
+}
+
 void Game::openInventory() {
     returnScreen_ = screen_;
     invSelected_ = -1;
     screen_ = INVENTORY;
+}
+
+void Game::openVendor() {
+    vendorStock_.clear();
+    int n = runRng_.range(4, 6);
+    for (int i = 0; i < n; i++)
+        vendorStock_.push_back(items_.loot(runRng_, runRng_.chance(65) ? "common" : "fine"));
+    vendorSellMode_ = false;
+    vendorLine_ = grammar_.expand("{vendor_line}", runRng_);
+    screen_ = VENDOR;
 }
 
 void Game::showInfo(const std::string& text) {
@@ -273,6 +366,7 @@ void Game::frame(Vector2 mouse) {
         case DEATH:     drawDeath(); break;
         case INVENTORY: drawInventory(mouse); break;
         case INFO:      drawInfo(); break;
+        case VENDOR:    drawVendor(mouse); break;
     }
 }
 
@@ -319,18 +413,48 @@ void Game::drawTopBar() {
 
 void Game::drawTitle() {
     const char* title = "RANDOM ROGUE";
-    DrawText(title, (kW - MeasureText(title, 20)) / 2, 48, 20, PAL_GOLD);
+    DrawText(title, (kW - MeasureText(title, 20)) / 2, 42, 20, PAL_GOLD);
     if (!dataError_.empty()) {
         DrawTextWrapped(dataError_, 20, 90, kW - 40, PAL_RED);
         return;
     }
-    if (((long)(GetTime() * 2)) % 2 == 0) {
-        const char* prompt = "press any key to be born";
-        DrawText(prompt, (kW - MeasureText(prompt, 10)) / 2, 96, 10, PAL_DIM);
-    }
     const char* sub = "a game of poor decisions";
-    DrawText(sub, (kW - MeasureText(sub, 10)) / 2, 74, 10, PAL_DARK);
-    if (anyKeyPressed()) newRun();
+    DrawText(sub, (kW - MeasureText(sub, 10)) / 2, 66, 10, PAL_DARK);
+
+    if (enteringSeed_) {
+        std::string line = "enter seed: " + seedInput_ + "_";
+        DrawText(line.c_str(), (kW - MeasureText(line.c_str(), 10)) / 2, 96, 10, PAL_GOLD);
+        const char* hint = "digits, Enter to accept, Esc to cancel";
+        DrawText(hint, (kW - MeasureText(hint, 10)) / 2, 112, 10, PAL_DARK);
+        int c;
+        while ((c = GetCharPressed()) != 0)
+            if (c >= '0' && c <= '9' && seedInput_.size() < 12) seedInput_ += (char)c;
+        if (IsKeyPressed(KEY_BACKSPACE) && !seedInput_.empty()) seedInput_.pop_back();
+        if (IsKeyPressed(KEY_ENTER)) {
+            if (!seedInput_.empty()) nextSeed_ = strtoull(seedInput_.c_str(), nullptr, 10);
+            enteringSeed_ = false;
+        }
+        if (IsKeyPressed(KEY_ESCAPE)) enteringSeed_ = false;
+        while (GetKeyPressed() != 0) {} // drain so keys don't leak into "any key"
+        return;
+    }
+
+    std::string seedLine = "world seed: " + std::to_string(nextSeed_);
+    DrawText(seedLine.c_str(), (kW - MeasureText(seedLine.c_str(), 10)) / 2, 96, 10, PAL_DIM);
+    const char* hint = "S: set seed   R: reroll";
+    DrawText(hint, (kW - MeasureText(hint, 10)) / 2, 112, 10, PAL_DARK);
+    if (((long)(GetTime() * 2)) % 2 == 0) {
+        const char* prompt = "press any other key to be born";
+        DrawText(prompt, (kW - MeasureText(prompt, 10)) / 2, 132, 10, PAL_DIM);
+    }
+
+    int key = GetKeyPressed();
+    if (key == KEY_S) { enteringSeed_ = true; seedInput_.clear(); return; }
+    if (key == KEY_R) {
+        nextSeed_ = (nextSeed_ * 6364136223846793005ULL + 1442695040888963407ULL) % 1000000000ULL;
+        return;
+    }
+    if (key != 0 || IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) newRun();
 }
 
 void Game::drawTravel(Vector2 mouse) {
@@ -357,10 +481,8 @@ void Game::drawTravel(Vector2 mouse) {
     if (pick >= 0) {
         siteName_ = travelOptions_[pick].siteName;
         deckTag_ = travelOptions_[pick].deck;
-        currentSite_ = -1;
-        for (int i = 0; i < (int)world_.sites.size(); i++)
-            if (world_.sites[i].name == travelOptions_[pick].siteName) currentSite_ = i;
-        eventsLeftHere_ = runRng_.range(2, 3);
+        currentSite_ = travelOptions_[pick].site;
+        eventsLeftHere_ = (deckTag_ == "dungeon") ? runRng_.range(3, 4) : runRng_.range(2, 3);
         ch_.day++;
         dealEvent();
         return;
@@ -394,18 +516,65 @@ void Game::drawOutcome() {
     y = DrawTextWrapped(outcome_.text, 8, y, kW - 16, PAL_INK);
     std::string fx;
     for (auto& e : outcome_.effects)
-        if (e.rfind("die", 0) != 0) fx += "[" + e + "] ";
+        if (e.rfind("die", 0) != 0 && e != "shop" && e.rfind("goto", 0) != 0)
+            fx += "[" + e + "] ";
     if (!fx.empty()) DrawTextWrapped(fx, 8, y + 4, kW - 16, PAL_DARK);
 
     const char* prompt = "[Enter]";
     DrawText(prompt, kW - MeasureText(prompt, 10) - 6, kH - 13, 10, PAL_DIM);
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE) ||
         IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        if (ch_.dead) { screen_ = DEATH; return; }
-        eventsLeftHere_--;
-        if (eventsLeftHere_ > 0) dealEvent();
-        else enterTravel();
+        continueAfterOutcome();
     }
+}
+
+void Game::drawVendor(Vector2 mouse) {
+    drawTopBar();
+    int y = DrawTextWrapped("\"" + vendorLine_ + "\"", 8, 22, kW - 16, PAL_DIM);
+    int rep = localRep();
+    std::string mode = vendorSellMode_ ? "Selling from your pack" : "For sale";
+    if (rep != 0)
+        mode += rep > 0 ? " (they like you here)" : " (they remember what you did)";
+    DrawText(mode.c_str(), 8, y + 2, 10, PAL_GOLD);
+    DrawText("Tab: buy/sell  Esc: leave", kW - MeasureText("Tab: buy/sell  Esc: leave", 10) - 4,
+             y + 2, 10, PAL_DARK);
+
+    std::vector<std::string> rows;
+    std::vector<bool> ok;
+    if (!vendorSellMode_) {
+        for (auto& item : vendorStock_) {
+            int price = buyPrice(item);
+            rows.push_back(item.displayName() + " - " + std::to_string(price) + "g");
+            ok.push_back(ch_.money >= price && (int)ch_.pack.size() < Character::kPackMax);
+        }
+        if (vendorStock_.empty()) {
+            DrawTextWrapped("Sold out. The vendor gestures proudly at nothing.", 8, y + 18,
+                            kW - 16, PAL_DIM);
+        }
+    } else {
+        for (auto& item : ch_.pack) {
+            rows.push_back(item.displayName() + " - " + std::to_string(sellPrice(item)) + "g");
+            ok.push_back(true);
+        }
+        if (ch_.pack.empty())
+            DrawTextWrapped("You have nothing to sell but stories, and those are free.", 8,
+                            y + 18, kW - 16, PAL_DIM);
+    }
+    int pick = optionRows(rows, ok, mouse);
+    if (pick >= 0) {
+        if (!vendorSellMode_) {
+            ItemInstance item = vendorStock_[pick];
+            ch_.money -= buyPrice(item);
+            ch_.pack.push_back(item);
+            vendorStock_.erase(vendorStock_.begin() + pick);
+        } else {
+            ch_.money += sellPrice(ch_.pack[pick]);
+            ch_.pack.erase(ch_.pack.begin() + pick);
+        }
+        return;
+    }
+    if (IsKeyPressed(KEY_TAB)) vendorSellMode_ = !vendorSellMode_;
+    if (IsKeyPressed(KEY_ESCAPE)) continueAfterOutcome();
 }
 
 void Game::drawInventory(Vector2 mouse) {
@@ -451,12 +620,35 @@ void Game::drawInventory(Vector2 mouse) {
     int pick = optionRows(rows, ok, mouse);
     if (pick == 0) {
         if (usable) {
-            bool isBook = false;
-            for (auto& u : item.useEffects)
+            bool isBook = false, isGossip = false, isMap = false;
+            for (auto& u : item.useEffects) {
                 if (u == "read") isBook = true;
-            if (isBook) {
-                showInfo("You read from " + item.name + ":\n\n" + chronicleExcerpt(3));
+                if (u == "gossip") isGossip = true;
+                if (u == "map") isMap = true;
+            }
+            if (isBook || isGossip || isMap) {
+                std::string name = item.name;
+                std::string text;
+                if (isBook) text = "You read from " + name + ":\n\n" + chronicleExcerpt(3);
+                if (isGossip) text = name + " reports, breathlessly:\n\n" + randomRumor();
+                if (isMap) {
+                    std::string mark;
+                    std::vector<int> resting;
+                    for (int i = 0; i < (int)history_.artifacts.size(); i++)
+                        if (!history_.artifacts[i].claimed && history_.artifacts[i].restingSite >= 0)
+                            resting.push_back(i);
+                    if (resting.empty()) {
+                        mark = "The map marks a spot someone else clearly found first. There's a doodle of them gloating.";
+                    } else {
+                        const HArtifact& a = history_.artifacts[resting[runRng_.range(0, (int)resting.size() - 1)]];
+                        mark = "Once decoded, the map marks " + a.display() + ", resting at " +
+                               world_.sites[a.restingSite].name + ". X, as they say.";
+                    }
+                    text = "You unfold " + name + ". " + mark;
+                }
+                ch_.pack.erase(ch_.pack.begin() + invSelected_);
                 invSelected_ = -1;
+                showInfo(text);
                 return;
             }
             std::string fxText;
@@ -493,17 +685,22 @@ void Game::drawInfo() {
 
 void Game::drawDeath() {
     const char* title = "YOU DIED";
-    DrawText(title, (kW - MeasureText(title, 20)) / 2, 34, 20, PAL_RED);
+    DrawText(title, (kW - MeasureText(title, 20)) / 2, 30, 20, PAL_RED);
     std::string who = ch_.name.conlang + " \"" + ch_.name.meaning + "\"";
-    DrawText(who.c_str(), (kW - MeasureText(who.c_str(), 10)) / 2, 60, 10, PAL_INK);
-    int y = DrawTextWrapped(ch_.epitaph, 30, 78, kW - 60, PAL_GOLD);
+    DrawText(who.c_str(), (kW - MeasureText(who.c_str(), 10)) / 2, 56, 10, PAL_INK);
+    int y = DrawTextWrapped(ch_.epitaph, 30, 74, kW - 60, PAL_GOLD);
     std::string run = "Survived " + std::to_string(ch_.day) + " days and " +
                       std::to_string(ch_.eventsSurvived) + " questionable decisions. Died holding " +
                       std::to_string(ch_.money) + " gold.";
-    DrawTextWrapped(run, 30, y + 6, kW - 60, PAL_DIM);
+    y = DrawTextWrapped(run, 30, y + 6, kW - 60, PAL_DIM);
+    std::string seed = "world seed: " + std::to_string(masterSeed_);
+    DrawText(seed.c_str(), (kW - MeasureText(seed.c_str(), 10)) / 2, y + 8, 10, PAL_DARK);
     if (((long)(GetTime() * 2)) % 2 == 0) {
         const char* prompt = "press any key";
-        DrawText(prompt, (kW - MeasureText(prompt, 10)) / 2, kH - 20, 10, PAL_DARK);
+        DrawText(prompt, (kW - MeasureText(prompt, 10)) / 2, kH - 16, 10, PAL_DARK);
     }
-    if (anyKeyPressed()) screen_ = TITLE;
+    if (GetKeyPressed() != 0 || IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        nextSeed_ = (masterSeed_ * 2654435761ULL + runCounter_ * 977ULL) % 1000000000ULL;
+        screen_ = TITLE;
+    }
 }

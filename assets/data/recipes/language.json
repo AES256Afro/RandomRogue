@@ -3,20 +3,43 @@
     "ka", "zak", "ur", "dim", "mor", "tan", "vel", "ost", "rin", "dak",
     "bel", "gor", "ith", "lun", "mar", "nev", "ol", "pra", "quil", "ras",
     "sol", "thu", "vor", "wyn", "xan", "yor", "zem", "fen", "gri", "hul",
-    "isk", "jor", "kel", "ash", "om", "esk", "tar", "ul", "brim", "cor"
+    "isk", "jor", "kel", "ash", "om", "esk", "tar", "ul", "brim", "cor",
+    "dra", "eth", "fal", "gan", "hesk", "ir", "juk", "krag", "lorn", "mup",
+    "nak", "oth", "pel", "qam", "rud", "skel", "tov", "umb", "vask", "wil",
+    "yeth", "zon", "af", "blek", "chu", "dov", "erg", "fyn", "glim", "hax",
+    "iv", "jen", "kro", "lim", "mmo", "nul", "orv", "pik", "rethe", "sna",
+    "tul", "uz", "vrek", "wob", "xil", "yam", "zur", "bre", "clo", "dun"
   ],
   "nouns": [
     "hammer", "coin", "oath", "salt", "wound", "crow", "ember", "thorn",
     "gate", "hollow", "spire", "fen", "ash", "iron", "moon", "wolf",
     "badger", "tooth", "tankard", "ledger", "spark", "rune", "knot",
     "cinder", "gloom", "brine", "root", "echo", "veil", "grudge",
-    "biscuit", "turnip", "mud", "spleen", "debt", "sock"
+    "biscuit", "turnip", "mud", "spleen", "debt", "sock",
+    "anvil", "bell", "bone", "bramble", "candle", "chain", "cliff",
+    "cloud", "dagger", "dice", "drum", "dust", "feather", "fist",
+    "flagon", "frost", "goose", "hearth", "hinge", "honey", "hook",
+    "kettle", "key", "lantern", "lock", "marrow", "mask", "mill",
+    "nail", "needle", "onion", "oar", "pebble", "plow", "quill",
+    "rat", "reed", "river", "rust", "saddle", "scab", "shadow",
+    "shovel", "sickle", "smoke", "snail", "spoon", "stump", "tallow",
+    "tar", "thistle", "throne", "tide", "toll", "twig", "vein",
+    "wagon", "wart", "wax", "well", "whistle", "worm", "yoke", "cheese"
   ],
   "adjectives": [
     "hammered", "salted", "broken", "gilded", "weeping", "hungry",
     "crooked", "silent", "burning", "frozen", "lucky", "cursed", "moist",
     "questionable", "thrifty", "belligerent", "sideways", "greasy",
     "humble", "spiteful", "velvet", "rusted", "wandering", "unlicensed",
-    "damp", "ominous"
+    "damp", "ominous",
+    "abandoned", "ancient", "bitter", "blistered", "boiled", "borrowed",
+    "bottled", "clenched", "cloven", "crumbling", "dented", "doubtful",
+    "drowned", "echoing", "elderly", "embarrassed", "feral", "flickering",
+    "folded", "forgiven", "gnawed", "hasty", "hollow", "howling",
+    "itchy", "jagged", "knotted", "leaning", "limping", "mumbling",
+    "overdue", "patient", "peeling", "pickled", "polished", "reluctant",
+    "seething", "shrunken", "singed", "sleepless", "smoldering", "sour",
+    "stubborn", "sunken", "swindled", "tarnished", "thundering", "tilted",
+    "trembling", "uninvited", "varnished", "wilted", "winking", "yawning"
   ]
 }
