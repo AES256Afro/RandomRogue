@@ -1,0 +1,7 @@
+[
+  { "id": "mercenary",  "kind": "a scarred mercenary",       "trait": "brave",   "passive": "check str +1" },
+  { "id": "badger",     "kind": "a talking badger",          "trait": "wise",    "passive": "check wis +1" },
+  { "id": "accountant", "kind": "a disgraced accountant",    "trait": "greedy",  "passive": "check int +1" },
+  { "id": "porter",     "kind": "a reformed mimic porter",   "trait": "hungry",  "passive": "", "packBonus": 2 },
+  { "id": "bard",       "kind": "an apprentice bard",        "trait": "anxious", "passive": "check cha +1" }
+]

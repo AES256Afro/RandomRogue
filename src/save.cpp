@@ -13,7 +13,8 @@ std::string Profile::toJson() const {
     json j = {{"deaths", deaths},
               {"daysTotal", daysTotal},
               {"bestDays", bestDays},
-              {"booksRead", booksRead}};
+              {"booksRead", booksRead},
+              {"ambitionsDone", ambitionsDone}};
     return j.dump();
 }
 
@@ -25,6 +26,7 @@ Profile Profile::fromJson(const std::string& text) {
     p.daysTotal = j.value("daysTotal", 0);
     p.bestDays = j.value("bestDays", 0);
     p.booksRead = j.value("booksRead", 0);
+    p.ambitionsDone = j.value("ambitionsDone", 0);
     return p;
 }
 

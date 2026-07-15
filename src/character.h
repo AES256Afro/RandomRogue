@@ -36,7 +36,8 @@ struct Character {
     // Afflictions & reputations-made-flesh: "cursed", "famous", "wanted"...
     // Granted/removed by effects, gate choices/outcomes/events.
     std::set<std::string> traits;
-    static constexpr int kPackMax = 9;
+    int packMax = 9;              // a mimic porter raises this
+    std::string companionPassive; // companion's check bonus, if any
 
     static int mod(int stat) { return (stat - 10) / 2; }
 
@@ -69,6 +70,7 @@ struct Character {
             if (verb == "check" && statFromName(which) == stat) total += v;
         };
         for (auto& i : pack) { scan(i.passive); scan(i.quirkPassive); }
+        scan(companionPassive);
         return total;
     }
 

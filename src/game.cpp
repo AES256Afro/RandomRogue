@@ -82,6 +82,19 @@ bool Game::init() {
                 loadText("assets/data/events/" + f.get<std::string>(),
                          [&](const char* et) { deck_.loadJsonText(et); });
     });
+    loadText("assets/data/companions.json", [&](const char* t) {
+        nlohmann::json j = nlohmann::json::parse(t, nullptr, false);
+        if (j.is_discarded() || !j.is_array()) return;
+        for (auto& c : j) {
+            Companion k;
+            k.id = c.value("id", "");
+            k.kind = c.value("kind", "");
+            k.trait = c.value("trait", "");
+            k.passive = c.value("passive", "");
+            k.packBonus = c.value("packBonus", 0);
+            if (!k.id.empty()) compKinds_.push_back(k);
+        }
+    });
     loadText("assets/data/traits.json", [&](const char* t) {
         nlohmann::json j = nlohmann::json::parse(t, nullptr, false);
         if (j.is_discarded() || !j.is_object()) return;
@@ -120,6 +133,131 @@ std::vector<Game::StartClass> Game::startClasses() const {
         classes.push_back({"Heir", blurb, "", true});
     }
     return classes;
+}
+
+// ---- company & purpose (P5) -------------------------------------------------
+
+struct AmbDef { const char* name; const char* desc; };
+static const AmbDef kAmbitions[6] = {
+    {"Strike It Rich", "hold 120 gold at once"},
+    {"Delver", "reach 3 dungeon finales"},
+    {"Bookworm", "read 3 things in one life"},
+    {"Survivor", "see day 15"},
+    {"Relic Hunter", "carry a true artifact"},
+    {"Beloved", "be loved somewhere (+20 rep)"},
+};
+
+void Game::setCompanion(const std::string& id) {
+    for (auto& k : compKinds_) {
+        if (k.id != id) continue;
+        comp_ = k;
+        comp_.name = forge_.person(runRng_).conlang;
+        comp_.active = true;
+        ch_.companionPassive = comp_.passive;
+        ch_.packMax = 9 + comp_.packBonus;
+        return;
+    }
+}
+
+void Game::dismissCompanion(bool died) {
+    if (!comp_.active) return;
+    if (died) {
+        // Companions enter the Chronicle like anyone else who mattered.
+        ChronEntry e;
+        e.id = (int)history_.chron.size();
+        e.year = history_.presentYear;
+        e.type = "companion_died";
+        e.extra = comp_.name + ", " + comp_.kind;
+        history_.chron.push_back(e);
+        newsLine_ = comp_.name + " will not be forgotten. Or avenged, probably.";
+    }
+    comp_ = Companion{};
+    ch_.companionPassive.clear();
+    ch_.packMax = 9;
+}
+
+void Game::offerContract() {
+    if (contract_.active || history_.factions.empty()) return;
+    contract_ = Contract{};
+    contract_.faction = runRng_.range(0, (int)history_.factions.size() - 1);
+    const std::string& patron = history_.factions[contract_.faction].name;
+    std::vector<int> resting;
+    for (int i = 0; i < (int)history_.artifacts.size(); i++)
+        if (!history_.artifacts[i].claimed && history_.artifacts[i].restingSite >= 0)
+            resting.push_back(i);
+    if (!resting.empty() && runRng_.chance(60)) {
+        int ai = resting[runRng_.range(0, (int)resting.size() - 1)];
+        contract_.artifactId = ai;
+        contract_.reward = 22;
+        contract_.desc = "Recover " + history_.artifacts[ai].display() + " (rests at " +
+                         world_.sites[history_.artifacts[ai].restingSite].name +
+                         ") for " + patron;
+    } else {
+        int s = runRng_.range(0, (int)world_.sites.size() - 1);
+        contract_.siteId = s;
+        contract_.reward = 12;
+        contract_.desc = "Survey " + world_.sites[s].name + " for " + patron;
+    }
+    contract_.active = true;
+}
+
+void Game::checkPurposes() {
+    if (ch_.dead) return;
+    // Contracts pay out the moment their condition holds.
+    if (contract_.active) {
+        bool done = false;
+        if (contract_.artifactId >= 0)
+            for (auto& item : ch_.pack)
+                if (item.artifactId == contract_.artifactId) done = true;
+        if (contract_.siteId >= 0 && currentSite_ == contract_.siteId) done = true;
+        if (done) {
+            ch_.money += contract_.reward;
+            if (contract_.faction >= 0 && contract_.faction < (int)rep_.size()) {
+                rep_[contract_.faction] += 6;
+                if (rep_[contract_.faction] > 50) rep_[contract_.faction] = 50;
+            }
+            audio_.coin();
+            Screen back = screen_;
+            showInfo("CONTRACT COMPLETE\n\n" + contract_.desc +
+                     ".\n\nA courier finds you within the hour. " +
+                     std::to_string(contract_.reward) +
+                     " gold, and your name said warmly in rooms you've never entered.");
+            infoBack_ = back;
+            contract_ = Contract{};
+        }
+    }
+    if (ambition_.id >= 0 && !ambition_.done) {
+        bool done = false;
+        switch (ambition_.id) {
+            case 0: done = ch_.money >= 120; break;
+            case 1: done = finalesSeen_ >= 3; break;
+            case 2: done = booksThisRun_ >= 3; break;
+            case 3: done = ch_.day >= 15; break;
+            case 4:
+                for (auto& item : ch_.pack)
+                    if (item.artifactId >= 0) done = true;
+                break;
+            case 5:
+                for (int r : rep_)
+                    if (r >= 20) done = true;
+                break;
+        }
+        if (done) {
+            ambition_.done = true;
+            ch_.maxHp += 3;
+            ch_.hp += 3;
+            ch_.money += 10;
+            profile_.ambitionsDone++;
+            SaveProfile(profile_);
+            audio_.chime();
+            Screen back = screen_;
+            showInfo("AMBITION FULFILLED: " + ambition_.name +
+                     "\n\nYou set out to " + ambition_.desc +
+                     ", and you did. Whatever else this life becomes, it had a point. "
+                     "(+3 max HP, +10 gold, one long satisfied exhale)");
+            infoBack_ = back;
+        }
+    }
 }
 
 ItemInstance Game::makeItem(const std::string& id) {
@@ -205,6 +343,8 @@ bool Game::evalCond(const std::string& cond) const {
         if (b == "<=") return lhs <= rhs;
         return lhs == rhs;
     };
+    if (a == "companion") return comp_.active;
+    if (a == "!companion") return !comp_.active;
     if (a == "war_here") {
         int owner = regionOwner(currentSite_ >= 0 ? world_.sites[currentSite_].region : -1);
         for (auto& w : history_.liveWars)
@@ -379,6 +519,11 @@ void Game::newRun(int classIdx) {
     npcMarks_.clear();
     slotFigure_ = -1;
     blessingSpent_ = false;
+    comp_ = Companion{};
+    contract_ = Contract{};
+    finalesSeen_ = 0;
+    booksThisRun_ = 0;
+    compLine_.clear();
     enterTravel();
 }
 
@@ -549,6 +694,14 @@ void Game::dealEvent() {
             choiceTexts_.push_back(c.requires_.label() +
                                    grammar_.expand(c.text, runRng_, ctx));
         reveal_ = 0.0f;
+        if (tag == "dungeon_finale") finalesSeen_++;
+        // The company keeps its own commentary.
+        compLine_.clear();
+        if (comp_.active && runRng_.chance(35)) {
+            std::string line = grammar_.expand("{comp_" + comp_.trait + "}", runRng_,
+                                               {{"comp", comp_.name}});
+            compLine_ = comp_.name + ": \"" + line + "\"";
+        }
         screen_ = EVENT;
         return;
     }
@@ -591,13 +744,13 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
             if (ch_.stats[i] < 1) ch_.stats[i] = 1;
         } else if (verb == "item") {
             std::string id; ss >> id;
-            if ((int)ch_.pack.size() < Character::kPackMax) {
+            if ((int)ch_.pack.size() < ch_.packMax) {
                 ch_.pack.push_back(makeItem(id));
                 audio_.chime();
             }
         } else if (verb == "loot") {
             std::string tier; ss >> tier;
-            if ((int)ch_.pack.size() < Character::kPackMax) {
+            if ((int)ch_.pack.size() < ch_.packMax) {
                 ItemInstance item = items_.loot(runRng_, tier);
                 bindQuirk(item);
                 ch_.pack.push_back(item);
@@ -606,6 +759,15 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
         } else if (verb == "removeitem") {
             std::string id; ss >> id;
             ch_.removeItem(id);
+        } else if (verb == "companion") {
+            std::string id; ss >> id;
+            setCompanion(id);
+        } else if (verb == "companion_leave") {
+            dismissCompanion(false);
+        } else if (verb == "companion_dies") {
+            dismissCompanion(true);
+        } else if (verb == "contract") {
+            offerContract();
         } else if (verb == "rep") {
             int v = 0; ss >> v;
             int region = (currentSite_ >= 0) ? world_.sites[currentSite_].region : -1;
@@ -620,7 +782,7 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
         } else if (verb == "goto") {
             ss >> forcedNextId_;
         } else if (verb == "take_artifact") {
-            if (pendingArtifact_ >= 0 && (int)ch_.pack.size() < Character::kPackMax) {
+            if (pendingArtifact_ >= 0 && (int)ch_.pack.size() < ch_.packMax) {
                 HArtifact& a = history_.artifacts[pendingArtifact_];
                 a.claimed = true;
                 a.restingSite = -1;
@@ -682,6 +844,8 @@ void Game::chooseOption(int idx) {
 
 void Game::continueAfterOutcome() {
     if (ch_.dead) { screen_ = DEATH; return; }
+    checkPurposes();
+    if (screen_ == INFO) return; // ambition/contract fanfare; resumes after
     if (pendingShop_) {
         pendingShop_ = false;
         openVendor();
@@ -733,6 +897,7 @@ void Game::openVendor() {
 
 void Game::showInfo(const std::string& text) {
     infoText_ = text;
+    infoBack_ = INVENTORY;
     screen_ = INFO;
 }
 
@@ -753,6 +918,7 @@ void Game::frame(Vector2 mouse, bool pressed) {
     switch (screen_) {
         case TITLE:     drawTitle(mouse); break;
         case CLASSPICK: drawClassPick(mouse); break;
+        case AMBITION:  drawAmbitionPick(mouse); break;
         case TRAVEL:    drawTravel(mouse); break;
         case EVENT:     drawEvent(mouse); break;
         case OUTCOME:   drawOutcome(); break;
@@ -896,7 +1062,47 @@ void Game::drawClassPick(Vector2 mouse) {
     int pick = optionRows(rows, ok, mouse);
     if (pick >= 0) {
         audio_.blip();
-        newRun(pick);
+        pendingClass_ = pick;
+        // Roll three ambitions to choose from — deterministic per world+generation.
+        Rng ambRng(nextSeed_ ^ (pendingLegacy_.size() * 8191ULL), 99);
+        ambitionChoices_.clear();
+        while ((int)ambitionChoices_.size() < 3) {
+            int a = ambRng.range(0, 5);
+            bool dup = false;
+            for (int c : ambitionChoices_)
+                if (c == a) dup = true;
+            if (!dup) ambitionChoices_.push_back(a);
+        }
+        screen_ = AMBITION;
+    }
+}
+
+void Game::drawAmbitionPick(Vector2 mouse) {
+    const char* head = "WHY ARE YOU DOING THIS?";
+    DrawText(head, (kW - MeasureText(head, 10)) / 2, 24, 10, PAL_GOLD);
+    const char* sub = "an ambition gives a life shape. fulfilling one leaves a mark.";
+    DrawText(sub, (kW - MeasureText(sub, 10)) / 2, 40, 10, PAL_DARK);
+
+    std::vector<std::string> rows;
+    std::vector<bool> ok;
+    for (int a : ambitionChoices_) {
+        rows.push_back(std::string(kAmbitions[a].name) + " - " + kAmbitions[a].desc);
+        ok.push_back(true);
+    }
+    rows.push_back("No ambition - pure wandering");
+    ok.push_back(true);
+    int pick = optionRows(rows, ok, mouse);
+    if (pick >= 0) {
+        audio_.blip();
+        if (pick < (int)ambitionChoices_.size()) {
+            ambition_.id = ambitionChoices_[pick];
+            ambition_.name = kAmbitions[ambition_.id].name;
+            ambition_.desc = kAmbitions[ambition_.id].desc;
+            ambition_.done = false;
+        } else {
+            ambition_ = Ambition{};
+        }
+        newRun(pendingClass_);
     }
 }
 
@@ -918,6 +1124,21 @@ void Game::drawTravel(Vector2 mouse) {
                       (weather_ == "clear" ? ", skies clear." : ", " + weather_ + ".");
     if (!newsLine_.empty()) sky += "  NEWS: " + newsLine_;
     y = DrawTextWrapped(sky, 8, y + 1, kW - 16, PAL_DIM, y + 24);
+    if (comp_.active) {
+        std::string cline = "With you: " + comp_.name + ", " + comp_.kind;
+        y = DrawTextWrapped(cline, 8, y + 1, kW - 16, PAL_DIM, y + 13);
+    }
+    std::string purpose;
+    if (ambition_.id >= 0 && !ambition_.done)
+        purpose = "Ambition: " + std::string(kAmbitions[ambition_.id].desc);
+    if (contract_.active)
+        purpose += (purpose.empty() ? "" : "  ") + std::string("Job: ") + contract_.desc;
+    if (!purpose.empty()) {
+        while (!purpose.empty() && MeasureText((purpose + "..").c_str(), 10) > kW - 16)
+            purpose.pop_back();
+        DrawText(purpose.c_str(), 8, y + 1, 10, PAL_GOLD);
+        y += 12;
+    }
     if (!ch_.traits.empty()) {
         std::string tline = "You are: ";
         bool first = true;
@@ -946,6 +1167,7 @@ void Game::drawTravel(Vector2 mouse) {
         eventsLeftHere_ = (deckTag_ == "dungeon") ? runRng_.range(3, 4) : runRng_.range(2, 3);
         dailyTick();
         dealEvent();
+        checkPurposes(); // survey contracts complete on arrival
         return;
     }
     if (IsKeyPressed(KEY_TAB)) openInventory();
@@ -962,8 +1184,16 @@ void Game::drawEvent(Vector2 mouse) {
             reveal_ = (float)currentText_.size();
     }
     int choicesTop = kH - (int)current_->choices.size() * 13 - 6;
-    DrawTextWrapped(currentText_.substr(0, (size_t)reveal_), 8, 22, kW - 16, PAL_INK,
-                    choicesTop);
+    int textBottom = compLine_.empty() ? choicesTop : choicesTop - 13;
+    int ty = DrawTextWrapped(currentText_.substr(0, (size_t)reveal_), 8, 22, kW - 16,
+                             PAL_INK, textBottom);
+    if (!compLine_.empty() && reveal_ >= (float)currentText_.size()) {
+        std::string cl = compLine_;
+        while (!cl.empty() && MeasureText((cl + "..").c_str(), 10) > kW - 16)
+            cl.pop_back();
+        if (cl.size() < compLine_.size()) cl += "..";
+        DrawText(cl.c_str(), 8, (ty < textBottom ? ty + 2 : textBottom), 10, PAL_DARK);
+    }
 
     std::vector<bool> ok;
     for (auto& c : current_->choices) ok.push_back(c.requires_.met(ch_));
@@ -1023,7 +1253,7 @@ void Game::drawVendor(Vector2 mouse) {
         for (auto& item : vendorStock_) {
             int price = buyPrice(item);
             rows.push_back(item.displayName() + " - " + std::to_string(price) + "g");
-            ok.push_back(ch_.money >= price && (int)ch_.pack.size() < Character::kPackMax);
+            ok.push_back(ch_.money >= price && (int)ch_.pack.size() < ch_.packMax);
         }
         if (vendorStock_.empty()) {
             DrawTextWrapped("Sold out. The vendor gestures proudly at nothing.", 8, y + 18,
@@ -1060,7 +1290,7 @@ void Game::drawInventory(Vector2 mouse) {
     drawTopBar();
     if (invSelected_ < 0) {
         std::string head = "Your pack (" + std::to_string(ch_.pack.size()) + "/" +
-                           std::to_string(Character::kPackMax) + ")";
+                           std::to_string(ch_.packMax) + ")";
         DrawText(head.c_str(), 8, 22, 10, PAL_GOLD);
         if (ch_.pack.empty()) {
             DrawTextWrapped("Empty. Your worldly possessions are: hope.", 8, 38, kW - 16, PAL_DIM);
@@ -1109,6 +1339,7 @@ void Game::drawInventory(Vector2 mouse) {
             }
             if (isBook || isGossip || isMap) {
                 profile_.booksRead++;
+                booksThisRun_++;
                 SaveProfile(profile_);
                 std::string name = item.name;
                 std::string text;
@@ -1162,7 +1393,7 @@ void Game::drawInfo() {
     DrawText(prompt, kW - MeasureText(prompt, 10) - 6, kH - 13, 10, PAL_DIM);
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_TAB) ||
         pressed_) {
-        screen_ = ch_.dead ? DEATH : INVENTORY;
+        screen_ = ch_.dead ? DEATH : infoBack_;
     }
 }
 

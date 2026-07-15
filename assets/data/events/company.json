@@ -1,0 +1,265 @@
+[
+  {
+    "id": "tavern_hireling",
+    "locations": ["tavern"],
+    "weight": 9,
+    "when": ["!companion"],
+    "text": "A scarred mercenary at {site} finishes her drink, looks you over, and slides her chair back. 'You have the look of someone about to do something stupid in a professional capacity. I charge eight gold. I'm worth twelve.'",
+    "choices": [
+      { "text": "Hire her", "requires": { "money": 8 },
+        "outcomes": [
+          { "weight": 100, "text": "She shakes your hand like she's testing a rope bridge. 'Rule one: I don't carry things. Rule two: I don't sing. Everything else is negotiable.'", "effects": ["money -8", "companion mercenary"] }
+        ] },
+      { "text": "Haggle to six", "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "'Six, and I get first pick of any boots we find.' Deal. Strange deal, but deal.", "effects": ["money -6", "companion mercenary"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "'Ten now.' You've haggled backwards. She watches you do the math and enjoys it.", "effects": [] }
+        ] },
+      { "text": "Ask what happened to her last client",
+        "outcomes": [
+          { "weight": 100, "text": "She tells you, in detail, with diagrams on a napkin. It was not her fault. It was IMPRESSIVELY not her fault. You keep the napkin.", "effects": ["stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "forest_talking_badger_companion",
+    "locations": ["forest"],
+    "weight": 8,
+    "when": ["!companion"],
+    "text": "A badger sits on a stump, cleaning its paws with the composure of a retired judge. 'You're going the wrong way,' it says. 'Most of you are, most of the time. I could come along and point.'",
+    "choices": [
+      { "text": "Accept the badger's company",
+        "outcomes": [
+          { "weight": 100, "text": "It climbs onto your pack like it has always lived there. 'First correction: your left boot is laced wrong. It's been bothering me since you walked up.'", "effects": ["companion badger"] }
+        ] },
+      { "text": "Ask why a badger talks",
+        "outcomes": [
+          { "weight": 60, "text": "'Why does anyone?' it says, which is either profound or evasive. You suspect a wizard was involved at some point. The badger's expression forbids follow-up questions.", "effects": ["stat wis +1"] },
+          { "weight": 40, "text": "'Cursed,' it says, cheerfully. 'Best thing that ever happened to me. You should try it.' You decline to try it.", "effects": ["stat wis +1"] }
+        ] },
+      { "text": "Politely decline",
+        "outcomes": [
+          { "weight": 100, "text": "'Suit yourself.' It watches you leave. Two hundred yards later you realize you are, in fact, going the wrong way. You do not turn around. Pride is a navigation system too.", "effects": ["hp -1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "city_accountant_companion",
+    "locations": ["city"],
+    "weight": 8,
+    "when": ["!companion"],
+    "text": "A man in a once-fine coat sits on the courthouse steps beside a box of his desk things. 'Fourteen years of impeccable ledgers,' he announces to the street, 'and ONE creative quarter, and suddenly I'm the villain.'",
+    "choices": [
+      { "text": "Take him on as your numbers man",
+        "outcomes": [
+          { "weight": 100, "text": "He alphabetizes your pack on the first evening and finds two coins you didn't know you had. 'A rounding error,' he says, eyes gleaming. 'In our favor. They always can be.'", "effects": ["money +2", "companion accountant"] }
+        ] },
+      { "text": "Ask about the creative quarter", "check": { "stat": "int", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "The scheme he describes is so elegant you take notes. Technically legal in two jurisdictions, one of which no longer exists. Your understanding of money deepens alarmingly.", "effects": ["stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The explanation involves three currencies and a fictional shipping company. You nod at the wrong moment and briefly become a co-conspirator. You walk away quickly.", "effects": [] }
+        ] },
+      { "text": "Buy his desk things", "requires": { "money": 4 },
+        "outcomes": [
+          { "weight": 100, "text": "The box contains a nameplate, a dry inkwell, and a genuinely excellent letter opener. He watches it go with dignity. 'Take care of the opener. It's seen things.'", "effects": ["money -4", "item dagger"] }
+        ] }
+    ]
+  },
+  {
+    "id": "dungeon_mimic_porter",
+    "locations": ["dungeon"],
+    "weight": 7,
+    "when": ["!companion"],
+    "text": "A chest follows you. Not aggressively - at a respectful distance, stopping when you stop. Eventually it clears its throat (a chest, clearing its throat) and says: 'I'm in recovery. Eight months clean. I carry things now. LEGITIMATELY.'",
+    "choices": [
+      { "text": "Hire the reformed mimic as a porter",
+        "outcomes": [
+          { "weight": 100, "text": "It opens its lid to reveal clean felt lining and a small certificate of completion from the support group. Your carrying capacity improves. Your trust exercises begin.", "effects": ["companion porter"] }
+        ] },
+      { "text": "Ask what it eats now",
+        "outcomes": [
+          { "weight": 100, "text": "'Compliments,' it says. Long pause. 'And rats. But EMOTIONALLY, compliments.' You tell it the felt lining looks nice. It purrs like a wooden cat.", "effects": ["stat wis +1"] }
+        ] },
+      { "text": "Test it with your hand first", "check": { "stat": "wis", "dc": 10 },
+        "success": [
+          { "weight": 100, "text": "You hold out your hand. The chest holds VERY still, visibly working the program. 'Thank you for trusting me,' it says thickly. You hire it out of sheer emotion.", "effects": ["companion porter"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The lid trembles. A single tooth pokes out and retracts. 'RELAPSE ADJACENT,' it wails, and trundles off to find its sponsor. You keep your hand. It keeps its journey.", "effects": [] }
+        ] }
+    ]
+  },
+  {
+    "id": "wild_campfire_stories",
+    "locations": ["road", "forest"],
+    "weight": 8,
+    "when": ["companion"],
+    "slots": { "rumor": "chronicle_random" },
+    "text": "Night camp. The fire does its ancient work. Your companion pokes the coals and asks if you've heard the one about - and out comes a story: \"{rumor}\"",
+    "choices": [
+      { "text": "Trade a story of your own",
+        "outcomes": [
+          { "weight": 100, "text": "You tell yours. They tell another. The fire burns to embers with the excellent slowness of a good night. This is the part of the life nobody puts in ballads because words don't hold it.", "effects": ["hp +4", "stat wis +1"] }
+        ] },
+      { "text": "Ask how they know that story",
+        "outcomes": [
+          { "weight": 60, "text": "The answer involves a chain of tellers five people long, each of whom 'swears it's true.' You've just watched history travel. It limps, but it travels.", "effects": ["stat int +1"] },
+          { "weight": 40, "text": "'I was THERE,' they say, wounded. The details that follow are too specific and too weird to be invented. You will never doubt them again. Openly.", "effects": ["stat wis +1"] }
+        ] },
+      { "text": "Fall asleep mid-story",
+        "outcomes": [
+          { "weight": 100, "text": "You wake at dawn under a blanket you didn't put there. Neither of you mentions it. The day starts warmer than the weather explains.", "effects": ["hp +5"] }
+        ] }
+    ]
+  },
+  {
+    "id": "road_companion_peril",
+    "locations": ["road", "dungeon"],
+    "weight": 8,
+    "when": ["companion"],
+    "text": "It happens fast: the ground gives, a sinkhole yawns, and your companion is halfway down it, holding a root and, out of pure professionalism, not screaming yet.",
+    "choices": [
+      { "text": "Grab them", "check": { "stat": "str", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You haul them out in one pull. For a moment you both sit in the dirt breathing. 'Well,' they say finally. 'Now you know what my scream sounds like on the inside.'", "effects": ["hp -1"] }
+        ],
+        "fail": [
+          { "weight": 70, "text": "You catch them - barely - and the save costs you both skin and dignity. At the bottom of your grip strength you find a little more. Everybody keeps everybody.", "effects": ["hp -4"] },
+          { "weight": 30, "text": "The root snaps. Your grip fails. The sinkhole takes them and gives back only echo. You dig until your hands bleed. The road is quieter after, and so are you.", "effects": ["hp -3", "companion_dies"] }
+        ] },
+      { "text": "Throw them your rope", "requires": { "item": "rope" },
+        "outcomes": [
+          { "weight": 100, "text": "The rope lands true. They climb out swearing creatively in two languages. The rope is now their favorite object in the world; they pat it sometimes.", "effects": [] }
+        ] },
+      { "text": "Lower yourself down to push from below", "check": { "stat": "con", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You brace, they climb over you like furniture, then reach back and pull you up. Teamwork: undignified, effective, the only kind there is.", "effects": ["hp -2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Now you're both in the sinkhole. The silence is very loud. 'So,' your companion says. 'Come here often?' The climb out takes an hour and costs you all your remaining grace.", "effects": ["hp -4"] }
+        ] }
+    ]
+  },
+  {
+    "id": "city_notice_board",
+    "locations": ["city"],
+    "weight": 12,
+    "text": "The city notice board: lost dogs, found dogs, dogs of unclear status, and between them, sealed postings with wax stamps - real work, for real coin, from people who don't post twice.",
+    "choices": [
+      { "text": "Take a contract",
+        "outcomes": [
+          { "weight": 100, "text": "You break the wax and read the terms. Work is work, and this one has a name and a place and a number on it.", "effects": ["contract"] }
+        ] },
+      { "text": "Read the dog notices, all of them",
+        "outcomes": [
+          { "weight": 100, "text": "Barnaby has been found THREE TIMES this month. Barnaby is running a scheme. You feel richer for knowing this, in the way that matters least.", "effects": ["stat wis +1"] }
+        ] },
+      { "text": "Post your own notice", "requires": { "money": 1 },
+        "outcomes": [
+          { "weight": 60, "text": "You post 'ADVENTURER, AVAILABLE, REASONABLE.' Within the hour someone hires you to carry a wardrobe upstairs. It pays. Adventure is a spectrum.", "effects": ["money +5", "hp -1"] },
+          { "weight": 40, "text": "You post something wittier than wise. It draws exactly one response, which is also witty, and unsigned, and now you're in a correspondence.", "effects": ["stat cha +1", "money -1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "tavern_broker_contract",
+    "locations": ["tavern"],
+    "weight": 9,
+    "text": "A woman at the corner table of {site} has three drinks in front of her and hasn't touched any. A broker. The drinks are for clients. 'Sit,' she says, not looking up. 'You look underemployed.'",
+    "choices": [
+      { "text": "Take the job",
+        "outcomes": [
+          { "weight": 100, "text": "She slides a paper across. Names, places, a number underlined twice. 'Don't read it here. Don't lose it. Don't come back without finishing it or a very good story.'", "effects": ["contract"] }
+        ] },
+      { "text": "Drink one of the client drinks first",
+        "outcomes": [
+          { "weight": 50, "text": "You drink it with eye contact. She almost smiles. 'Bold. The job pays extra for bold.' It does not pay extra. But you got a free drink and a reputation.", "effects": ["hp +1", "contract"] },
+          { "weight": 50, "text": "That drink belonged to someone who arrives while you're mid-sip. The negotiation that follows is physical and brief.", "effects": ["hp -3"] }
+        ] },
+      { "text": "Ask what happens to clients who fail",
+        "outcomes": [
+          { "weight": 100, "text": "She finally looks up. Holds your gaze. Taps the table twice. That's it. That's the answer. You understand it completely and can never explain it to anyone.", "effects": ["stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "finale_champion",
+    "locations": ["dungeon_finale"],
+    "weight": 9,
+    "text": "The last hall is a ring of old stone, and in it waits the dungeon's Champion: a broad figure in mismatched legendary armor, each piece from a different fallen hero. It raises a hand - not a threat. An invitation. 'One exchange,' it rumbles. 'Choose your opening.'",
+    "choices": [
+      { "text": "Open with steel", "check": { "stat": "str", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Your blow rings true and the Champion staggers back a step - one step, which by its widening eyes has not happened in a century.", "effects": ["goto finale_champion_advantage"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "It catches your swing like a thrown apple. 'Spirited,' it says, and the counterblow rearranges your priorities.", "effects": ["hp -4", "goto finale_champion_pressed"] }
+        ] },
+      { "text": "Open with words", "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You ask whose armor it wears, piece by piece, name by name. By the fourth name its guard has dropped entirely. Grief is an opening too.", "effects": ["goto finale_champion_advantage"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your speech dies somewhere around 'noble adversary.' The Champion sighs - it has heard ten thousand speeches - and closes the distance.", "effects": ["hp -3", "goto finale_champion_pressed"] }
+        ] },
+      { "text": "Open with patience", "check": { "stat": "wis", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You do nothing. Perfectly. The Champion circles once, twice, waiting for the tell that never comes. It is the first opponent in an age that has made IT move first, and the lunge is readable a mile away.", "effects": ["goto finale_champion_advantage"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your patience holds for eleven seconds, which the Champion counts out loud. On 'twelve' it is already behind you.", "effects": ["hp -3", "goto finale_champion_pressed"] }
+        ] }
+    ]
+  },
+  {
+    "id": "finale_champion_advantage",
+    "locations": [],
+    "text": "The Champion is off balance - a century of undefeated stillness cracked open. The moment stretches. What you do with an advantage is the whole of who you are.",
+    "choices": [
+      { "text": "Press the attack", "check": { "stat": "str", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "It ends clean. The Champion kneels, sets down its blade, and begins - piece by piece - removing the armor. 'Take what you can carry. I have held this door long enough.' You leave rich, and the hall stands empty behind you.", "effects": ["money +25", "loot fine", "stat str +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You overextend into its recovery. The exchange ends in a draw of mutual bruises and, oddly, mutual respect. It waves you past the door with a professional nod: worth something. Not everything.", "effects": ["hp -4", "money +10"] }
+        ] },
+      { "text": "Offer it mercy",
+        "outcomes": [
+          { "weight": 100, "text": "You lower your weapon. The silence lasts a long time. 'Nine hundred years,' the Champion says finally, 'and you are the first to waste an advantage on kindness.' It gives you its oldest piece of armor and its blessing, which turns out to be the heavier of the two.", "effects": ["item chain_armor", "trait +blessed", "rep +5"] }
+        ] },
+      { "text": "Ask it to teach you instead",
+        "outcomes": [
+          { "weight": 100, "text": "One lesson, there in the ring, with the dust of nine centuries as your classroom. Your stance will never be the same. Neither will your lower back.", "effects": ["stat str +1", "stat wis +1", "hp -2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "finale_champion_pressed",
+    "locations": [],
+    "text": "You're on the back foot and the Champion advances like weather. It isn't angry. That's the worst part. It's PROFESSIONAL.",
+    "choices": [
+      { "text": "Fight out of the corner", "check": { "stat": "str", "dc": 14 },
+        "success": [
+          { "weight": 100, "text": "Cornered animals and desperate adventurers: history's great underdogs. Your wild counter lands where mismatched armor pieces meet. The Champion steps back, touches the gap, and LAUGHS. 'There it is. Go on through, gap-finder. You've earned the door.'", "effects": ["money +15", "stat str +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The corner wins. The Champion deposits you outside the ring with the care of someone returning a library book. 'Come back stronger. I'll be here. I'm always here.'", "effects": ["hp -5"] }
+        ] },
+      { "text": "Yield with dignity",
+        "outcomes": [
+          { "weight": 100, "text": "You lower your weapon and bow. The Champion returns the bow, deeper. 'Wisdom is also a weapon. Toll for the door: whatever you can spare, and the story told honestly.' You pay. You will tell it honestly. Mostly.", "effects": ["money -8", "stat wis +1"] }
+        ] },
+      { "text": "Escape through the old drain", "check": { "stat": "dex", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You dive through a gap no armored thing could follow. Behind you, unmistakably: applause. One pair of gauntlets, clapping. 'CREATIVE,' booms the Champion. 'THE DRAIN COUNTS.'", "effects": ["hp -1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You do not fit in the drain. The Champion watches you not fit in the drain. It is the longest forty seconds of your life, and then the beating resumes, gentler now, out of pity.", "effects": ["hp -4"] }
+        ] }
+    ]
+  }
+]

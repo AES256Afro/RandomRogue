@@ -27,7 +27,8 @@ static std::string readFile(const std::string& path) {
 
 static const std::set<std::string> kVerbs = {
     "hp", "maxhp", "money", "credits", "stat", "item", "loot", "removeitem",
-    "rep", "shop", "goto", "take_artifact", "die", "trait", "npc_mark"};
+    "rep", "shop", "goto", "take_artifact", "die", "trait", "npc_mark",
+    "companion", "companion_leave", "companion_dies", "contract"};
 static const std::set<std::string> kSlotQueries = {
     "chronicle_random", "chronicle_news", "artifact_here", "figure_alive",
     "figure_dead"};
@@ -47,7 +48,8 @@ static bool validWhen(const std::string& w) {
     std::string a, b, c;
     ss >> a >> b >> c;
     static const std::set<std::string> unary = {"carrying_artifact", "war_here",
-                                                "plague_here", "raining", "snowing"};
+                                                "plague_here", "raining", "snowing",
+                                                "companion", "!companion"};
     static const std::set<std::string> named = {"trait", "!trait", "has", "!has", "npc",
                                                 "season"};
     static const std::set<std::string> cmp = {"rep", "money", "credits", "hp", "day"};

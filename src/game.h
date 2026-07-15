@@ -26,7 +26,28 @@ public:
     float shakeAmount() const { return shake_ > 0.0f ? shake_ : 0.0f; }
 
 private:
-    enum Screen { TITLE, CLASSPICK, TRAVEL, EVENT, OUTCOME, DEATH, INVENTORY, INFO, VENDOR };
+    enum Screen { TITLE, CLASSPICK, AMBITION, TRAVEL, EVENT, OUTCOME, DEATH,
+                  INVENTORY, INFO, VENDOR };
+
+    // A hired sword, a talking badger, a disgraced accountant (P5).
+    struct Companion {
+        std::string id, name, kind, trait, passive;
+        int packBonus = 0;
+        bool active = false;
+    };
+    struct Ambition {
+        std::string name, desc;
+        int id = -1; // index into the ambition table; -1 = none
+        bool done = false;
+    };
+    struct Contract {
+        std::string desc;
+        int artifactId = -1; // fetch this artifact...
+        int siteId = -1;     // ...or visit this site
+        int faction = -1;
+        int reward = 0;
+        bool active = false;
+    };
 
     struct StartClass {
         std::string name;
@@ -61,7 +82,12 @@ private:
 
     void drawTitle(Vector2 mouse);
     void drawClassPick(Vector2 mouse);
+    void drawAmbitionPick(Vector2 mouse);
     void drawTravel(Vector2 mouse);
+    void setCompanion(const std::string& id);
+    void dismissCompanion(bool died);
+    void offerContract();
+    void checkPurposes(); // ambition + contract completion
     void drawEvent(Vector2 mouse);
     void drawOutcome();
     void drawDeath();
@@ -116,6 +142,7 @@ private:
 
     // inventory / info
     Screen returnScreen_ = TRAVEL;
+    Screen infoBack_ = INVENTORY;
     int invSelected_ = -1;
     std::string infoText_;
 
@@ -129,6 +156,17 @@ private:
     std::string seedInput_;
 
     bool pressed_ = false; // unified click/tap edge for this frame
+
+    // company & purpose (P5)
+    Companion comp_;
+    std::vector<Companion> compKinds_;
+    Ambition ambition_;
+    Contract contract_;
+    std::string compLine_;      // this event's interjection, if any
+    int finalesSeen_ = 0;
+    int booksThisRun_ = 0;
+    std::vector<int> ambitionChoices_; // rolled at AMBITION screen
+    int pendingClass_ = 0;
 
     // the unbroken chronicle (P2+P3)
     std::vector<LegacyRecord> pendingLegacy_; // ghosts of nextSeed_'s world

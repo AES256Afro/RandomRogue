@@ -453,6 +453,41 @@
     "is engraved 'IN MEMORY OF {qfig}, WHO SHOULD HAVE DUCKED'",
     "hums a tune old-timers swear was popular around year {qyear}"
   ],
+  "comp_brave": [
+    "I could take it. Whatever it is. Say the word.",
+    "Smells like a fight. Good.",
+    "If this goes bad, get behind me. If it goes very bad, get in front.",
+    "I've survived worse. Statistically, so will you."
+  ],
+  "comp_wise": [
+    "Consider doing the opposite of your first instinct.",
+    "I have seen this before. It ended strangely then, too.",
+    "The obvious choice is a door. Doors are sometimes mouths.",
+    "Whatever you choose, choose it like you mean it."
+  ],
+  "comp_greedy": [
+    "Ask what it pays. ALWAYS ask what it pays.",
+    "I can depreciate whatever we take from this. Trust me.",
+    "There is money in this somewhere. There is money in everything somewhere.",
+    "If anyone offers 'exposure' as payment, we leave."
+  ],
+  "comp_hungry": [
+    "Is any of this edible? Asking for the group.",
+    "I once ate a situation very similar to this one.",
+    "I'm not saying eat it. I'm saying keep the option open.",
+    "In my chest days, I would simply have swallowed the problem."
+  ],
+  "comp_anxious": [
+    "This is fine. Is this fine? Tell me this is fine.",
+    "I've written a ballad about this exact scenario. Everyone dies in verse four.",
+    "My professional opinion is: hmm. Hmm hm hmm.",
+    "If we die, know that I had doubts THE WHOLE TIME."
+  ],
+  "chron_companion_died": [
+    "In year {year}, {extra} died in loyal company. The road remembers its own.",
+    "{extra} fell in year {year}, far from home, close to a friend."
+  ],
+
   "vendor_line": [
     "Everything's for sale. Some of it's even mine.",
     "Prices firm. Feelings negotiable.",
