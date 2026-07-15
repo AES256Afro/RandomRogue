@@ -33,6 +33,10 @@ jobs:
         run: cmake -B build -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: cmake --build build
+      - name: Validate content
+        run: ./build/validate assets
+      - name: Determinism gate (chronicle must generate)
+        run: ./build/chronicle_dump 90210 assets | head -5
       - uses: actions/upload-artifact@v4
         with:
           name: random-rogue-linux

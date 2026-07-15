@@ -50,6 +50,10 @@ if(NOT EMSCRIPTEN)
     )
     target_link_libraries(chronicle_dump PRIVATE nlohmann_json::nlohmann_json)
     target_include_directories(chronicle_dump PRIVATE src)
+
+    # Content linter: dangling ids, unknown verbs, broken slot/grammar refs.
+    add_executable(validate tools/validate.cpp)
+    target_link_libraries(validate PRIVATE nlohmann_json::nlohmann_json)
 endif()
 target_link_libraries(random_rogue PRIVATE raylib nlohmann_json::nlohmann_json)
 target_include_directories(random_rogue PRIVATE src)
@@ -70,8 +74,9 @@ else()
     add_custom_command(TARGET random_rogue POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
                 "${CMAKE_SOURCE_DIR}/assets" "$<TARGET_FILE_DIR:random_rogue>/assets")
-    if(WIN32)
-        # No console window in release; keep it in debug for logs.
+    if(WIN32 AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        # No console window in release; keep it in debug for logs. (-mwindows
+        # is a GCC flag; MSVC on CI uses its own defaults.)
         target_link_options(random_rogue PRIVATE $<$<CONFIG:Release>:-mwindows>)
     endif()
 endif()
