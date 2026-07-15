@@ -1,0 +1,517 @@
+[
+  {
+    "id": "tavern_fizzing_drink",
+    "locations": ["tavern"],
+    "text": "A hooded figure at {site} slides you a drink. It is fizzing. Drinks here don't fizz.",
+    "choices": [
+      { "text": "Drink it",
+        "outcomes": [
+          { "weight": 55, "text": "It's just soda. From space, apparently. Weirdly invigorating.", "effects": ["stat wis +1"] },
+          { "weight": 30, "text": "Poison. Classic. You spend an hour befriending the floor.", "effects": ["hp -5"] },
+          { "weight": 15, "text": "You can now taste colors. Purple is the worst one.", "effects": ["stat int +1", "stat cha -1"] }
+        ] },
+      { "text": "Make them drink it first", "requires": { "stat": "cha", "gte": 12 },
+        "outcomes": [
+          { "weight": 100, "text": "They vanish in a puff of embarrassment, leaving their coin purse.", "effects": ["money +12"] }
+        ] },
+      { "text": "Leave immediately",
+        "outcomes": [
+          { "weight": 100, "text": "Coward. Effective, living coward.", "effects": [] }
+        ] }
+    ]
+  },
+  {
+    "id": "tavern_arm_wrestle",
+    "locations": ["tavern"],
+    "text": "A stone golem sits at the corner table of {site}, arm up, palm open. The chalkboard reads: 'BEAT GRUNDLE. WIN 20 GOLD. NO REFUNDS ON BONES.'",
+    "choices": [
+      { "text": "Wrestle the golem", "check": { "stat": "str", "dc": 15 },
+        "success": [
+          { "weight": 100, "text": "Grundle's arm hits the table with a sound like a landslide. The bar goes silent, then erupts. Grundle nods, respectfully.", "effects": ["money +20"] }
+        ],
+        "fail": [
+          { "weight": 70, "text": "Your arm makes a noise arms should not make.", "effects": ["hp -4"] },
+          { "weight": 30, "text": "You lose instantly, but with such style that someone buys you dinner.", "effects": ["hp -1", "money +2"] }
+        ] },
+      { "text": "Bet on the next challenger instead", "requires": { "money": 5 },
+        "outcomes": [
+          { "weight": 50, "text": "The blacksmith beats Grundle on a technicality. Your bet pays out.", "effects": ["money +8"] },
+          { "weight": 50, "text": "Grundle wins. Grundle always wins. The chalkboard was a warning, not a challenge.", "effects": ["money -5"] }
+        ] },
+      { "text": "Buy Grundle a drink",
+        "outcomes": [
+          { "weight": 100, "text": "Golems don't drink. Grundle holds the mug anyway, touched. You've made a very heavy friend.", "effects": ["stat cha +1", "money -2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "tavern_mystery_stew",
+    "locations": ["tavern"],
+    "text": "Tonight's special at {site} is 'Stew.' No further details. The bowl is looking at you.",
+    "choices": [
+      { "text": "Eat the stew", "check": { "stat": "con", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "Delicious, restorative, and only mildly sentient. You feel great and vaguely guilty.", "effects": ["hp +5"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The stew wins. You spend the night negotiating with your own stomach.", "effects": ["hp -3"] }
+        ] },
+      { "text": "Ask what's in it",
+        "outcomes": [
+          { "weight": 60, "text": "The cook stares at you for a long time. 'Stew,' they say. You decide not to eat the stew. Wise.", "effects": [] },
+          { "weight": 40, "text": "The cook is so impressed someone finally asked that dinner is free.", "effects": ["hp +3"] }
+        ] },
+      { "text": "Order bread instead",
+        "outcomes": [
+          { "weight": 100, "text": "The bread is fine. The bread is always fine. Boring, but fine.", "effects": ["hp +1", "money -1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "tavern_bard_ballad",
+    "locations": ["tavern"],
+    "text": "A bard at {site} is singing a ballad about your life. The facts are wrong, the rhymes are worse, and the crowd loves it.",
+    "choices": [
+      { "text": "Own it. Take a bow", "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You bow. The crowd roars. Hats fill with coins, and one of the hats is yours.", "effects": ["money +10"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You bow. A chair leg is thrown. History will remember the ballad, not the truth.", "effects": ["hp -2", "stat cha -1"] }
+        ] },
+      { "text": "Correct the bard's facts, loudly",
+        "outcomes": [
+          { "weight": 50, "text": "The bard incorporates your corrections into a new, crueler verse. It's catchy.", "effects": ["stat cha -1"] },
+          { "weight": 50, "text": "The bard hires you as a fact-checker on the spot. Easiest coin you've ever made.", "effects": ["money +6"] }
+        ] },
+      { "text": "Slip out the back",
+        "outcomes": [
+          { "weight": 100, "text": "You escape. Behind you, the ballad gains a verse about your mysterious vanishing. Cool points, technically.", "effects": [] }
+        ] }
+    ]
+  },
+  {
+    "id": "city_doom_prophet",
+    "locations": ["city"],
+    "text": "A street prophet grabs your sleeve. 'You will die on a TUESDAY,' she hisses. She's selling anti-Tuesday charms, 10 gold each.",
+    "choices": [
+      { "text": "Buy the charm", "requires": { "money": 10 },
+        "outcomes": [
+          { "weight": 70, "text": "It's a rock with 'NO' painted on it. You feel scammed and yet, somehow, safer.", "effects": ["money -10"] },
+          { "weight": 30, "text": "The rock hums faintly. It might actually be doing something. Unsettling value for money.", "effects": ["money -10", "stat wis +1"] }
+        ] },
+      { "text": "Ask which Tuesday",
+        "outcomes": [
+          { "weight": 100, "text": "She consults her notes. 'One of them,' she admits. Refreshing honesty. She gives you a discount rock for free.", "effects": [] }
+        ] },
+      { "text": "Point out it's currently Tuesday",
+        "outcomes": [
+          { "weight": 60, "text": "She screams and sprints away. The crowd applauds. Someone hands you a celebratory pastry.", "effects": ["hp +2"] },
+          { "weight": 40, "text": "She smiles. That's the worst possible response. You spend the rest of the day looking over your shoulder.", "effects": ["stat wis +1", "hp -1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "city_pickpocket",
+    "locations": ["city"],
+    "text": "Fingers, light as regret, brush your coin purse. The pickpocket is already three steps away, whistling.",
+    "choices": [
+      { "text": "Grab them", "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You catch their wrist mid-whistle. They surrender your purse and, embarrassingly for them, someone else's too.", "effects": ["money +8"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You grab air. They grab your purse. The whistling fades into the crowd like an insult.", "effects": ["money -8"] }
+        ] },
+      { "text": "Shout 'STOP, THIEF!'",
+        "outcomes": [
+          { "weight": 50, "text": "The whole street tackles them out of civic enthusiasm. Your gold is returned, slightly dented.", "effects": [] },
+          { "weight": 50, "text": "Three other pickpockets use the distraction. Somewhere, a guild quota is met.", "effects": ["money -6"] }
+        ] },
+      { "text": "Respect the craft",
+        "outcomes": [
+          { "weight": 100, "text": "You nod. They nod. They keep 5 gold as a 'demonstration fee' and return the rest with a business card.", "effects": ["money -5", "stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "city_guard_shakedown",
+    "locations": ["city"],
+    "text": "A guard blocks your path. 'Walking tax,' he says, inventing it. 'Five gold.' His halberd suggests this is not a negotiation.",
+    "choices": [
+      { "text": "Cite the nonexistent tax code", "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You invent subsection 12-B, 'Exemptions for the Visibly Broke.' He writes it down, defeated by bureaucracy.", "effects": ["stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "He invents a fine for 'citing.' Now you owe seven.", "effects": ["money -7"] }
+        ] },
+      { "text": "Pay the 'tax'", "requires": { "money": 5 },
+        "outcomes": [
+          { "weight": 100, "text": "He pockets it and waves you through. At least the corruption is efficient here.", "effects": ["money -5"] }
+        ] },
+      { "text": "Run", "check": { "stat": "dex", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "You vanish into an alley. The guard doesn't even give chase; armor is heavy and the day is long.", "effects": [] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You run directly into a second guard. There's a fee for that, too.", "effects": ["money -6", "hp -1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "city_spaceship_parts",
+    "locations": ["city"],
+    "text": "A vendor's stall displays gleaming junk: 'AUTHENTIC SKY-DEBRIS. FELL OFF A STAR-WAGON. NO REFUNDS.' One piece is blinking.",
+    "choices": [
+      { "text": "Buy the blinking one", "requires": { "money": 8 },
+        "outcomes": [
+          { "weight": 50, "text": "It's a 'credit chip,' whatever that is. The vendor swears it's money somewhere. It does feel like money.", "effects": ["money -8", "credits +15"] },
+          { "weight": 35, "text": "It blinks faster in your hand, then stops forever. You have purchased a dead rectangle.", "effects": ["money -8"] },
+          { "weight": 15, "text": "It chirps 'RECALIBRATED' and zaps your brain pleasantly. You suddenly understand fractions.", "effects": ["money -8", "stat int +2"] }
+        ] },
+      { "text": "Ask where exactly it fell from",
+        "outcomes": [
+          { "weight": 100, "text": "The vendor points straight up and maintains eye contact. Technically unfalsifiable. You respect it.", "effects": [] }
+        ] },
+      { "text": "Report the stall to a guard",
+        "outcomes": [
+          { "weight": 100, "text": "The guard is the vendor's cousin. Everyone is disappointed in you, including, somehow, the merchandise.", "effects": ["stat cha -1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "dungeon_no_refunds_door",
+    "locations": ["dungeon"],
+    "text": "The entrance door bears a carved sign: 'WELCOME. NO REFUNDS. MIND THE GAP.' There is, as far as you can see, no gap.",
+    "choices": [
+      { "text": "Enter confidently",
+        "outcomes": [
+          { "weight": 60, "text": "There was a gap. You find it with your face. The dungeon's sense of humor is structural.", "effects": ["hp -3"] },
+          { "weight": 40, "text": "You step over where a gap would be, on a hunch. Somewhere, a trap sighs in disappointment.", "effects": ["stat wis +1"] }
+        ] },
+      { "text": "Probe ahead with a stick", "check": { "stat": "wis", "dc": 10 },
+        "success": [
+          { "weight": 100, "text": "The stick finds the gap, then a second gap, then a mimic pretending to be a third gap. You proceed safely, stickless.", "effects": [] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The stick was the mimic. It bites your hand and scampers off, offended.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Knock politely",
+        "outcomes": [
+          { "weight": 100, "text": "A voice from inside: 'It's open! Mind the gap!' Forewarned is forearmed. Whoever they are, you never find them.", "effects": [] }
+        ] }
+    ]
+  },
+  {
+    "id": "dungeon_ribcage_sword",
+    "locations": ["dungeon"],
+    "text": "A sword is wedged in a rib cage. The plaque reads: 'HERE LIES THE PREVIOUS OWNER OF THIS SWORD.' The sword looks excellent.",
+    "choices": [
+      { "text": "Take the sword",
+        "outcomes": [
+          { "weight": 55, "text": "Nothing happens. It's just a great sword and a very honest plaque. You feel stronger already.", "effects": ["stat str +1"] },
+          { "weight": 30, "text": "The rib cage's original owner objects, briefly and skeletally. You keep the sword, but at a cost.", "effects": ["stat str +1", "hp -4"] },
+          { "weight": 15, "text": "The sword whispers 'finally' in a voice like a satisfied tax auditor. You are now, apparently, in a partnership.", "effects": ["stat str +2", "stat wis -1"] }
+        ] },
+      { "text": "Add a coin to the grave and move on",
+        "outcomes": [
+          { "weight": 100, "text": "The skeleton's jaw creaks into what might be a smile. Somewhere ahead, a trap quietly disarms itself.", "effects": ["money -1", "hp +2"] }
+        ] },
+      { "text": "Read the plaque's fine print", "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "'...ESTATE SALE SATURDAY.' You come back Saturday. The estate includes a modest bag of gold.", "effects": ["money +12"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The fine print is in Skeletal. You nod like you understood. The rib cage nods back. You leave quickly.", "effects": [] }
+        ] }
+    ]
+  },
+  {
+    "id": "dungeon_goblin_toll",
+    "locations": ["dungeon", "cave"],
+    "text": "A goblin sits at a tiny desk before a bridge. 'Toll bridge,' he says. 'Five gold. I don't make the rules.' He gestures at a rock labeled RULES.",
+    "choices": [
+      { "text": "Pay the toll", "requires": { "money": 5 },
+        "outcomes": [
+          { "weight": 100, "text": "He stamps your hand with a mushroom. 'Receipt.' The bridge is sturdy and the transaction weirdly professional.", "effects": ["money -5"] }
+        ] },
+      { "text": "Challenge the rock's authority", "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You argue jurisdiction. The goblin consults the rock, loses the argument on your behalf, and waves you through, muttering about precedent.", "effects": [] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The rock wins. Somehow. There's a surcharge now for 'contempt of rock.'", "effects": ["money -7"] }
+        ] },
+      { "text": "Wade across the river below", "check": { "stat": "con", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "Cold, wet, free. The goblin watches you the whole way, taking notes for a fee he'll invent later.", "effects": ["hp -1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The river is deeper, colder, and more opinionated than expected. You emerge downstream with less dignity and one fewer boot.", "effects": ["hp -4"] }
+        ] }
+    ]
+  },
+  {
+    "id": "dungeon_forgotten_altar",
+    "locations": ["dungeon"],
+    "text": "An altar to a forgotten god. The offering bowl holds three coins, a button, and a note: 'PLEASE. ANYTHING. I USED TO HAVE A WHOLE THING.'",
+    "choices": [
+      { "text": "Donate generously", "requires": { "money": 5 },
+        "outcomes": [
+          { "weight": 60, "text": "Warmth floods the room. A voice, rusty with disuse: 'A CUSTOMER.' You are blessed with the enthusiasm of the recently remembered.", "effects": ["money -5", "hp +6", "stat cha +1"] },
+          { "weight": 40, "text": "The god overdoes the blessing, badly out of practice. Your hair will be golden for a month whether you like it or not.", "effects": ["money -5", "hp +3"] }
+        ] },
+      { "text": "Take the three coins",
+        "outcomes": [
+          { "weight": 50, "text": "Nothing happens. The god can't afford consequences right now.", "effects": ["money +3"] },
+          { "weight": 50, "text": "A whisper follows you for the rest of the day: 'rude. RUDE.' Your luck feels thinner.", "effects": ["money +3", "stat wis -1"] }
+        ] },
+      { "text": "Leave the button. Take nothing. Say something kind",
+        "outcomes": [
+          { "weight": 100, "text": "'...thank you,' says the dark, and means it. You leave feeling inexplicably taller.", "effects": ["stat wis +1", "hp +2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "dungeon_lich_taxes",
+    "locations": ["dungeon"],
+    "weight": 6,
+    "text": "The final chamber. An elderly lich sits at a desk buried in parchment. 'Adventurer,' it rasps, 'do you know ANYTHING about estate taxes? I've been dead for 300 years and they keep sending letters.'",
+    "choices": [
+      { "text": "Help with the taxes", "check": { "stat": "int", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Three hours later, you've found a deduction for 'phylactery depreciation.' The lich weeps dust and pays you from its hoard.", "effects": ["money +25", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You make it worse. The lich now owes back taxes in two kingdoms, one of which no longer exists. It curses you out of pure administrative grief.", "effects": ["hp -5"] }
+        ] },
+      { "text": "Attack while it's distracted", "check": { "stat": "str", "dc": 14 },
+        "success": [
+          { "weight": 100, "text": "The lich crumbles, almost relieved. Its final words: 'tell them... I'm... exempt.' The hoard is yours, minus filing fees.", "effects": ["money +30", "hp -3"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The lich hits you with a sheaf of parchment. It's the deadliest thing in the room and it knows it.", "effects": ["hp -8"] }
+        ] },
+      { "text": "Suggest it just stop opening the letters",
+        "outcomes": [
+          { "weight": 100, "text": "The lich stares at you. Three centuries of dread dissolve. 'I can... simply not?' It hands you gold with trembling claws. You've slain the real monster: obligation.", "effects": ["money +15", "stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "forest_talking_mushroom",
+    "locations": ["forest"],
+    "text": "A mushroom the size of a stool clears its throat. 'I'll trade you a secret for a secret,' it says. 'That's the economy out here.'",
+    "choices": [
+      { "text": "Trade secrets",
+        "outcomes": [
+          { "weight": 60, "text": "You whisper yours. It whispers back the location of a buried coin cache. Fungal intel is shockingly reliable.", "effects": ["money +9"] },
+          { "weight": 40, "text": "Your secret is now known to the entire mycelial network. Every mushroom for miles is judging you.", "effects": ["stat wis +1", "stat cha -1"] }
+        ] },
+      { "text": "Ask why a mushroom needs secrets",
+        "outcomes": [
+          { "weight": 100, "text": "'Leverage,' it says instantly. You have no follow-up questions. You have learned something anyway.", "effects": ["stat wis +1"] }
+        ] },
+      { "text": "Eat the mushroom",
+        "outcomes": [
+          { "weight": 40, "text": "It tastes like betrayal and umami. The forest goes very quiet. You feel amazing and hunted.", "effects": ["hp +4", "stat cha -2"] },
+          { "weight": 60, "text": "It was ready for this. It is, in fact, mildly toxic out of spite alone.", "effects": ["hp -6"] }
+        ] }
+    ]
+  },
+  {
+    "id": "forest_bureaucratic_bear",
+    "locations": ["forest"],
+    "text": "A bear blocks the path, holding a piece of paper upside down. It growls, then, haltingly: 'You... read?' It appears to be a summons.",
+    "choices": [
+      { "text": "Read the summons for the bear", "check": { "stat": "int", "dc": 10 },
+        "success": [
+          { "weight": 100, "text": "The bear is being evicted from its own cave by a beaver holding company. You explain. The bear nods grimly and pays you in salmon and one shiny rock.", "effects": ["money +5", "hp +2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You misread 'eviction' as 'invitation.' The bear attends the beaver gala. It does not go well. The bear blames you, physically.", "effects": ["hp -5"] }
+        ] },
+      { "text": "Back away slowly",
+        "outcomes": [
+          { "weight": 100, "text": "The bear watches you go, paper still upside down, somehow disappointed in the entire literate world.", "effects": [] }
+        ] },
+      { "text": "Offer legal representation", "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You win on a technicality: beavers can't notarize. The forest pays you in prestige and buried acorn-gold.", "effects": ["money +12", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You lose to a beaver in a tiny waistcoat. The bear's look of betrayal will haunt you longer than the bruises.", "effects": ["hp -3", "stat cha -1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "forest_definitely_safe_berries",
+    "locations": ["forest", "road"],
+    "text": "A bush of plump berries, beside a hand-painted sign: 'DEFINITELY SAFE BERRIES.' The paint is fresh. The handwriting is nervous.",
+    "choices": [
+      { "text": "Eat a handful", "check": { "stat": "con", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Sweet, harmless, delightful. The sign was telling the truth, which is somehow the biggest twist of your day.", "effects": ["hp +4"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The sign lied. Your tongue goes numb and your shadow looks wrong for an hour.", "effects": ["hp -4"] }
+        ] },
+      { "text": "Eat exactly one berry, scientifically",
+        "outcomes": [
+          { "weight": 100, "text": "One berry's worth of poison is just a tingle. One berry's worth of delicious is still delicious. Science wins again, in miniature.", "effects": ["hp +1", "stat int +1"] }
+        ] },
+      { "text": "Find whoever painted the sign", "check": { "stat": "wis", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "You find a goblin with purple-stained hands and zero remorse. He bribes you with real, verified rations to keep quiet.", "effects": ["hp +3", "money +3"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The trail leads in a circle back to the sign, which you'd swear now reads 'DEFINITELY SAFE BERRIES :)'.", "effects": [] }
+        ] }
+    ]
+  },
+  {
+    "id": "cave_wrong_echo",
+    "locations": ["cave"],
+    "text": "You shout 'HELLO' into the dark. The echo answers 'HELLO,' then, after a pause, 'WHO TOLD YOU THAT NAME?'",
+    "choices": [
+      { "text": "Interrogate the echo", "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Through careful questioning you determine the echo is guarding a stash it can't spend, being an echo. It trades coordinates for conversation.", "effects": ["money +10"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The echo answers every question with your own question, but smugger. You leave with a headache and existential doubts.", "effects": ["hp -1"] }
+        ] },
+      { "text": "Apologize and keep walking",
+        "outcomes": [
+          { "weight": 100, "text": "'THANK YOU,' says the echo, mollified. It guides you around a pit as a courtesy. Manners: still undefeated.", "effects": [] }
+        ] },
+      { "text": "Shout something rude",
+        "outcomes": [
+          { "weight": 50, "text": "The echo repeats it to something bigger, deeper in the cave. You hear footsteps. You are suddenly very fast.", "effects": ["hp -3"] },
+          { "weight": 50, "text": "The echo laughs. An ancient tension breaks. It shares the cave gossip, including where the previous adventurer dropped their purse.", "effects": ["money +7"] }
+        ] }
+    ]
+  },
+  {
+    "id": "cave_sleeping_something",
+    "locations": ["cave"],
+    "text": "Something enormous is asleep across the passage. Its breathing sounds like a forge. A sign around its neck: 'DO NOT WAKE. SERIOUSLY. -MANAGEMENT.'",
+    "choices": [
+      { "text": "Sneak past", "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You ghost past it, stepping between snores. On the far side, someone has left a tip jar labeled 'FOR THE QUIET ONES.' You take a cut.", "effects": ["money +6"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You step on the one crunchy rock in the cave. The something opens one eye, decides you're not worth digesting, and swats you into a wall.", "effects": ["hp -6"] }
+        ] },
+      { "text": "Poke it",
+        "outcomes": [
+          { "weight": 80, "text": "Management was right. Management is always right. You survive on pure cardio.", "effects": ["hp -7"] },
+          { "weight": 20, "text": "It purrs. It PURRS. You have adopted something the size of a barn, emotionally if not logistically. It gifts you a shiny thing from its hoard.", "effects": ["money +14"] }
+        ] },
+      { "text": "Turn back",
+        "outcomes": [
+          { "weight": 100, "text": "You live to be a coward another day. The something snores approvingly.", "effects": [] }
+        ] }
+    ]
+  },
+  {
+    "id": "road_scooter_gang",
+    "locations": ["road"],
+    "text": "A gang of goblins on rusty scooters circles you, engines buzzing like angry wasps. Their leader flips up her goggles: 'Tribute. Or race. Them's the roads.'",
+    "choices": [
+      { "text": "Race for it", "check": { "stat": "dex", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You win on a borrowed scooter with a wobbling wheel. The gang is furious and deeply impressed. They pay tribute to YOU, as is the law of the roads.", "effects": ["money +10", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You crash into the one bush on an otherwise empty plain. The gang laughs so hard two of them also crash. Tribute is waived for entertainment value, but the bush wants damages.", "effects": ["hp -3"] }
+        ] },
+      { "text": "Pay tribute", "requires": { "money": 4 },
+        "outcomes": [
+          { "weight": 100, "text": "The leader stamps your hand: road tax, paid. 'Valid till the next rain,' she says. It begins raining immediately.", "effects": ["money -4"] }
+        ] },
+      { "text": "Ask to join the gang", "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "There's a form. Of course there's a form. You're now an associate member with scooter privileges and a cut of today's tribute.", "effects": ["money +8", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "'We have standards,' says the goblin holding a scooter together with rope. The rejection stings more than it should.", "effects": ["stat cha -1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "road_broken_wagon",
+    "locations": ["road"],
+    "text": "A merchant sits beside a wagon with a shattered wheel, surrounded by crates labeled 'FRAGILE,' 'VERY FRAGILE,' and 'DO NOT ASK.'",
+    "choices": [
+      { "text": "Help fix the wheel", "check": { "stat": "str", "dc": 11 },
+        "success": [
+          { "weight": 70, "text": "The wheel goes on, the merchant beams, and you're paid from the DO NOT ASK crate. It's money. You don't ask.", "effects": ["money +8"] },
+          { "weight": 30, "text": "Fixed! The merchant pays you in 'credits' - shiny rectangles from beyond the sky. 'Big somewhere,' they insist.", "effects": ["credits +12"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The wagon rolls off the jack and onto your foot. The merchant apologizes on behalf of gravity.", "effects": ["hp -3"] }
+        ] },
+      { "text": "Ask what's in the crates",
+        "outcomes": [
+          { "weight": 100, "text": "'The first two are pottery.' You wait. The merchant stares through you. 'The pottery is also not to be asked about.' You move on, enriched only by mystery.", "effects": [] }
+        ] },
+      { "text": "Loot a crate while they're distracted", "check": { "stat": "dex", "dc": 14 },
+        "success": [
+          { "weight": 100, "text": "You palm something small from DO NOT ASK. It's warm. It hums. It's worth money to somebody, ideally somebody far away.", "effects": ["money +11", "stat wis -1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The crate SHRIEKS. Whatever's inside does not appreciate being burgled. The merchant charges you an 'awakening fee.'", "effects": ["money -7", "hp -2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "tavern_tab_dispute",
+    "locations": ["tavern"],
+    "text": "The barkeep of {site} slides you a tab as long as your arm. You ordered one drink. One item reads 'ambiance: 6 gold.'",
+    "choices": [
+      { "text": "Dispute the ambiance charge", "check": { "stat": "cha", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "You argue the ambiance was, at best, adequate. The barkeep, a professional, respects the negotiation and comps everything but the drink.", "effects": ["money -2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The barkeep adds a 'dispute processing fee.' You pay it out of exhausted admiration.", "effects": ["money -9"] }
+        ] },
+      { "text": "Pay it all like royalty", "requires": { "money": 12 },
+        "outcomes": [
+          { "weight": 100, "text": "You pay in full with a flourish. Word spreads. By sundown, three taverns claim you drank there, and one has named a sandwich after you.", "effects": ["money -12", "stat cha +2"] }
+        ] },
+      { "text": "Dine and dash", "check": { "stat": "dex", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Out the window, over the fence, gone. Somewhere behind you the tab flutters to the floor like a defeated bird.", "effects": [] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The bouncer catches you by the collar mid-leap. The tab now includes 'window: 4 gold' and your dignity.", "effects": ["money -13", "hp -2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "city_lost_noble_child",
+    "locations": ["city"],
+    "text": "A small child in absurdly expensive clothes tugs your sleeve. 'I am LOST,' they announce, with the confidence of someone who has never once faced a consequence.",
+    "choices": [
+      { "text": "Escort them home", "check": { "stat": "wis", "dc": 10 },
+        "success": [
+          { "weight": 100, "text": "The manor guards initially arrest you, then the child vouches: 'This one is MY SERVANT.' The reward is generous. The title is not.", "effects": ["money +15"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The child directs you, turn by turn, to a candy stall, a puppet show, and a duck pond. By the time you find the manor, the reward has been spent on the journey. By the child.", "effects": ["money -4"] }
+        ] },
+      { "text": "Deliver them to the city guard",
+        "outcomes": [
+          { "weight": 100, "text": "The guard sergeant recognizes the child, goes pale, and thanks you for making it someone else's problem. That's worth a small finder's fee from the guard's own purse.", "effects": ["money +4"] }
+        ] },
+      { "text": "Walk away. Not your circus",
+        "outcomes": [
+          { "weight": 100, "text": "The child watches you go, then declares, to the entire street, that you are their FAVORITE. You've never felt worse about a decision that cost nothing.", "effects": ["stat wis +1"] }
+        ] }
+    ]
+  }
+]

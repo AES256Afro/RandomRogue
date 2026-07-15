@@ -1,0 +1,22 @@
+{
+  "syllables": [
+    "ka", "zak", "ur", "dim", "mor", "tan", "vel", "ost", "rin", "dak",
+    "bel", "gor", "ith", "lun", "mar", "nev", "ol", "pra", "quil", "ras",
+    "sol", "thu", "vor", "wyn", "xan", "yor", "zem", "fen", "gri", "hul",
+    "isk", "jor", "kel", "ash", "om", "esk", "tar", "ul", "brim", "cor"
+  ],
+  "nouns": [
+    "hammer", "coin", "oath", "salt", "wound", "crow", "ember", "thorn",
+    "gate", "hollow", "spire", "fen", "ash", "iron", "moon", "wolf",
+    "badger", "tooth", "tankard", "ledger", "spark", "rune", "knot",
+    "cinder", "gloom", "brine", "root", "echo", "veil", "grudge",
+    "biscuit", "turnip", "mud", "spleen", "debt", "sock"
+  ],
+  "adjectives": [
+    "hammered", "salted", "broken", "gilded", "weeping", "hungry",
+    "crooked", "silent", "burning", "frozen", "lucky", "cursed", "moist",
+    "questionable", "thrifty", "belligerent", "sideways", "greasy",
+    "humble", "spiteful", "velvet", "rusted", "wandering", "unlicensed",
+    "damp", "ominous"
+  ]
+}

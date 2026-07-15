@@ -1,0 +1,55 @@
+{
+  "adj": [
+    "Crooked", "Weeping", "Gilded", "Salted", "Whispering", "Sunken",
+    "Rusted", "Moldering", "Restless", "Bleak", "Velvet", "Greasy",
+    "Unblinking", "Thirsty", "Crumbling", "Howling", "Damp", "Forgotten",
+    "Sideways", "Ominous"
+  ],
+  "noun_forest": ["Weald", "Timberdeep", "Tanglewood", "Greenreach", "Thicket"],
+  "noun_desert": ["Expanse", "Wastes", "Dunes", "Scorch", "Flats"],
+  "noun_plains": ["Meadows", "Steppe", "Grasslands", "Reaches", "Fields"],
+  "noun_swamp": ["Mire", "Fens", "Bog", "Sloughs", "Murk"],
+  "noun_mountains": ["Peaks", "Crags", "Teeth", "Heights", "Spine"],
+  "noun_coast": ["Shores", "Strand", "Cliffs", "Bay", "Breakers"],
+
+  "tavern_name": [
+    "The {tavern_adj} {tavern_animal}",
+    "The {tavern_adj} {tavern_animal}",
+    "The {tavern_animal}'s {tavern_thing}",
+    "{tavern_adj} {tavern_animal} Inn"
+  ],
+  "tavern_adj": [
+    "Flatulent", "Prancing", "Bashful", "Soggy", "Gilded", "Drunken",
+    "Sleepy", "Two-Headed", "Honest", "Suspicious", "Belligerent"
+  ],
+  "tavern_animal": [
+    "Basilisk", "Goose", "Owlbear", "Badger", "Mule", "Wyvern",
+    "Herring", "Toad", "Manticore", "Weasel"
+  ],
+  "tavern_thing": ["Regret", "Tankard", "Rest", "Folly", "Purse", "Elbow"],
+
+  "dungeon_name": [
+    "The {dungeon_adj} {dungeon_noun} of {placeword}",
+    "{placeword}'s {dungeon_adj} {dungeon_noun}"
+  ],
+  "dungeon_adj": [
+    "Sunken", "Screaming", "Forgotten", "Bottomless", "Haunted",
+    "Discount", "Moist", "Abandoned"
+  ],
+  "dungeon_noun": [
+    "Crypt", "Halls", "Vault", "Catacombs", "Warrens", "Basement",
+    "Oubliette", "Mines"
+  ],
+
+  "epitaph": [
+    "Died as they lived: confused.",
+    "The paperwork was fatal.",
+    "Peer pressure, mostly.",
+    "In hindsight, an avoidable death.",
+    "They died doing what they loved. Unfortunately.",
+    "Local wildlife remains unapologetic.",
+    "Gravity was involved.",
+    "An honest mistake, repeated four times.",
+    "The gods watched. They did not help. They took notes."
+  ]
+}
