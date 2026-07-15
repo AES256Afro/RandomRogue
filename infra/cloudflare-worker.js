@@ -24,7 +24,10 @@ const FILES = {
   "play/icon-192.png": "image/png",
   "play/icon-512.png": "image/png",
 };
-const ORIGIN = "https://aes256afro.github.io/RandomRogue/";
+// Sync origin: the CI-published site-dist branch. (GitHub Pages 301s the
+// github.io URL to the custom domain — i.e. back to this worker — so it
+// can't be the origin.)
+const ORIGIN = "https://raw.githubusercontent.com/AES256Afro/RandomRogue/site-dist/";
 const CORS = { "access-control-allow-origin": "*", "access-control-allow-methods": "GET,POST,OPTIONS", "access-control-allow-headers": "content-type" };
 
 // Board keys (R7): plain day numbers for daily worlds; 7000000+week for
