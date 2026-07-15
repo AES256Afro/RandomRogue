@@ -1,0 +1,30 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "windows-gcc",
+      "displayName": "Windows (MinGW GCC, Ninja)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/windows",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    },
+    {
+      "name": "web",
+      "displayName": "Browser (Emscripten)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/web",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "PLATFORM": "Web"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "windows-gcc", "configurePreset": "windows-gcc" },
+    { "name": "web", "configurePreset": "web" }
+  ]
+}
