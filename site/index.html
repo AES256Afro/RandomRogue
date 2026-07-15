@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Random Rogue — a game of poor decisions</title>
+<meta name="description" content="A lofi roguelike where every world simulates 250 years of history — then makes fun of you for dying in it. Play free in your browser.">
+<meta property="og:title" content="Random Rogue">
+<meta property="og:description" content="Reigns-style choices, Dwarf Fortress-style worldgen. Every rumor, sword, and terrible decision ties back to a simulated history. Die hilariously. Share the seed.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://random-rogue.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #181425;
+    --bg2: #262138;
+    --ink: #dedeD5;
+    --gold: #ffcd75;
+    --dim: #8b9bb4;
+    --dark: #5a6988;
+    --red: #e75256;
+    --green: #7ec45d;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Mono', monospace;
+    line-height: 1.7;
+    image-rendering: pixelated;
+  }
+  .px { font-family: 'Press Start 2P', monospace; }
+  a { color: var(--gold); }
+  section { max-width: 880px; margin: 0 auto; padding: 72px 24px; }
+
+  /* hero */
+  .hero { text-align: center; padding-top: 96px; }
+  .hero h1 {
+    font-family: 'Press Start 2P', monospace;
+    color: var(--gold);
+    font-size: clamp(22px, 5.5vw, 44px);
+    letter-spacing: 2px;
+    text-shadow: 4px 4px 0 #3a2b4d;
+    margin-bottom: 20px;
+  }
+  .hero .sub { color: var(--dim); font-size: 15px; margin-bottom: 40px; }
+  .btnrow { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    text-decoration: none;
+    padding: 16px 22px;
+    border: 3px solid var(--gold);
+    color: var(--gold);
+    background: transparent;
+    box-shadow: 5px 5px 0 #3a2b4d;
+    transition: transform .06s;
+    display: inline-block;
+  }
+  .btn:hover { transform: translate(2px, 2px); box-shadow: 3px 3px 0 #3a2b4d; }
+  .btn.primary { background: var(--gold); color: var(--bg); }
+  .scanline {
+    margin: 64px auto 0; max-width: 880px; height: 3px;
+    background: repeating-linear-gradient(90deg, var(--dark) 0 8px, transparent 8px 16px);
+  }
+
+  /* features */
+  h2 {
+    font-family: 'Press Start 2P', monospace;
+    color: var(--gold); font-size: 18px; margin-bottom: 28px;
+    text-shadow: 3px 3px 0 #3a2b4d;
+  }
+  .lead { font-size: 17px; margin-bottom: 18px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px; margin-top: 34px; }
+  .card {
+    background: var(--bg2); border: 2px solid #3a2b4d; padding: 22px;
+    box-shadow: 5px 5px 0 #100c18;
+  }
+  .card h3 { color: var(--gold); font-size: 15px; margin-bottom: 10px; }
+  .card p { color: var(--dim); font-size: 14px; }
+
+  /* chronicle */
+  .chron {
+    background: #100c18; border: 2px solid #3a2b4d; padding: 26px;
+    font-size: 14px; color: var(--green);
+    box-shadow: 5px 5px 0 #000;
+    overflow-x: auto;
+  }
+  .chron .y { color: var(--dark); }
+  .chron p { margin-bottom: 10px; white-space: nowrap; }
+  .chron p:last-child { margin-bottom: 0; color: var(--dim); font-style: italic; white-space: normal; }
+
+  /* play */
+  #play { text-align: center; }
+  .frame-wrap {
+    position: relative; width: 100%; aspect-ratio: 16 / 9;
+    background: #000; border: 3px solid var(--gold);
+    box-shadow: 6px 6px 0 #3a2b4d; margin-top: 30px;
+    overflow: hidden;
+  }
+  .frame-wrap iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .poster {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 22px; cursor: pointer;
+    background:
+      radial-gradient(ellipse at center, #262138 0%, #100c18 100%);
+  }
+  .poster:hover .btn { transform: translate(2px,2px); box-shadow: 3px 3px 0 #3a2b4d; }
+  .poster .t { font-family: 'Press Start 2P', monospace; color: var(--gold); font-size: clamp(14px, 3vw, 24px); text-shadow: 3px 3px 0 #3a2b4d; }
+  .poster .d { color: var(--dim); font-size: 13px; max-width: 60ch; padding: 0 16px; }
+  .hint { color: var(--dark); font-size: 13px; margin-top: 16px; }
+
+  footer { text-align: center; padding: 48px 24px 72px; color: var(--dark); font-size: 13px; }
+  footer .epitaph { color: var(--dim); font-style: italic; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>RANDOM ROGUE</h1>
+  <p class="sub px" style="font-size:11px">a game of poor decisions</p>
+  <p class="sub" style="max-width:62ch;margin-left:auto;margin-right:auto">
+    A lofi roguelike where every world simulates <b style="color:var(--ink)">250 years of history</b>
+    before you arrive — then makes fun of you for dying in it.
+  </p>
+  <div class="btnrow">
+    <a class="btn primary" href="#play">▶ PLAY IN BROWSER</a>
+    <a class="btn" href="https://github.com/AES256Afro/RandomRogue">SOURCE</a>
+  </div>
+  <div class="scanline"></div>
+</div>
+
+<section>
+  <h2>The world doesn't wait for you</h2>
+  <p class="lead">
+    Before your first step, the recipe runs: geography, factions, wars, artifacts,
+    named beasts, plagues, and the occasional thing that falls screaming from the sky.
+    Cities burn and become the dungeons you'll loot. Then you're born into the wreckage
+    with six stats, a rusty sword, and no expectations.
+  </p>
+  <div class="grid">
+    <div class="card">
+      <h3>Every card is a choice</h3>
+      <p>2–4 options, visible dice rolls, outcomes that are tragic, funny, or ironically
+         good. Usually all three, eventually.</p>
+    </div>
+    <div class="card">
+      <h3>Every rumor is real</h3>
+      <p>Tavern gossip, weathered books, and treasure maps quote the world's actual
+         chronicle. 15% of rumors are embellished. Good luck.</p>
+    </div>
+    <div class="card">
+      <h3>Every item is tied to something</h3>
+      <p>A buckler stamped with the name of a city that burned in year 141. A spyglass
+         carved with a dead man's IOU. Blessing, curse, or just history — the game will
+         never tell you which.</p>
+    </div>
+    <div class="card">
+      <h3>Every seed is a world</h3>
+      <p>Same seed, same world, same history — on any machine. Find something
+         ridiculous? Send a friend the number.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>From an actual chronicle</h2>
+  <div class="chron">
+    <p><span class="y">Year 13</span> — The Restless Stormcrab ate Kakel Hulol. The beast reports no regrets.</p>
+    <p><span class="y">Year 15</span> — Ulisk Solras 'relocated' Nevithras "Ashspire". It rests now at Corithost, officially by accident.</p>
+    <p><span class="y">Year 17</span> — Belash Iskcor founded The Children of Rot. Membership includes robes.</p>
+    <p><span class="y">Year 12</span> — Ulnev Omquil published '1001 Uses for a Dead Mireworm'. Critics called it 'a book.'</p>
+    <p><span class="y">Year 192</span> — The Chain Collective declared war on House Jorras over a duel that got out of hand.</p>
+    <p>— seed 424242. Nothing above was written by a human.</p>
+  </div>
+</section>
+
+<section id="play">
+  <h2>Play it. Right here.</h2>
+  <p class="lead" style="color:var(--dim)">
+    Free, in your browser. Works on desktop and iPad — keyboard or pure touch.
+  </p>
+  <div class="frame-wrap">
+    <div class="poster" id="poster" role="button" tabindex="0" aria-label="Load and play Random Rogue">
+      <div class="t">RANDOM ROGUE</div>
+      <div class="d">Arm-wrestle living legends. Console their grieving descendants.
+        Help a lich with 300 years of back taxes. Exit through the gift shop.</div>
+      <span class="btn primary">▶ PRESS ANY BUTTON TO BE BORN</span>
+    </div>
+  </div>
+  <p class="hint">1–9 or tap to choose · Tab or PACK for inventory · S to enter a seed · M to mute
+     · <a href="play/" target="_blank">open fullscreen ↗</a></p>
+</section>
+
+<footer>
+  <p class="epitaph">"Trusted a rock labeled RULES."</p>
+  <p>Random Rogue · built from one seed and questionable judgment ·
+     <a href="https://github.com/AES256Afro/RandomRogue">GitHub</a></p>
+</footer>
+
+<script>
+  const poster = document.getElementById('poster');
+  function loadGame() {
+    const wrap = poster.parentElement;
+    const iframe = document.createElement('iframe');
+    iframe.src = 'play/';
+    iframe.allow = 'autoplay';
+    iframe.setAttribute('title', 'Random Rogue');
+    wrap.appendChild(iframe);
+    poster.remove();
+    iframe.focus();
+  }
+  poster.addEventListener('click', loadGame);
+  poster.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') loadGame(); });
+</script>
+
+</body>
+</html>

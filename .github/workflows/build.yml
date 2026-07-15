@@ -77,3 +77,33 @@ jobs:
         with:
           name: random-rogue-web
           path: dist
+
+  # random-rogue.com: landing page + playable build, via GitHub Pages
+  pages:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mymindstorm/setup-emsdk@v14
+      - name: Build web
+        run: |
+          emcmake cmake -B build-web -DCMAKE_BUILD_TYPE=Release -DPLATFORM=Web
+          cmake --build build-web
+      - name: Assemble site
+        run: |
+          mkdir -p _site/play
+          cp site/index.html _site/
+          cp build-web/random_rogue.html _site/play/index.html
+          cp build-web/random_rogue.js build-web/random_rogue.wasm build-web/random_rogue.data _site/play/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
