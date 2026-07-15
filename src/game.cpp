@@ -345,6 +345,12 @@ bool Game::evalCond(const std::string& cond) const {
     };
     if (a == "companion") return comp_.active;
     if (a == "!companion") return !comp_.active;
+    if (a == "vehicle" || a == "!vehicle") {
+        bool has = false;
+        for (auto& item : ch_.pack)
+            if (item.type == "vehicle") has = true;
+        return (a[0] == '!') ? !has : has;
+    }
     if (a == "war_here") {
         int owner = regionOwner(currentSite_ >= 0 ? world_.sites[currentSite_].region : -1);
         for (auto& w : history_.liveWars)
@@ -524,30 +530,76 @@ void Game::newRun(int classIdx) {
     finalesSeen_ = 0;
     booksThisRun_ = 0;
     compLine_.clear();
+    currentRegion_ = runRng_.range(0, (int)world_.regions.size() - 1);
     enterTravel();
 }
 
+std::vector<int> Game::regionDistances() const {
+    std::vector<int> dist(world_.regions.size(), -1);
+    if (currentRegion_ < 0 || currentRegion_ >= (int)world_.regions.size()) return dist;
+    std::vector<int> queue = {currentRegion_};
+    dist[currentRegion_] = 0;
+    for (size_t qi = 0; qi < queue.size(); qi++) {
+        int r = queue[qi];
+        for (int n : world_.regions[r].neighbors) {
+            if (n >= 0 && n < (int)dist.size() && dist[n] < 0) {
+                dist[n] = dist[r] + 1;
+                queue.push_back(n);
+            }
+        }
+    }
+    return dist;
+}
+
+// The world is wide now: nearby sites are a day away, the horizon costs
+// days and supplies. A vehicle halves the road.
 void Game::enterTravel() {
     screen_ = TRAVEL;
     travelOptions_.clear();
-    std::vector<int> pool;
-    for (int i = 0; i < (int)world_.sites.size(); i++) pool.push_back(i);
-    for (int n = 0; n < 3 && !pool.empty(); n++) {
-        int pi = runRng_.range(0, (int)pool.size() - 1);
-        int si = pool[pi];
+    std::vector<int> dist = regionDistances();
+    bool vehicle = false;
+    for (auto& item : ch_.pack)
+        if (item.type == "vehicle") vehicle = true;
+
+    auto makeOption = [&](int si) {
         const Site& s = world_.sites[si];
-        pool.erase(pool.begin() + pi);
         TravelOption o;
         o.deck = s.deck;
         o.siteName = s.name;
         o.site = si;
-        o.label = s.name + "  (" + s.type + ", " + world_.regions[s.region].name + ")";
-        travelOptions_.push_back(o);
+        int d = (s.region >= 0 && s.region < (int)dist.size() && dist[s.region] >= 0)
+                    ? dist[s.region] : 3;
+        o.days = d < 1 ? 1 : d;
+        if (vehicle) o.days = (o.days + 1) / 2;
+        o.label = s.name + " (" + s.type + ", " + std::to_string(o.days) +
+                  (o.days == 1 ? " day)" : " days)");
+        return o;
+    };
+
+    std::vector<int> near, far;
+    for (int i = 0; i < (int)world_.sites.size(); i++) {
+        int r = world_.sites[i].region;
+        int d = (r >= 0 && r < (int)dist.size()) ? dist[r] : -1;
+        if (d >= 0 && d <= 1) near.push_back(i);
+        else far.push_back(i);
+    }
+    for (int n = 0; n < 2 && !near.empty(); n++) {
+        int pi = runRng_.range(0, (int)near.size() - 1);
+        travelOptions_.push_back(makeOption(near[pi]));
+        near.erase(near.begin() + pi);
+    }
+    if (!far.empty())
+        travelOptions_.push_back(makeOption(far[runRng_.range(0, (int)far.size() - 1)]));
+    while (travelOptions_.size() < 3 && !near.empty()) {
+        int pi = runRng_.range(0, (int)near.size() - 1);
+        travelOptions_.push_back(makeOption(near[pi]));
+        near.erase(near.begin() + pi);
     }
     TravelOption wander;
-    wander.deck = runRng_.chance(50) ? "road" : "forest";
+    std::string biome = world_.regions[currentRegion_].biome;
+    wander.deck = (biome == "forest" || biome == "swamp") ? "forest" : "road";
     wander.siteName = "the wilds";
-    wander.label = "Wander off in a random direction";
+    wander.label = "Wander " + world_.regions[currentRegion_].name;
     travelOptions_.push_back(wander);
 }
 
@@ -653,6 +705,12 @@ bool Game::resolveSlots(const Event& e, Grammar::Ctx& ctx) {
             ctx[name + "_trait"] = f.trait;
             ctx[name + "_prof"] = f.profession;
             if (f.faction >= 0) ctx[name + "_faction"] = history_.factions[f.faction].name;
+        } else if (query == "god") {
+            if (history_.gods.empty()) return false;
+            const God& god = history_.gods[runRng_.range(0, (int)history_.gods.size() - 1)];
+            ctx[name] = god.name;
+            ctx[name + "_domain"] = god.domain;
+            ctx[name + "_mood"] = god.mood > 0 ? "generous" : (god.mood < 0 ? "wrathful" : "indifferent");
         } else if (query == "figure_dead") {
             std::vector<int> pool;
             for (int i = 0; i < (int)history_.figures.size(); i++)
@@ -1164,8 +1222,27 @@ void Game::drawTravel(Vector2 mouse) {
         siteName_ = travelOptions_[pick].siteName;
         deckTag_ = travelOptions_[pick].deck;
         currentSite_ = travelOptions_[pick].site;
+        if (currentSite_ >= 0) currentRegion_ = world_.sites[currentSite_].region;
         eventsLeftHere_ = (deckTag_ == "dungeon") ? runRng_.range(3, 4) : runRng_.range(2, 3);
-        dailyTick();
+        // The road takes what the road takes: each day past the first eats a
+        // food item, or failing that, a piece of you.
+        int days = travelOptions_[pick].days;
+        for (int d = 0; d < days; d++) {
+            dailyTick();
+            if (d == 0) continue;
+            bool ate = false;
+            for (size_t i = 0; i < ch_.pack.size(); i++) {
+                if (ch_.pack[i].type == "food") {
+                    ch_.pack.erase(ch_.pack.begin() + i);
+                    ate = true;
+                    break;
+                }
+            }
+            if (!ate) {
+                ch_.hp -= 2;
+                if (ch_.hp < 1) ch_.hp = 1; // hunger humbles; it doesn't kill
+            }
+        }
         dealEvent();
         checkPurposes(); // survey contracts complete on arrival
         return;

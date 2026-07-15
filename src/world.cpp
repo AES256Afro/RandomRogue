@@ -33,7 +33,7 @@ World GenerateWorld(uint64_t seed, const Grammar& grammar, const NameForge& forg
     World w;
     w.name = forge.place(rng);
 
-    int regionCount = rng.range(10, 14);
+    int regionCount = rng.range(28, 36); // the wide world (ROADMAP P6)
     w.regions.resize(regionCount);
 
     // Chain the regions, then sprinkle extra edges — connected, slightly tangled.

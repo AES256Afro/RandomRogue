@@ -31,7 +31,7 @@ static const std::set<std::string> kVerbs = {
     "companion", "companion_leave", "companion_dies", "contract"};
 static const std::set<std::string> kSlotQueries = {
     "chronicle_random", "chronicle_news", "artifact_here", "figure_alive",
-    "figure_dead"};
+    "figure_dead", "god"};
 static const std::set<std::string> kDecks = {
     "city", "tavern", "dungeon", "dungeon_finale", "cave", "forest", "road"};
 static const std::set<std::string> kStats = {"str", "dex", "con", "int", "wis", "cha"};
@@ -49,7 +49,8 @@ static bool validWhen(const std::string& w) {
     ss >> a >> b >> c;
     static const std::set<std::string> unary = {"carrying_artifact", "war_here",
                                                 "plague_here", "raining", "snowing",
-                                                "companion", "!companion"};
+                                                "companion", "!companion",
+                                                "vehicle", "!vehicle"};
     static const std::set<std::string> named = {"trait", "!trait", "has", "!has", "npc",
                                                 "season"};
     static const std::set<std::string> cmp = {"rep", "money", "credits", "hp", "day"};

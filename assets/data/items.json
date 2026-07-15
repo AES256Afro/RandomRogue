@@ -39,6 +39,8 @@
   { "id": "monocle",       "name": "Scholar's Monocle",  "type": "misc",   "value": 10, "passive": "check int +1" },
   { "id": "credit_chip",   "name": "Blinking Credit Chip", "type": "misc", "value": 8,  "use": ["credits +10"] },
   { "id": "scooter",       "name": "Goblin-Made Scooter", "type": "vehicle", "value": 22, "passive": "check dex +1" },
+  { "id": "wagon",         "name": "Second-Hand Wagon",   "type": "vehicle", "value": 28 },
+  { "id": "dune_buggy",    "name": "Sky-Metal Dune Buggy", "type": "vehicle", "value": 45, "passive": "check dex +1" },
   { "id": "incense",       "name": "Temple Incense",     "type": "misc",   "value": 4,  "use": ["hp +2"] },
   { "id": "dice_set",      "name": "Suspiciously Nice Dice", "type": "misc", "value": 6 }
 ]

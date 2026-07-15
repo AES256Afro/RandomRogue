@@ -1,0 +1,430 @@
+[
+  {
+    "id": "forest_wayside_shrine",
+    "locations": [
+      "forest",
+      "road"
+    ],
+    "weight": 9,
+    "slots": {
+      "god": "god"
+    },
+    "text": "A wayside shrine, moss-eaten but swept clean by someone recent: a niche, a bowl, and the worn sigil of {god}, keeper of {god_domain}. The bowl holds two coins and a button. Standards around here are humble.",
+    "choices": [
+      {
+        "text": "Make a proper offering",
+        "requires": {
+          "money": 3
+        },
+        "outcomes": [
+          {
+            "weight": 55,
+            "text": "You give three coins and a moment of actual quiet. Somewhere in the domain of {god_domain}, accounts are updated in your favor. You feel it land.",
+            "effects": [
+              "money -3",
+              "trait +blessed"
+            ]
+          },
+          {
+            "weight": 45,
+            "text": "The coins settle. Nothing stirs. Either {god} is busy, or {god_domain} is having a quiet century. Faith includes the silences.",
+            "effects": [
+              "money -3",
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Take the two coins",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "Two coins. From a god of {god_domain}. Bold. The road out of here feels subtly longer, and every door you pass creaks at you specifically.",
+            "effects": [
+              "money +2",
+              "trait +cursed"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "You take them and leave the button, which is somehow worse. Nothing happens. Nothing happening is its own kind of dread.",
+            "effects": [
+              "money +2",
+              "stat wis -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask {god} for a sign",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "A moth lands on the sigil, walks a full circle, and leaves. You will spend the rest of your life deciding what that meant. That's the sign.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_grand_temple",
+    "locations": [
+      "city"
+    ],
+    "weight": 9,
+    "slots": {
+      "god": "god"
+    },
+    "text": "The temple of {god} dominates the square, all bells and incense and acolytes moving like clockwork. A donation plate the size of a shield waits at the door. {god} is {god_mood} this season, per the notice board. They post it like weather.",
+    "choices": [
+      {
+        "text": "Tithe like you mean it",
+        "requires": {
+          "money": 8
+        },
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "The plate rings. An acolyte anoints you with something that smells of {god_domain} and old bells. Blessed, certified, receipt available.",
+            "effects": [
+              "money -8",
+              "trait +blessed",
+              "rep +3"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "Generous, noted, and rewarded with the temple's hospitality: a meal, a bath, and the best sleep in three regions.",
+            "effects": [
+              "money -8",
+              "hp +6",
+              "rep +3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Debate the priests on doctrine",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Your reading of the {god_domain} scriptures is heterodox, rigorous, and two hundred years overdue. They make you an honorary lector and pay a small stipend for the shock.",
+            "effects": [
+              "money +7",
+              "stat int +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You cite the wrong canticle. The silence has incense in it. You are escorted out with tremendous gentleness, which stings worse than force.",
+            "effects": [
+              "stat cha -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Light a candle for someone gone",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "One candle, one name said quietly, one coin. The temple noise recedes for exactly as long as it takes. Whatever gods are, this part works.",
+            "effects": [
+              "money -1",
+              "hp +3",
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "cave_forgotten_idol",
+    "locations": [
+      "cave",
+      "dungeon"
+    ],
+    "weight": 8,
+    "slots": {
+      "god": "god"
+    },
+    "text": "Deep in the dark: an idol with the sigil of {god}, older than the temple style, older maybe than the name. Someone chained it to the wall facing the corner, like a punishment. The chain is on the WALL's side.",
+    "choices": [
+      {
+        "text": "Turn the idol back around",
+        "check": {
+          "stat": "str",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Stone grinds. The idol faces the room again, and the air pressure changes like a held breath released after centuries. Something in the domain of {god_domain} is grateful, and gratitude from below is heavy coin.",
+            "effects": [
+              "money +9",
+              "trait +blessed"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The idol doesn't move. The CHAIN moves. You leave at a pace you'll describe later as 'dignified.'",
+            "effects": [
+              "hp -2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Leave it exactly as you found it",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Whoever chained a god to face a corner had reasons, and you weren't there for them. You nod to the idol - hedging - and move on. Wisdom is mostly knowing which mysteries aren't yours.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Read the chain's inscription",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Liturgical script, penitential grammar: 'UNTIL THE DEBT OF {god_domain} IS PAID.' Below, in newer scratches, a tally. The tally is almost full. You memorize the count and leave before it completes.",
+            "effects": [
+              "stat int +1",
+              "stat wis +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The script swims. The one word you make out is 'SOON.' The dark feels attentive on the way out.",
+            "effects": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "road_vehicle_breakdown",
+    "locations": [
+      "road"
+    ],
+    "weight": 9,
+    "when": [
+      "vehicle"
+    ],
+    "text": "A noise from your vehicle that vehicles should not make: part cough, part opinion. It rolls to a stop with theatrical timing, miles from anything, under a sky that's considering rain.",
+    "choices": [
+      {
+        "text": "Repair it properly",
+        "requires": {
+          "item": "repair_kit"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "An hour of honest work and the kit's last good clamp. The engine turns over with what you'd swear is gratitude. You pat it. Everyone pats it. That's the rule.",
+            "effects": [
+              "removeitem repair_kit"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Improvise a fix",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Wire, sap, one sacrificed bootlace, and a theory. It holds. Mechanics would weep - some from horror, the good ones from respect.",
+            "effects": [
+              "stat int +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "Your fix makes a new noise, WORSE, a noise with followers. You walk the last stretch pushing it, which is somehow more tiring than carrying it would be.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Flag down help",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "A passing tinker fixes it in minutes for a fair price and one long, judgmental look at your maintenance habits.",
+            "effects": [
+              "money -5"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "The only passerby is a goblin scooter gang. They fix it FOR FREE, out of vehicular solidarity, then ride circles around you honking for a mile. The toll is dignity.",
+            "effects": [
+              "stat cha -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "road_joyride",
+    "locations": [
+      "road"
+    ],
+    "weight": 7,
+    "when": [
+      "vehicle"
+    ],
+    "text": "The road ahead: empty, downhill, freshly dry, and gently curved in exactly the way that whispers to anyone with wheels. You know the whisper. Everyone with a vehicle knows the whisper.",
+    "choices": [
+      {
+        "text": "Answer the whisper",
+        "check": {
+          "stat": "dex",
+          "dc": 11
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Wind, speed, one perfect drift through the curve, and a whoop you'll deny making. For ninety seconds the world is simple and you are its fastest citizen.",
+            "effects": [
+              "hp +3",
+              "stat dex +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The curve wins on a technicality involving gravel. You and the vehicle part ways briefly and reunite in a bush. Both of you are fine. Neither of you will mention it.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Maintain a sensible speed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You descend the perfect hill at a prudent pace, feeling the whisper fade into disappointment. Safe. Responsible. A tiny piece of you files a grievance.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Close your eyes and trust providence",
+        "requires": {
+          "trait": "blessed"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Protected by providence, you surrender the controls. The descent that follows breaks no bones and three land-speed assumptions. You arrive blessed AND windswept, which is the best two-trait combination there is.",
+            "effects": [
+              "hp +2"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_vehicle_dealer",
+    "locations": [
+      "city"
+    ],
+    "weight": 7,
+    "when": [
+      "!vehicle"
+    ],
+    "text": "A yard of vehicles in various states of hope: scooters, a wagon with 'RUNS GOOD' chalked on it, and one sky-metal thing under a tarp the dealer keeps glancing at. 'Everything's road-ready,' he says, road-readily.",
+    "choices": [
+      {
+        "text": "Buy the wagon",
+        "requires": {
+          "money": 24
+        },
+        "outcomes": [
+          {
+            "weight": 70,
+            "text": "It does, in fact, run good. The previous owner's lucky horseshoe is still nailed inside. The horizon just got closer.",
+            "effects": [
+              "money -24",
+              "item wagon"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "It runs good for a day, then reveals its true nature: it runs ADEQUATE. Still, wheels are wheels, and the horizon doesn't check receipts.",
+            "effects": [
+              "money -24",
+              "item wagon",
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask about the thing under the tarp",
+        "requires": {
+          "money": 40
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "He pulls the tarp like a magician. Sky-metal, dune-rated, humming faintly with dead-corporation warranty energy. You buy it before your judgment reboots.",
+            "effects": [
+              "money -40",
+              "item dune_buggy"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Kick some tires, buy nothing",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You kick tires with the gravity of an expert. The dealer matches your nods. Neither of you knows what the kicking is for. It's tradition. It's enough.",
+            "effects": []
+          }
+        ]
+      }
+    ]
+  }
+]

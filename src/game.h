@@ -117,9 +117,11 @@ private:
     // reputation with each faction, -50..50, reset per run
     std::vector<int> rep_;
 
-    // travel
-    struct TravelOption { std::string label, deck, siteName; int site = -1; };
+    // travel (P6: the world has distance now)
+    struct TravelOption { std::string label, deck, siteName; int site = -1; int days = 1; };
     std::vector<TravelOption> travelOptions_;
+    int currentRegion_ = 0;
+    std::vector<int> regionDistances() const; // BFS hops from currentRegion_
 
     // current event
     const Event* current_ = nullptr;

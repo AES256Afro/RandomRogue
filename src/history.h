@@ -48,6 +48,13 @@ struct Beast {
     int kills = 0, died = -1;
 };
 
+// The pantheon (P6): every world generates its own gods. They remember.
+struct God {
+    std::string name;   // liturgical tongue
+    std::string domain; // "doors", "debts", "moths"...
+    int mood = 0;       // -1 wrathful, 0 indifferent, +1 generous
+};
+
 struct ChronEntry {
     int id = 0, year = 0;
     std::string type; // artifact_forged, war_declared, city_sacked, ...
@@ -69,6 +76,7 @@ struct History {
     std::vector<Figure> figures;
     std::vector<HArtifact> artifacts;
     std::vector<Beast> beasts;
+    std::vector<God> gods;
     std::vector<ChronEntry> chron;
     int years = 0;       // last simulated year
     int presentYear = 0; // the year the player walks in

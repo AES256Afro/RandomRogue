@@ -453,6 +453,13 @@
     "is engraved 'IN MEMORY OF {qfig}, WHO SHOULD HAVE DUCKED'",
     "hums a tune old-timers swear was popular around year {qyear}"
   ],
+  "god_domain": [
+    "doors", "debts", "weather", "moths", "harvests", "bells", "lost things",
+    "soup", "patience", "thresholds", "small change", "second chances",
+    "roads at dusk", "unfinished letters", "the space under stairs",
+    "borrowed tools", "queues", "near misses"
+  ],
+
   "comp_brave": [
     "I could take it. Whatever it is. Say the word.",
     "Smells like a fight. Good.",

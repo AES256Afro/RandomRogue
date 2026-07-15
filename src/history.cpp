@@ -146,6 +146,17 @@ struct Sim {
             b.region = rng.range(0, (int)w.regions.size() - 1);
             h.beasts.push_back(b);
         }
+        // The pantheon: named in the liturgical tongue, moody by nature.
+        int ng = rng.range(3, 5);
+        for (int i = 0; i < ng; i++) {
+            God god;
+            std::string raw = forge.word(rng, rng.range(2, 3), CULT_LITURGICAL);
+            raw[0] = (char)(raw[0] >= 'a' && raw[0] <= 'z' ? raw[0] - 'a' + 'A' : raw[0]);
+            god.name = raw;
+            god.domain = g.expand("{god_domain}", rng);
+            god.mood = rng.range(-1, 1);
+            h.gods.push_back(god);
+        }
     }
 
     void figureActs(int fi) {
