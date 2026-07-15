@@ -2,16 +2,29 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Random Rogue">
   <title>Random Rogue</title>
   <style>
-    html, body { margin: 0; padding: 0; background: #000; height: 100%; overflow: hidden; }
+    html, body {
+      margin: 0; padding: 0; background: #000; height: 100%;
+      overflow: hidden;
+      touch-action: none;              /* no pinch zoom / scroll on iPad */
+      -webkit-user-select: none; user-select: none;
+      -webkit-touch-callout: none;
+      overscroll-behavior: none;       /* no rubber-band bounce */
+      position: fixed; width: 100%;
+    }
     #canvas {
       display: block;
       width: 100vw;
       height: 100vh;
       image-rendering: pixelated;
       image-rendering: crisp-edges;
+      touch-action: none;
     }
   </style>
 </head>
@@ -21,6 +34,9 @@
     var Module = {
       canvas: (function () { return document.getElementById('canvas'); })()
     };
+    // iOS Safari: block double-tap-to-zoom inside the game.
+    document.addEventListener('dblclick', function (e) { e.preventDefault(); }, { passive: false });
+    document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
   </script>
   {{{ SCRIPT }}}
 </body>

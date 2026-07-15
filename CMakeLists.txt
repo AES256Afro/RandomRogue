@@ -35,6 +35,8 @@ add_executable(random_rogue
     src/history.cpp
     src/events.cpp
     src/items.cpp
+    src/audio.cpp
+    src/save.cpp
 )
 
 # ---- chronicle_dump: worldgen dev tool (native only, no raylib) -------------

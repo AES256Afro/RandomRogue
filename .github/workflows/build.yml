@@ -1,0 +1,75 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build --config Release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: random-rogue-windows
+          path: |
+            build/Release/random_rogue.exe
+            build/Release/assets
+            build/random_rogue.exe
+            build/assets
+
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install raylib build deps
+        run: sudo apt-get update && sudo apt-get install -y libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
+      - name: Configure
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: random-rogue-linux
+          path: |
+            build/random_rogue
+            build/assets
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: random-rogue-macos
+          path: |
+            build/random_rogue
+            build/assets
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mymindstorm/setup-emsdk@v14
+      - name: Configure
+        run: emcmake cmake -B build-web -DCMAKE_BUILD_TYPE=Release -DPLATFORM=Web
+      - name: Build
+        run: cmake --build build-web
+      - name: Package for itch.io (index.html expected)
+        run: |
+          mkdir -p dist
+          cp build-web/random_rogue.html dist/index.html
+          cp build-web/random_rogue.js build-web/random_rogue.wasm build-web/random_rogue.data dist/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: random-rogue-web
+          path: dist

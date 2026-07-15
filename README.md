@@ -1,0 +1,60 @@
+# Random Rogue
+
+A lofi-pixel, Reigns-style roguelike where every world is generated from a
+seed: geography, factions, 250 years of simulated history, and every rumor,
+book, artifact, and item quirk ties back to that history. Dungeon Crawler
+Carl energy throughout.
+
+- **Design docs:** [PLAN.md](PLAN.md) · [WORLDGEN.md](WORLDGEN.md)
+- **Targets:** Windows, Linux, macOS, Browser (desktop + iPad)
+
+## Play
+
+- **1–9 / tap**: choose
+- **Tab / PACK button**: inventory
+- **Enter / tap**: continue
+- **S**: enter a seed · **M**: mute
+- Same seed = same world, same history, on every platform.
+
+## Build (desktop)
+
+Needs CMake 3.24+, Ninja, and a C++17 compiler. Raylib and nlohmann/json are
+fetched automatically.
+
+```
+cmake --preset windows-gcc      # or: cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build --preset windows-gcc
+build/windows/random_rogue.exe
+```
+
+On Windows, `scripts/env.ps1` puts the local toolchain
+(`~/tools/{cmake,ninja,mingw64}`, `~/emsdk`) on PATH.
+
+## Build (browser)
+
+```
+emcmake cmake -B build/web -G Ninja -DCMAKE_BUILD_TYPE=Release -DPLATFORM=Web
+cmake --build build/web
+npx http-server build/web -p 8087   # open random_rogue.html
+```
+
+## Dev tools
+
+```
+build/windows/chronicle_dump.exe <seed> assets
+```
+
+Prints a world's full simulated history as readable text. If the dump is fun
+to read, the game is working. Native and WASM dumps are byte-identical for
+the same seed — that's load-bearing; see the determinism note in
+src/language.cpp before touching RNG call sites.
+
+## Releasing
+
+- **CI:** pushing to GitHub runs `.github/workflows/build.yml`, producing
+  Windows / Linux / macOS binaries and a web bundle as artifacts.
+- **itch.io:** upload the `random-rogue-web` artifact zip (it contains
+  `index.html`), mark it "This file will be played in the browser", and
+  enable mobile-friendly. The page already blocks iPad zoom/scroll and
+  supports touch for every interaction.
+- Desktop zips: pair the binary with its `assets/` folder.

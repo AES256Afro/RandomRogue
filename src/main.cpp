@@ -1,11 +1,13 @@
 // Random Rogue — entry point. Owns the window and the 320x180 virtual canvas;
 // the Game class does everything else.
 
+#include <cmath>
 #include "raylib.h"
 #include "game.h"
 
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
+#include <emscripten/html5.h>
 #endif
 
 namespace {
@@ -16,8 +18,32 @@ constexpr int kVirtualH = 180;
 RenderTexture2D gCanvas;
 Game gGame;
 
+#if defined(PLATFORM_WEB)
+// The GLFW mouse path is unreliable under emscripten, and touch needs first-
+// class handling for iPad anyway — so the web build listens to the canvas
+// directly and feeds the game one unified pointer.
+float gPtrX = 0.0f, gPtrY = 0.0f; // canvas CSS coords
+bool gPtrPressed = false;         // edge: a press happened since last frame
+
+EM_BOOL onMouse(int type, const EmscriptenMouseEvent* e, void*) {
+    gPtrX = (float)e->targetX;
+    gPtrY = (float)e->targetY;
+    if (type == EMSCRIPTEN_EVENT_MOUSEDOWN) gPtrPressed = true;
+    return EM_FALSE; // don't consume; raylib/GLFW may still want these
+}
+
+EM_BOOL onTouch(int type, const EmscriptenTouchEvent* e, void*) {
+    if (e->numTouches > 0) {
+        gPtrX = (float)e->touches[0].targetX;
+        gPtrY = (float)e->touches[0].targetY;
+    }
+    if (type == EMSCRIPTEN_EVENT_TOUCHSTART) gPtrPressed = true;
+    return EM_TRUE; // consume: no ghost mouse events / page gestures
+}
+#endif
+
 void UpdateDrawFrame() {
-    // Window-space -> virtual-canvas-space for the mouse.
+    // Window-space -> virtual-canvas-space for the pointer.
     int screenW = GetScreenWidth();
     int screenH = GetScreenHeight();
     int scale = 1;
@@ -26,12 +52,33 @@ void UpdateDrawFrame() {
     int drawH = kVirtualH * scale;
     int offX = (screenW - drawW) / 2;
     int offY = (screenH - drawH) / 2;
+
+#if defined(PLATFORM_WEB)
+    // Canvas CSS pixels -> framebuffer pixels (they can differ on retina).
+    double cssW = 1, cssH = 1;
+    emscripten_get_element_css_size("#canvas", &cssW, &cssH);
+    float sx = cssW > 0 ? (float)screenW / (float)cssW : 1.0f;
+    float sy = cssH > 0 ? (float)screenH / (float)cssH : 1.0f;
+    Vector2 m = {gPtrX * sx, gPtrY * sy};
+    bool pressed = gPtrPressed;
+    gPtrPressed = false;
+#else
     Vector2 m = GetMousePosition();
+    bool pressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+#endif
     Vector2 vm = {(m.x - offX) / scale, (m.y - offY) / scale};
 
     BeginTextureMode(gCanvas);
-    gGame.frame(vm);
+    gGame.frame(vm, pressed);
     EndTextureMode();
+
+    // Screen shake: jitter the blit, never the game state.
+    float shake = gGame.shakeAmount();
+    if (shake > 0.0f) {
+        double t = GetTime();
+        offX += (int)(sinf((float)t * 61.0f) * shake * scale);
+        offY += (int)(cosf((float)t * 83.0f) * shake * scale);
+    }
 
     Rectangle src{0, 0, (float)kVirtualW, (float)-kVirtualH};
     Rectangle dst{(float)offX, (float)offY, (float)drawW, (float)drawH};
@@ -59,6 +106,10 @@ int main() {
     gGame.init();
 
 #if defined(PLATFORM_WEB)
+    emscripten_set_mousedown_callback("#canvas", nullptr, 1, onMouse);
+    emscripten_set_mousemove_callback("#canvas", nullptr, 1, onMouse);
+    emscripten_set_touchstart_callback("#canvas", nullptr, 1, onTouch);
+    emscripten_set_touchmove_callback("#canvas", nullptr, 1, onTouch);
     emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
 #else
     SetTargetFPS(60);
@@ -67,6 +118,7 @@ int main() {
     }
 #endif
 
+    gGame.shutdown();
     UnloadRenderTexture(gCanvas);
     CloseWindow();
     return 0;

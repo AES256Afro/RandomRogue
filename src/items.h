@@ -34,13 +34,18 @@ public:
     void loadQuirksJsonText(const char* jsonText);
 
     bool has(const std::string& id) const { return templates_.count(id) > 0; }
-    ItemInstance make(const std::string& id, Rng& rng, bool allowQuirk = true) const;
+    // Quirks are NOT rolled here: the Game binds them, because every quirk
+    // must tie to something — a hidden modifier or a piece of world history.
+    ItemInstance make(const std::string& id, Rng& rng) const;
     // Random item by tier: "common" (value <= 8) or "fine" (value > 8).
     ItemInstance loot(Rng& rng, const std::string& tier) const;
     size_t size() const { return templates_.size(); }
 
+    const std::vector<std::string>& quirkTexts() const { return quirkTexts_; }
+    const std::vector<std::string>& goodPassives() const { return goodPassives_; }
+    const std::vector<std::string>& badPassives() const { return badPassives_; }
+
 private:
-    void rollQuirk(ItemInstance& item, Rng& rng) const;
     std::map<std::string, ItemTemplate> templates_;
     std::vector<std::string> order_; // for random draws
     std::vector<std::string> quirkTexts_;

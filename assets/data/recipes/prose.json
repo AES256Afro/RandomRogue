@@ -106,6 +106,25 @@
                     "the Eternal {fnoun}", "the {adj} Steps", "an equestrian statue, no horse, long story",
                     "the Pillar of {plague_noun} Survivors", "the {adj} Gate"],
 
+  "quirk_hist": [
+    "has '{qfig}' scratched into it in a shaky hand",
+    "bears the faded crest of {qfaction}",
+    "is stamped 'PROPERTY OF {qsite}'",
+    "has a tooth stuck in it. {qbeast}-sized, an expert would say",
+    "smells faintly of the quarantine vinegar they used during {qplague}",
+    "is dated 'year {qyear}' by the maker's mark",
+    "was clearly salvaged from the ashes of {qsite}",
+    "has '{qfig} owes me' carved on the underside",
+    "is wrapped in a page torn from {qbook}",
+    "rattles like it swallowed something during {qplague}",
+    "carries a museum tag: 'recovered near {qsite}, do not lick'",
+    "bears scorch marks in the shape of {qfaction}'s old banner",
+    "has been chewed and, judging by the pattern, apologized to",
+    "still has a {qfaction} requisition slip glued to it",
+    "is engraved 'IN MEMORY OF {qfig}, WHO SHOULD HAVE DUCKED'",
+    "hums a tune old-timers swear was popular around year {qyear}"
+  ],
+
   "vendor_line": [
     "Everything's for sale. Some of it's even mine.",
     "Prices firm. Feelings negotiable.",

@@ -38,17 +38,7 @@ void ItemDb::loadQuirksJsonText(const char* jsonText) {
     load("bad", badPassives_);
 }
 
-void ItemDb::rollQuirk(ItemInstance& item, Rng& rng) const {
-    if (quirkTexts_.empty() || !rng.chance(45)) return;
-    item.quirk = rng.pick(quirkTexts_);
-    // The same text can bless one item and curse another. Per-item roll;
-    // most quirks mean nothing at all. Never tell the player which.
-    int roll = rng.range(1, 100);
-    if (roll <= 25 && !goodPassives_.empty()) item.quirkPassive = rng.pick(goodPassives_);
-    else if (roll <= 40 && !badPassives_.empty()) item.quirkPassive = rng.pick(badPassives_);
-}
-
-ItemInstance ItemDb::make(const std::string& id, Rng& rng, bool allowQuirk) const {
+ItemInstance ItemDb::make(const std::string& id, Rng& rng) const {
     ItemInstance item;
     auto it = templates_.find(id);
     if (it == templates_.end()) {
@@ -63,7 +53,6 @@ ItemInstance ItemDb::make(const std::string& id, Rng& rng, bool allowQuirk) cons
     item.value = t.value;
     item.useEffects = t.useEffects;
     item.passive = t.passive;
-    if (allowQuirk) rollQuirk(item, rng);
     return item;
 }
 
