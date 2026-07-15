@@ -26,6 +26,7 @@ struct LegacyRecord {
     std::string epitaph;
     std::string deathSite;
     int days = 0;
+    bool blessing = false; // an afterlife bargain: the heir starts blessed
     // Up to two notable carried items become findable relics.
     std::vector<std::pair<std::string, std::string>> relics; // {name, quirk}
 };
@@ -33,3 +34,11 @@ struct LegacyRecord {
 // Legacies are stored per world seed. Only the most recent worlds are kept.
 std::vector<LegacyRecord> LoadLegacy(uint64_t seed);
 void AppendLegacy(uint64_t seed, const LegacyRecord& rec);
+
+// Mid-run autosave: an opaque JSON blob owned by the Game (R3).
+std::string LoadRawRun();
+void SaveRawRun(const std::string& text); // "" clears
+
+// NPC memory that outlives you: marks persist per world seed (R3).
+std::string LoadMarks(uint64_t seed);
+void SaveMarks(uint64_t seed, const std::string& json);

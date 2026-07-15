@@ -30,6 +30,7 @@ struct BotState {
     std::string lastEventId;
     bool finishedWell = false;
     int foodEaten = 0;
+    int contracts = 0; // completed contracts (career ladder)
 };
 
 // A pared-down mirror of Game::evalCond — world conditions get coin flips.
@@ -67,6 +68,7 @@ static bool botCond(BotState& s, const std::string& cond) {
         return lhs == rhs;
     };
     if (a == "rep") return cmp(0);
+    if (a == "contracts") return cmp(s.contracts);
     if (a == "money") return cmp(s.c.money);
     if (a == "credits") return cmp(s.c.credits);
     if (a == "hp") return cmp(s.c.hp);
@@ -218,6 +220,9 @@ int main(int argc, char** argv) {
                         else if (verb == "loot") { std::string t; fs >> t; if ((int)s.c.pack.size() < s.c.packMax) s.c.pack.push_back(items.loot(s.rng, t)); }
                         else if (verb == "removeitem") { std::string id; fs >> id; s.c.removeItem(id); }
                         else if (verb == "goto") { fs >> gotoId; }
+                        // Taken contracts complete about half the time in
+                        // real play; approximate the career ladder.
+                        else if (verb == "contract") { if (s.rng.chance(50)) s.contracts++; }
                         else if (verb == "die") { s.c.dead = true; }
                         else if (verb == "finish") { s.c.dead = true; s.finishedWell = true; finishEvents[ev->id]++; }
                     }

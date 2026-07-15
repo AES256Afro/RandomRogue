@@ -28,10 +28,11 @@ static std::string readFile(const std::string& path) {
 static const std::set<std::string> kVerbs = {
     "hp", "maxhp", "money", "credits", "stat", "item", "loot", "removeitem",
     "rep", "shop", "goto", "take_artifact", "die", "trait", "npc_mark",
-    "companion", "companion_leave", "companion_dies", "contract", "finish"};
+    "companion", "companion_leave", "companion_dies", "contract", "finish",
+    "slay_beast", "legacy_bless"};
 static const std::set<std::string> kSlotQueries = {
     "chronicle_random", "chronicle_news", "artifact_here", "figure_alive",
-    "figure_dead", "god"};
+    "figure_dead", "god", "beast_here"};
 static const std::set<std::string> kDecks = {
     "city", "tavern", "dungeon", "dungeon_finale", "cave", "forest", "road",
     "crash"};
@@ -54,7 +55,8 @@ static bool validWhen(const std::string& w) {
                                                 "vehicle", "!vehicle"};
     static const std::set<std::string> named = {"trait", "!trait", "has", "!has", "npc",
                                                 "season"};
-    static const std::set<std::string> cmp = {"rep", "money", "credits", "hp", "day"};
+    static const std::set<std::string> cmp = {"rep", "money", "credits", "hp", "day",
+                                              "contracts"};
     static const std::set<std::string> ops = {">", "<", ">=", "<=", "=="};
     if (unary.count(a)) return true;
     if (named.count(a)) return !b.empty();

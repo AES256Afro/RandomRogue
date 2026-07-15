@@ -51,6 +51,12 @@ void AudioBank::init() {
     sThud_ = makeSfx(120, 55, 0.16f, 1);
     sDice_ = makeSfx(440, 440, 0.05f, 2);
     sChime_ = makeSfx(523, 1047, 0.22f, 0);
+    // Descending minor line for the afterlife; a rising major arpeggio +
+    // held top for triumphs. Both quiet enough to sit under the music.
+    float dirge[] = {220.0f, 208.0f, 175.0f, 165.0f, 147.0f, 110.0f};
+    sDirge_ = makeStinger(dirge, 6, 0.28f);
+    float fanfare[] = {262.0f, 330.0f, 392.0f, 523.0f, 523.0f};
+    sFanfare_ = makeStinger(fanfare, 5, 0.14f);
 }
 
 void AudioBank::shutdown() {
@@ -58,6 +64,7 @@ void AudioBank::shutdown() {
     if (hasTrack_) UnloadSound(current_);
     UnloadSound(sBlip_); UnloadSound(sCoin_); UnloadSound(sThud_);
     UnloadSound(sDice_); UnloadSound(sChime_);
+    UnloadSound(sDirge_); UnloadSound(sFanfare_);
     CloseAudioDevice();
 }
 
@@ -81,6 +88,15 @@ Sound AudioBank::makeSfx(float baseFreq, float endFreq, float seconds, int kind)
         buf[i] = (short)(sample * env * 0.35f * 32767.0f);
     }
     Wave w{(unsigned)n, kRate, 16, 1, buf.data()};
+    return LoadSoundFromWave(w);
+}
+
+Sound AudioBank::makeStinger(const float* freqs, int count, float stepSeconds) {
+    int stepLen = (int)(kRate * stepSeconds);
+    std::vector<short> buf(stepLen * count, 0);
+    for (int s = 0; s < count; s++)
+        addNote(buf, s * stepLen, (int)(stepLen * 1.4f), freqs[s], 0.14f);
+    Wave w{(unsigned)buf.size(), kRate, 16, 1, buf.data()};
     return LoadSoundFromWave(w);
 }
 
@@ -144,3 +160,5 @@ void AudioBank::coin()  { if (ready_ && !muted_) PlaySound(sCoin_); }
 void AudioBank::thud()  { if (ready_ && !muted_) PlaySound(sThud_); }
 void AudioBank::dice()  { if (ready_ && !muted_) PlaySound(sDice_); }
 void AudioBank::chime() { if (ready_ && !muted_) PlaySound(sChime_); }
+void AudioBank::dirge()   { if (ready_ && !muted_) PlaySound(sDirge_); }
+void AudioBank::fanfare() { if (ready_ && !muted_) PlaySound(sFanfare_); }

@@ -1,0 +1,192 @@
+[
+  {
+    "id": "beast_bounty_board",
+    "locations": ["tavern", "city"],
+    "weight": 14,
+    "slots": { "beast": "beast_here" },
+    "text": "The bounty board has one poster nailed over all the others, ink still wet: {beast}. Kill count so far: {beast_kills}. Below the number, someone has written 'AND MY COUSIN' in a different hand, and below that, a sum that makes the whole room glance at the door.",
+    "choices": [
+      { "text": "Take the hunt",
+        "outcomes": [
+          { "weight": 100, "text": "You pull the poster down. The room goes quiet in the way rooms do when someone volunteers to become either a legend or a number. An old trapper draws you a map on the back of the poster: the trail starts where the farms stop.", "effects": ["goto beast_trail"] }
+        ] },
+      { "text": "Buy drinks and gather beast-lore", "requires": { "money": 4 },
+        "outcomes": [
+          { "weight": 70, "text": "Four gold in ale buys you every survivor's account in the room. Half contradict each other, but the half that agree all mention the same weakness. You file it away with the receipt.", "effects": ["money -4", "stat wis +1"] },
+          { "weight": 30, "text": "The room drinks your gold and tells you tall tales. The only consistent detail is that {beast} is 'bigger than the last liar said.' Useful.", "effects": ["money -4"] }
+        ] },
+      { "text": "Someone else's problem",
+        "outcomes": [
+          { "weight": 100, "text": "You leave the poster for a braver reader. On the way out, the kill count on the board is quietly amended upward. Not your cousin. Not your problem. You tell yourself that twice.", "effects": [] }
+        ] }
+    ]
+  },
+  {
+    "id": "beast_trail",
+    "locations": [],
+    "slots": { "beast": "beast_here" },
+    "text": "The trail is not subtle. Trees pushed over. A cart, formerly. Tracks deep enough to hold rainwater, spaced like the strides of something that has never needed to hurry. Everything that lives here has learned to be quiet, and now, so have you.",
+    "choices": [
+      { "text": "Track it to the lair", "check": { "stat": "wis", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You read the ground like a ledger: it hunts at dusk, drags kills uphill, and sleeps off its meals in a scar of rock above the treeline. You arrive with daylight to spare and the advantage of choosing the hour.", "effects": ["goto beast_lair"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You follow the wrong drag-mark into a ravine, and the walk out costs you skin and most of the day. When you finally find the lair, you find it the loud way - it finds you first, briefly, as a warning.", "effects": ["hp -4", "goto beast_lair"] }
+        ] },
+      { "text": "Set a baited trap first", "requires": { "item": "rations" },
+        "outcomes": [
+          { "weight": 60, "text": "Your rations, a snare of your own design, and patience. At dusk, {beast} takes the bait and the snare takes a leg - not enough to hold it, more than enough to slow it. You follow the limp uphill.", "effects": ["removeitem rations", "stat int +1", "goto beast_lair"] },
+          { "weight": 40, "text": "At dusk, {beast} eats the bait, the snare, and the sapling the snare was tied to, in that order, without breaking stride. You have learned something about the value of preparation, which is: situational.", "effects": ["removeitem rations", "goto beast_lair"] }
+        ] },
+      { "text": "Turn back while turning back is a choice",
+        "outcomes": [
+          { "weight": 100, "text": "There is no shame in arithmetic. You measure the stride length one more time, and walk back down into the world of soup and doors that lock. The poster will still be there. So, unfortunately, will {beast}.", "effects": ["stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "beast_lair",
+    "locations": [],
+    "slots": { "beast": "beast_here" },
+    "text": "The lair smells of old iron and older bones. And there, mounded in the dark like a hill that breathes: {beast}. Generations of hunters are arranged around the entrance in what you slowly realize is a display. It knows you're here. It has decided you're not urgent.",
+    "choices": [
+      { "text": "Attack while it dozes", "check": { "stat": "str", "dc": 14 },
+        "success": [
+          { "weight": 100, "text": "It is not a fight the ballads will get right. It's ugly, close, and decided by one strike you will remember in your hands forever. When it finally stills, the silence rolls downhill like weather. The world just got measurably safer, and you are the measure.", "effects": ["slay_beast", "trait +famous", "money +25", "loot fine"] }
+        ],
+        "fail": [
+          { "weight": 60, "text": "It was not dozing. The display outside gains no new member today, but only because you are fast, lucky, and willing to leave your dignity on the hillside. Everything hurts. Everything.", "effects": ["hp -9"] },
+          { "weight": 40, "text": "One paw. It hits you with ONE PAW, the way you'd swat a moth you respected slightly. You wake at the bottom of the hill with a new understanding of the kill count.", "effects": ["hp -12"] }
+        ] },
+      { "text": "Exploit the old wound", "requires": { "stat": "wis", "gte": 7 }, "check": { "stat": "int", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Every survivor's story agreed on one thing, and the stories were right. You place your strike where the old scar never healed, and the ending is quick - quicker than it deserved, say the bones outside. The Chronicle will say YOUR name slowly.", "effects": ["slay_beast", "trait +famous", "money +25", "loot fine", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The scar was a trap. It's been baiting hunters with that limp for a generation. You escape with your life because it wants the story of you to spread, and stories need survivors.", "effects": ["hp -7"] }
+        ] },
+      { "text": "Leave an offering and go",
+        "outcomes": [
+          { "weight": 70, "text": "You set down the best of what you carry and back away, palms open. {beast} watches with one amber eye, and does not rise. Later, hunters will find your offering placed atop the display, untouched, like a signature accepted.", "effects": ["money -6", "stat wis +1"] },
+          { "weight": 30, "text": "It takes the offering. It takes it while looking directly at you, deliberately, the way a landlord accepts late rent. You are permitted to leave. The word 'permitted' does a lot of work.", "effects": ["money -6"] }
+        ] }
+    ]
+  },
+  {
+    "id": "afterlife_gate",
+    "locations": [],
+    "slots": { "god": "god" },
+    "text": "The pain stops. The world stops. What's left is a road of grey light, a gate of no particular architecture, and {god}, god of {god_domain}, leaning against it like they've been waiting - {god_mood}, as gods go. 'Every soul gets one sentence at my gate,' they say. 'Choose yours.'",
+    "choices": [
+      { "text": "Bargain for your bloodline",
+        "outcomes": [
+          { "weight": 100, "text": "'Not for me,' you say. 'For the next of my line.' The god studies you for a long moment, then presses a thumbprint of light into your fading chest. 'Spent souls rarely spend their sentence on strangers. Granted. The next to carry your story carries my mark with it.' The gate opens.", "effects": ["legacy_bless"] }
+        ] },
+      { "text": "Ask what the Chronicle will say about you",
+        "outcomes": [
+          { "weight": 100, "text": "The god produces the page - YOUR page - and reads it aloud, complete, unhurried, with better pronunciation than you ever managed. It is shorter than you hoped and truer than you feared, and hearing it read by a god makes every word of it enormous. 'Adequate,' they say, and the gate opens.", "effects": [] }
+        ] },
+      { "text": "Walk through without spending it",
+        "outcomes": [
+          { "weight": 100, "text": "You nod to the god and keep walking. Behind you, quietly, with something that might be respect: 'Huh. That's rarer than the bargaining.' The gate doesn't open for you - it simply stops being closed. Some exits are earned by not asking.", "effects": [] }
+        ] }
+    ]
+  },
+  {
+    "id": "guild_promotion",
+    "locations": ["city"],
+    "weight": 20,
+    "when": ["contracts >= 2", "!trait agent"],
+    "text": "A clerk finds you in the street - finds YOU, by name, which is new - and presents a sealed letter with the weary ceremony of someone who delivers forty of these a year and means maybe one. The guilds have noticed your completed contracts. The letter contains a badge, a stipend, and the word 'AGENT' in a font that costs money.",
+    "choices": [
+      { "text": "Accept the badge",
+        "outcomes": [
+          { "weight": 100, "text": "The badge is heavier than it looks. So is the title. Doors that used to need lockpicks now need only a flash of guild brass, and the stipend arrives with a punctuality no adventure ever had.", "effects": ["trait +agent", "money +12", "rep +5"] }
+        ] },
+      { "text": "Negotiate the stipend upward", "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "'The badge honors ME?' you say. 'Interesting theory.' The clerk, who has clearly been hoping someone would try this for years, gleefully amends the figure and shakes your hand twice.", "effects": ["trait +agent", "money +20", "rep +4", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You overplay it. The clerk's face closes like a ledger. The badge is still yours - the guild's need is real - but the stipend arrives in the smallest legal denomination, delivered in a sack, out of spite.", "effects": ["trait +agent", "money +6"] }
+        ] },
+      { "text": "Refuse. Freelance forever",
+        "outcomes": [
+          { "weight": 100, "text": "You hand the letter back unopened past the seal. The clerk notes something in the margin - you glimpse the words 'flight risk (romantic)' - and departs. The taverns hear about the refusal by evening, and freelancers drink free where guild badges pay double.", "effects": ["rep +3", "stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "guildmaster_offer",
+    "locations": ["city"],
+    "weight": 22,
+    "when": ["contracts >= 4", "trait agent"],
+    "text": "The summons comes on paper so thick it could shingle a roof. In the guildhall's highest office, the outgoing guildmaster - ancient, ink-stained, visibly done - slides a single key across the desk. 'Four contracts, agent, and not one botched. The chair is yours if you want it. The chair, the ledgers, the feuds, all of it. Sit down or walk out.'",
+    "choices": [
+      { "text": "Take the chair",
+        "outcomes": [
+          { "weight": 100, "text": "You sit. The chair creaks in a way that sounds like a contract being signed. The old master is out the door before the sound fades, laughing for the first time in what the clerks say is a decade. The ledgers are yours now. The feuds are yours. The CHAIR is yours, and from it, the whole sprawling business of the world's errands.", "effects": ["finish Rose from freelance nobody to guildmaster, contract by contract, and died rich in the chair with the ledgers balanced."] }
+        ] },
+      { "text": "Take the key, sell the chair", "check": { "stat": "cha", "dc": 14 },
+        "success": [
+          { "weight": 100, "text": "There are three rival guilds who would pay HANDSOMELY to decide who sits in this chair, and by dawn you've collected retainers from all three to remain 'undecided' indefinitely. The old master, hearing of it, sends a note: 'Should have done that forty years ago.'", "effects": ["money +40", "stat cha +1", "rep -4"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The rival guilds compare notes, which you did not budget for. The key is reclaimed, the badge is reconsidered, and your name is entered in the ledger under a heading you can't read upside down but can guess.", "effects": ["money -10", "rep -8"] }
+        ] },
+      { "text": "The road is your guild",
+        "outcomes": [
+          { "weight": 100, "text": "You slide the key back. 'Give it to the clerk who fixes your stipend math,' you say. 'They've been running this place for years anyway.' The old master blinks, then nods slowly, then laughs. The clerk faints. The road takes you back like it never doubted.", "effects": ["rep +6", "stat wis +1", "money +10"] }
+        ] }
+    ]
+  },
+  {
+    "id": "curse_manifests",
+    "locations": ["road", "forest", "cave", "tavern", "city"],
+    "weight": 20,
+    "when": ["trait cursed", "!trait marked", "day >= 4"],
+    "text": "The curse stops being subtle. Milk sours when you carry it. Dogs cross the street; cats organize. This morning your shadow was four seconds late getting up, and tonight, in the lamplight, it's writing something on the wall behind you that you can't quite turn fast enough to read.",
+    "choices": [
+      { "text": "Read the shadow's message", "check": { "stat": "wis", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You stop trying to turn fast and use a puddle instead. The shadow, caught, finishes its sentence: a place, and a rite, and the words 'BRING INCENSE.' It's not a threat. It's instructions. Your curse, it turns out, is trying to get itself removed.", "effects": ["stat wis +1", "goto curse_rite"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You wrench around fast enough to hurt your neck. The shadow scrubs the wall clean with your own silhouette's sleeve and pretends to be shaped like you. The mark on you deepens; you can feel it settle in like a tenant.", "effects": ["hp -3", "trait +marked"] }
+        ] },
+      { "text": "Shout at your own shadow in public",
+        "outcomes": [
+          { "weight": 60, "text": "To be fair to the onlookers, it does look exactly like a person having a breakdown at a wall. But the shadow flinches, sulks, and behaves for days afterward. Sometimes governance is just volume.", "effects": ["rep -3"] },
+          { "weight": 40, "text": "The shadow shouts BACK - soundlessly, but with unmistakable gestures - and the crowd that gathers includes a priest who takes extensive, alarmed notes. You are asked to leave by several institutions simultaneously.", "effects": ["rep -5", "trait +marked"] }
+        ] },
+      { "text": "Live with it. It's quirky",
+        "outcomes": [
+          { "weight": 100, "text": "You and the shadow reach an arrangement: it stops writing on walls, you stop standing in direct light out of spite. The curse settles deeper in exchange for manners. Somewhere, something that keeps score makes a small satisfied sound.", "effects": ["trait +marked", "stat con +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "curse_rite",
+    "locations": [],
+    "text": "The place the shadow named: a ring of standing stones just off the road that you have definitely walked past before without there being a ring of standing stones there. In the center, a stone bowl, waiting. The air has the held-breath feel of paperwork about to be processed by something very old.",
+    "choices": [
+      { "text": "Burn the incense and speak your name", "requires": { "item": "incense" },
+        "outcomes": [
+          { "weight": 75, "text": "The smoke goes straight up in dead air, your name goes with it, and something enormous and bureaucratic EXHALES. The curse lifts off you like a bird changing trees - present, then elsewhere. Your shadow stretches, luxuriously, and matches your movements for the first time in weeks.", "effects": ["removeitem incense", "trait -cursed", "trait -marked", "hp +4", "stat wis +1"] },
+          { "weight": 25, "text": "The smoke rises, pauses, and comes back down with a counteroffer. The curse will leave - and it does - but it takes a memento: three days of memories, chosen at random, gone like pages torn cleanly out. You hope they weren't important. You'll never know.", "effects": ["removeitem incense", "trait -cursed", "trait -marked", "stat int -1"] }
+        ] },
+      { "text": "Improvise the rite without incense", "check": { "stat": "int", "dc": 15 },
+        "success": [
+          { "weight": 100, "text": "Pipe-weed, dried herbs from your pack, and absolute confidence. The something-very-old accepts the substitution the way a border official accepts a bribe: without eye contact, at speed. The curse lifts. Do not tell anyone how.", "effects": ["trait -cursed", "trait -marked", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The bowl rejects your offering with prejudice, and the stones express their opinion of improvisation by all leaning in an inch. You leave at a pace. Behind you, your shadow writes one word on a standing stone: 'EMBARRASSING.'", "effects": ["hp -5"] }
+        ] },
+      { "text": "Back out of the ring slowly",
+        "outcomes": [
+          { "weight": 100, "text": "Not today. The stones watch you go with the patience of things that measure time in dynasties. The bowl will wait. The curse rides along, humming something tuneless through your teeth.", "effects": [] }
+        ] }
+    ]
+  }
+]

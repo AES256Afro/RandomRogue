@@ -212,3 +212,38 @@ skeleton written to the new checklist works immediately.
   (P1), not last.
 - Perf gates in CI: worldgen < 4s browser, chronicle queries < 1ms,
   1,000-yr dump still byte-identical native vs WASM.
+
+---
+
+## Release 3 (shipped)
+
+Everything at once, per the brief:
+
+- **Beast hunts** - named living beasts from the Chronicle become a
+  bounty-board -> trail -> lair chain; `slay_beast` writes the kill into
+  history (`chron_pc_beast_slain`) and the news line.
+- **Afterlife interludes** - dying (not finishing) deals one gate card with
+  a real god of this world; bargaining grants `legacy_bless`, so the next
+  of your line starts blessed.
+- **Faction careers** - completed contracts are counted; `contracts >= 2`
+  earns the Guild Agent trait, `>= 4` unlocks the guildmaster chair (a
+  `finish` ending) or the option to grift it.
+- **Curse arcs** - `cursed` now escalates (`curse_manifests`) into a
+  standing-stones rite that wants temple incense.
+- **Mid-run save/load** - autosave every travel screen (localStorage /
+  file); CONTINUE on the title restores character, packs, wars, weather,
+  RNG state.
+- **Persistent NPC marks** - marks are saved per world seed and outlive
+  the run; the folk you rob remember your heirs.
+- **World map screen** - MAP on the travel screen: ring-graph of all
+  regions, biome colors, visited fog, wars/plagues/owner on hover.
+- **Chronicle browser** - CHRONICLE on the title screen pages through the
+  full thousand-year history of the next seed before you commit to it.
+- **Procedural portraits** - name-hashed pixel faces on travel and death.
+- **Daily leaderboard** - daily-world deaths POST to the Cloudflare worker
+  (`/__score`, `/__scores`); top three fallen shown on the title screen.
+- **Death share card** - COPY EPITAPH puts your name, days, epitaph, and
+  seed on the clipboard.
+- **Music stingers** - a dirge at the gate, a fanfare for slain beasts.
+
+Deferred: naval arc, Steam packaging.

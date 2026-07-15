@@ -5,5 +5,7 @@
   "wanted": "Wanted",
   "glowing": "Faintly Glowing",
   "gang_member": "Scooter Gang Associate",
-  "banned": "Banned From Taverns"
+  "banned": "Banned From Taverns",
+  "agent": "Guild Agent",
+  "marked": "Marked by the Curse"
 }

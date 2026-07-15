@@ -27,7 +27,7 @@ public:
 
 private:
     enum Screen { TITLE, CLASSPICK, AMBITION, TRAVEL, EVENT, OUTCOME, DEATH,
-                  INVENTORY, INFO, VENDOR };
+                  INVENTORY, INFO, VENDOR, WORLDMAP, CHRONICLE };
 
     // A hired sword, a talking badger, a disgraced accountant (P5).
     struct Companion {
@@ -90,11 +90,17 @@ private:
     void checkPurposes(); // ambition + contract completion
     void drawEvent(Vector2 mouse);
     void drawOutcome();
-    void drawDeath();
+    void drawDeath(Vector2 mouse);
     void drawInventory(Vector2 mouse);
     void drawInfo();
     void drawVendor(Vector2 mouse);
     void drawTopBar();
+    void drawWorldMap(Vector2 mouse);
+    void drawChronicle(Vector2 mouse);
+    void drawPortrait(int x, int y, int scale, const std::string& name);
+    void saveRun();
+    bool loadRun();
+    void clearRun();
     int optionRows(const std::vector<std::string>& rows,
                    const std::vector<bool>& enabled, Vector2 mouse);
     // Touch-friendly clickable button; returns true on click/tap.
@@ -135,6 +141,7 @@ private:
     ResolvedOutcome outcome_;
     int pendingArtifact_ = -1;    // artifact bound by an artifact_here slot
     int slotFigure_ = -1;         // figure bound by a figure_alive slot
+    int slotBeast_ = -1;          // beast bound by a beast_here slot
     bool blessingSpent_ = false;  // a blessed trait absorbed death this outcome
     // Per-run NPC memory: chronicle figure index -> marks ("robbed", ...)
     std::map<int, std::set<std::string>> npcMarks_;
@@ -178,6 +185,16 @@ private:
     std::string newsLine_;
     bool legacySaved_ = false;   // this death already recorded
     bool finishedWell_ = false;  // ended alive: ascended, retired, complete
+    bool afterlifeShown_ = false; // the gate only opens once per death
+    bool heirBlessing_ = false;  // afterlife bargain: bless the next of the line
+    int contractsDone_ = 0;      // faction career ladder
+    std::set<int> visitedRegions_;
+    int chronPage_ = 0;                    // chronicle browser page
+    std::vector<std::string> chronLines_;  // cached rendered page
+    int chronCachedPage_ = -1;
+    std::string scoresJson_;     // today's fallen (web leaderboard)
+    bool scoresRequested_ = false;
+    bool scoreSubmitted_ = false;
 
     // audio / juice / meta
     AudioBank audio_;

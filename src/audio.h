@@ -23,10 +23,14 @@ public:
     void thud();   // damage
     void dice();   // check rolled
     void chime();  // item gained
+    void dirge();   // death / the afterlife gate
+    void fanfare(); // triumph: beast slain, career crowned
 
 private:
     Sound generateTrack(const std::string& tag, uint64_t seed);
     Sound makeSfx(float baseFreq, float endFreq, float seconds, int kind);
+    // A short note sequence (freq, steps) — musical stingers, not sweeps.
+    Sound makeStinger(const float* freqs, int count, float stepSeconds);
 
     // Exactly ONE track lives in memory. Decoded audio is ~16x the source
     // wave (device-format resampling); caching tracks OOMs the wasm heap.
@@ -34,6 +38,7 @@ private:
     Sound current_{};
     bool hasTrack_ = false;
     Sound sBlip_{}, sCoin_{}, sThud_{}, sDice_{}, sChime_{};
+    Sound sDirge_{}, sFanfare_{};
     bool ready_ = false;
     bool muted_ = false;
 };

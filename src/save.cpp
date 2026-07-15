@@ -38,7 +38,8 @@ static json legacyToJson(const LegacyRecord& r) {
     json items = json::array();
     for (auto& [name, quirk] : r.relics) items.push_back({{"name", name}, {"quirk", quirk}});
     return {{"name", r.name},   {"meaning", r.meaning},   {"epitaph", r.epitaph},
-            {"deathSite", r.deathSite}, {"days", r.days}, {"relics", items}};
+            {"deathSite", r.deathSite}, {"days", r.days}, {"relics", items},
+            {"blessing", r.blessing}};
 }
 
 static LegacyRecord legacyFromJson(const json& j) {
@@ -48,6 +49,7 @@ static LegacyRecord legacyFromJson(const json& j) {
     r.epitaph = j.value("epitaph", "");
     r.deathSite = j.value("deathSite", "");
     r.days = j.value("days", 0);
+    r.blessing = j.value("blessing", false);
     if (j.contains("relics"))
         for (auto& it : j["relics"])
             r.relics.emplace_back(it.value("name", ""), it.value("quirk", ""));
@@ -77,6 +79,26 @@ void AppendLegacy(uint64_t seed, const LegacyRecord& rec) {
     while (j[key].size() > 12) j[key].erase(0);
     while (j.size() > 6) j.erase(j.begin());
     saveRawStore("random_rogue_worlds", j.dump());
+}
+
+std::string LoadRawRun() { return loadRawStore("random_rogue_run"); }
+void SaveRawRun(const std::string& text) { saveRawStore("random_rogue_run", text); }
+
+std::string LoadMarks(uint64_t seed) {
+    json j = json::parse(loadRawStore("random_rogue_marks"), nullptr, false);
+    if (j.is_discarded() || !j.is_object()) return "{}";
+    std::string key = std::to_string(seed);
+    return j.contains(key) ? j[key].dump() : "{}";
+}
+
+void SaveMarks(uint64_t seed, const std::string& marksJson) {
+    json j = json::parse(loadRawStore("random_rogue_marks"), nullptr, false);
+    if (j.is_discarded() || !j.is_object()) j = json::object();
+    json m = json::parse(marksJson, nullptr, false);
+    if (m.is_discarded()) return;
+    j[std::to_string(seed)] = m;
+    while (j.size() > 6) j.erase(j.begin());
+    saveRawStore("random_rogue_marks", j.dump());
 }
 
 #if defined(__EMSCRIPTEN__)

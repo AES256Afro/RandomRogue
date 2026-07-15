@@ -673,6 +673,12 @@
     "In year {year}, {actor}'s {artifact} turned up at {site}. Nobody claimed it. Nobody dared.",
     "{artifact} rests at {site}, still waiting for {actor} to come back for it."
   ],
+  "chron_pc_beast_slain": [
+    "In year {year}, a wanderer called {extra} walked into the lair of {beast} and walked back out. The beast did not.",
+    "{beast} - {beast}, of all things - was slain in year {year} by {extra}, an adventurer the ballads had not previously bothered to mention.",
+    "Year {year}: {extra} ended {beast}. The bounty board kept the poster up for a month, framed.",
+    "The kill count of {beast} stopped in year {year}. The reason signs their name {extra}."
+  ],
   "epitaph": [
     "Died as they lived: confused.",
     "The paperwork was fatal.",

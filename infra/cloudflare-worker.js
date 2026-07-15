@@ -14,6 +14,7 @@ const FILES = {
   "play/random_rogue.wasm": "application/wasm",
   "play/random_rogue.data": "application/octet-stream",
 };
+const CORS = { 'access-control-allow-origin': '*', 'access-control-allow-methods': 'GET,POST,OPTIONS', 'access-control-allow-headers': 'content-type' };
 const ORIGIN = "https://aes256afro.github.io/RandomRogue/";
 
 export default {
@@ -32,7 +33,32 @@ export default {
       }
       return Response.json(out);
     }
-    if (p === "") p = "index.html";
+    
+    // Daily leaderboard: the fallen of world <day>.
+    if (p === "__score" && req.method === "POST") {
+      let body;
+      try { body = await req.json(); } catch (e) { return new Response("bad", { status: 400, headers: CORS }); }
+      const day = parseInt(body.day);
+      const today = Math.floor(Date.now() / 86400000);
+      if (!day || Math.abs(day - today) > 1) return new Response("stale", { status: 400, headers: CORS });
+      const name = String(body.name || "anonymous").slice(0, 48);
+      const days = Math.max(0, Math.min(999, parseInt(body.days) || 0));
+      const epitaph = String(body.epitaph || "").slice(0, 120);
+      const key = "scores/" + day;
+      let list = [];
+      try { list = JSON.parse((await env.SITE.get(key)) || "[]"); } catch (e) {}
+      list.push({ name, days, epitaph });
+      list.sort((a, b) => b.days - a.days);
+      list = list.slice(0, 25);
+      await env.SITE.put(key, JSON.stringify(list), { expirationTtl: 259200 });
+      return new Response("ok", { headers: CORS });
+    }
+    if (p === "__scores") {
+      const day = parseInt(url.searchParams.get("day")) || Math.floor(Date.now() / 86400000);
+      const list = (await env.SITE.get("scores/" + day)) || "[]";
+      return new Response(list, { headers: Object.assign({ "content-type": "application/json" }, CORS) });
+    }
+if (p === "") p = "index.html";
     if (p === "play" || p === "play/") p = "play/index.html";
     const type = FILES[p];
     if (!type) return Response.redirect(url.origin + "/", 302);
