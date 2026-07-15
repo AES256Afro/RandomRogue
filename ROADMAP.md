@@ -1,0 +1,215 @@
+# Random Rogue 2.0 — "The Chronicle Absorbs You"
+
+The massive update. Goal: complete randomness with a rich source to pull
+from, nigh-endless play, and the core promise — **a player should never feel
+like they know how to respond to X.**
+
+## 0. The Design Law (read this before anything else)
+
+Memorization dies when the same card can resolve differently for reasons the
+player can sense but not fully compute. Three multipliers, in priority order:
+
+1. **Context** — outcomes gated on hidden world state. The goblin toll
+   collector waves you through free if his faction likes you, doubles the
+   toll during a war, and flees if you carry the artifact that killed his
+   grandfather. Same card, different world = different answer.
+2. **Consequence** — choices leave marks (traits, reputation, NPC memory,
+   chronicle entries) that alter *future* cards. The optimal answer to X
+   depends on what you did about W.
+3. **Volume** — 10x content so the surface area is too big to grind.
+
+Volume without the first two just delays the spreadsheet. All three together
+make the spreadsheet impossible.
+
+---
+
+## 1. Systems (the big swings)
+
+### 1.1 The Living World ★ centerpiece
+History does not stop when the player is born. Every in-game day, the
+simulation ticks forward: wars break out mid-run, cities get sacked while
+you're three regions away (you hear it as *news*, then see refugees on the
+roads, then find the ruins), plagues spread region to region, artifacts get
+stolen from dungeons you were saving for later, beasts migrate, prices move.
+- Runtime chronicle entries are tagged `live` — taverns rumor about *this
+  week*, not just ancient history.
+- Decks re-weight by current events: war zones spawn deserters, checkpoints,
+  and profiteers; plague regions spawn quarantines and quack doctors.
+- Technical: the yearly tick already exists; add a daily micro-tick that
+  advances a fractional year and emits localized consequences.
+
+### 1.2 Legacy: your dead characters enter the Chronicle ★ centerpiece
+The world persists across runs (per seed). When you die:
+- Your character becomes a **historical figure** — epitaph, deeds, death
+  entry, all of it written into the Chronicle.
+- Your next character is born into the *same world, years later*. The world
+  simulates the gap. You can hear tavern rumors about your own previous
+  death. A bard sings the ballad. Badly.
+- Items you carried scatter to sites as recoverable relics — your old sword,
+  quirk intact, waiting in a dungeon with YOUR name in its provenance.
+- Descendants: opt to be an heir of a previous character (stat echoes, a
+  family grudge, one heirloom).
+- "New world" always available; but the sales pitch is the 40-run-old world
+  thick with your own ghosts.
+
+### 1.3 Traits & afflictions (the player-side state machine)
+The character accumulates **tags** — cursed, famous, wanted, glowing,
+lycanthropy-adjacent, banned-from-taverns, blessed-by-a-forgotten-god,
+owes-the-scooter-gang. Tags:
+- gate choices (`requires: {trait: wanted}`), gate outcomes, spawn dedicated
+  events (bounty hunters for `wanted`, autograph seekers for `famous`),
+  and decay/cure through play.
+- This is the #1 anti-memorization lever: the right answer to a guard
+  shakedown is different when you're `famous` vs `wanted` vs `glowing`.
+
+### 1.4 Conditional outcomes (engine upgrade that powers everything)
+Outcomes get optional `when` clauses evaluated against world + character
+state: `faction_at_war`, `rep < -20`, `trait(cursed)`, `carrying_artifact`,
+`night`, `plague_here`, `year > 500`, `previous_character_died_here`.
+Weighted pools filter by `when` first, then roll. Authoring cost: one line
+per outcome; payoff: every event becomes situational.
+
+### 1.5 Companions
+Hirelings, strays, and volunteers: a mercenary with a trait, a talking
+badger, a disgraced accountant, one (1) very loyal mimic. They add check
+bonuses, interject in events (their trait picks the interjection), can be
+targeted by outcomes (kidnapped, poisoned, unionized), and can betray or die
+— entering the Chronicle when they do.
+
+### 1.6 Contracts & ambitions (generated quests)
+Multi-step goals generated from the Chronicle: retrieve artifact X resting
+at Y for faction Z; escort a descendant to their grandparent's ruin; hunt
+the beast that ate a named hero; deliver a sealed letter (DO NOT READ — a
+trait if you do). Also **ambitions**: run-long win conditions chosen at
+birth (die rich, slay a named beast, get a monument built about you, own a
+spaceship) that give runs a shape without ending the sandbox.
+
+### 1.7 Deep encounters (multi-round events)
+Boss-tier cards that run 2–4 linked rounds via the existing `goto` machinery
+with state (the duel where round 2 depends on round 1's stance; the
+negotiation that escalates). Authored as small graphs; feels like combat
+without building a combat system that fights the card game.
+
+### 1.8 Religion & the gods
+Generated pantheon per world (names, domains, moods, schisms in the
+chronicle). Shrines, tithes, blessings-with-strings, the forgotten god arc
+expanded into a full storyline. Gods remember. Gods take notes.
+
+### 1.9 Vehicles & the travel layer
+Vehicles become real: scooter/wagon/buggy/truck each add travel options,
+their own event pools, breakdowns, upgrades, and passengers. Endgame: buy,
+repair, and fuel a crashed **spaceship** across many steps — leaving the
+planet is a legitimate run-ending achievement (the chronicle records the
+world's reaction).
+
+### 1.10 Exploration & hidden areas
+Clue → rumor → map-fragment → hidden site chains, generated. Hidden sites
+(glades, vaults, crash sites, sunken towns) hold the best relics and the
+weirdest events. Spyglass/scooter/rope gate deeper access.
+
+### 1.11 NPC memory
+Named NPCs (vendors, legends, descendants) remember your last interaction
+per world — the vendor you robbed prices accordingly forever; the legend you
+beat at arm wrestling introduces you to rooms. Cheap to store, enormous felt
+consequence.
+
+### 1.12 Seasons, weather, night
+A world clock: seasons re-weight biome decks, weather modifies checks
+(rain: DEX outside), night swaps in nocturnal variants. Free variance on
+every existing card.
+
+---
+
+## 2. The 10x Recipe
+
+| Category | Now | Target | How |
+|---|---|---|---|
+| Events | 59 | **600+ effective** | ~250 new authored skeletons × parameterization (see 2.1) |
+| Outcomes per choice | 1–3 | 4–8 (incl. conditional) | `when`-gated pools |
+| Prose grammar keys | 49 | 200+ | new domains: dialogue, weather, gods, news, ballads |
+| Variants per key | ~4 | 10–15 | straight authoring |
+| Language cultures | 1 | 5 (old-tongue, goblin, spacer-corporate, swamp, liturgical) | per-culture phonemes + lexicons; factions speak differently |
+| Items | 42 | 300+ | generated families: material × type × tier × maker-culture |
+| Quirks | 60 | 300 (150 texts + 100 historical templates + 50 rare) | |
+| History event types | 17 | 40+ | heresies, dynasties, inventions, scandals, disappearances, comets, prophecy (and prophecy *failing*) |
+| History length | 250 yrs | **1,000+ yrs with eras** | see 2.2 |
+| Epitaphs | 30 | 120 | the death screen must never repeat in a session |
+| Site types | 7 | 15+ | monasteries, prisons, lighthouses, markets, battlefields, wizard towers, theme-taverns |
+
+### 2.1 Event parameterization (how 250 skeletons become 600+)
+Stop authoring "the goblin toll." Author "the {collector} toll" where the
+collector is drawn from culture + faction + trait, the demanded currency
+varies, the RULES rock is sometimes a scroll, a parrot, or a sibling, and
+outcome pools branch on world state. Every skeleton ships with a variance
+checklist: ≥2 slot axes, ≥1 conditional outcome, ≥1 trait interaction.
+The validator enforces the checklist.
+
+### 2.2 Deep history: 1,000 years in eras
+- **Eras** with distinct flavor: Founding, the Long Peace, the Sundering
+  (extra wars), the Sky-Fall Century (debris rate ×10 — this is where the
+  sci-fi flood happened), the Present. Era tags color names, prose, and
+  which ruins hold what tech.
+- **Dynasties & institutions**: factions rise, split (schism events), merge,
+  and *die* — a dead faction's crest on an item means something different.
+- Chronicle scale: ~20–40k entries. Engine work: prune boring threads,
+  index by entity for O(1) slot queries, and keep worldgen under ~4s in
+  browser (budgeted, measured, CI-gated).
+- Books become era histories; scholars cite (and misquote) each other.
+
+### 2.3 Content pipeline (or the blitz collapses)
+- Split `events.json` → `assets/data/events/<deck>/*.json` + build-time
+  manifest (web preload needs a file list).
+- `validate` grows: variance-checklist enforcement, deck-coverage stats,
+  dead-slot detection, tone lint (flag events with zero funny outcomes).
+- `chronicle_dump --era X --entity Y` filters for authoring against history.
+- New `playtest` tool: headless Monte-Carlo runs (10k choices by policy
+  bots) reporting death curves, economy inflation, deck exhaustion rates.
+  Balance by data, not vibes.
+
+---
+
+## 3. Nigh-Endless Play
+
+1. **Persistent worlds** (1.2) — the run ends; the world doesn't.
+2. **Living world** (1.1) — the world changes faster than you can learn it.
+3. **World size scaling**: regions 10–14 → 30–60; travel becomes regional
+   (near sites cheap, far sites cost days/supplies/vehicle) so the map
+   unfolds over many runs.
+4. **Deck exhaustion resistance**: per-visit pools draw from
+   skeleton × parameters, so even a repeated skeleton arrives re-cast.
+5. **Save mid-run** (native file / localStorage) — long runs survive.
+6. **Difficulty ratchet**: the world escalates with world-age, not player
+   level — old worlds are dangerous *and* rich, and that's the appeal.
+7. **Daily world**: everyone plays the same date-seed; your death epitaph is
+   shareable against everyone else's (local stats now; leaderboard later).
+8. **Ambitions** (1.6) give arcs; retirement is a victory (your character
+   enters the Chronicle *alive* — innkeeper, legend, cult leader emeritus).
+
+---
+
+## 4. Build Order (phases; each ships playable)
+
+| Phase | Contents | Why first |
+|---|---|---|
+| **P1 — The Engine of Doubt** | Conditional outcomes (`when`), traits/afflictions, NPC memory, event file split + manifest, validator v2 | Everything else hangs off these hooks |
+| **P2 — The Living World** | Daily world tick, live rumors/news, war/plague runtime effects, seasons/weather/night | Biggest felt change per line of code |
+| **P3 — Legacy** | Persistent worlds, dead-PC absorption, relic scattering, heirs, save/load | The retention engine |
+| **P4 — 10x Content Blitz I** | 1,000-yr eras + new history types, 5 cultures, item/quirk generation families, +100 event skeletons | Feeds on P1 hooks |
+| **P5 — Company & Purpose** | Companions, contracts, ambitions, deep encounters | Depth |
+| **P6 — The Wide World** | 30–60 regions, regional travel, vehicles-for-real, exploration chains, religion | Breadth |
+| **P7 — 10x Content Blitz II** | remaining skeletons to 250+, prose to 200 keys, epitaphs to 120, Monte-Carlo balance pass | Saturation |
+| **P8 — Endgames & Ship** | Spaceship arc, retirement, daily world, mod folder support, itch/site update | The bow on top |
+
+Rough shape: P1–P3 are mostly engine (the anti-memorization machinery);
+P4–P7 are mostly authoring; content lands continuously after P1 since every
+skeleton written to the new checklist works immediately.
+
+## 5. Budget Reality Check
+- 100 MB is unreachable for text — and that's good. 250 skeletons + 200
+  grammar keys ≈ 2–4 MB. The wasm stays ~1 MB. Ship size stays trivial;
+  the *possibility space* is what grows 10x–100x.
+- The real budget is authoring hours. The parameterization + validator +
+  Monte-Carlo pipeline is what makes 10x content affordable; build it first
+  (P1), not last.
+- Perf gates in CI: worldgen < 4s browser, chronicle queries < 1ms,
+  1,000-yr dump still byte-identical native vs WASM.
