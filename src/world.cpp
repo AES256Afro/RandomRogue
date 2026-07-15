@@ -1,4 +1,4 @@
-#include "world.h"
+﻿#include "world.h"
 #include <array>
 
 namespace {
@@ -36,7 +36,7 @@ World GenerateWorld(uint64_t seed, const Grammar& grammar, const NameForge& forg
     int regionCount = rng.range(28, 36); // the wide world (ROADMAP P6)
     w.regions.resize(regionCount);
 
-    // Chain the regions, then sprinkle extra edges — connected, slightly tangled.
+    // Chain the regions, then sprinkle extra edges - connected, slightly tangled.
     for (int i = 1; i < regionCount; i++) {
         w.regions[i - 1].neighbors.push_back(i);
         w.regions[i].neighbors.push_back(i - 1);
@@ -50,7 +50,7 @@ World GenerateWorld(uint64_t seed, const Grammar& grammar, const NameForge& forg
         }
     }
 
-    // Biomes with the adjacency constraint (a few retries, then whatever — the
+    // Biomes with the adjacency constraint (a few retries, then whatever - the
     // world is allowed to be a little wrong; that's flavor).
     for (int i = 0; i < regionCount; i++) {
         Region& r = w.regions[i];

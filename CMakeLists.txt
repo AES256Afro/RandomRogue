@@ -54,6 +54,16 @@ if(NOT EMSCRIPTEN)
     # Content linter: dangling ids, unknown verbs, broken slot/grammar refs.
     add_executable(validate tools/validate.cpp)
     target_link_libraries(validate PRIVATE nlohmann_json::nlohmann_json)
+
+    # Monte-Carlo balance bot: thousands of headless runs, data over vibes.
+    add_executable(playtest
+        tools/playtest.cpp
+        src/events.cpp
+        src/items.cpp
+        src/language.cpp
+    )
+    target_link_libraries(playtest PRIVATE nlohmann_json::nlohmann_json)
+    target_include_directories(playtest PRIVATE src)
 endif()
 target_link_libraries(random_rogue PRIVATE raylib nlohmann_json::nlohmann_json)
 target_include_directories(random_rogue PRIVATE src)

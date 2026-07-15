@@ -1,4 +1,4 @@
-#include "history.h"
+﻿#include "history.h"
 #include <algorithm>
 
 // The five ages. Their fingerprints end up in every rumor and ruin.
@@ -324,7 +324,7 @@ struct Sim {
             // Sky-Fall Century it POURS. Crash sites carry spacer names.
             Site s;
             s.type = "crash";
-            s.deck = "dungeon";
+            s.deck = "crash";
             s.region = rng.range(0, (int)w.regions.size() - 1);
             s.name = g.expand("{crash_name}", rng,
                               {{"placeword", forge.place(rng, CULT_SPACER).conlang}});

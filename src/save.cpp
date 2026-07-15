@@ -1,4 +1,4 @@
-#include "save.h"
+﻿#include "save.h"
 #include <nlohmann/json.hpp>
 
 #if defined(__EMSCRIPTEN__)
@@ -14,7 +14,8 @@ std::string Profile::toJson() const {
               {"daysTotal", daysTotal},
               {"bestDays", bestDays},
               {"booksRead", booksRead},
-              {"ambitionsDone", ambitionsDone}};
+              {"ambitionsDone", ambitionsDone},
+              {"livesCompleted", livesCompleted}};
     return j.dump();
 }
 
@@ -27,6 +28,7 @@ Profile Profile::fromJson(const std::string& text) {
     p.bestDays = j.value("bestDays", 0);
     p.booksRead = j.value("booksRead", 0);
     p.ambitionsDone = j.value("ambitionsDone", 0);
+    p.livesCompleted = j.value("livesCompleted", 0);
     return p;
 }
 

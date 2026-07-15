@@ -176,7 +176,8 @@ private:
     Rng liveRng_;
     std::string season_ = "spring", weather_ = "clear";
     std::string newsLine_;
-    bool legacySaved_ = false; // this death already recorded
+    bool legacySaved_ = false;   // this death already recorded
+    bool finishedWell_ = false;  // ended alive: ascended, retired, complete
 
     // audio / juice / meta
     AudioBank audio_;

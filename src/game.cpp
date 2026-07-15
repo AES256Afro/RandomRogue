@@ -530,6 +530,7 @@ void Game::newRun(int classIdx) {
     finalesSeen_ = 0;
     booksThisRun_ = 0;
     compLine_.clear();
+    finishedWell_ = false;
     currentRegion_ = runRng_.range(0, (int)world_.regions.size() - 1);
     enterTravel();
 }
@@ -731,10 +732,12 @@ void Game::dealEvent() {
     audio_.playMusicFor(deckTag_, masterSeed_);
     // Dungeons escalate: the last event of a visit draws from the finale deck.
     std::string tag = deckTag_;
-    if (deckTag_ == "dungeon" && eventsLeftHere_ == 1) tag = "dungeon_finale";
+    if ((deckTag_ == "dungeon" || deckTag_ == "crash") && eventsLeftHere_ == 1)
+        tag = "dungeon_finale";
     for (int attempt = 0; attempt < 6; attempt++) {
         current_ = deck_.draw(runRng_, tag);
         if (!current_ && tag == "dungeon_finale") { tag = "dungeon"; continue; }
+        if (!current_ && tag == "crash") { tag = "dungeon"; continue; }
         if (!current_) { enterTravel(); return; }
         // Event-level gate: "trait wanted" events only find the wanted.
         bool gated = false;
@@ -870,6 +873,15 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
             std::getline(ss, rest);
             if (!rest.empty() && rest[0] == ' ') rest.erase(0, 1);
             ch_.dead = true;
+            if (!rest.empty()) ch_.epitaph = rest;
+        } else if (verb == "finish") {
+            // A life completed on its own terms — ascension, retirement.
+            // The run ends; the Chronicle takes you in ALIVE.
+            std::string rest;
+            std::getline(ss, rest);
+            if (!rest.empty() && rest[0] == ' ') rest.erase(0, 1);
+            ch_.dead = true;
+            finishedWell_ = true;
             if (!rest.empty()) ch_.epitaph = rest;
         }
     }
@@ -1085,8 +1097,13 @@ void Game::drawTitle(Vector2 mouse) {
              pendingLegacy_.empty() ? PAL_DARK : PAL_GOLD);
 
     // Touch-friendly: buttons carry the whole flow on iPad.
-    bool play = uiButton({kW / 2 - 90, 122, 84, 20}, "BEGIN", mouse);
-    bool reroll = uiButton({kW / 2 + 6, 122, 84, 20}, "REROLL SEED", mouse);
+    bool play = uiButton({kW / 2 - 130, 122, 84, 20}, "BEGIN", mouse);
+    bool reroll = uiButton({kW / 2 - 42, 122, 84, 20}, "REROLL SEED", mouse);
+    // Everyone who presses DAILY today gets the same world.
+    if (uiButton({kW / 2 + 46, 122, 84, 20}, "DAILY WORLD", mouse)) {
+        nextSeed_ = (uint64_t)(time(nullptr) / 86400) % 1000000000ULL;
+        return;
+    }
     std::string runs = "deaths: " + std::to_string(profile_.deaths) +
                        "   best run: " + std::to_string(profile_.bestDays) + " days";
     DrawText(runs.c_str(), (kW - MeasureText(runs.c_str(), 10)) / 2, kH - 16, 10, PAL_DARK);
@@ -1475,8 +1492,9 @@ void Game::drawInfo() {
 }
 
 void Game::drawDeath() {
-    const char* title = "YOU DIED";
-    DrawText(title, (kW - MeasureText(title, 20)) / 2, 30, 20, PAL_RED);
+    const char* title = finishedWell_ ? "A LIFE, COMPLETED" : "YOU DIED";
+    DrawText(title, (kW - MeasureText(title, 20)) / 2, 30, 20,
+             finishedWell_ ? PAL_GOLD : PAL_RED);
     std::string who = ch_.name.conlang + " \"" + ch_.name.meaning + "\"";
     DrawText(who.c_str(), (kW - MeasureText(who.c_str(), 10)) / 2, 56, 10, PAL_INK);
     int y = DrawTextWrapped(ch_.epitaph, 30, 74, kW - 60, PAL_GOLD);
@@ -1492,7 +1510,8 @@ void Game::drawDeath() {
     }
     if (GetKeyPressed() != 0 || pressed_) {
         // Bank the run into the profile exactly once, on the way out.
-        profile_.deaths++;
+        if (finishedWell_) profile_.livesCompleted++;
+        else profile_.deaths++;
         profile_.daysTotal += ch_.day;
         if (ch_.day > profile_.bestDays) profile_.bestDays = ch_.day;
         SaveProfile(profile_);

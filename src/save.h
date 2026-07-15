@@ -10,6 +10,7 @@ struct Profile {
     int bestDays = 0;
     int booksRead = 0;
     int ambitionsDone = 0;
+    int livesCompleted = 0;
 
     std::string toJson() const;
     static Profile fromJson(const std::string& text);

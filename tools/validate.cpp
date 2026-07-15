@@ -28,12 +28,13 @@ static std::string readFile(const std::string& path) {
 static const std::set<std::string> kVerbs = {
     "hp", "maxhp", "money", "credits", "stat", "item", "loot", "removeitem",
     "rep", "shop", "goto", "take_artifact", "die", "trait", "npc_mark",
-    "companion", "companion_leave", "companion_dies", "contract"};
+    "companion", "companion_leave", "companion_dies", "contract", "finish"};
 static const std::set<std::string> kSlotQueries = {
     "chronicle_random", "chronicle_news", "artifact_here", "figure_alive",
     "figure_dead", "god"};
 static const std::set<std::string> kDecks = {
-    "city", "tavern", "dungeon", "dungeon_finale", "cave", "forest", "road"};
+    "city", "tavern", "dungeon", "dungeon_finale", "cave", "forest", "road",
+    "crash"};
 static const std::set<std::string> kStats = {"str", "dex", "con", "int", "wis", "cha"};
 
 // Tokens the engine injects at runtime.
