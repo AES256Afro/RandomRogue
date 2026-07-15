@@ -2488,6 +2488,9 @@ void Game::drawWorldMap(Vector2 mouse) {
         for (int nb : world_.regions[i].neighbors)
             if (nb > i)
                 DrawLineV(pos[i], pos[nb], Color{52, 46, 66, 255});
+    bool hasShip = false;
+    for (auto& item : ch_.pack)
+        if (item.type == "ship") hasShip = true;
     int hovered = -1;
     for (int i = 0; i < n; i++) {
         bool seen = visitedRegions_.count(i) > 0;
@@ -2496,6 +2499,15 @@ void Game::drawWorldMap(Vector2 mouse) {
         if (i == currentRegion_) {
             DrawRectangleLines((int)pos[i].x - 5, (int)pos[i].y - 5, 10, 10, PAL_GOLD);
         }
+        // A living named beast lairs here, and you've walked this land (R8).
+        if (seen)
+            for (auto& b : history_.beasts)
+                if (b.died < 0 && b.region == i)
+                    DrawRectangle((int)pos[i].x - 1, (int)pos[i].y - 8, 3, 3, PAL_RED);
+        // With a ship, every coast is a possible landfall.
+        if (hasShip && world_.regions[i].biome == "coast")
+            DrawRectangle((int)pos[i].x - 3, (int)pos[i].y + 5, 6, 2,
+                          Color{92, 128, 168, 255});
         if (fabsf(mouse.x - pos[i].x) < 6 && fabsf(mouse.y - pos[i].y) < 6) hovered = i;
     }
     // One label at a time keeps 30 regions readable on a 320px canvas.
@@ -2517,9 +2529,24 @@ void Game::drawWorldMap(Vector2 mouse) {
         while (!line.empty() && MeasureText(line.c_str(), 10) > kW - 12) line.pop_back();
         DrawText(line.c_str(), (kW - MeasureText(line.c_str(), 10)) / 2, kH - 30, 10,
                  PAL_INK);
+        // Second line: the sites you know of there (R8).
+        if (seen && !r.sites.empty()) {
+            std::string sl;
+            for (int si : r.sites) {
+                if (!sl.empty()) sl += ", ";
+                sl += world_.sites[si].name;
+            }
+            while (!sl.empty() && MeasureText((sl + "..").c_str(), 10) > kW - 12)
+                sl.pop_back();
+            if (!sl.empty())
+                DrawText(sl.c_str(), (kW - MeasureText(sl.c_str(), 10)) / 2, kH - 42,
+                         10, PAL_DIM);
+        }
     }
-    std::string tally = std::to_string((int)visitedRegions_.size()) + " of " +
-                        std::to_string(n) + " regions walked";
+    std::string tally = std::to_string((int)visitedRegions_.size()) + "/" +
+                        std::to_string(n) + " walked   red: lair" +
+                        (hasShip ? "   blue: landfall" : "");
+    while (!tally.empty() && MeasureText(tally.c_str(), 10) > kW - 64) tally.pop_back();
     DrawText(tally.c_str(), 8, kH - 16, 10, PAL_DARK);
     if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
         IsKeyPressed(KEY_TAB) || IsKeyPressed(KEY_ESCAPE)) {

@@ -37,6 +37,11 @@ Personality personalityFor(const std::string& tag) {
     if (tag == "city")    return {165.0f, kRate / 4, 15, false};
     if (tag == "forest")  return {147.0f, kRate / 4, 25, false};
     if (tag == "road")    return {131.0f, kRate / 4, 20, false};
+    // The sea gets a shanty: major, rolling, barely any rests (R8).
+    if (tag == "sea")     return {165.0f, kRate * 3 / 8, 8, false};
+    if (tag == "swamp")   return {104.0f, kRate / 2, 40, true};
+    if (tag == "mountains") return {139.0f, kRate / 3, 30, false};
+    if (tag == "coast")   return {156.0f, kRate * 2 / 7, 15, false};
     return {123.0f, kRate / 4, 20, true}; // title / default
 }
 
