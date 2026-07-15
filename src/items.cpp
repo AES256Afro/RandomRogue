@@ -24,6 +24,42 @@ void ItemDb::loadItemsJsonText(const char* jsonText) {
     }
 }
 
+void ItemDb::generateFamilies() {
+    struct Mat { const char* name; int tier; };       // value & bonus scale
+    struct Kind { const char* name; const char* stat; };
+    static const Mat kMats[4] = {{"Rusted", 0}, {"Iron", 1}, {"Steel", 2},
+                                 {"Sky-Metal", 3}};
+    static const Kind kWeapons[4] = {{"Sword", "str"}, {"Axe", "str"},
+                                     {"Spear", "dex"}, {"Maul", "str"}};
+    static const char* kArmors[3] = {"Jerkin", "Hauberk", "Cuirass"};
+
+    for (auto& m : kMats) {
+        for (auto& k : kWeapons) {
+            ItemTemplate t;
+            t.id = std::string("gen_") + m.name + "_" + k.name;
+            for (char& c : t.id) c = (char)((c >= 'A' && c <= 'Z') ? c - 'A' + 'a' : c);
+            t.name = std::string(m.name) + " " + k.name;
+            t.type = "weapon";
+            t.value = 3 + m.tier * 6;
+            int bonus = 1 + (m.tier + 1) / 2; // 1,2,2,3
+            t.passive = std::string("check ") + k.stat + " +" + std::to_string(bonus);
+            templates_[t.id] = t;
+            order_.push_back(t.id);
+        }
+        for (int a = 0; a < 3; a++) {
+            ItemTemplate t;
+            t.id = std::string("gen_") + m.name + "_" + kArmors[a];
+            for (char& c : t.id) c = (char)((c >= 'A' && c <= 'Z') ? c - 'A' + 'a' : c);
+            t.name = std::string(m.name) + " " + kArmors[a];
+            t.type = "armor";
+            t.value = 4 + m.tier * 6 + a * 2;
+            t.passive = "armor " + std::to_string(1 + (m.tier + a) / 3);
+            templates_[t.id] = t;
+            order_.push_back(t.id);
+        }
+    }
+}
+
 void ItemDb::loadQuirksJsonText(const char* jsonText) {
     if (!jsonText) return;
     json j = json::parse(jsonText, nullptr, false);

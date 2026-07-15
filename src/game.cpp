@@ -72,6 +72,7 @@ bool Game::init() {
     loadText("assets/data/recipes/language.json", [&](const char* t) { forge_.loadJsonText(t); });
     loadText("assets/data/items.json", [&](const char* t) { items_.loadItemsJsonText(t); });
     loadText("assets/data/quirks.json", [&](const char* t) { items_.loadQuirksJsonText(t); });
+    items_.generateFamilies();
     // Events live in per-deck files listed by a manifest.
     loadText("assets/data/events/manifest.json", [&](const char* t) {
         nlohmann::json m = nlohmann::json::parse(t, nullptr, false);

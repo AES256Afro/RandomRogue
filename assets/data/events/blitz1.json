@@ -1,0 +1,1378 @@
+[
+  {
+    "id": "city_era_museum",
+    "locations": [
+      "city"
+    ],
+    "weight": 8,
+    "slots": {
+      "rumor": "chronicle_random"
+    },
+    "text": "A one-room museum, admission two coins, curated by a man who calls every exhibit 'priceless' while pricing them. The centerpiece plaque tells an old story: \"{rumor}\"",
+    "choices": [
+      {
+        "text": "Pay admission and browse",
+        "requires": {
+          "money": 2
+        },
+        "outcomes": [
+          {
+            "weight": 70,
+            "text": "Half the exhibits are mislabeled and one is visibly breathing. Still, you leave knowing things. Some of them true.",
+            "effects": [
+              "money -2",
+              "stat int +1"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "You correct a plaque date out loud. The curator makes you an honorary docent on the spot, which pays in exposure and one actual coin.",
+            "effects": [
+              "money -1",
+              "stat cha +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sell him something from your pack",
+        "requires": {
+          "item": "lucky_rock"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You present the rock with a straight face and three invented dynasties of provenance. He pays museum prices. There is now a plinth for it.",
+            "effects": [
+              "removeitem lucky_rock",
+              "money +12"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Point out the breathing exhibit",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "'That one's on loan,' says the curator, not looking. The exhibit winks at you. Some knowledge costs nothing and weighs plenty.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tavern_goblin_diplomat",
+    "locations": [
+      "tavern"
+    ],
+    "weight": 8,
+    "text": "A goblin in a tiny formal doublet stands on the bar of {site}, reading from a scroll: 'PEACE PROPOSAL, ARTICLE ONE: EVERYONE CALM DOWN.' Nobody is not calm, which is throwing off his rhythm.",
+    "choices": [
+      {
+        "text": "Applaud the proposal",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Emboldened, he reads all nine articles. Article seven is just the word 'SOUP.' The tavern ratifies it unanimously. History is made, probably.",
+            "effects": [
+              "stat cha +1",
+              "rep +3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Raise a point of order",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Your amendment ('soup FOR ALL') passes by acclamation. The goblin appoints you deputy envoy and pays you from the diplomacy budget, which is a sock of coins.",
+            "effects": [
+              "money +8",
+              "stat int +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You are ruled out of order by a goblin in a doublet, which stings more than you'd think. The tavern sides with the doublet.",
+            "effects": [
+              "stat cha -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask who sent him",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "He checks the scroll. It doesn't say. He checks his doublet. Nothing. The existential crisis that follows requires two ales, which you buy out of pity and curiosity.",
+            "effects": [
+              "money -2",
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "'The rock,' he whispers. You know the one. You leave before jurisdiction attaches.",
+            "effects": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dungeon_spacer_terminal",
+    "locations": [
+      "dungeon"
+    ],
+    "weight": 9,
+    "text": "Half-buried in the wall: a slab of sky-metal with a cracked glass face. When you approach, it flickers alive: 'WELCOME, CUSTOMER. YOUR WAIT TIME IS: 847 YEARS. YOUR CALL IS IMPORTANT TO US.'",
+    "choices": [
+      {
+        "text": "Wait on hold, briefly",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "After ten minutes of crackling music, it dispenses a complimentary credit chip 'for your patience.' The queue does not advance.",
+            "effects": [
+              "item credit_chip"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "The hold music is oddly beautiful. You leave humming a song written by a corporation that died before your grandmother was born.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Demand a manager",
+        "check": {
+          "stat": "cha",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The terminal PANICS. Compensation protocols engage. Credits spill from a slot like a slot machine admitting fault.",
+            "effects": [
+              "credits +12"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "'YOUR FEEDBACK MATTERS,' it says, and adds 200 years to your wait time out of spite.",
+            "effects": []
+          }
+        ]
+      },
+      {
+        "text": "Pry it open for parts",
+        "check": {
+          "stat": "str",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Inside: sky-metal filaments worth good coin, and a note from a previous scavenger: 'sorry. me too.'",
+            "effects": [
+              "money +10"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The terminal defends itself with a burst of static and a threatening survey. Your hair will be ambitious for days.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forest_liturgical_procession",
+    "locations": [
+      "forest"
+    ],
+    "weight": 7,
+    "text": "Through the trees comes a procession in gray robes, chanting in a tongue that sounds like a cathedral apologizing. They carry an enormous bell on poles. The bell is cracked. They seem very proud of it.",
+    "choices": [
+      {
+        "text": "Walk with them a while",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You carry a pole for an hour. The chant gets into your bones in a good way. At parting, they anoint your forehead with something that smells like rain.",
+            "effects": [
+              "hp +3",
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask about the crack",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "'The crack IS the relic,' explains a monk, delighted someone asked. The theology takes forty minutes. You understand none of it and feel better anyway.",
+            "effects": [
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "Wrong question. The procession stops. Forty hooded faces turn. You apologize to the bell directly, which turns out to be correct protocol.",
+            "effects": []
+          }
+        ]
+      },
+      {
+        "text": "Offer to fix the bell",
+        "requires": {
+          "item": "repair_kit"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The horror on their faces teaches you more about faith than any sermon. They pay you to NOT fix it, which is the strangest gold you've ever earned.",
+            "effects": [
+              "money +9"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "road_toll_war_veteran",
+    "locations": [
+      "road"
+    ],
+    "weight": 7,
+    "slots": {
+      "vet": "figure_alive"
+    },
+    "text": "An old soldier sits on a milestone, medals pinned to a coat two wars out of date. 'I served under {vet},' he says to no one, or to you, or to the road. 'Nobody remembers the siege. I remember the siege.'",
+    "choices": [
+      {
+        "text": "Sit and hear the whole siege",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Two hours. Mud, soup shortages, a heroic goat. By the end you remember the siege too, which is the entire point. He stands straighter when you leave.",
+            "effects": [
+              "stat wis +1",
+              "rep +3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Buy a medal off him",
+        "requires": {
+          "money": 6
+        },
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "He sells you the third-shiniest one and invents its story fresh for the occasion. Both of you know. Neither of you says.",
+            "effects": [
+              "money -6",
+              "loot common"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "He refuses your coin and PINS the medal on you instead. 'For listening.' You are now decorated for a war you weren't born for.",
+            "effects": [
+              "stat cha +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Claim you also served",
+        "check": {
+          "stat": "cha",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You improvise a company, a ridge, and a sergeant with a memorable mustache. He weeps, embraces you, and splits his pension ale money with a fellow veteran.",
+            "effects": [
+              "money +5",
+              "stat cha +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "He asks one question about the mess tents and your fiction collapses like a wet tent. The look he gives you will outlast several of your organs.",
+            "effects": [
+              "stat cha -1",
+              "rep -3"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "cave_spacer_pod",
+    "locations": [
+      "cave"
+    ],
+    "weight": 7,
+    "text": "Deep in the cave, a sky-metal pod stands upright, frosted glass fogged from inside. A panel blinks: 'OCCUPANT: 1. WAKE? Y/N.' Someone has scratched next to it: 'DONT'. Someone else has scratched: 'DO'.",
+    "choices": [
+      {
+        "text": "Press Y",
+        "outcomes": [
+          {
+            "weight": 50,
+            "text": "The pod hisses open. Inside: a very old, very annoyed tortoise wearing a tiny vest. It was NOT the original occupant. It bites you on principle and waddles off with centuries of secrets.",
+            "effects": [
+              "hp -2",
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "Empty. Long empty. But the occupant left their effects, and a note: 'gone to see the sky from the right side. take what you need.'",
+            "effects": [
+              "money +8",
+              "loot fine"
+            ]
+          },
+          {
+            "weight": 20,
+            "text": "The pod BOOTS instead of opening, runs a diagnostic on YOU, and prints a receipt declaring you '87% within parameters.' You keep the receipt. It feels important.",
+            "effects": [
+              "stat con +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Press N, respectfully",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The panel dims to a slow, sleeping pulse. 'MAYBE NEXT CENTURY,' it displays. You add your own scratch to the debate: 'NOT YET.'",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Wipe the fog and peek",
+        "check": {
+          "stat": "wis",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Through the glass: nothing but a folded uniform and a child's drawing of a sun. You leave the pod alone and take the long way out, thinking about it.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The glass fogs FROM YOUR SIDE as something inside exhales. You set a personal record for cave exit velocity.",
+            "effects": [
+              "hp -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_swamp_delegation",
+    "locations": [
+      "city"
+    ],
+    "weight": 7,
+    "text": "A delegation of swamp folk has set up in the square, selling jars of gray-green paste and glaring at anyone who wrinkles their nose. Their banner reads, in dripping letters: 'IT IS GOOD FOR YOU.'",
+    "choices": [
+      {
+        "text": "Buy a jar",
+        "requires": {
+          "money": 3
+        },
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "It tastes like a pond's opinion of you. It is also, infuriatingly, good for you.",
+            "effects": [
+              "money -3",
+              "hp +5"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "It tastes like a pond's opinion of you, and the pond was right. Still works though.",
+            "effects": [
+              "money -3",
+              "hp +4",
+              "stat cha -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask what's in it",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The eldest delegate says a word with four consecutive glottal stops and offers no translation. The younger one mouths 'you don't want to know' with real kindness.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Wrinkle your nose",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The glare you receive is generational. It carries the weight of every dried-out ancestor who was ever sneered at by city folk. You buy two jars out of pure shame.",
+            "effects": [
+              "money -6",
+              "hp +5"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tavern_wanted_poster_wall",
+    "locations": [
+      "tavern"
+    ],
+    "weight": 7,
+    "text": "The back wall of {site} is papered with wanted posters, some so old the faces have faded to smudges with bounties. Patrons play darts against the top row.",
+    "choices": [
+      {
+        "text": "Study the current bounties",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You memorize three faces and two rewards. Knowledge like this either makes you money or makes you careful. Ideally both.",
+            "effects": [
+              "stat int +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Check for your own face",
+        "requires": {
+          "trait": "wanted"
+        },
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "There you are, top row, mid-dartboard. The artist gave you better cheekbones. You quietly take it down and pocket it. One less copy in the world.",
+            "effects": []
+          },
+          {
+            "weight": 40,
+            "text": "There you are - and a patron looks from the poster to you, twice. You buy the whole bar a round with the speed of the truly motivated.",
+            "effects": [
+              "money -8"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Throw darts",
+        "outcomes": [
+          {
+            "weight": 50,
+            "text": "Triple bullseye into a smudge-faced outlaw from another era. The bar cheers. The house buys your next drink.",
+            "effects": [
+              "hp +1",
+              "stat dex +1"
+            ]
+          },
+          {
+            "weight": 50,
+            "text": "Your dart finds the wall, the doorframe, and very nearly the barkeep. You are handed a spoon and told it's spoon night.",
+            "effects": [
+              "stat cha -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dungeon_archive_room",
+    "locations": [
+      "dungeon"
+    ],
+    "weight": 8,
+    "text": "A room of rotted shelves and one miraculously dry cabinet, stamped with the seal of a faction you half-recognize. Records survive in here. Records, and the smell of very old decisions.",
+    "choices": [
+      {
+        "text": "Read the records",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Tax rolls, troop counts, a love letter misfiled under 'GRAIN.' History from the inside, unglamorous and real.",
+            "effects": [
+              "stat int +1",
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Take documents to sell",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You select the pages with names still worth blackmail... that is, HISTORICAL VALUE. Collectors will pay handsomely.",
+            "effects": [
+              "money +11"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You grab the impressive-looking ones. They turn out to be 300-year-old inventory lists for socks. Even the rats judge your curation.",
+            "effects": []
+          }
+        ]
+      },
+      {
+        "text": "Burn it all. Some history should rest",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The cabinet goes up like a confession. Somewhere, several old grudges lose their evidence. The dungeon feels lighter. So do you.",
+            "effects": [
+              "stat wis +1",
+              "rep +2"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "road_goblin_moving_day",
+    "locations": [
+      "road"
+    ],
+    "weight": 7,
+    "text": "An entire goblin warren is migrating: forty goblins, one road, furniture on backs, a grandfather clock carried by six of them like a fallen king. A scooter outrider waves you to the shoulder.",
+    "choices": [
+      {
+        "text": "Help carry something",
+        "outcomes": [
+          {
+            "weight": 70,
+            "text": "You take a corner of the clock for three miles. Goblin moving songs are 90% complaints and 10% threats against stairs. At the rest stop they feed you gratitude stew, which is better than it sounds.",
+            "effects": [
+              "hp +2",
+              "rep +5"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "They hand you the jar shelf. THE JAR SHELF. You learn what's in goblin jars. You carry it anyway, forever changed.",
+            "effects": [
+              "stat wis +1",
+              "rep +4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask why they're moving",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "'Landlord,' says the matriarch, and spits with impressive range. Nothing more needs saying. You spit too, in solidarity.",
+            "effects": [
+              "rep +2"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "'The old warren WOKE UP,' says a small goblin, and is immediately shushed by four adults. You walk a little faster after that.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sell them supplies at migration prices",
+        "requires": {
+          "item": "rations"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Forty hungry goblins, one seller. You could gouge. You charge fair and they remember it - goblins keep excellent books on who gouges.",
+            "effects": [
+              "removeitem rations",
+              "money +6",
+              "rep +3"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forest_hermit_exchange",
+    "locations": [
+      "forest"
+    ],
+    "weight": 7,
+    "text": "A hermit's hut with a shelf out front: 'TAKE A THING, LEAVE A THING. NO SHOUTING.' The current inventory: a boot, a jar of teeth, a small excellent painting of a duck, and a bell you are certain rang by itself.",
+    "choices": [
+      {
+        "text": "Trade something in",
+        "requires": {
+          "item": "lucky_rock"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Rock for duck painting: the deal of the century. From inside the hut, a satisfied grunt. The duck follows you with its eyes in a comforting way.",
+            "effects": [
+              "removeitem lucky_rock",
+              "loot common"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Take the bell",
+        "outcomes": [
+          {
+            "weight": 50,
+            "text": "You leave your second-best regret on the shelf in exchange (the shelf accepts abstractions). The bell rings when danger is near, or when it's bored. Same ring.",
+            "effects": [
+              "item lucky_rock"
+            ]
+          },
+          {
+            "weight": 50,
+            "text": "The bell SCREAMS. From the hut: 'NO SHOUTING!' You put it back. The bell smirks, audibly. Your nerves file a complaint.",
+            "effects": [
+              "hp -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Knock and say hello",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Long silence. Then, under the door slides a card: 'no. but thank you for asking properly.' You have been declined with more warmth than most people greet you.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_street_food_gauntlet",
+    "locations": [
+      "city"
+    ],
+    "weight": 8,
+    "text": "The food street: forty stalls, one alley, every vendor shouting. Skewers of what is PROBABLY chicken. A soup that glows. A pastry with a waiting list. Your stomach seizes executive control.",
+    "choices": [
+      {
+        "text": "Eat dangerously, stall by stall",
+        "requires": {
+          "money": 4
+        },
+        "outcomes": [
+          {
+            "weight": 55,
+            "text": "The probably-chicken: excellent. The glowing soup: warm going down, luminous forever. The mystery skewer: best decision of your week.",
+            "effects": [
+              "money -4",
+              "hp +6"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "Stall seven defeats you. Nobody gets through stall seven. You are carried to a bench by strangers who have all been there.",
+            "effects": [
+              "money -4",
+              "hp -2",
+              "stat con +1"
+            ]
+          },
+          {
+            "weight": 15,
+            "text": "The glowing soup GLOWS BACK. You feel incredible. Strangers ask if you're okay. You've never been this okay.",
+            "effects": [
+              "money -4",
+              "hp +4",
+              "trait +glowing"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Wait-list for the famous pastry",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Two hours in line. Worth it. You would testify to this under oath. You nearly weep into the crumbs.",
+            "effects": [
+              "hp +3",
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Just inhale the smells for free",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The vendors know your kind. One takes pity and hands you a broken skewer 'for quality control.' Dignity: negotiable. Skewer: delicious.",
+            "effects": [
+              "hp +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tavern_arm_wrestling_league",
+    "locations": [
+      "tavern"
+    ],
+    "weight": 7,
+    "when": [
+      "day > 5"
+    ],
+    "text": "It's league night at {site}. A bracket board, folding chairs, a referee with a whistle and unshakable authority. Grundle's name is at the top, undefeated across three taverns. There's an open slot in the bracket.",
+    "choices": [
+      {
+        "text": "Enter the bracket",
+        "check": {
+          "stat": "str",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 70,
+            "text": "You wrestle through three rounds to the Grundle semifinal, where you lose honorably and instantly. Third place pays actual money and eternal league standing.",
+            "effects": [
+              "money +9",
+              "stat cha +1"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "GRUNDLE FORFEITS - a scheduling conflict with another bar's league. You win the bracket by default. The trophy is a bronzed elbow. You will treasure it always.",
+            "effects": [
+              "money +15",
+              "loot common"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "Round one. Eight seconds. Your opponent apologizes WHILE winning, which is somehow worse. League rules entitle you to a consolation sandwich.",
+            "effects": [
+              "hp +1",
+              "stat cha -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Bookmake the bracket",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You set lines, take bets, and clean up when the favorite chokes in the quarters. The referee looks the other way for a modest consideration.",
+            "effects": [
+              "money +12",
+              "money -2"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You misprice Grundle (never misprice Grundle) and pay out to half the tavern. An expensive education in golem athletics.",
+            "effects": [
+              "money -10"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Officiate as a volunteer",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You call elbows all night with escalating confidence. By the final you have a whistle of your own and the referee calls you 'son' regardless of your age or relation.",
+            "effects": [
+              "stat cha +1",
+              "rep +4"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dungeon_wine_cellar",
+    "locations": [
+      "dungeon"
+    ],
+    "weight": 7,
+    "text": "A collapsed manor's cellar, racks intact. Bottles from before the wars, labels in a beautiful dead hand. One rack is chained and padlocked, which in your experience means either the best wine or the worst mistake.",
+    "choices": [
+      {
+        "text": "Take the good unlocked bottles",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Six bottles of pre-war vintage. Collectors will duel over these. You wrap them in your spare shirt like the treasure they are.",
+            "effects": [
+              "money +12"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Pick the padlock",
+        "requires": {
+          "item": "lockpick"
+        },
+        "outcomes": [
+          {
+            "weight": 55,
+            "text": "The chained rack holds ONE bottle, unlabeled, humming faintly. You sell it to the weirdest merchant you know for the strangest money you've seen.",
+            "effects": [
+              "money +18",
+              "stat wis -1"
+            ]
+          },
+          {
+            "weight": 45,
+            "text": "The bottle behind the chain is empty. The chain was to keep something IN the bottle. It isn't in the bottle anymore. It's had time to think about things.",
+            "effects": [
+              "hp -4",
+              "trait +cursed"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Drink a toast to the dead house",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You pour one glass, raise it to the fallen rafters, and drink. The vintage is extraordinary. For a moment the cellar feels like a dinner party instead of a grave.",
+            "effects": [
+              "hp +3",
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "road_pilgrim_bus",
+    "locations": [
+      "road"
+    ],
+    "weight": 6,
+    "text": "A wagon converted for pilgrims rattles past, gray-robed passengers packed in like devout cargo. It stops. A window slides open. 'ROOM FOR ONE,' intones the driver. 'DESTINATION: WHEREVER IT IS ALL GOING.'",
+    "choices": [
+      {
+        "text": "Board the pilgrim wagon",
+        "requires": {
+          "money": 3
+        },
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "Four hours of chanting, shared bread, and a window seat on the world. They let you off at the next crossroads spiritually rinsed.",
+            "effects": [
+              "money -3",
+              "hp +4"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "The chant has seventy verses and you learn all of them against your will. Weeks from now you will hum verse forty in a dungeon and feel inexplicably safe.",
+            "effects": [
+              "money -3",
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask where it is all going",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The driver looks at you for a long moment. 'Forward,' he says, and drives forward. Unfalsifiable. Deeply unsatisfying. You think about it for days.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Race the wagon on foot",
+        "check": {
+          "stat": "con",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You keep pace for a full mile while the pilgrims chant FASTER in encouragement. When you finally pull ahead, the whole wagon cheers. Blessed, sweaty victory.",
+            "effects": [
+              "stat con +1",
+              "hp -1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The wagon disappears over the hill to the sound of seventy voices harmonizing on the word 'slow.'",
+            "effects": [
+              "hp -2"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "cave_echo_market",
+    "locations": [
+      "cave"
+    ],
+    "weight": 6,
+    "text": "A cavern where echoes gather like moths. Traders in the know come here to sell SOUNDS: a dead singer's high note, a grandmother's laugh, the exact crunch of autumn. A blind broker sits at a stone desk, listening to inventory.",
+    "choices": [
+      {
+        "text": "Sell a sound of your own",
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "You give up the sound of your first door closing behind you. The broker pays well. You won't miss it, you think. You think.",
+            "effects": [
+              "money +10",
+              "stat wis -1"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "You offer your best sigh. The broker auditions it, nods slowly: 'quality weariness.' Premium rate.",
+            "effects": [
+              "money +7"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Buy the autumn crunch",
+        "requires": {
+          "money": 5
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "It comes in a shell. Hold it to your ear: October, forever. Some purchases are stupid and correct at the same time.",
+            "effects": [
+              "money -5",
+              "hp +3",
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Just listen to the stock",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The broker plays you samples: rain on a tent, a crowd gasping, someone saying a name you almost recognize. 'Browsing is free,' he says. 'Feeling things costs extra.' He doesn't charge you. He should have.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "city_beast_insurance",
+    "locations": [
+      "city"
+    ],
+    "weight": 7,
+    "text": "A stall under a banner: 'BEAST ATTACK INSURANCE. COMPREHENSIVE. ACTS OF WYRM INCLUDED.' The actuary has a wooden leg, an eyepatch, and the serene confidence of someone whose premiums are working.",
+    "choices": [
+      {
+        "text": "Buy a policy",
+        "requires": {
+          "money": 6
+        },
+        "outcomes": [
+          {
+            "weight": 70,
+            "text": "You are now covered against mauling, hoarding-adjacent losses, and 'gaze-related petrification (partial).' The certificate is beautiful. The peace of mind is real, if actuarially dubious.",
+            "effects": [
+              "money -6",
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "Reading the policy, you find clause 9: coverage void if you 'approach, taunt, or befriend' a beast. That's... that's your whole career. He will not refund you. Clause 12.",
+            "effects": [
+              "money -6"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask about the leg and the eyepatch",
+        "check": {
+          "stat": "cha",
+          "dc": 11
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "'Uninsured,' he says simply, tapping the wood. The sales pitch of the century. You get a survivor's discount for listening and a genuinely useful map of lair territories.",
+            "effects": [
+              "stat int +1",
+              "stat wis +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "'Shark,' he says flatly, in a city three weeks from any coast. You have offended an actuary. Your premium quote triples on the spot.",
+            "effects": []
+          }
+        ]
+      },
+      {
+        "text": "File a fraudulent claim",
+        "check": {
+          "stat": "int",
+          "dc": 14
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Your account of a 'diregoose incident' is so detailed, so vivid, that he pays out while openly admiring the craftsmanship. 'Come work for me,' he says. You take the payout instead.",
+            "effects": [
+              "money +13",
+              "rep -5"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "He asks which DIRECTION the diregoose attacked from. There is a correct answer. You do not know it. There is a fraud fee. You do pay it.",
+            "effects": [
+              "money -8",
+              "rep -4"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forest_old_battlefield",
+    "locations": [
+      "forest",
+      "road"
+    ],
+    "weight": 7,
+    "slots": {
+      "gone": "figure_dead"
+    },
+    "text": "The forest opens onto old earthworks: a battlefield gone green, trenches soft with moss. A stone marker lists the fallen. Most names are weathered out. One is legible: {gone}.",
+    "choices": [
+      {
+        "text": "Search the earthworks",
+        "check": {
+          "stat": "wis",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Under the moss: buckles, a rusted blade-hilt, a purse the looters missed by inches and centuries. The forest kept it for whoever would look carefully.",
+            "effects": [
+              "money +9",
+              "loot common"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You find the one section of trench that still remembers how to collapse. The battlefield claims one more ankle, briefly.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Clean the marker stone",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "An hour with moss and grit under your nails. Four more names emerge into the light. Somewhere, four families' stories get their footnote back. Nobody pays you. It's the best work you do all week.",
+            "effects": [
+              "stat wis +1",
+              "rep +3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Camp here for the night",
+        "check": {
+          "stat": "con",
+          "dc": 10
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The quietest sleep you've had in weeks. Whatever's here doesn't mind company that asks permission first, which you did, out loud, feeling foolish. You woke up un-eaten. Not foolish.",
+            "effects": [
+              "hp +5"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "All night: marching. No feet, just the SOUND. You leave at dawn with gray hairs you intend to lie about.",
+            "effects": [
+              "hp -1",
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tavern_recipe_feud",
+    "locations": [
+      "tavern"
+    ],
+    "weight": 7,
+    "text": "Two cooks at {site} are dueling with ladles - actually dueling - over whose stew is canonical. The barkeep referees with visible exhaustion. Both stews simmer, and both cooks turn to YOU. 'Neutral tongue! JUDGE.'",
+    "choices": [
+      {
+        "text": "Judge honestly",
+        "check": {
+          "stat": "wis",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You articulate the difference - one has depth, one has courage - and award a split decision so diplomatic both cooks claim victory. You eat free forever, in this one specific tavern.",
+            "effects": [
+              "hp +4",
+              "stat cha +1",
+              "rep +4"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You pick a winner. The loser's ladle finds you at the speed of grief. The winner's gratitude does not cover medical.",
+            "effects": [
+              "hp -2",
+              "hp +2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Declare both stews inferior to your grandmother's",
+        "outcomes": [
+          {
+            "weight": 50,
+            "text": "The cooks UNITE against a common enemy. They demand the recipe. You have no recipe. You have no grandmother of note. You improvise one from pure fear, and it's - it's actually good?",
+            "effects": [
+              "stat int +1",
+              "hp +2"
+            ]
+          },
+          {
+            "weight": 50,
+            "text": "The cooks unite against a common enemy: your face. Two ladles. One lesson.",
+            "effects": [
+              "hp -4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Steal both recipes during the chaos",
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Two recipe cards, one pocket, zero witnesses. Sold separately to rival taverns in the next region, they fund a week of your life.",
+            "effects": [
+              "money +11",
+              "rep -3"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "Both cooks catch you mid-lift. The feud is OVER. The alliance is AGAINST YOU. The stews, you learn, are excellent projectiles.",
+            "effects": [
+              "hp -3",
+              "rep -5"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dungeon_finale_throne_squatter",
+    "locations": [
+      "dungeon_finale"
+    ],
+    "text": "The throne room. The throne. And ON the throne: a very comfortable goat. It has clearly been here for years. Around it, offerings - the dungeon's denizens have drawn their own conclusions about what sits on thrones.",
+    "choices": [
+      {
+        "text": "Pay respects to the goat king",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You bow. The goat regards you with rectangular-pupiled majesty and permits you to take from the offering pile. Wisest monarch you've ever dealt with. Lowest taxes, too.",
+            "effects": [
+              "money +14",
+              "loot common",
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Depose the goat",
+        "check": {
+          "stat": "str",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The goat yields the throne with terrifying grace, as if it had already planned to abdicate TODAY, SPECIFICALLY. You sit. It's cold. The offerings stop immediately. The goat watches you learn.",
+            "effects": [
+              "money +10",
+              "stat wis +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The headbutt carries the authority of an anointed sovereign. You are escorted from the throne room by momentum.",
+            "effects": [
+              "hp -5"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Leave an offering yourself",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You add your second-best item to the pile. The goat chews thoughtfully and nudges the BEST of the old offerings toward you with one hoof. Court favor, fairly traded.",
+            "effects": [
+              "money -2",
+              "loot fine"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -37,7 +37,7 @@ static const std::set<std::string> kStats = {"str", "dex", "con", "int", "wis", 
 
 // Tokens the engine injects at runtime.
 static const std::set<std::string> kBuiltinCtx = {"site", "world", "placeword",
-                                                  "year", "actor", "trait",
+                                                  "year", "era", "actor", "trait",
                                                   "profession", "faction",
                                                   "faction2", "artifact",
                                                   "beast", "extra"};

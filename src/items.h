@@ -32,6 +32,9 @@ class ItemDb {
 public:
     void loadItemsJsonText(const char* jsonText);
     void loadQuirksJsonText(const char* jsonText);
+    // Weapon/armor families from material x type x tier tables — the recipe
+    // philosophy applied to gear (ROADMAP P4).
+    void generateFamilies();
 
     bool has(const std::string& id) const { return templates_.count(id) > 0; }
     // Quirks are NOT rolled here: the Game binds them, because every quirk

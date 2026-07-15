@@ -13,9 +13,15 @@
 
 struct Faction {
     std::string name;
-    int home = -1; // region index
+    int home = -1;    // region index
+    int culture = 0;  // Culture enum: names its figures, colors its flavor
     std::vector<int> rel; // relation to each other faction, -100..100
 };
+
+// The deep timeline runs 1,000 years through five named eras, each bending
+// the simulation's probabilities (ROADMAP P4 §2.2).
+constexpr int kHistoryYears = 1000;
+const char* EraName(int year);
 
 struct Figure {
     std::string name;

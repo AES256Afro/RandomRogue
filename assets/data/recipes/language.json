@@ -1,15 +1,51 @@
 {
-  "syllables": [
-    "ka", "zak", "ur", "dim", "mor", "tan", "vel", "ost", "rin", "dak",
-    "bel", "gor", "ith", "lun", "mar", "nev", "ol", "pra", "quil", "ras",
-    "sol", "thu", "vor", "wyn", "xan", "yor", "zem", "fen", "gri", "hul",
-    "isk", "jor", "kel", "ash", "om", "esk", "tar", "ul", "brim", "cor",
-    "dra", "eth", "fal", "gan", "hesk", "ir", "juk", "krag", "lorn", "mup",
-    "nak", "oth", "pel", "qam", "rud", "skel", "tov", "umb", "vask", "wil",
-    "yeth", "zon", "af", "blek", "chu", "dov", "erg", "fyn", "glim", "hax",
-    "iv", "jen", "kro", "lim", "mmo", "nul", "orv", "pik", "rethe", "sna",
-    "tul", "uz", "vrek", "wob", "xil", "yam", "zur", "bre", "clo", "dun"
-  ],
+  "cultures": {
+    "old": {
+      "syllables": [
+        "ka", "zak", "ur", "dim", "mor", "tan", "vel", "ost", "rin", "dak",
+        "bel", "gor", "ith", "lun", "mar", "nev", "ol", "pra", "quil", "ras",
+        "sol", "thu", "vor", "wyn", "xan", "yor", "zem", "fen", "gri", "hul",
+        "isk", "jor", "kel", "ash", "om", "esk", "tar", "ul", "brim", "cor",
+        "dra", "eth", "fal", "gan", "hesk", "ir", "juk", "krag", "lorn", "mup",
+        "nak", "oth", "pel", "qam", "rud", "skel", "tov", "umb", "vask", "wil",
+        "yeth", "zon", "af", "blek", "chu", "dov", "erg", "fyn", "glim", "hax",
+        "iv", "jen", "kro", "lim", "mmo", "nul", "orv", "pik", "rethe", "sna",
+        "tul", "uz", "vrek", "wob", "xil", "yam", "zur", "bre", "clo", "dun"
+      ]
+    },
+    "goblin": {
+      "syllables": [
+        "grak", "zig", "snik", "bog", "krut", "gnash", "skab", "riz", "glok",
+        "vex", "grub", "zag", "nix", "krak", "spit", "gob", "runk", "tik",
+        "wark", "zug", "blat", "skri", "gnar", "drek", "fizz", "klep", "mog",
+        "narg", "prak", "quig", "razz", "skug", "trog", "urk", "yip", "zonk"
+      ]
+    },
+    "spacer": {
+      "syllables": [
+        "vex", "cor", "tek", "dyn", "lux", "syn", "nex", "zed", "arc", "pro",
+        "omni", "meta", "quan", "hex", "volt", "ion", "gen", "neo", "apex",
+        "flux", "beta", "cryo", "delt", "ferro", "giga", "helio", "iso",
+        "kilo", "mono", "nano", "octo", "poly", "servo", "turbo", "ultra", "vecto"
+      ]
+    },
+    "swamp": {
+      "syllables": [
+        "glub", "murr", "bogh", "slosh", "mire", "gurg", "ooze", "fenn",
+        "drip", "squel", "muck", "blub", "croak", "damp", "eely", "frogg",
+        "gloop", "humid", "lurk", "moss", "newt", "plop", "quag", "reed",
+        "silt", "toad", "wallow", "wort", "yug", "zwamp"
+      ]
+    },
+    "liturgical": {
+      "syllables": [
+        "ael", "ora", "ith", "elu", "sanc", "vesper", "lumen", "os", "ave",
+        "cantus", "dei", "ecc", "fidel", "gloria", "hymn", "icon", "jubil",
+        "kyrie", "laud", "missa", "nunc", "opus", "pax", "quies", "rex",
+        "sanctus", "tenebrae", "unum", "vox", "zelo"
+      ]
+    }
+  },
   "nouns": [
     "hammer", "coin", "oath", "salt", "wound", "crow", "ember", "thorn",
     "gate", "hollow", "spire", "fen", "ash", "iron", "moon", "wolf",

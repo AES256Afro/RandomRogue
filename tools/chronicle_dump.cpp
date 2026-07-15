@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -61,8 +62,15 @@ int main(int argc, char** argv) {
         printf("%s, of %s\n", f.name.c_str(), world.regions[f.home].name.c_str());
 
     printf("\n---- THE CHRONICLE (%d entries) ----\n", (int)h.chron.size());
-    for (auto& e : h.chron)
+    const char* lastEra = "";
+    for (auto& e : h.chron) {
+        const char* era = EraName(e.year);
+        if (strcmp(era, lastEra) != 0) {
+            printf("\n======== %s ========\n", era);
+            lastEra = era;
+        }
         printf("%s\n", RenderChronEntry(e, h, world, grammar, rng).c_str());
+    }
 
     printf("\n---- SURVIVING ARTIFACTS ----\n");
     for (auto& a : h.artifacts)

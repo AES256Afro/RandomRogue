@@ -1,7 +1,37 @@
 #include "history.h"
 #include <algorithm>
 
+// The five ages. Their fingerprints end up in every rumor and ruin.
+const char* EraName(int year) {
+    if (year <= 250) return "the Founding Age";
+    if (year <= 450) return "the Long Peace";
+    if (year <= 650) return "the Sundering";
+    if (year <= 750) return "the Sky-Fall Century";
+    return "the Present Age";
+}
+
 namespace {
+
+struct EraMod {
+    int war;      // percent multiplier (100 = baseline)
+    int trade;
+    int culturey; // books & monuments
+    int plague;
+    int debris;
+};
+
+EraMod eraMod(int year) {
+    if (year <= 250) return {100, 100, 100, 100, 100};   // Founding
+    if (year <= 450) return {15, 220, 250, 80, 100};     // Long Peace
+    if (year <= 650) return {300, 40, 60, 160, 100};     // Sundering
+    if (year <= 750) return {80, 100, 120, 100, 900};    // Sky-Fall Century
+    return {100, 130, 150, 100, 60};                     // Present Age
+}
+
+int scaled(int basePct, int mult) {
+    int v = basePct * mult / 100;
+    return v < 0 ? 0 : (v > 95 ? 95 : v);
+}
 
 const std::vector<std::string>& traits() {
     static const std::vector<std::string> v = {
@@ -64,7 +94,9 @@ struct Sim {
 
     void newFigure(int faction, bool announce) {
         Figure f;
-        f.name = forge.person(rng).conlang;
+        int culture = (faction >= 0 && faction < (int)h.factions.size())
+                          ? h.factions[faction].culture : CULT_OLD;
+        f.name = forge.person(rng, culture).conlang;
         f.faction = faction;
         f.trait = rng.pick(traits());
         f.profession = rng.pick(professions());
@@ -82,9 +114,16 @@ struct Sim {
         std::vector<int> homes;
         for (int i = 0; i < nf; i++) {
             Faction f;
+            // Cultures: mostly old-tongue, with a goblin band, swamp folk,
+            // or a liturgical order in the mix. Spacers only arrive with
+            // the Sky-Fall (their names come via crash sites, not banners).
+            static const int kCulturePool[6] = {CULT_OLD, CULT_OLD, CULT_OLD,
+                                                CULT_GOBLIN, CULT_SWAMP,
+                                                CULT_LITURGICAL};
+            f.culture = kCulturePool[rng.range(0, 5)];
             for (int attempt = 0; attempt < 12; attempt++) {
-                f.name = g.expand("{faction_name}", rng,
-                                  {{"placeword", forge.place(rng).conlang}});
+                std::string placeword = forge.place(rng, f.culture).conlang;
+                f.name = g.expand("{faction_name}", rng, {{"placeword", placeword}});
                 bool taken = false;
                 for (auto& other : h.factions)
                     if (other.name == f.name) taken = true;
@@ -174,6 +213,7 @@ struct Sim {
             e.actor = fi;
             e.extra = g.expand("{book_title}", rng);
         } else if (p == "merchant") {
+            if (!rng.chance(scaled(60, eraMod(year).trade))) return;
             int other = rng.range(0, (int)h.factions.size() - 1);
             if (other == f.faction) return;
             h.factions[f.faction].rel[other] += 15;
@@ -210,7 +250,8 @@ struct Sim {
                 bool atWar = false;
                 for (auto& war : wars)
                     if ((war.a == a && war.b == b)) atWar = true;
-                if (!atWar && h.factions[a].rel[b] < -45 && rng.chance(30)) {
+                if (!atWar && h.factions[a].rel[b] < -45 &&
+                    rng.chance(scaled(30, eraMod(year).war))) {
                     ChronEntry& e = log("war_declared");
                     e.faction = a;
                     e.faction2 = b;
@@ -256,25 +297,42 @@ struct Sim {
     }
 
     void disasters() {
-        if (rng.chance(2)) {
+        EraMod mod = eraMod(year);
+        if (rng.chance(scaled(2, mod.plague))) {
             std::string plague = g.expand("{plague_name}", rng);
             ChronEntry& e = log("plague");
             e.extra = plague;
             for (auto& f : h.figures)
                 if (f.died < 0 && rng.chance(20)) f.died = year;
         }
-        if (rng.chance(1)) {
-            // Sky debris: sci-fi enters the world, canonically.
+        int crashCount = 0;
+        for (auto& s : w.sites)
+            if (s.type == "crash") crashCount++;
+        if (crashCount < 8 && rng.chance(scaled(1, mod.debris))) {
+            // Sky debris: sci-fi enters the world, canonically. During the
+            // Sky-Fall Century it POURS. Crash sites carry spacer names.
             Site s;
             s.type = "crash";
             s.deck = "dungeon";
             s.region = rng.range(0, (int)w.regions.size() - 1);
             s.name = g.expand("{crash_name}", rng,
-                              {{"placeword", forge.place(rng).conlang}});
+                              {{"placeword", forge.place(rng, CULT_SPACER).conlang}});
             w.regions[s.region].sites.push_back((int)w.sites.size());
             w.sites.push_back(s);
             ChronEntry& e = log("sky_debris");
             e.site = (int)w.sites.size() - 1;
+        }
+        // Old beasts die; new ones rise, or nothing would be left to slay.
+        int aliveBeasts = 0;
+        for (auto& b : h.beasts)
+            if (b.died < 0) aliveBeasts++;
+        if (aliveBeasts < 4 && rng.chance(2)) {
+            Beast b;
+            b.name = g.expand("{beast_name}", rng);
+            b.region = rng.range(0, (int)w.regions.size() - 1);
+            h.beasts.push_back(b);
+            ChronEntry& e = log("beast_risen");
+            e.beast = (int)h.beasts.size() - 1;
         }
         for (int bi = 0; bi < (int)h.beasts.size(); bi++) {
             if (h.beasts[bi].died >= 0 || !rng.chance(4)) continue;
@@ -289,9 +347,10 @@ struct Sim {
     }
 
     void society() {
+        EraMod mod = eraMod(year);
         // Monuments: pure flavor, and future rumor fodder.
         for (int fa = 0; fa < (int)h.factions.size(); fa++) {
-            if (!rng.chance(1)) continue;
+            if (!rng.chance(scaled(1, mod.culturey))) continue;
             ChronEntry& e = log("monument_built");
             e.faction = fa;
             e.extra = g.expand("{monument_name}", rng);
@@ -366,7 +425,7 @@ History SimulateHistory(World& world, uint64_t seed, const Grammar& grammar,
     History h;
     Sim sim(world, h, seed, grammar, forge);
     sim.setup();
-    sim.run(1, 250);
+    sim.run(1, kHistoryYears);
     return h;
 }
 
@@ -499,6 +558,7 @@ std::string RenderChronEntry(const ChronEntry& e, const History& h, const World&
                              const Grammar& grammar, Rng& rng) {
     Grammar::Ctx ctx;
     ctx["year"] = std::to_string(e.year);
+    ctx["era"] = EraName(e.year);
     ctx["extra"] = e.extra;
     if (e.actor >= 0 && e.actor < (int)h.figures.size()) {
         ctx["actor"] = h.figures[e.actor].name;
