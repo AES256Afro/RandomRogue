@@ -277,3 +277,29 @@ GET /__scores?day=N, GET /__ghosts?day=N&n=3.
   becomes readable when you know enough words.
 - **Death card PNG** - SAVE CARD on the death screen exports a 3x PNG
   (browser download / next to the exe). F11 screenshots any screen.
+
+---
+
+## Release 5 (shipped) - The Land, the Gods, the Watchers
+
+- **Biome decks** - swamp, mountains, and coast each have their own
+  event deck (8 events apiece); wandering draws from the land itself,
+  with graceful fallback when a small deck runs dry.
+- **The Book of You** - YOUR SAGA on the title: every stored life
+  across every remembered world as chapters, with portraits, days,
+  death sites, epitaphs, and profile totals (LoadAllLegacy).
+- **Divine favor** - the `favor` verb banks devotion with the god an
+  event summoned (shrines, temples, pilgrim roads in gods.json);
+  5+ favor buys one miracle per life - the god spends it all to put
+  you back up at 3 HP. Deep blasphemy converts to a curse.
+- **Run replays** - every choice is journaled (day, site, choice,
+  outcome; capped 240 steps); daily deaths upload the journey with
+  the score (D1 `journey` column, /__replay endpoint); the title's
+  "today's fallen" line is clickable and pages through the fall,
+  card by card, with NEXT FALLEN to cycle victims.
+- **Live deeds feed** - beast kills and completed lives POST to
+  /__deed; daily runs pull /__deeds and surface real players' acts
+  as "WORD ARRIVES" news lines mid-run (deeds table in D1).
+- **PWA** - manifest, pixel icons, and a network-first service worker;
+  random-rogue.com/play installs to the iPad home screen and plays
+  offline after the first visit. Live endpoints are never cached.

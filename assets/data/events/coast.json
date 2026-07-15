@@ -1,0 +1,198 @@
+[
+  {
+    "id": "coast_message_bottles",
+    "locations": ["coast"],
+    "weight": 14,
+    "slots": { "rumor": "chronicle_random" },
+    "text": "The tide has organized its correspondence: eleven bottles in a neat line on the wrack, each with paper inside. The sea does this every few years, the locals say - a delivery, all at once, of everything it's been holding. The nearest bottle's note is legible through the glass: \"{rumor}\"",
+    "choices": [
+      { "text": "Open them all",
+        "outcomes": [
+          { "weight": 70, "text": "Love letters, confessions, one recipe, two treasure maps that contradict each other, and a bank note from an institution that still, incredibly, exists and honors it. The sea's mailbag pays better than most honest work.", "effects": ["money +10", "stat int +1"] },
+          { "weight": 30, "text": "Ten letters of heartbreak so concentrated you have to sit down, and one note reading only 'STOP OPENING THESE.' You re-cork that one and throw it back hard.", "effects": ["stat wis +1"] }
+        ] },
+      { "text": "Reply to one", "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You pick the saddest one and write back - properly, kindly, the answer the sender needed decades ago. Sealed, corked, thrown past the breakers. The tide takes it with unusual care. You will never know. That's not why you did it.", "effects": ["stat cha +1", "stat wis +1", "trait +blessed"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your reply is heartfelt and the throw is not: the bottle returns on the next wave and beans you. The sea has standards for its couriers.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Sell them unopened as curiosities",
+        "outcomes": [
+          { "weight": 100, "text": "Sealed sea-mail moves briskly - collectors pay for the not-knowing, which is the whole product. You keep the smallest bottle for yourself, unopened, for reasons you decline to examine.", "effects": ["money +8"] }
+        ] }
+    ]
+  },
+  {
+    "id": "coast_wreckers_lantern",
+    "locations": ["coast"],
+    "weight": 13,
+    "text": "On the headland at dusk: a false lighthouse. A wrecker's lantern, hung to lure ships onto the teeth below, and by its light you can see them working - three figures readying hooks, and out at sea, a merchantman already turning toward the lie.",
+    "choices": [
+      { "text": "Douse the lantern", "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You come over the rocks quiet as owls and put the light out with one motion. The dark saves the ship - you hear it correcting course, bell ringing confusion - and the wreckers scatter from what they assume is the law. The merchantman's grateful captain finds you at dawn.", "effects": ["money +14", "rep +6", "stat dex +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "A loose rock announces you like a herald. The wreckers are professionals about violence in a way you were hoping to avoid, and you leave with your skin and little else - but the scuffle knocks the lantern over anyway. The ship turns away. You'll take it.", "effects": ["hp -6", "rep +3"] }
+        ] },
+      { "text": "Demand a cut", "check": { "stat": "cha", "dc": 14 },
+        "success": [
+          { "weight": 100, "text": "You stroll into the lantern-light like a shift supervisor and name a percentage. The sheer administrative confidence of it works: they pay you off to leave. You take the money, walk over the hill, and douse their lantern from the far side anyway. Ethics with a signing bonus.", "effects": ["money +12", "rep +2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "'A CUT?' The negotiation becomes a footrace, which you win, barely, minus your coin purse, which departed as a distraction. Effective. Expensive.", "effects": ["money -8", "hp -2"] }
+        ] },
+      { "text": "Not your ship, not your rocks",
+        "outcomes": [
+          { "weight": 100, "text": "You walk on in the dark. Behind you, eventually, the sounds a ship makes when a lie succeeds. The coast road is long, and it is longer that night, and the tavern ale at the end of it tastes like nothing at all.", "effects": ["stat wis -1", "money +0"] }
+        ] }
+    ]
+  },
+  {
+    "id": "coast_tidepool_oracle",
+    "locations": ["coast"],
+    "weight": 12,
+    "slots": { "god": "god" },
+    "text": "A tidepool the size of a table, and the octopus in it has arranged shells around the rim in a pattern that took planning. Locals leave questions written on slate and small crabs as payment. The shrine-keeper - a retired fisherman with one arm - confirms the pool speaks for {god}, 'or at least they've never sued.'",
+    "choices": [
+      { "text": "Pay a crab, ask about your road ahead", "requires": { "money": 2 },
+        "outcomes": [
+          { "weight": 100, "text": "The octopus reads your slate, thinks with its whole body, and rearranges the shells into something you almost understand - and then, seeing your face, into something you DO: a warning, specific, about a place you were absolutely going to sleep tomorrow night. You adjust. You tip a second crab.", "effects": ["money -2", "stat wis +2"] }
+        ] },
+      { "text": "Ask it the question you don't say out loud",
+        "outcomes": [
+          { "weight": 55, "text": "You write nothing. You just sit at the rim. The octopus looks at you for a long time with an eye like wet amber, then reaches up and pats your hand once, precisely, and returns to its shells. It is the correct answer. You cry a little on a beautiful beach, which is allowed.", "effects": ["hp +4", "stat wis +1"] },
+          { "weight": 45, "text": "The octopus flips your unwritten question back at you by squirting seawater directly into your face. The shrine-keeper nods sagely: 'That's the other answer he does.'", "effects": [] }
+        ] },
+      { "text": "Study the shell patterns", "check": { "stat": "int", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "It's syntax. The shells are a pidgin of old tongue and tide-logic, and once you see the grammar you can't unsee it. You fill six pages. The octopus watches you write with what you'd swear is professional courtesy, one scholar to another.", "effects": ["learn 4", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You lean in too far for a better look at the pattern. The pattern, as it were, comes to you. Octopuses are stronger than they look and funnier than they need to be.", "effects": ["hp -2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "coast_salvage_rights",
+    "locations": ["coast"],
+    "weight": 12,
+    "text": "A wreck on the bar at low tide, ribs up, hull split like bread - and around it, a small war of etiquette. Two salvage crews arrived at the same moment, and coastal law says first hook claims the hull. Both hooks, witnesses agree, landed together. The crews have been glaring at each other across the wreck since dawn.",
+    "choices": [
+      { "text": "Arbitrate", "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You invent, on the spot, with total authority, the doctrine of Simultaneous Hook: hull split down the keel line, cargo by alternating pick, ship's bell to the crew with more widows. Both captains find it so fair they're furious. Both pay the arbiter's fee to spite each other.", "effects": ["money +12", "rep +4", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your proposed split involves percentages, and mid-explanation you realize neither crew can hear numbers over the blood in their ears. The brawl starts around you, includes you briefly, and moves on like weather.", "effects": ["hp -4"] }
+        ] },
+      { "text": "Slip aboard while they argue", "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Doctrine of Nimble Third Party. While two crews litigate at volume, you go through the captain's cabin like a tide: strongbox, sextant, a bottle of something older than both crews combined. You're a dot on the cliff path before the first hook moves.", "effects": ["money +15", "loot common"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Both crews stop arguing at the same instant, for the first time all day, because both have spotted the same thing: you, in the cabin window, holding the strongbox. Unity at last. You outrun most of them.", "effects": ["hp -5", "rep -4"] }
+        ] },
+      { "text": "Help whichever crew is losing",
+        "outcomes": [
+          { "weight": 100, "text": "You throw in with the smaller crew - more widows, worse boats - and work the tide like a deckhand. Your side's haul comes in heavier for the extra back. They pay you in coin, smoked fish, and a standing welcome in a harbor town you may badly need someday.", "effects": ["money +7", "item rations", "rep +5"] }
+        ] }
+    ]
+  },
+  {
+    "id": "coast_singing_cave",
+    "locations": ["coast"],
+    "weight": 11,
+    "text": "At the cliff base, a sea cave that breathes - and on the right tide, sings. A held chord, deep as ballast, that the fishing fleet uses to navigate and the local children dare each other to answer. The tide is right. The cave is singing. The entrance glows faint green at the waterline.",
+    "choices": [
+      { "text": "Row in on the singing tide", "check": { "stat": "con", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Inside, the chord is a body-sized thing; you feel it change your heartbeat to match. The green glow is a vein of sea-fire lichen - harvestable, precious - and at the high shelf, offerings from a century of braver children: coins, carvings, one entire fiddle. You take the lichen and leave the fiddle. Rules are rules.", "effects": ["money +13", "stat con +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The chord changes while you're inside - the tide's key modulating - and the cave stops being a throat and starts being a drain. You exit wet, fast, and partially by ricochet, to a beach of applauding children.", "effects": ["hp -5"] }
+        ] },
+      { "text": "Answer the song from the beach", "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You find the fifth of the chord and hold it. The cave hesitates - a thousand years of singing alone will do that - and then, unmistakably, harmonizes AROUND you. The fishing fleet, out on the water, all turn to look at the shore at once. You are in six songs by autumn.", "effects": ["trait +famous", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your note curdles the chord like lemon in milk, and the cave's response - a single dissonant BLAT - is heard, and correctly attributed, in three villages.", "effects": ["rep -2"] }
+        ] },
+      { "text": "Record its bearings for the fleet",
+        "outcomes": [
+          { "weight": 100, "text": "You spend the tide charting how the song carries - where it's true, where the cliffs bend it into lies. The harbormaster pays for the survey without haggling, which harbormasters do exactly never.", "effects": ["money +9", "stat int +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "coast_hermit_crab_town",
+    "locations": ["coast"],
+    "weight": 11,
+    "text": "The tideline is a metropolis. Hermit crabs by the thousand, and a shell shortage: the housing crisis is visible, queues of soft-bodied crabs waiting by every empty shell, and a black market in broken pottery. One enormous specimen has claimed a human skull and dares you, with both eyestalks, to comment.",
+    "choices": [
+      { "text": "Distribute your spare containers",
+        "outcomes": [
+          { "weight": 100, "text": "An empty jar, a cracked cup, the horn you never learned to blow: you seed the beach with real estate. The exchange cascades down the queue - every upgrade freeing a shell for someone smaller - and by dusk the whole tideline has moved up one. Economists would call it. Actually, no one would believe this.", "effects": ["stat wis +1", "rep +3"] }
+        ] },
+      { "text": "Negotiate for the skull", "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "It takes an hour and your second-best buckle, but the big one trades. The skull - cleaned, ancient, gold tooth INCLUDED - is worth a startling amount to the right collector. The crab, in your buckle, is the best-dressed crustacean on the coast, and knows it.", "effects": ["money +11", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The crab considers your offer, considers your finger, and chooses the finger. Its neighbors ALSO choose the finger. The tideline moves as one. You retreat from the only cavalry charge ever conducted at two inches of altitude.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Just watch the housing market",
+        "outcomes": [
+          { "weight": 100, "text": "You sit on a rock for two hours watching the shell exchange: the queues, the trades, the one crab running what is clearly a scam with a shell that has no back. It is the entire world in miniature and you leave feeling you finally understand cities.", "effects": ["stat wis +1", "stat int +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "coast_driftwood_god",
+    "locations": ["coast"],
+    "weight": 11,
+    "slots": { "beast": "beast_here" },
+    "text": "Storm-wrack has piled against the sea stack in a shape that is absolutely an accident and absolutely a face. Fishermen have started leaving offerings 'just in case,' and the just-in-case shrine now outearns the chapel. The face, locals swear, looks toward wherever {beast} was last seen - all {beast_kills} kills of it - like a warning system made of luck.",
+    "choices": [
+      { "text": "Consult the face about the beast",
+        "outcomes": [
+          { "weight": 100, "text": "You sight along the driftwood gaze and mark the bearing against the headland. If the face is right - and its accuracy rate is disturbing - you now know which valley the thing dens in. Knowledge worth more than the shrine's whole collection plate, acquired for the price of standing in the right spot.", "effects": ["stat wis +1", "stat int +1"] }
+        ] },
+      { "text": "Rob the just-in-case shrine",
+        "outcomes": [
+          { "weight": 45, "text": "It's driftwood. It's DRIFTWOOD. You take the plate, and the face goes on being wet lumber while you count coins, and no curse arrives, and the sea does nothing, and you got away with it entirely, and you check over your shoulder for the rest of your natural life.", "effects": ["money +12", "rep -3"] },
+          { "weight": 55, "text": "The moment your hand touches the plate, the tide turns. Early. The walk back along the shingle is a running fight with the sea, and the sea holds nothing back, and your pockets - when you finally climb the cliff path - hold mostly kelp.", "effects": ["money +3", "hp -4", "trait +cursed"] }
+        ] },
+      { "text": "Add to the offerings", "requires": { "money": 2 },
+        "outcomes": [
+          { "weight": 100, "text": "Two coins in the plate, just in case. The face does not move, because it is driftwood. But the wind drops for your whole walk up the coast, and the rain starts the exact moment you reach shelter, and you know better than to call that nothing.", "effects": ["money -2", "trait +blessed"] }
+        ] }
+    ]
+  },
+  {
+    "id": "coast_low_tide_road",
+    "locations": ["coast"],
+    "weight": 10,
+    "text": "At the lowest tide of the month, the sea uncovers a road: cobbles, wheel ruts, the stumps of lamp posts, running straight out toward a drowned town that has six hours of air a month. The locals don't use it. The locals watch to see if YOU will.",
+    "choices": [
+      { "text": "Walk it fast, salvage faster", "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You budget three hours out, one hour of work, two back, and you keep the budget like your life is the currency, which it is. The drowned town's shops still hold what the sea can't digest: coin, glass, one shopfront's brass letters. You're on the last dry cobble when the tide takes the road back.", "effects": ["money +16", "loot fine"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The town makes you greedy - one more shop, one more till - and the sea calls time while you're two streets deep. The swim back over the road is a lesson in what roads are for. The watchers on the cliff pull you out with a boat hook and zero surprise.", "effects": ["hp -7", "money +4"] }
+        ] },
+      { "text": "Visit the town's church only",
+        "outcomes": [
+          { "weight": 100, "text": "One destination, no detours. The church stands roofless under the sky it never used to see, and in its font, generations of the tide's own offerings: sea glass and silver. You take a handful and leave your own coin, and walk back with the strange peace of someone who kept an appointment.", "effects": ["money +8", "stat wis +1", "trait +blessed"] }
+        ] },
+      { "text": "Watch from the cliff with the locals",
+        "outcomes": [
+          { "weight": 100, "text": "You share the cliff, the wind, and someone's flask, and watch the sea hand back a whole town and take it again like a tide-worked toy. The locals, once you've proven you can watch without going, tell you what's REALLY down there and why they don't. You believe them. You write it down.", "effects": ["stat wis +1", "stat int +1"] }
+        ] }
+    ]
+  }
+]

@@ -7,6 +7,9 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Random Rogue">
+  <meta name="theme-color" content="#181425">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <title>Random Rogue</title>
   <style>
     html, body {
@@ -37,6 +40,12 @@
     // iOS Safari: block double-tap-to-zoom inside the game.
     document.addEventListener('dblclick', function (e) { e.preventDefault(); }, { passive: false });
     document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+    // PWA: offline play after the first visit (R5).
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').catch(function () {});
+      });
+    }
   </script>
   {{{ SCRIPT }}}
 </body>

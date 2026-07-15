@@ -118,8 +118,9 @@ int main(int argc, char** argv) {
     }
 
     static const char* kDecks[] = {"tavern", "city", "dungeon", "cave",
-                                   "forest", "road", "crash"};
-    static const int kDeckW[] = {20, 20, 18, 12, 15, 15, 5};
+                                   "forest", "road", "crash",
+                                   "swamp", "mountains", "coast"};
+    static const int kDeckW[] = {20, 20, 18, 12, 12, 12, 5, 8, 8, 8};
 
     std::map<std::string, int> killerEvents, seenEvents;
     std::map<std::string, int> finishEvents;
@@ -163,7 +164,7 @@ int main(int argc, char** argv) {
             int total = 0;
             for (int w : kDeckW) total += w;
             int roll = s.rng.range(1, total), di = 0;
-            for (; di < 7; di++) {
+            for (; di < 9; di++) {
                 roll -= kDeckW[di];
                 if (roll <= 0) break;
             }

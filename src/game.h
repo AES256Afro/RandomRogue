@@ -33,7 +33,7 @@ public:
 
 private:
     enum Screen { TITLE, CLASSPICK, AMBITION, TRAVEL, EVENT, OUTCOME, DEATH,
-                  INVENTORY, INFO, VENDOR, WORLDMAP, CHRONICLE };
+                  INVENTORY, INFO, VENDOR, WORLDMAP, CHRONICLE, SAGA, REPLAY };
 
     // A hired sword, a talking badger, a disgraced accountant (P5).
     struct Companion {
@@ -104,6 +104,8 @@ private:
     void drawTopBar();
     void drawWorldMap(Vector2 mouse);
     void drawChronicle(Vector2 mouse);
+    void drawSaga(Vector2 mouse);
+    void drawReplay(Vector2 mouse);
     void drawPortrait(int x, int y, int scale, const std::string& name);
     void saveRun();
     bool loadRun();
@@ -220,6 +222,25 @@ private:
     };
     Rival rival_;
     bool cardRequested_ = false; // death-card PNG wanted (handled by main.cpp)
+
+    // R5: the saga, the gods, the replays, the feed.
+    std::vector<std::pair<uint64_t, LegacyRecord>> sagaLives_;
+    int sagaPage_ = 0;
+    int slotGod_ = -1;             // god bound by the last god slot
+    std::map<int, int> favor_;     // god index -> favor earned this run
+    bool miracleUsed_ = false;     // one divine intervention per life
+    struct JourneyStep { int day = 0; std::string site, choice, outcome; };
+    std::vector<JourneyStep> journey_;  // this run, recorded for replay
+    std::vector<JourneyStep> replay_;   // someone else's run, being watched
+    std::string replayWho_;
+    int replayPage_ = 0;
+    bool replayRequested_ = false;
+    std::vector<int> scoreIds_;         // D1 row ids of today's fallen
+    std::vector<std::string> scoreNames_;
+    int replayCursor_ = 0;              // which of the fallen we're watching
+    std::vector<std::string> deeds_;    // live deeds feed (daily worlds)
+    size_t deedNext_ = 0;
+    bool deedsRequested_ = false;
 
     // audio / juice / meta
     AudioBank audio_;

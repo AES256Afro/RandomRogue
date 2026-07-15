@@ -35,6 +35,30 @@ EM_JS(char*, rr_get_ghosts, (), {
     stringToUTF8(s, buf, len);
     return buf;
 });
+EM_JS(void, rr_fetch_replay, (int id), {
+    window.__rrReplay = "";
+    try { fetch('/__replay?id=' + id).then(function(r){ return r.text(); }).then(function(t){ window.__rrReplay = t; }).catch(function(){ window.__rrReplay = "[]"; }); } catch (e) { window.__rrReplay = "[]"; }
+});
+EM_JS(char*, rr_get_replay, (), {
+    var s = window.__rrReplay || "";
+    var len = lengthBytesUTF8(s) + 1;
+    var buf = _malloc(len);
+    stringToUTF8(s, buf, len);
+    return buf;
+});
+EM_JS(void, rr_submit_deed, (const char* json), {
+    try { fetch('/__deed', { method: 'POST', headers: { 'content-type': 'application/json' }, body: UTF8ToString(json) }).catch(function(){}); } catch (e) {}
+});
+EM_JS(void, rr_fetch_deeds, (int day), {
+    try { fetch('/__deeds?day=' + day).then(function(r){ return r.text(); }).then(function(t){ window.__rrDeeds = t; }).catch(function(){ window.__rrDeeds = "[]"; }); } catch (e) { window.__rrDeeds = "[]"; }
+});
+EM_JS(char*, rr_get_deeds, (), {
+    var s = window.__rrDeeds || "";
+    var len = lengthBytesUTF8(s) + 1;
+    var buf = _malloc(len);
+    stringToUTF8(s, buf, len);
+    return buf;
+});
 #endif
 
 namespace {
@@ -339,6 +363,14 @@ void Game::saveRun() {
         {"rival", {{"name", rival_.name}, {"meaning", rival_.meaning},
                    {"alive", rival_.alive}, {"deeds", rival_.deeds}}},
         {"ghosts", ghostsRaw_}};
+    nlohmann::json fav = nlohmann::json::object();
+    for (auto& [gi, f] : favor_) fav[std::to_string(gi)] = f;
+    j["favor"] = fav;
+    j["miracle"] = miracleUsed_;
+    nlohmann::json steps = nlohmann::json::array();
+    for (auto& st : journey_)
+        steps.push_back({{"d", st.day}, {"s", st.site}, {"c", st.choice}, {"o", st.outcome}});
+    j["journey"] = steps;
     SaveRawRun(j.dump());
 }
 
@@ -373,6 +405,21 @@ bool Game::loadRun() {
         rival_.alive = r.value("alive", true);
         rival_.deeds = r.value("deeds", 0);
     }
+    favor_.clear();
+    if (j.contains("favor") && j["favor"].is_object())
+        for (auto& [gi, f] : j["favor"].items())
+            favor_[atoi(gi.c_str())] = f.get<int>();
+    miracleUsed_ = j.value("miracle", false);
+    journey_.clear();
+    if (j.contains("journey"))
+        for (auto& s : j["journey"]) {
+            JourneyStep st;
+            st.day = s.value("d", 0);
+            st.site = s.value("s", "");
+            st.choice = s.value("c", "");
+            st.outcome = s.value("o", "");
+            journey_.push_back(st);
+        }
     // Now overlay the saved life onto the fresh world.
     ch_.name.conlang = j.value("name", ch_.name.conlang);
     ch_.name.meaning = j.value("meaning", ch_.name.meaning);
@@ -811,6 +858,12 @@ void Game::newRun(int classIdx) {
     visitedRegions_.clear();
     scoreSubmitted_ = false;
     slotBeast_ = -1;
+    slotGod_ = -1;
+    favor_.clear();
+    miracleUsed_ = false;
+    journey_.clear();
+    deeds_.clear();
+    deedNext_ = 0;
     // NPC memory outlives you in this world (R3).
     npcMarks_.clear();
     {
@@ -841,6 +894,16 @@ void Game::newRun(int classIdx) {
                 injectStrangers(gj);
                 if (!strangers_.empty()) ghostsRaw_ = gj;
             }
+            // And the day's deeds so far: other players, live-ish (R5).
+            char* draw = rr_get_deeds();
+            std::string dj(draw ? draw : "");
+            free(draw);
+            nlohmann::json dl = nlohmann::json::parse(dj, nullptr, false);
+            if (!dl.is_discarded() && dl.is_array())
+                for (auto& d : dl) {
+                    std::string t = d.value("text", "");
+                    if (!t.empty()) deeds_.push_back(t.substr(0, 140));
+                }
         }
     }
 #endif
@@ -913,7 +976,12 @@ void Game::enterTravel() {
     }
     TravelOption wander;
     std::string biome = world_.regions[currentRegion_].biome;
-    wander.deck = (biome == "forest" || biome == "swamp") ? "forest" : "road";
+    // Wandering draws from the land itself: biomes are decks now (R5).
+    if (biome == "forest") wander.deck = "forest";
+    else if (biome == "swamp") wander.deck = "swamp";
+    else if (biome == "mountains") wander.deck = "mountains";
+    else if (biome == "coast") wander.deck = "coast";
+    else wander.deck = "road"; // plains, desert: the long flat middle
     wander.siteName = "the wilds";
     wander.label = "Wander " + world_.regions[currentRegion_].name;
     travelOptions_.push_back(wander);
@@ -1022,6 +1090,11 @@ void Game::dailyTick() {
             newsLine_ = rival_.name + " is dead. You feel the strangest grief: who chases you now?";
         }
     }
+    // Word arrives from other players in this same daily world (R5).
+    if (deedNext_ < deeds_.size() && liveRng_.chance(14)) {
+        newsLine_ = "WORD ARRIVES: " + deeds_[deedNext_++];
+        audio_.chime();
+    }
     static const char* kSeasons[4] = {"spring", "summer", "autumn", "winter"};
     season_ = kSeasons[(ch_.day / 28) % 4];
     int roll = liveRng_.range(1, 100);
@@ -1088,10 +1161,13 @@ bool Game::resolveSlots(const Event& e, Grammar::Ctx& ctx) {
             ctx[name + "_kills"] = std::to_string(b.kills);
         } else if (query == "god") {
             if (history_.gods.empty()) return false;
-            const God& god = history_.gods[runRng_.range(0, (int)history_.gods.size() - 1)];
+            int gi = runRng_.range(0, (int)history_.gods.size() - 1);
+            slotGod_ = gi; // favor effects in this event land on this god
+            const God& god = history_.gods[gi];
             ctx[name] = god.name;
             ctx[name + "_domain"] = god.domain;
             ctx[name + "_mood"] = god.mood > 0 ? "generous" : (god.mood < 0 ? "wrathful" : "indifferent");
+            ctx[name + "_favor"] = std::to_string(favor_.count(gi) ? favor_[gi] : 0);
         } else if (query == "figure_dead") {
             std::vector<int> pool;
             for (int i = 0; i < (int)history_.figures.size(); i++)
@@ -1156,6 +1232,9 @@ void Game::dealEvent() {
         current_ = deck_.draw(runRng_, tag);
         if (!current_ && tag == "dungeon_finale") { tag = "dungeon"; continue; }
         if (!current_ && tag == "crash") { tag = "dungeon"; continue; }
+        // Biome decks are smaller; when one runs dry the land defaults.
+        if (!current_ && tag == "swamp") { tag = "forest"; continue; }
+        if (!current_ && (tag == "mountains" || tag == "coast")) { tag = "road"; continue; }
         if (!current_) { enterTravel(); return; }
         // Event-level gate: "trait wanted" events only find the wanted.
         bool gated = false;
@@ -1261,6 +1340,16 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
                 history_.chron.push_back(e);
                 newsLine_ = b.name + " is dead. You were there. You were the reason.";
                 audio_.fanfare();
+#if defined(__EMSCRIPTEN__)
+                // Daily world? The other players hear about this.
+                uint64_t dailySeed = (uint64_t)(time(nullptr) / 86400) % 1000000000ULL;
+                if (masterSeed_ == dailySeed) {
+                    nlohmann::json d = {{"day", (int)(time(nullptr) / 86400)},
+                                        {"text", ch_.name.conlang + " slew " + b.name +
+                                                 " on day " + std::to_string(ch_.day) + "."}};
+                    rr_submit_deed(d.dump().c_str());
+                }
+#endif
             }
         } else if (verb == "legacy_bless") {
             heirBlessing_ = true;
@@ -1321,6 +1410,16 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
                 rival_.alive = false;
                 newsLine_ = rival_.name + " will not be racing anyone anywhere again.";
             }
+        } else if (verb == "favor") {
+            // Devotion (or blasphemy) with the god this event summoned.
+            int v = 0; ss >> v;
+            if (slotGod_ >= 0) {
+                favor_[slotGod_] += v;
+                if (favor_[slotGod_] < -3 && !ch_.hasTrait("cursed")) {
+                    ch_.traits.insert("cursed"); // wrath has a paper trail
+                    favor_[slotGod_] = 0;
+                }
+            }
         } else if (verb == "die") {
             std::string rest;
             std::getline(ss, rest);
@@ -1336,6 +1435,16 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
             ch_.dead = true;
             finishedWell_ = true;
             if (!rest.empty()) ch_.epitaph = rest;
+#if defined(__EMSCRIPTEN__)
+            // A completed life is front-page news in a shared world.
+            uint64_t dailySeed = (uint64_t)(time(nullptr) / 86400) % 1000000000ULL;
+            if (masterSeed_ == dailySeed) {
+                nlohmann::json d = {{"day", (int)(time(nullptr) / 86400)},
+                                    {"text", ch_.name.conlang + " finished their story on day " +
+                                             std::to_string(ch_.day) + ", alive."}};
+                rr_submit_deed(d.dump().c_str());
+            }
+#endif
         }
     }
     if (ch_.hp <= 0) ch_.dead = true;
@@ -1346,6 +1455,23 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
         ch_.hp = 1;
         ch_.epitaph.clear();
         blessingSpent_ = true;
+    }
+    // A miracle: if a god favors you enough, they spend it all to keep you
+    // standing — once per life, never for the willingly finished (R5).
+    if (ch_.dead && !finishedWell_ && !miracleUsed_) {
+        int best = -1, bestFavor = 4; // threshold: 5+ favor
+        for (auto& [gi, f] : favor_)
+            if (f > bestFavor) { best = gi; bestFavor = f; }
+        if (best >= 0 && best < (int)history_.gods.size()) {
+            miracleUsed_ = true;
+            favor_[best] = 0; // the account is emptied
+            ch_.dead = false;
+            ch_.hp = 3;
+            ch_.epitaph.clear();
+            newsLine_ = history_.gods[best].name + " reaches down and puts you back on your feet. The debt is unspoken and enormous.";
+            audio_.fanfare();
+            shake_ = 3.0f;
+        }
     }
 }
 
@@ -1362,6 +1488,16 @@ void Game::chooseOption(int idx) {
     ch_.eventsSurvived++;
     if (ch_.dead && ch_.epitaph.empty())
         ch_.epitaph = grammar_.expand("{epitaph}", runRng_, currentCtx_);
+    // The journey log: what happened, where, in your words (R5 replays).
+    if (journey_.size() < 240) {
+        JourneyStep step;
+        step.day = ch_.day;
+        step.site = siteName_.substr(0, 40);
+        step.choice = (idx < (int)choiceTexts_.size() ? choiceTexts_[idx] : choice.text)
+                          .substr(0, 70);
+        step.outcome = outcome_.text.substr(0, 110);
+        journey_.push_back(step);
+    }
     screen_ = OUTCOME;
 }
 
@@ -1478,6 +1614,8 @@ void Game::frame(Vector2 mouse, bool pressed) {
         case VENDOR:    drawVendor(mouse); break;
         case WORLDMAP:  drawWorldMap(mouse); break;
         case CHRONICLE: drawChronicle(mouse); break;
+        case SAGA:      drawSaga(mouse); break;
+        case REPLAY:    drawReplay(mouse); break;
     }
 }
 
@@ -1592,6 +1730,13 @@ void Game::drawTitle(Vector2 mouse) {
         audio_.blip();
         if (loadRun()) return;
     }
+    if (uiButton({kW / 2 + 46, 139, 84, 18}, "YOUR SAGA", mouse)) {
+        audio_.blip();
+        sagaLives_ = LoadAllLegacy();
+        sagaPage_ = 0;
+        screen_ = SAGA;
+        return;
+    }
     if (uiButton({kW / 2 - 42, 139, 84, 18}, "CHRONICLE", mouse)) {
         audio_.blip();
         // Peek at the world before living in it.
@@ -1620,6 +1765,10 @@ void Game::drawTitle(Vector2 mouse) {
             ghostsRequested_ = true;
             rr_fetch_ghosts((int)(time(nullptr) / 86400), "");
         }
+        if (!deedsRequested_) {
+            deedsRequested_ = true;
+            rr_fetch_deeds((int)(time(nullptr) / 86400));
+        }
         if (scoresJson_.empty()) {
             char* raw = rr_get_scores();
             if (raw) { scoresJson_ = raw; free(raw); }
@@ -1627,16 +1776,34 @@ void Game::drawTitle(Vector2 mouse) {
         if (!scoresJson_.empty()) {
             nlohmann::json list = nlohmann::json::parse(scoresJson_, nullptr, false);
             if (!list.is_discarded() && list.is_array() && !list.empty()) {
+                scoreIds_.clear();
+                scoreNames_.clear();
                 std::string line = "today's fallen: ";
                 for (int i = 0; i < (int)list.size() && i < 3; i++) {
                     if (i) line += "  |  ";
-                    line += list[i].value("name", "?") + " (" +
-                            std::to_string(list[i].value("days", 0)) + "d)";
+                    std::string nm = list[i].value("name", "?");
+                    line += nm + " (" + std::to_string(list[i].value("days", 0)) + "d)";
+                    scoreIds_.push_back(list[i].value("id", -1));
+                    scoreNames_.push_back(nm);
                 }
                 while (!line.empty() && MeasureText((line + "..").c_str(), 10) > kW - 8)
                     line.pop_back();
-                DrawText(line.c_str(), (kW - MeasureText(line.c_str(), 10)) / 2,
-                         kH - 28, 10, PAL_GOLD);
+                int lw = MeasureText(line.c_str(), 10);
+                Rectangle lr{(float)((kW - lw) / 2), (float)(kH - 22), (float)lw, 11};
+                bool hover = CheckCollisionPointRec(mouse, lr) && !scoreIds_.empty() &&
+                             scoreIds_[0] >= 0;
+                DrawText(line.c_str(), (int)lr.x, kH - 21, 10, hover ? PAL_INK : PAL_GOLD);
+                if (hover && pressed_) {
+                    audio_.blip();
+                    replayCursor_ = 0;
+                    replayWho_ = scoreNames_[0];
+                    rr_fetch_replay(scoreIds_[0]);
+                    replay_.clear();
+                    replayPage_ = 0;
+                    replayRequested_ = true;
+                    screen_ = REPLAY;
+                    return;
+                }
             }
         }
     }
@@ -1645,7 +1812,7 @@ void Game::drawTitle(Vector2 mouse) {
                        "   completed: " + std::to_string(profile_.livesCompleted) +
                        "   best: " + std::to_string(profile_.bestDays) + "d" +
                        "   lexicon: " + std::to_string(profile_.wordsLearned) + " words";
-    DrawText(runs.c_str(), (kW - MeasureText(runs.c_str(), 10)) / 2, kH - 14, 10, PAL_DARK);
+    DrawText(runs.c_str(), (kW - MeasureText(runs.c_str(), 10)) / 2, kH - 10, 10, PAL_DARK);
 
     if (reroll) {
         nextSeed_ = (nextSeed_ * 6364136223846793005ULL + 1442695040888963407ULL) % 1000000000ULL;
@@ -2171,6 +2338,132 @@ void Game::drawChronicle(Vector2 mouse) {
     }
 }
 
+// The Book of You: every life you've lived, in every world still
+// remembered, bound as chapters (R5).
+void Game::drawSaga(Vector2 mouse) {
+    DrawText("THE BOOK OF YOU", (kW - MeasureText("THE BOOK OF YOU", 10)) / 2, 6, 10,
+             PAL_GOLD);
+    std::string totals = std::to_string(profile_.deaths) + " deaths, " +
+                         std::to_string(profile_.livesCompleted) + " lives completed, " +
+                         std::to_string(profile_.daysTotal) + " days walked, " +
+                         std::to_string(profile_.wordsLearned) + " words learned";
+    DrawText(totals.c_str(), (kW - MeasureText(totals.c_str(), 10)) / 2, 18, 10, PAL_DIM);
+
+    const int kPerPage = 3;
+    int total = (int)sagaLives_.size();
+    int pages = total > 0 ? (total + kPerPage - 1) / kPerPage : 1;
+    if (sagaPage_ < 0) sagaPage_ = 0;
+    if (sagaPage_ >= pages) sagaPage_ = pages - 1;
+
+    if (total == 0) {
+        DrawTextWrapped("The pages are blank. Nobody has died yet, which the book "
+                        "finds suspicious.", 30, 60, kW - 60, PAL_DIM);
+    }
+    int y = 34;
+    for (int i = sagaPage_ * kPerPage; i < total && i < (sagaPage_ + 1) * kPerPage; i++) {
+        const auto& [seed, life] = sagaLives_[i];
+        drawPortrait(8, y, 2, life.name);
+        std::string head = "Ch." + std::to_string(i + 1) + "  " + life.name +
+                           " \"" + life.meaning + "\"";
+        while (!head.empty() && MeasureText(head.c_str(), 10) > kW - 34) head.pop_back();
+        DrawText(head.c_str(), 28, y, 10, PAL_GOLD);
+        std::string mid = std::to_string(life.days) + " days in world " +
+                          std::to_string(seed) + ", ended at " +
+                          (life.deathSite.empty() ? "parts unknown" : life.deathSite) +
+                          (life.blessing ? "  [blessed the next]" : "");
+        bool cut = false;
+        while (!mid.empty() && MeasureText((mid + "..").c_str(), 10) > kW - 34) {
+            mid.pop_back();
+            cut = true;
+        }
+        if (cut) mid += "..";
+        DrawText(mid.c_str(), 28, y + 11, 10, PAL_DIM);
+        std::string epi = "\"" + life.epitaph + "\"";
+        while (!epi.empty() && MeasureText((epi + "..").c_str(), 10) > kW - 34) epi.pop_back();
+        DrawText(epi.c_str(), 28, y + 22, 10, PAL_INK);
+        y += 38;
+    }
+    std::string pg = "page " + std::to_string(sagaPage_ + 1) + "/" + std::to_string(pages);
+    DrawText(pg.c_str(), (kW - MeasureText(pg.c_str(), 10)) / 2, kH - 16, 10, PAL_DARK);
+    if (sagaPage_ > 0 &&
+        (uiButton({4, (float)(kH - 20), 48, 16}, "< PREV", mouse) || IsKeyPressed(KEY_LEFT)))
+        sagaPage_--;
+    if (sagaPage_ < pages - 1 &&
+        (uiButton({56, (float)(kH - 20), 48, 16}, "NEXT >", mouse) || IsKeyPressed(KEY_RIGHT)))
+        sagaPage_++;
+    if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
+        IsKeyPressed(KEY_TAB) || IsKeyPressed(KEY_ESCAPE))
+        screen_ = TITLE;
+}
+
+// Watch one of today's fallen make every decision that got them killed (R5).
+void Game::drawReplay(Vector2 mouse) {
+#if defined(__EMSCRIPTEN__)
+    if (replayRequested_ && replay_.empty()) {
+        char* raw = rr_get_replay();
+        std::string rj(raw ? raw : "");
+        free(raw);
+        nlohmann::json list = nlohmann::json::parse(rj, nullptr, false);
+        if (!list.is_discarded() && list.is_array())
+            for (auto& s : list) {
+                JourneyStep st;
+                st.day = s.value("d", 0);
+                st.site = s.value("s", "");
+                st.choice = s.value("c", "");
+                st.outcome = s.value("o", "");
+                replay_.push_back(st);
+            }
+        if (!list.is_discarded()) replayRequested_ = false;
+    }
+#endif
+    std::string head = "THE FALL OF " + replayWho_;
+    for (auto& c : head) c = (char)toupper((unsigned char)c);
+    while (!head.empty() && MeasureText(head.c_str(), 10) > kW - 8) head.pop_back();
+    DrawText(head.c_str(), (kW - MeasureText(head.c_str(), 10)) / 2, 6, 10, PAL_GOLD);
+
+    if (replay_.empty()) {
+        DrawTextWrapped(replayRequested_ ? "The chronicle is being fetched from wherever "
+                                           "chronicles live..."
+                                         : "Their story arrived blank. Some falls keep "
+                                           "their secrets.",
+                        30, 60, kW - 60, PAL_DIM);
+    } else {
+        int total = (int)replay_.size();
+        if (replayPage_ < 0) replayPage_ = 0;
+        if (replayPage_ >= total) replayPage_ = total - 1;
+        const JourneyStep& st = replay_[replayPage_];
+        std::string where = "Day " + std::to_string(st.day) + ", " + st.site +
+                            "   (" + std::to_string(replayPage_ + 1) + "/" +
+                            std::to_string(total) + ")";
+        DrawText(where.c_str(), (kW - MeasureText(where.c_str(), 10)) / 2, 20, 10, PAL_DIM);
+        int y = DrawTextWrapped("They chose: " + st.choice, 8, 38, kW - 16, PAL_INK);
+        DrawTextWrapped(st.outcome, 8, y + 6, kW - 16, PAL_DIM, kH - 24);
+        if (replayPage_ > 0 &&
+            (uiButton({4, (float)(kH - 20), 48, 16}, "< PREV", mouse) || IsKeyPressed(KEY_LEFT)))
+            replayPage_--;
+        if (replayPage_ < total - 1 &&
+            (uiButton({56, (float)(kH - 20), 48, 16}, "NEXT >", mouse) || IsKeyPressed(KEY_RIGHT)))
+            replayPage_++;
+    }
+#if defined(__EMSCRIPTEN__)
+    // Cycle through the day's other fallen without going back out.
+    if ((int)scoreIds_.size() > 1 &&
+        uiButton({(float)(kW / 2 - 42), (float)(kH - 20), 84, 16}, "NEXT FALLEN", mouse)) {
+        replayCursor_ = (replayCursor_ + 1) % (int)scoreIds_.size();
+        if (scoreIds_[replayCursor_] >= 0) {
+            replayWho_ = scoreNames_[replayCursor_];
+            rr_fetch_replay(scoreIds_[replayCursor_]);
+            replay_.clear();
+            replayPage_ = 0;
+            replayRequested_ = true;
+        }
+    }
+#endif
+    if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
+        IsKeyPressed(KEY_TAB) || IsKeyPressed(KEY_ESCAPE))
+        screen_ = TITLE;
+}
+
 void Game::drawDeath(Vector2 mouse) {
     const char* title = finishedWell_ ? "A LIFE, COMPLETED" : "YOU DIED";
     DrawText(title, (kW - MeasureText(title, 20)) / 2, 30, 20,
@@ -2243,6 +2536,10 @@ void Game::drawDeath(Vector2 mouse) {
                 nlohmann::json relics = nlohmann::json::array();
                 for (auto& [rn, rq] : rec.relics)
                     relics.push_back({{"name", rn}, {"quirk", rq}});
+                nlohmann::json steps = nlohmann::json::array();
+                for (auto& st : journey_)
+                    steps.push_back({{"d", st.day}, {"s", st.site},
+                                     {"c", st.choice}, {"o", st.outcome}});
                 nlohmann::json s = {{"day", (int)(time(nullptr) / 86400)},
                                     {"name", ch_.name.conlang + " \"" + ch_.name.meaning + "\""},
                                     {"meaning", ch_.name.meaning},
@@ -2250,7 +2547,8 @@ void Game::drawDeath(Vector2 mouse) {
                                     {"epitaph", ch_.epitaph},
                                     {"site", siteName_},
                                     {"relics", relics},
-                                    {"finished", finishedWell_}};
+                                    {"finished", finishedWell_},
+                                    {"journey", steps}};
                 rr_submit_score(s.dump().c_str());
             }
 #endif

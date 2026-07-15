@@ -83,6 +83,17 @@ void AppendLegacy(uint64_t seed, const LegacyRecord& rec) {
     saveRawStore("random_rogue_worlds", j.dump());
 }
 
+std::vector<std::pair<uint64_t, LegacyRecord>> LoadAllLegacy() {
+    std::vector<std::pair<uint64_t, LegacyRecord>> out;
+    json j = json::parse(loadRawStore("random_rogue_worlds"), nullptr, false);
+    if (j.is_discarded() || !j.is_object()) return out;
+    for (auto& [key, lives] : j.items()) {
+        uint64_t seed = strtoull(key.c_str(), nullptr, 10);
+        for (auto& r : lives) out.emplace_back(seed, legacyFromJson(r));
+    }
+    return out;
+}
+
 std::string LoadRawRun() { return loadRawStore("random_rogue_run"); }
 void SaveRawRun(const std::string& text) { saveRawStore("random_rogue_run", text); }
 

@@ -15,6 +15,10 @@
     "wideworld.json",
     "endgame.json",
     "hunts.json",
-    "ghosts.json"
+    "ghosts.json",
+    "swamp.json",
+    "mountains.json",
+    "coast.json",
+    "gods.json"
   ]
 }

@@ -1,7 +1,13 @@
 // random-rogue-site — the Cloudflare Worker serving random-rogue.com.
-// Deployed on account c3975c2a... with a KV binding SITE
-// (namespace "random-rogue-site", id 3a6ee10b605147fbaeff9c1f8cba0e3f)
+// Deployed on account c3975c2a... with bindings:
+//   SITE — KV namespace "random-rogue-site" (3a6ee10b605147fbaeff9c1f8cba0e3f)
+//   DB   — D1 database  "random-rogue"      (6c93123a-db1e-497c-93c3-718a6b5a9f91)
 // and zone routes random-rogue.com/* + www.random-rogue.com/*.
+//
+// D1 schema:
+//   deaths(id, day, name, meaning, days, epitaph, site, relics, finished,
+//          journey, ts)   — daily-world deaths + replay logs
+//   deeds(id, day, text, ts) — the live deeds feed
 //
 // /__load?key=<LOAD_KEY> re-syncs KV from the GitHub Pages staging deploy.
 // The real key is NOT committed; the deployed copy has it inlined.
@@ -13,14 +19,19 @@ const FILES = {
   "play/random_rogue.js": "application/javascript",
   "play/random_rogue.wasm": "application/wasm",
   "play/random_rogue.data": "application/octet-stream",
+  "play/manifest.webmanifest": "application/manifest+json",
+  "play/sw.js": "application/javascript",
+  "play/icon-192.png": "image/png",
+  "play/icon-512.png": "image/png",
 };
-const CORS = { 'access-control-allow-origin': '*', 'access-control-allow-methods': 'GET,POST,OPTIONS', 'access-control-allow-headers': 'content-type' };
 const ORIGIN = "https://aes256afro.github.io/RandomRogue/";
+const CORS = { "access-control-allow-origin": "*", "access-control-allow-methods": "GET,POST,OPTIONS", "access-control-allow-headers": "content-type" };
 
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
     let p = url.pathname.replace(/^\/+/, "");
+    if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
     if (p === "__load") {
       if (url.searchParams.get("key") !== LOAD_KEY) return new Response("no", { status: 403 });
       const out = {};
@@ -33,9 +44,8 @@ export default {
       }
       return Response.json(out);
     }
-    
-    // Daily leaderboard + shared graveyard (D1 binding DB,
-    // database "random-rogue" id 6c93123a-db1e-497c-93c3-718a6b5a9f91).
+    // A daily-world death: leaderboard row, shared-graveyard ghost, and
+    // replay journey, all in one insert.
     if (p === "__score" && req.method === "POST") {
       let body;
       try { body = await req.json(); } catch (e) { return new Response("bad", { status: 400, headers: CORS }); }
@@ -53,17 +63,29 @@ export default {
         const r = Array.isArray(body.relics) ? body.relics.slice(0, 2) : [];
         relics = JSON.stringify(r.map(x => ({ name: String(x.name || "").slice(0, 48), quirk: String(x.quirk || "").slice(0, 120) })));
       } catch (e) {}
+      let journey = "[]";
+      try {
+        const j = Array.isArray(body.journey) ? body.journey.slice(0, 240) : [];
+        journey = JSON.stringify(j.map(s => ({ d: parseInt(s.d) || 0, s: String(s.s || "").slice(0, 40), c: String(s.c || "").slice(0, 70), o: String(s.o || "").slice(0, 110) })));
+        if (journey.length > 80000) journey = "[]";
+      } catch (e) {}
       await env.DB.prepare(
-        "INSERT INTO deaths (day, name, meaning, days, epitaph, site, relics, finished) VALUES (?,?,?,?,?,?,?,?)"
-      ).bind(day, name, meaning, days, epitaph, site, relics, finished).run();
+        "INSERT INTO deaths (day, name, meaning, days, epitaph, site, relics, finished, journey) VALUES (?,?,?,?,?,?,?,?,?)"
+      ).bind(day, name, meaning, days, epitaph, site, relics, finished, journey).run();
       return new Response("ok", { headers: CORS });
     }
     if (p === "__scores") {
       const day = parseInt(url.searchParams.get("day")) || Math.floor(Date.now() / 86400000);
       const rs = await env.DB.prepare(
-        "SELECT name, days, epitaph FROM deaths WHERE day = ? ORDER BY days DESC, ts ASC LIMIT 25"
+        "SELECT id, name, days, epitaph FROM deaths WHERE day = ? ORDER BY days DESC, ts ASC LIMIT 25"
       ).bind(day).all();
-      return new Response(JSON.stringify(rs.results || []), { headers: Object.assign({ "content-type": "application/json" }, CORS) });
+      return new Response(JSON.stringify(rs.results || []), { headers: { "content-type": "application/json", ...CORS } });
+    }
+    // Watch how someone else's run actually went.
+    if (p === "__replay") {
+      const id = parseInt(url.searchParams.get("id")) || -1;
+      const row = await env.DB.prepare("SELECT journey FROM deaths WHERE id = ?").bind(id).first();
+      return new Response((row && row.journey) || "[]", { headers: { "content-type": "application/json", ...CORS } });
     }
     // Strangers fallen in this daily world: ghosts for other players.
     if (p === "__ghosts") {
@@ -73,9 +95,28 @@ export default {
       const rs = await env.DB.prepare(
         "SELECT name, meaning, days, epitaph, site, relics FROM deaths WHERE day = ? AND name != ? ORDER BY RANDOM() LIMIT ?"
       ).bind(day, not, n).all();
-      return new Response(JSON.stringify(rs.results || []), { headers: Object.assign({ "content-type": "application/json" }, CORS) });
+      return new Response(JSON.stringify(rs.results || []), { headers: { "content-type": "application/json", ...CORS } });
     }
-if (p === "") p = "index.html";
+    // The live deeds feed: notable acts, broadcast to the same daily world.
+    if (p === "__deed" && req.method === "POST") {
+      let body;
+      try { body = await req.json(); } catch (e) { return new Response("bad", { status: 400, headers: CORS }); }
+      const day = parseInt(body.day);
+      const today = Math.floor(Date.now() / 86400000);
+      if (!day || Math.abs(day - today) > 1) return new Response("stale", { status: 400, headers: CORS });
+      const text = String(body.text || "").slice(0, 140);
+      if (!text) return new Response("bad", { status: 400, headers: CORS });
+      await env.DB.prepare("INSERT INTO deeds (day, text) VALUES (?,?)").bind(day, text).run();
+      return new Response("ok", { headers: CORS });
+    }
+    if (p === "__deeds") {
+      const day = parseInt(url.searchParams.get("day")) || Math.floor(Date.now() / 86400000);
+      const rs = await env.DB.prepare(
+        "SELECT text FROM deeds WHERE day = ? ORDER BY ts DESC LIMIT 12"
+      ).bind(day).all();
+      return new Response(JSON.stringify(rs.results || []), { headers: { "content-type": "application/json", ...CORS } });
+    }
+    if (p === "") p = "index.html";
     if (p === "play" || p === "play/") p = "play/index.html";
     const type = FILES[p];
     if (!type) return Response.redirect(url.origin + "/", 302);
@@ -83,7 +124,7 @@ if (p === "") p = "index.html";
     if (!body) return new Response("content not loaded yet", { status: 503 });
     return new Response(body, { headers: {
       "content-type": type,
-      "cache-control": p.endsWith(".html") ? "public, max-age=300" : "public, max-age=86400"
+      "cache-control": p.endsWith(".html") || p.endsWith("sw.js") ? "public, max-age=300" : "public, max-age=86400"
     }});
   }
 };

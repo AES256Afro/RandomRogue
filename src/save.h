@@ -35,6 +35,8 @@ struct LegacyRecord {
 // Legacies are stored per world seed. Only the most recent worlds are kept.
 std::vector<LegacyRecord> LoadLegacy(uint64_t seed);
 void AppendLegacy(uint64_t seed, const LegacyRecord& rec);
+// Every stored life across every remembered world, oldest world first (R5).
+std::vector<std::pair<uint64_t, LegacyRecord>> LoadAllLegacy();
 
 // Mid-run autosave: an opaque JSON blob owned by the Game (R3).
 std::string LoadRawRun();
