@@ -4,3 +4,5 @@ build-*/
 *.exe
 *.wasm
 CMakeUserPresets.json
+
+.claude/
