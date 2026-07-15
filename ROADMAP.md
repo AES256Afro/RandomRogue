@@ -303,3 +303,31 @@ GET /__scores?day=N, GET /__ghosts?day=N&n=3.
 - **PWA** - manifest, pixel icons, and a network-first service worker;
   random-rogue.com/play installs to the iPad home screen and plays
   offline after the first visit. Live endpoints are never cached.
+
+---
+
+## Release 6 (shipped) - The Naval Arc
+
+The last deferred feature. Deferred no more.
+
+- **Getting a boat** - three coast-deck paths while you own none
+  (`when !has sloop`): buy her from the shipwright, win her off a
+  drunk captain at cards, or raise a sunken one with rope and a
+  strong back. The sloop is an item (type `ship`); the deed rides
+  in your pack.
+- **Set sail** - on any coast region with a ship, a fifth travel
+  option: two days on the open water (deck `sea`), landfall on a
+  DIFFERENT random coast. The fastest way across a 30-region world,
+  paid for in whatever the sea deals you.
+- **The sea deck** - squalls, freebooters with receipts, a ghost
+  ship crewed by a real dead figure from this world's Chronicle,
+  a leviathan you can surf, doldrums where a god does the books,
+  merfolk vendors who overpay for dry biscuits, and bottle-post
+  carrying genuine chronicle rumors.
+- **The horizon ending** - the chart's last page has a line drawn
+  off its edge. Follow it (rations required) through horizon_call
+  to beyond_the_chart: cross entirely (a `finish` ending to rank
+  with the spaceship), come back changed, or anchor in the seam
+  and wake knowing six words of the old tongue.
+
+Steam packaging remains the only deferred item.

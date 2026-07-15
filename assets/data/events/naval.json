@@ -1,0 +1,307 @@
+[
+  {
+    "id": "shipwright_yard",
+    "locations": ["coast"],
+    "weight": 16,
+    "when": ["!has sloop"],
+    "text": "A shipwright's yard at the harbor's end, and in it, up on blocks, a sloop with clean lines and a FOR SALE shingle. The shipwright looks you over the way shipwrights look over people who walk in from the land side: with pity, and a price.",
+    "choices": [
+      { "text": "Buy her outright", "requires": { "money": 40 },
+        "outcomes": [
+          { "weight": 100, "text": "Forty gold and the deed changes hands, along with one piece of free advice: 'She points better than she runs. Like most of us.' You own a ship. The horizon rearranges itself around that fact.", "effects": ["money -40", "item sloop"] }
+        ] },
+      { "text": "Work the yard for a share", "check": { "stat": "con", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "A week of caulking, hauling, and learning which end of a plank is which. The shipwright pays part coin, part boat: an older hull, sound where it counts, yours. Calluses included at no charge.", "effects": ["item sloop", "stat con +1", "stat str +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Day three, you put your foot through a client's deck. The shipwright is kind about it, which costs you more dignity than shouting would have. Your wages cover the plank.", "effects": ["hp -3", "money +4"] }
+        ] },
+      { "text": "Just learn the waterline gossip",
+        "outcomes": [
+          { "weight": 100, "text": "An hour on the yard bench earns you the harbor's whole ledger: who's sailing where, what the sea's been doing to whom, and which captain cheats at cards but pays his losses. Useful people, shipwrights. They know where every hull is buried.", "effects": ["stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "captains_wager",
+    "locations": ["coast", "tavern"],
+    "weight": 12,
+    "when": ["!has sloop"],
+    "text": "In the corner of the harbor tavern, a captain with three days of celebration behind him and one hand of cards in front of him is offering, at volume, to stake his SLOOP. His crew's expressions suggest this has been coming for a while. There's an open seat.",
+    "choices": [
+      { "text": "Sit down and play", "check": { "stat": "int", "dc": 14 },
+        "success": [
+          { "weight": 100, "text": "You play the cards, then the man, then the room. At the end he slides the deed across the table with unexpected grace: 'She hates the name I gave her anyway.' His crew looks RELIEVED. You have won a boat and, apparently, done everyone a favor.", "effects": ["item sloop", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "He plays much better drunk than you play sober, which he mentions, twice, while raking in your stake. The sloop stays his. The lesson is yours, and overpriced.", "effects": ["money -12"] }
+        ] },
+      { "text": "Stake something strange instead", "requires": { "item": "spyglass" },
+        "outcomes": [
+          { "weight": 55, "text": "Your spyglass against his sloop - insulting odds, but he's drunk enough to find it poetic. The hand goes long, then your way. He keeps the spyglass pressed to his eye as you leave with the deed, watching his boat become yours in real time.", "effects": ["removeitem spyglass", "item sloop"] },
+          { "weight": 45, "text": "The cards land his way. He adds your spyglass to his winnings, looks through it backward, and declares you 'tiny and far away.' The room agrees.", "effects": ["removeitem spyglass"] }
+        ] },
+      { "text": "Talk his crew into stopping him",
+        "outcomes": [
+          { "weight": 100, "text": "You tap the first mate and point out, quietly, what's about to happen to everyone's employer. The crew extracts their captain with the smoothness of long practice. He'll never know you saved his boat. THEY know. Sailors remember.", "effects": ["rep +5", "stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "sunken_sloop",
+    "locations": ["coast"],
+    "weight": 12,
+    "when": ["!has sloop"],
+    "text": "In the shallows off the point, visible at low water: a sloop, sunk at her mooring in some old storm and never raised. The mast still stands, tide-washed. The harbormaster's records say her owner left no heirs, which makes her, by coastal law, the property of 'whoever's fool enough.'",
+    "choices": [
+      { "text": "Raise her", "requires": { "item": "rope" }, "check": { "stat": "str", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Two tides of work: rope, barrels, arithmetic, and hauling until your spine files complaints. She comes up streaming like something being born. A week of drying and pitch, and she's YOURS - fool's claim, honestly earned.", "effects": ["removeitem rope", "item sloop", "stat str +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The rope holds. The barrels hold. The mast, which had one storm's worth of rot in it, does not. She settles back down with a sigh, taking your rope and most of your afternoon with her.", "effects": ["removeitem rope", "hp -3"] }
+        ] },
+      { "text": "Dive her cabin first", "check": { "stat": "con", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Three breaths' work in green water: the strongbox comes free of the silt on the second try. Barnacled shut, but harbor smiths open such things for a percentage. The dead owner, wherever he is, doesn't mind. Probably.", "effects": ["money +13"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The cabin door swings shut behind you the way doors underwater absolutely should not, and your exit involves a porthole not sized for exits. You surface with nothing but a story and some scrapes to prove it.", "effects": ["hp -4"] }
+        ] },
+      { "text": "Report her to the harbormaster properly",
+        "outcomes": [
+          { "weight": 100, "text": "Paperwork, of all things. The harbormaster stamps three forms, pays you a finder's fee from a locked drawer, and mutters that you're the first person in thirty years to do this the right way. The sloop will go to the orphan school's sailing program. That's... actually the best ending she could have.", "effects": ["money +8", "rep +4"] }
+        ] }
+    ]
+  },
+  {
+    "id": "sea_squall",
+    "locations": ["sea"],
+    "weight": 16,
+    "text": "The sky to windward turns the color of a bruise and starts walking toward you. There is nowhere to moor, because you are the moor, the harbor, and the entire national infrastructure of this ship. The squall gives you about four minutes to have opinions about that.",
+    "choices": [
+      { "text": "Run before it", "check": { "stat": "dex", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You put the wind behind you and FLY - hull humming, spray like thrown coins, the squall chasing and never catching. It is the fastest you have ever traveled and the most alive you have felt doing it. The storm gives up, visibly annoyed.", "effects": ["stat dex +1", "hp +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The squall catches you mid-maneuver and treats your sloop like a dog treats a stick. You keep the mast and lose the afternoon, some skin, and whatever was on deck that wasn't tied down. The rations were not tied down.", "effects": ["hp -4", "removeitem rations"] }
+        ] },
+      { "text": "Strike sail and take it bare-poled",
+        "outcomes": [
+          { "weight": 70, "text": "You make everything fast, lash the tiller, and let the sea do its worst to a target with nothing to grab. An hour of noise and vertical water, then sun, absurdly, as if nothing happened. The sloop shakes herself like a dog. You do the same.", "effects": ["stat con +1"] },
+          { "weight": 30, "text": "Bare poles or not, one wave comes aboard like it had a ticket. You spend the storm bailing and the evening wringing out everything you own, including, somehow, things that were sealed.", "effects": ["hp -3"] }
+        ] },
+      { "text": "Shout back at it",
+        "outcomes": [
+          { "weight": 100, "text": "You stand at the mast and inform the weather, at volume, exactly what you think of its timing. The squall - witnesses would be useful here - VEERS. Sailors' rule: one shout per storm, and never mention it ashore or the sea hears.", "effects": ["stat cha +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "sea_freebooters",
+    "locations": ["sea"],
+    "weight": 14,
+    "text": "The sail behind you has been matching your course for an hour, which is one hour longer than coincidence allows. She closes enough to show her colors: none. Freebooters. A voice comes over the water, professionally bored: 'HEAVE TO. TOLL INSPECTION.'",
+    "choices": [
+      { "text": "Pay the toll", "requires": { "money": 10 },
+        "outcomes": [
+          { "weight": 100, "text": "Ten gold in a tarred bag goes across on a line. The freebooter captain examines it, nods, and passes back a receipt - an actual receipt, stamped, valid (it says) with all crews flying no colors this season. Piracy has gotten organized. The receipt will save your purse once more before it falls apart.", "effects": ["money -10", "stat wis +1"] }
+        ] },
+      { "text": "Run for it", "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Your sloop is smaller, lighter, and - it turns out over two glorious hours - faster in shallow water where their draft won't dare. You cross a sandbar with a handspan to spare and hear applause, actual applause, carry over the water behind you. Pirates respect craft.", "effects": ["stat dex +1", "rep +3"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "They have more sail, more crew, and someone aboard who anticipates your one clever move like they invented it. The boarding is almost gentle. They take the toll plus a 'fleeing surcharge' and leave you your boat, your skin, and an itemized bill.", "effects": ["money -14", "hp -2"] }
+        ] },
+      { "text": "Parley: offer news instead", "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Freebooters live and die on harbor gossip, and you are FRESH from shore. Twenty minutes of who's shipping what, which garrison is undermanned, and the captain's cheating cousin later, they wave you through - and throw in a jar of something excellent, looted from somebody who deserved it.", "effects": ["item ale", "rep +2", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your news is stale. STALE. The captain's face suggests you've committed the sea's one unforgivable crime: being boring. The toll is doubled 'for wasting the watch's time.'", "effects": ["money -8"] }
+        ] }
+    ]
+  },
+  {
+    "id": "sea_ghost_ship",
+    "locations": ["sea"],
+    "weight": 12,
+    "slots": { "figure": "figure_dead" },
+    "text": "She crosses your bow in the grey before dawn, sails full on a windless sea: a ship with no wake, crewed by nobody, riding lights burning a color lights don't come in. Her stern-board, as she glides past, reads clear as judgment - she was {figure}'s ship, and {figure} has been dead since year {figure_year}.",
+    "choices": [
+      { "text": "Board her",
+        "outcomes": [
+          { "weight": 55, "text": "Your boots make the only sound aboard. The log on the chart table is filled out to TOMORROW's date, in a neat hand, mid-sentence. You take the strongbox - the dead file no complaints - and are back over the rail before whatever writes the log comes back from wherever it steps out to.", "effects": ["money +16", "stat con +1"] },
+          { "weight": 45, "text": "Below decks, the crew's boots stand in two neat rows, all facing the ladder, all waiting. You are back aboard your own sloop before conscious thought resumes, carrying nothing but the strong impression that you were EXPECTED, and early.", "effects": ["trait +cursed", "hp -2"] }
+        ] },
+      { "text": "Hail her by her dead captain's name", "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "At the name, the whole ship pauses - sails still full, sea still flat, everything holding its breath. Then her riding lights dip, once, precisely: a salute. Something loosens in the grey air, and she sails on lighter than she came. Some errands just need a witness.", "effects": ["trait +blessed", "stat wis +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You get the name almost right. ALMOST is apparently the problem. The lights swing toward you like heads turning, and your sloop - your sensible, beloved sloop - chooses that moment to find wind that doesn't exist and USE it. You let her run.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Log the sighting and hold course",
+        "outcomes": [
+          { "weight": 100, "text": "You write down the hour, the heading, the color of those lights - a color you have to describe in metaphor because the alphabet of light doesn't have it. Harbormasters pay for verified sightings; the superstitious pay MORE. Both will buy you drinks for the telling.", "effects": ["money +7", "stat int +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "sea_leviathan",
+    "locations": ["sea"],
+    "weight": 11,
+    "text": "The water to starboard bulges, smooths, and becomes a back - a BACK, barnacled like a reef, rising and rising until your mast is the second-tallest thing in the neighborhood. An eye the size of your tiller regards you on its way past. It is not hostile. It is not anything. You are weather to it.",
+    "choices": [
+      { "text": "Hold course and be weather",
+        "outcomes": [
+          { "weight": 100, "text": "You sail on at your same speed like a professional with an appointment, and the leviathan continues at its same speed like a continent with one. For six minutes you travel together, the enormity and you. When it sounds, the sea closes over it politely, and your hands don't shake until afterward. Mostly.", "effects": ["stat wis +2"] }
+        ] },
+      { "text": "Ride its bow-wave", "check": { "stat": "dex", "dc": 14 },
+        "success": [
+          { "weight": 100, "text": "Madness, and it WORKS: you tuck the sloop onto the swell it pushes and surf a hill of ocean for two effortless leagues, hull singing, doing a day's sailing in an hour. When it sounds, it leaves you precisely, gently, in calm water - which is when you realize it knew you were there the whole time.", "effects": ["stat dex +1", "hp +2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The bow-wave is not a hill, it is a MOOD, and it changes. Your sloop corkscrews off the swell, you meet the deck at an angle nobody meets a deck on purpose, and the leviathan sounds without ever noticing the small crunchy noise it almost made of you.", "effects": ["hp -5"] }
+        ] },
+      { "text": "Scrape a barnacle as it passes",
+        "outcomes": [
+          { "weight": 60, "text": "You leaN out with a knife and take one fist-sized barnacle off the passing immensity - a barnacle that has seen the deep ocean floor and the undersides of storms. Collectors will fight over it. The leviathan does not notice the theft, which is the only reason there is an afterward.", "effects": ["money +11"] },
+          { "weight": 40, "text": "The hide FLINCHES - just locally, just a ripple, the way your skin twitches at a fly. The local ripple is nine feet tall. You and your knife and your ambitions are relocated to the sea, and the sloop kindly waits while you climb back into your life.", "effects": ["hp -4"] }
+        ] }
+    ]
+  },
+  {
+    "id": "sea_doldrums",
+    "locations": ["sea"],
+    "weight": 11,
+    "slots": { "god": "god" },
+    "text": "The wind dies like a debt defaulting - all at once, no forwarding address. The sail hangs. The sea goes to glass. Sailors say the doldrums are where {god} does the accounting for {god_domain}, and nothing moves until the ledger balances. Your reflection watches you from alongside, waiting to see what you'll try.",
+    "choices": [
+      { "text": "Whistle for a wind, and mean it",
+        "outcomes": [
+          { "weight": 65, "text": "The old rite: face the quarter you want, whistle low, and put something over the side - you spare a heel of bread. The glass sea takes it under without a ripple, considers, and sends a cat's-paw of breeze that builds into a working wind. The ledger, apparently, balanced in your favor.", "effects": ["favor 1", "stat cha +1"] },
+          { "weight": 35, "text": "You whistle. The sea holds its breath, offended - WRONG NOTE, apparently, or wrong quarter, or wrong century. The calm lasts another half a day out of spite, and something under the boat hums the correct tune once, quietly, to rub it in.", "effects": ["hp -1"] }
+        ] },
+      { "text": "Row", "check": { "stat": "con", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You get the sweeps out and become your own weather. Hours of it, blisters stacked on blisters, the sloop grinding forward across the glass - until the hull crosses some invisible line and the wind picks you up like a parent relenting. You earned every yard.", "effects": ["stat con +1", "stat str +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You row until your hands give out, and the horizon declines to come any closer. When you finally ship the sweeps, the silence applauds. The wind returns in its own time, unearned, indifferent, insulting.", "effects": ["hp -3"] }
+        ] },
+      { "text": "Use the mirror-calm: sound the bottom",
+        "outcomes": [
+          { "weight": 100, "text": "Water this still is a window. You spend the calm charting what's below: a drowned ridge, a wreck worth marking, a school of something silver that moves like one animal wearing a thousand coats. The chart notes alone will sell in the next harbor - the calm PAID you.", "effects": ["money +8", "stat int +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "sea_merfolk_market",
+    "locations": ["sea"],
+    "weight": 10,
+    "text": "They surface around your hull at noon, unhurried: merfolk, a dozen of them, towing net-bags of goods between them. Not sirens, not omens - VENDORS. One raps the hull like a shop bell and holds up, by way of a merchandise display, a sword with coral grown through the guard.",
+    "choices": [
+      { "text": "Trade coin for salvage", "requires": { "money": 9 },
+        "outcomes": [
+          { "weight": 100, "text": "Commerce at the waterline: your coins (they like the SHINE, not the value) for the pick of their nets - drowned goods, sea-changed and strange. What you haul aboard is worth double ashore, provenance: 'wet.'", "effects": ["money -9", "loot fine"] }
+        ] },
+      { "text": "Trade something that floats down badly",
+        "outcomes": [
+          { "weight": 100, "text": "What merfolk cannot get is anything that hates water, so your spare dry biscuit - a DRY thing, crisp, impossible - is treasure to them. They pass it around with reverence, and overpay you in pearl-scrap with the giddiness of collectors. Everyone in this transaction thinks they robbed the other. Perfect trade.", "effects": ["removeitem bread", "money +12"] }
+        ] },
+      { "text": "Ask what they know of the chart's edge", "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "The oldest of them surfaces close, looks at you a long time, and draws on your hull with one wet finger: the coast, the deep, and then - past the last sounding - a spiral. 'Edge on YOUR chart,' she says, in careful land-speech. 'Door on ours.' The drawing dries into your memory permanently.", "effects": ["stat wis +2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The question makes the whole pod go still, exchange looks, and submerge - transaction OVER. The last one down leaves your payment on the deck anyway. Whatever you touched, they wanted no part of it, but they're honest about invoices.", "effects": ["money +3"] }
+        ] }
+    ]
+  },
+  {
+    "id": "sea_bottle_post",
+    "locations": ["sea"],
+    "weight": 9,
+    "slots": { "rumor": "chronicle_random" },
+    "text": "A glint in the swell: a bottle, riding the current with the self-importance of registered mail. The paper inside is dry and the hand is urgent: \"{rumor}\" Below that, smaller: 'If found, tell someone. Anyone. It matters that it's KNOWN.'",
+    "choices": [
+      { "text": "Promise the bottle, and keep it",
+        "outcomes": [
+          { "weight": 100, "text": "You read it twice, learn it, and swear to the empty sea to carry it ashore. Knowledge wants witnesses; the Chronicle is just the sea's way of washing things up where they'll be read. At the next tavern, you'll watch the news land on faces. That's the delivery fee, paid to you.", "effects": ["stat wis +1", "stat int +1"] }
+        ] },
+      { "text": "Add your own line and re-post it",
+        "outcomes": [
+          { "weight": 100, "text": "Beneath the message you write one true sentence of your own - your name, your heading, one thing you know that somebody someday might need. Re-corked, re-thrown, the bottle rides off toward its next reader. Somewhere down the years, a stranger will know you existed. Cheapest immortality on the market.", "effects": ["stat cha +1"] }
+        ] },
+      { "text": "Sell the bottle, message and all",
+        "outcomes": [
+          { "weight": 100, "text": "Sealed sea-mail with legible provenance is a collector's category, and you know it. The promise to 'tell someone'? Technically the buyer is someone. The coins are heavy and only slightly disappointed in you.", "effects": ["money +6"] }
+        ] }
+    ]
+  },
+  {
+    "id": "sea_chart_edge",
+    "locations": ["sea"],
+    "weight": 9,
+    "text": "Sorting the chart locker in a quiet watch, you find it: the master chart's LAST page. Past the final soundings, past the last hopeful island, the cartographers simply... stopped. But someone - older ink, surer hand - has drawn one thin line continuing off the edge, and written beside it: 'the water does not end. we just stopped asking.'",
+    "choices": [
+      { "text": "Set course along the old line", "requires": { "item": "rations" },
+        "outcomes": [
+          { "weight": 100, "text": "You provision, take a bearing from a line drawn by a dead hand, and point the bow at the space where the chart gives up. The land behind you takes a long time to sink, like it's watching you go.", "effects": ["goto horizon_call"] }
+        ] },
+      { "text": "Copy the line, sell the heading",
+        "outcomes": [
+          { "weight": 100, "text": "There are captains who collect impossible headings the way scholars collect dead languages. You find one in the next harbor and the price is excellent - though she looks at you afterward with something like pity: 'You SOLD it? You didn't SAIL it?' The coins are heavy. So is the question.", "effects": ["money +14", "stat wis -1"] }
+        ] },
+      { "text": "The chart ends where it ends for reasons",
+        "outcomes": [
+          { "weight": 100, "text": "You fold the last page back under the others and return to waters with soundings. Some lines are drawn by the drowned, and following them is how the drowned recruit. Prudence keeps you breathing. It keeps the horizon exactly where it is, too.", "effects": ["stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "horizon_call",
+    "locations": [],
+    "text": "Day three past the last sounding. The water has changed color to something with no coastal name, the stars have started rearranging - subtly, like furniture moved while you slept - and dead ahead, all day, there has been a LINE on the horizon that does not resolve and does not recede. The old ink was right. Nobody stopped asking because the answer was boring.",
+    "choices": [
+      { "text": "Hold course. All the way", "check": { "stat": "con", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You lash your supplies, take the tiller, and give the line on the horizon your full, unblinking attention as it grows. The sea funnels. The light goes strange and personal. The sloop, bless her fool's heart, RUNS.", "effects": ["goto beyond_the_chart"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "On the fourth night the sea sends one wave as a question - a big one, a SERIOUS one - and your grip on the tiller answers wrong. By the time you've rebuilt the rigging's courage and your own, the line has receded, the stars have snapped back, and the way is lost. This year.", "effects": ["hp -5"] }
+        ] },
+      { "text": "Anchor here, at the edge of asking",
+        "outcomes": [
+          { "weight": 100, "text": "You anchor where no chart admits an anchorage, one day short of the answer, and spend a night at the rim of the world's knowledge. The fishing is unbelievable. The dreams are better. In the morning you sail back the way you came, carrying the exact coordinates of the question - which is its own kind of treasure.", "effects": ["stat wis +2", "money +9"] }
+        ] },
+      { "text": "Turn back while the stars still know you",
+        "outcomes": [
+          { "weight": 100, "text": "The line watches you go. That's not a figure of speech - you feel the attention on your back the whole first day home, patient as the horizon itself. It isn't angry. It has all the time there is. The taverns will not believe a word, and you will tell it anyway, forever.", "effects": ["trait +famous", "stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "beyond_the_chart",
+    "locations": [],
+    "text": "The line resolves. It is not a waterfall, not a wall, not an ending - it is a THRESHOLD, the sea rising through it like a held chord, and beyond it: water, more water, lit from angles this sky doesn't have, under stars arranged in an alphabet you suddenly, giddily, almost read. The sloop's bow crosses first. Nothing stops. The chord widens. The sloop asks, in her way: WELL?",
+    "choices": [
+      { "text": "Cross. Entirely",
+        "outcomes": [
+          { "weight": 100, "text": "You take the tiller, thank the water you're leaving, and sail through. The chord closes behind you like a book with your name in it. On this side of the charts, the coast is only the beginning of what nobody stopped to ask about - and you have a good boat, full rations, and forever. The last thing the old world hears is you, laughing, trimming sail.", "effects": ["finish Sailed past the edge of every chart, where the water does not end. The harbor still leaves a light out, just in case."] }
+        ] },
+      { "text": "One hour on the far side, then home",
+        "outcomes": [
+          { "weight": 100, "text": "You cross, you breathe the far light, you fill one jar with water that glows faintly with borrowed stars - and you come BACK, because someone has to, because otherwise it's just another sailor who never returned. The jar never dims. Neither, ever again, do you.", "effects": ["loot fine", "trait +famous", "trait +blessed", "stat wis +2"] }
+        ] },
+      { "text": "Anchor in the threshold itself",
+        "outcomes": [
+          { "weight": 100, "text": "Half the hull in each world, the chord humming through the keel, you spend one night anchored in the seam of everything. What you dream there doesn't fit in the space behind your eyes, and leaves the extra outside: you wake knowing words you were never taught, in a tongue older than the coast.", "effects": ["learn 6", "stat int +1", "hp +3"] }
+        ] }
+    ]
+  }
+]

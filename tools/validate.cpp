@@ -36,7 +36,7 @@ static const std::set<std::string> kSlotQueries = {
     "rival", "wronged_figure"};
 static const std::set<std::string> kDecks = {
     "city", "tavern", "dungeon", "dungeon_finale", "cave", "forest", "road",
-    "crash", "swamp", "mountains", "coast"};
+    "crash", "swamp", "mountains", "coast", "sea"};
 static const std::set<std::string> kStats = {"str", "dex", "con", "int", "wis", "cha"};
 
 // Tokens the engine injects at runtime.
@@ -53,7 +53,8 @@ static bool validWhen(const std::string& w) {
     static const std::set<std::string> unary = {"carrying_artifact", "war_here",
                                                 "plague_here", "raining", "snowing",
                                                 "companion", "!companion",
-                                                "vehicle", "!vehicle"};
+                                                "vehicle", "!vehicle",
+                                                "ship", "!ship"};
     static const std::set<std::string> named = {"trait", "!trait", "has", "!has", "npc",
                                                 "season"};
     static const std::set<std::string> cmp = {"rep", "money", "credits", "hp", "day",

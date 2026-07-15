@@ -608,6 +608,12 @@ bool Game::evalCond(const std::string& cond) const {
             if (item.type == "vehicle") has = true;
         return (a[0] == '!') ? !has : has;
     }
+    if (a == "ship" || a == "!ship") {
+        bool has = false;
+        for (auto& item : ch_.pack)
+            if (item.type == "ship") has = true;
+        return (a[0] == '!') ? !has : has;
+    }
     if (a == "war_here") {
         int owner = regionOwner(currentSite_ >= 0 ? world_.sites[currentSite_].region : -1);
         for (auto& w : history_.liveWars)
@@ -985,6 +991,22 @@ void Game::enterTravel() {
     wander.siteName = "the wilds";
     wander.label = "Wander " + world_.regions[currentRegion_].name;
     travelOptions_.push_back(wander);
+
+    // The naval arc: on a coast, with a ship, the map opens sideways (R6).
+    if (biome == "coast") {
+        bool hasShip = false;
+        for (auto& item : ch_.pack)
+            if (item.type == "ship") hasShip = true;
+        if (hasShip) {
+            TravelOption sail;
+            sail.deck = "sea";
+            sail.siteName = "the open water";
+            sail.label = "Set sail (2 days, another shore)";
+            sail.days = 2;
+            sail.sail = true;
+            travelOptions_.push_back(sail);
+        }
+    }
 }
 
 int Game::regionOwner(int region) const {
@@ -1235,6 +1257,7 @@ void Game::dealEvent() {
         // Biome decks are smaller; when one runs dry the land defaults.
         if (!current_ && tag == "swamp") { tag = "forest"; continue; }
         if (!current_ && (tag == "mountains" || tag == "coast")) { tag = "road"; continue; }
+        if (!current_ && tag == "sea") { tag = "coast"; continue; }
         if (!current_) { enterTravel(); return; }
         // Event-level gate: "trait wanted" events only find the wanted.
         bool gated = false;
@@ -1952,6 +1975,16 @@ void Game::drawTravel(Vector2 mouse) {
         deckTag_ = travelOptions_[pick].deck;
         currentSite_ = travelOptions_[pick].site;
         if (currentSite_ >= 0) currentRegion_ = world_.sites[currentSite_].region;
+        if (travelOptions_[pick].sail) {
+            // A voyage: the sea events happen en route, and you make
+            // landfall on some OTHER coast entirely.
+            std::vector<int> coasts;
+            for (int r = 0; r < (int)world_.regions.size(); r++)
+                if (world_.regions[r].biome == "coast" && r != currentRegion_)
+                    coasts.push_back(r);
+            if (!coasts.empty())
+                currentRegion_ = coasts[runRng_.range(0, (int)coasts.size() - 1)];
+        }
         visitedRegions_.insert(currentRegion_);
         eventsLeftHere_ = (deckTag_ == "dungeon") ? runRng_.range(3, 4) : runRng_.range(2, 3);
         // The road takes what the road takes: each day past the first eats a

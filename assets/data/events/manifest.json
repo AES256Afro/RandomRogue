@@ -19,6 +19,7 @@
     "swamp.json",
     "mountains.json",
     "coast.json",
-    "gods.json"
+    "gods.json",
+    "naval.json"
   ]
 }
