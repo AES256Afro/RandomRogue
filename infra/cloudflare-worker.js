@@ -40,7 +40,7 @@ function validKey(day) {
 }
 
 export default {
-  async fetch(req, env) {
+  async fetch(req, env, ctx) {
     const url = new URL(req.url);
     let p = url.pathname.replace(/^\/+/, "");
     if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
@@ -83,6 +83,15 @@ export default {
       await env.DB.prepare(
         "INSERT INTO deaths (day, name, meaning, days, epitaph, site, relics, finished, journey) VALUES (?,?,?,?,?,?,?,?,?)"
       ).bind(day, name, meaning, days, epitaph, site, relics, finished, journey).run();
+      // The Confluence: fallen runs cross over to the MUD as ghosts.
+      // Fire and forget; the afterlife does not do retries.
+      if (!finished && ctx) {
+        ctx.waitUntil(fetch("https://mud.random-rogue.com/api/legacy/death", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ name, meaning, epitaph, days, cause: site ? "fell at " + site : "fell somewhere in the Wide World" }),
+        }).catch(() => {}));
+      }
       return new Response("ok", { headers: CORS });
     }
     if (p === "__scores") {
