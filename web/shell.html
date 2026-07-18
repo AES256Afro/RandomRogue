@@ -34,6 +34,30 @@
 <body>
   <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
   <script>
+    // Browsers suspend AudioContexts created before a user gesture, which
+    // silenced the whole soundtrack. Capture every context the engine makes
+    // and resume them on the first real interaction (R9c).
+    (function () {
+      var ctxs = [];
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      function Wrapped(opts) {
+        var c = opts !== undefined ? new AC(opts) : new AC();
+        ctxs.push(c);
+        return c;
+      }
+      Wrapped.prototype = AC.prototype;
+      window.AudioContext = Wrapped;
+      if (window.webkitAudioContext) window.webkitAudioContext = Wrapped;
+      function resumeAll() {
+        for (var i = 0; i < ctxs.length; i++) {
+          if (ctxs[i].state === 'suspended') { try { ctxs[i].resume(); } catch (e) {} }
+        }
+      }
+      ['pointerdown', 'touchstart', 'mousedown', 'keydown'].forEach(function (t) {
+        document.addEventListener(t, resumeAll, true);
+      });
+    })();
     var Module = {
       canvas: (function () { return document.getElementById('canvas'); })()
     };
