@@ -1,0 +1,1061 @@
+[
+  {
+    "id": "b2t_darts_final",
+    "locations": ["tavern"],
+    "weight": 12,
+    "text": "It's the dart league final at {site} and the Mudlarks are down a player. Their captain scans the room with the desperation of a man who has already bet his boots, and lands on you.",
+    "choices": [
+      {
+        "text": "Step up and throw",
+        "check": { "stat": "dex", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Triple ring, twice, and a finish so clean the opposing team checks the board for magnets. The Mudlarks carry you a lap around the bar and split the pot.", "effects": ["money +8", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your third dart hits the chalkboard, the lamp, and the captain's boot, in that order. The boot was already bet. Everyone loses.", "effects": ["hp -2", "stat cha -1"] }
+        ]
+      },
+      {
+        "text": "Book the side action instead",
+        "requires": { "money": 5 },
+        "outcomes": [
+          { "weight": 55, "text": "You give honest odds, which nobody here has seen before, and take a percentage of the frenzy. Bookkeeping is just adventuring for cowards, and it pays better.", "effects": ["money +7"] },
+          { "weight": 45, "text": "The match ends in a tie, a result you did not price. Both sides demand payouts. You settle out of pocket before the darts get involved.", "effects": ["money -5"] }
+        ]
+      },
+      {
+        "text": "Inspect the champion's darts",
+        "check": { "stat": "int", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Weighted tips, hollow shafts, and a magnet in his ring. You announce your findings with exhibits. The league fines him, the Mudlarks win by forfeit, and you get the whistleblower's cut.", "effects": ["money +6", "rep +3"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You dismantle a perfectly honest dart in front of forty witnesses. It does not go back together. You buy the champion a new set and a round of apology.", "effects": ["money -4", "rep -2"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_wake_for_the_dead",
+    "locations": ["tavern"],
+    "weight": 9,
+    "slots": { "gone": "figure_dead" },
+    "text": "The whole of {site} is draped in black for the wake of {gone}, {gone_trait} to the last, dead since year {gone_year}. The ale is free, the grief is negotiable, and someone has propped the portrait facing the bar 'so they don't miss anything.'",
+    "choices": [
+      {
+        "text": "Give an unsolicited eulogy",
+        "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You speak for four minutes about a person you never met and land every note. Three mourners adopt you as family on the spot. The family part comes with dinner.", "effects": ["rep +4", "hp +3"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Halfway through, it becomes clear you are eulogizing the wrong dead person entirely. The room lets you finish, which is crueler than stopping you.", "effects": ["rep -3", "stat cha -1"] }
+        ]
+      },
+      {
+        "text": "Drink the free ale and keep your head down",
+        "outcomes": [
+          { "weight": 100, "text": "You raise a quiet mug to a stranger's memory. The stew comes around twice. Grief, it turns out, caters well.", "effects": ["hp +2"] }
+        ]
+      },
+      {
+        "text": "Volunteer to carry the coffin tomorrow",
+        "outcomes": [
+          { "weight": 70, "text": "Coffins are heavier than they look and the family pays better than they promised. You walk away sore, solvent, and mentioned kindly in a prayer.", "effects": ["money +6", "hp -2", "rep +2"] },
+          { "weight": 30, "text": "The route includes a hill nobody warned you about. By the top, you have doubts about the deceased's decision to be buried up there.", "effects": ["money +6", "hp -4"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_wedding_takeover",
+    "locations": ["tavern"],
+    "weight": 11,
+    "text": "A wedding party has rented all of {site}, a fact you learn while already inside it, holding a drink. The bride's side and the groom's side have divided the room like rival armies with cake.",
+    "choices": [
+      {
+        "text": "Blend in as a distant cousin",
+        "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You are 'from the mother's side, obviously' and nobody on either side will admit to not remembering you. Three courses, two dances, one slice of cake the size of a shield.", "effects": ["hp +4"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Both sides compare notes on you at exactly the wrong moment. You are escorted out mid-bite by an aunt with a grip like a dockworker.", "effects": ["hp -2", "stat cha -1"] }
+        ]
+      },
+      {
+        "text": "Give the couple a gift and get invited properly",
+        "requires": { "money": 5 },
+        "outcomes": [
+          { "weight": 100, "text": "Five gold in a borrowed handkerchief. The couple, who know exactly nobody's name today, seat you at the good table. The toast you improvise gets written down by a bridesmaid.", "effects": ["money -5", "rep +4", "hp +3"] }
+        ]
+      },
+      {
+        "text": "Offer to work the taps for the night",
+        "outcomes": [
+          { "weight": 100, "text": "The barkeep, drowning, hands you an apron without a word. You pour until midnight, learn both families' secrets, and get paid out of the wedding fund plus tips from the guilty.", "effects": ["money +6", "hp -1", "stat wis +1"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_cellar_lodger",
+    "locations": ["tavern"],
+    "weight": 12,
+    "text": "The barkeep of {site} is offering free dinner for life - 'well, tonight' - to whoever deals with 'the situation in the cellar.' The situation, on inspection, is a badger. It has gotten into the small casks and it is not sorry.",
+    "choices": [
+      {
+        "text": "Wrestle it out by hand",
+        "check": { "stat": "str", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "It takes both arms, a barrel lid, and language the barkeep pretends not to hear. You emerge holding a furious, damp badger at arm's length. The tavern applauds. The badger does not.", "effects": ["money +6", "hp -2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The badger has been drinking and you have not, which turns out to be the deciding factor. You retreat up the stairs with souvenirs.", "effects": ["hp -5"] }
+        ]
+      },
+      {
+        "text": "Lure it out with jerky",
+        "requires": { "item": "jerky" },
+        "outcomes": [
+          { "weight": 100, "text": "A trail of dried meat from cask to door. The badger follows it out with the dignity of a paying customer leaving of its own accord. Bloodless, professional, and the barkeep pays full rate.", "effects": ["removeitem jerky", "money +7"] }
+        ]
+      },
+      {
+        "text": "Declare it handled without handling it",
+        "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "'It's a cellar guardian now,' you explain. 'Very lucky. Keeps rats out.' The barkeep, who hates rats more than badgers, pays you a consulting fee and names it Gerald.", "effects": ["money +5"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Gerald chooses that exact moment to come upstairs and finish someone's pie. The barkeep's look costs you more than the dinner was worth, and your name goes on the slate by the door.", "effects": ["rep -3", "trait +banned"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_tavern_audit",
+    "locations": ["tavern"],
+    "weight": 10,
+    "text": "A revenue assessor has taken the corner booth of {site} with a ledger, a candle, and the stillness of a heron. The barkeep polishes the same mug for the fourth time and mouths at you: HELP.",
+    "choices": [
+      {
+        "text": "Cook the books",
+        "check": { "stat": "int", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Two hours of creative arithmetic later, the tavern has technically operated at a loss since before it was built. The assessor signs off with grudging admiration. The barkeep pays you from the drawer that doesn't exist.", "effects": ["money +10"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You carry a nine. The assessor notices. The word 'accomplice' is written down, slowly, while maintaining eye contact. You pay a contribution toward the settlement.", "effects": ["money -6", "rep -3"] }
+        ]
+      },
+      {
+        "text": "Buy the assessor drinks until the numbers soften",
+        "requires": { "money": 4 },
+        "outcomes": [
+          { "weight": 60, "text": "Four rounds in, the assessor admits nobody has bought them a drink in eleven years, and rounds the tavern's debt down out of sheer novelty. The barkeep comps your meals for a week, payable now.", "effects": ["money -4", "hp +3", "rep +2"] },
+          { "weight": 40, "text": "The assessor drinks all four, thanks you, itemizes them as 'attempted influence: 4 units,' and adds them to the assessment. You have subsidized your own failure.", "effects": ["money -4"] }
+        ]
+      },
+      {
+        "text": "Quietly sell the barkeep out",
+        "outcomes": [
+          { "weight": 100, "text": "There's an informant's fee, and you collect it, and the coins are ordinary coins that don't burn or whisper or anything. The barkeep finds out by sundown. Everyone always finds out by sundown.", "effects": ["money +6", "rep -5"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_apprentice_batch",
+    "locations": ["tavern"],
+    "weight": 11,
+    "text": "The brewer's apprentice corners you at {site} with a mug of something the color of pond and the smell of ambition. 'The guild examiner comes at dawn. I need one honest opinion first. Please. Everyone else here is a liar or my mother.'",
+    "choices": [
+      {
+        "text": "Drink it and tell the truth",
+        "check": { "stat": "con", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "It fights you on the way down, but underneath the pond there is - improbably - promise. You suggest less pond. The apprentice takes notes like scripture and stands you a proper drink.", "effects": ["hp +1", "stat wis +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your honest opinion is delivered from the floor. The apprentice writes down 'too strong?' with a hopeful question mark while you renegotiate with your stomach.", "effects": ["hp -3"] }
+        ]
+      },
+      {
+        "text": "Critique it without drinking any",
+        "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You swirl, sniff, hold it to the light, and deliver four minutes on 'mouthfeel' without letting a drop past your teeth. The apprentice is transformed. So is your reputation as a person of taste.", "effects": ["stat cha +1", "rep +2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "'You didn't drink any,' says the apprentice's mother, from the next table, at volume. The tavern's disappointment is unanimous and you buy the next round as penance.", "effects": ["money -3", "rep -2"] }
+        ]
+      },
+      {
+        "text": "Buy the whole test barrel cheap",
+        "requires": { "money": 6 },
+        "outcomes": [
+          { "weight": 50, "text": "The examiner passes the batch at dawn, the recipe becomes the season's fashion, and your barrel of it sells by the mug at a shameless markup. Speculation: occasionally a virtue.", "effects": ["money -6", "money +12"] },
+          { "weight": 50, "text": "The examiner's verdict is one word and it is 'no.' You now own a barrel of officially condemned liquid. The bottling salvages some of it, technically.", "effects": ["money -6", "item swamp_wine"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_gossip_ledger",
+    "locations": ["tavern"],
+    "weight": 10,
+    "text": "The barkeep of {site} keeps a ledger under the till: every rumor, every name, every regrettable Tuesday, cross-referenced. Yours is in there. You can see the tab sticking out. It's a thick tab.",
+    "choices": [
+      {
+        "text": "Pay to read your own page",
+        "requires": { "money": 4 },
+        "outcomes": [
+          { "weight": 100, "text": "Some of it is wrong, some of it is right, and one entry is something you never told anyone, sourced to 'the fishmonger (reliable).' You leave knowing exactly how the town sees you, which is a weapon if you hold it right.", "effects": ["money -4", "stat wis +1"] }
+        ]
+      },
+      {
+        "text": "Pay to have it edited",
+        "requires": { "money": 8 },
+        "outcomes": [
+          { "weight": 100, "text": "For eight gold the barkeep strikes three entries and amends a fourth to read 'misunderstood, allegedly generous.' Within a week the town's opinion of you improves by exactly the amount you paid for. Markets are honest like that.", "effects": ["money -8", "rep +5"] }
+        ]
+      },
+      {
+        "text": "Steal the page",
+        "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "One clean tear during the dinner rush. You burn it in the hearth and watch your worst Tuesday go up the chimney. The barkeep will notice eventually, but a missing page proves nothing.", "effects": ["rep +3"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The ledger is trapped with a bell. Of course it's trapped with a bell. The barkeep adds a fresh entry while you stand there, narrating it aloud, and the door is indicated.", "effects": ["rep -4", "trait +banned"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_rain_crush",
+    "locations": ["tavern"],
+    "weight": 12,
+    "when": ["raining"],
+    "text": "The rain has driven half the market into {site}: merchants, mud, a man holding a goose under one arm as luggage. Standing room only, and you have the last dry seat by the fire. People have noticed.",
+    "choices": [
+      {
+        "text": "Auction your seat",
+        "outcomes": [
+          { "weight": 70, "text": "A soaked wool merchant pays four gold without haggling, which tells you he'd have paid six. You lean against the wall, damp but liquid.", "effects": ["money +4"] },
+          { "weight": 30, "text": "The bidding war between two drenched clerks gets genuinely heated. The winner overpays out of spite. You admire spite; it's reliable.", "effects": ["money +7"] }
+        ]
+      },
+      {
+        "text": "Help the barkeep work the crush",
+        "outcomes": [
+          { "weight": 100, "text": "Two hours of passing mugs over heads and shouting orders in relay. You lose the seat, gain a wage, and learn where every merchant in the crush hides their coin, purely as an observation.", "effects": ["money +5", "hp -1", "stat wis +1"] }
+        ]
+      },
+      {
+        "text": "Give the seat to the man with the goose",
+        "outcomes": [
+          { "weight": 100, "text": "He accepts with the gravity of a dethroned king. The goose sits on his lap and stares into the fire like it remembers something. Later, wordlessly, he leaves a jar of honeycomb by your elbow. The tavern decides you're good people.", "effects": ["item honeycomb", "rep +3"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_last_call",
+    "locations": ["tavern"],
+    "weight": 11,
+    "text": "Last call at {site} came and went an hour ago. Now it's just you, the barkeep, and the specific honesty that only exists between a person washing mugs and the last customer awake in {world}.",
+    "choices": [
+      {
+        "text": "Stay and listen until dawn",
+        "outcomes": [
+          { "weight": 100, "text": "You learn the barkeep's real name, the town's real business, and which cellar the militia doesn't check. None of it was for sale. All of it is valuable. Dawn finds you unslept and better informed than the magistrate.", "effects": ["hp -1", "stat wis +1"] }
+        ]
+      },
+      {
+        "text": "Trade a confession for a confession",
+        "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You go first, which is the whole trick. What comes back is worth ten of yours, and the last drink of the night is on the house, from the good bottle, the one behind the clock.", "effects": ["hp +3", "rep +2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your confession lands wrong - too big for the hour. The barkeep goes quiet and polishes the counter until the polishing means leave. You take the long way home in the dark.", "effects": ["stat cha -1"] }
+        ]
+      },
+      {
+        "text": "Help close up for a floor spot",
+        "outcomes": [
+          { "weight": 100, "text": "Chairs up, floor swept, hearth banked. The barkeep tosses you a blanket and a heel of bread and says nothing, which in barkeep is a whole speech. You sleep like the well-fed dead.", "effects": ["hp +4", "item bread"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_founders_egg",
+    "locations": ["tavern"],
+    "weight": 9,
+    "text": "Behind the bar of {site} sits a jar, and in the jar sits The Egg, pickled - by tradition - since the founding. The pot to eat it stands at twelve gold. It has stood at twelve gold for a generation, because nobody eats The Egg.",
+    "choices": [
+      {
+        "text": "Eat The Egg",
+        "check": { "stat": "con", "dc": 14 },
+        "success": [
+          { "weight": 100, "text": "It tastes like the founding: vinegar, hardship, and something the recipe books call 'notes of regret.' You keep it down. The pot is yours, your name goes on the jar's lid, and a new egg goes in before you've finished counting.", "effects": ["money +12", "rep +3"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The Egg wins, as The Egg has always won. You spend the evening in the alley making your peace with the founding, and the pot rolls over, fattened by your entry fee.", "effects": ["hp -5", "money -2"] }
+        ]
+      },
+      {
+        "text": "Question the egg's authenticity",
+        "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You date the jar's glass, the brine's cloud, and the lid's stamp, and prove the 'founding egg' is at most eight years old. The tavern is scandalized, then relieved, then generous - the truth buys drinks here.", "effects": ["stat int +1", "hp +2", "rep +2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your forensic argument collapses under cross-examination by a retired chandler who knows glass. Doubting The Egg turns out to be a social crime. Your table empties.", "effects": ["rep -3"] }
+        ]
+      },
+      {
+        "text": "Start a side pot on the next challenger",
+        "requires": { "money": 3 },
+        "outcomes": [
+          { "weight": 55, "text": "A confident drover takes the challenge an hour later and folds at the first bite, exactly as you priced. The side pot pays out clean.", "effects": ["money +6"] },
+          { "weight": 45, "text": "The drover eats The Egg without changing expression, asks for another, and breaks the odds, the tradition, and your margin in one sitting.", "effects": ["money -3"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_stray_cask",
+    "locations": ["tavern"],
+    "weight": 10,
+    "text": "A sweating man sets a cask beside your table at {site}. 'Watch this. Tell anyone who asks it's yours. Back in one hour, three gold now, five after.' He's gone before the 'no' forms. The three gold is real. The cask is very slightly warm.",
+    "choices": [
+      {
+        "text": "Sit with it, ask nothing",
+        "outcomes": [
+          { "weight": 55, "text": "An hour later he's back, calmer, and pays the five like a man concluding legitimate business. You will never know, and not knowing is included in the price.", "effects": ["money +8"] },
+          { "weight": 30, "text": "The watch comes through asking about a cask. You say it's yours, which becomes complicated when they ask what's in it and you have to choose a liquid at random. 'Soup' was the wrong answer, but they lose interest before it matters. He never returns. You keep the three and the cask of, as it turns out, unlabeled brandy.", "effects": ["money +3", "loot common"] },
+          { "weight": 15, "text": "The watch comes through, asks about the cask, and does not lose interest. The sweating man watches from across the street as you're fined for possession of 'uncustomed goods.' The three gold covers a third of it.", "effects": ["money -6", "rep -3"] }
+        ]
+      },
+      {
+        "text": "Open it the moment he's gone",
+        "outcomes": [
+          { "weight": 60, "text": "Contraband, but the boring kind: undeclared spice, worth more than he was paying you to guard it. You decant a personal customs fee and reseal it with an innocent face.", "effects": ["money +6"] },
+          { "weight": 40, "text": "The warm thing inside is a colony of bees, mid-relocation, and they have opinions about the lid. The tavern evacuates in order of sting count.", "effects": ["hp -3"] }
+        ]
+      },
+      {
+        "text": "Hand it straight to the door guard",
+        "outcomes": [
+          { "weight": 100, "text": "The guard takes the cask, the report, and your description of the man, and pays the standing rate for 'civic vigilance.' It's less than the five you'd have gotten. It also comes with zero chance of prison, which is a feature.", "effects": ["money +4", "rep +2"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_rival_two_stools",
+    "locations": ["tavern"],
+    "weight": 10,
+    "slots": { "rival": "rival" },
+    "text": "Of all the taverns in {world}, {rival} walks into {site} and takes the stool beside yours. To you, that name means {rival_meaning}. The room, which knows about {rival_deeds}, goes interested and quiet.",
+    "choices": [
+      {
+        "text": "Buy the truce round",
+        "requires": { "money": 3 },
+        "outcomes": [
+          { "weight": 55, "text": "Two drinks, no apologies, one hour of talking around it. You leave without shaking hands, but the room saw who reached for their coin first, and the room keeps score.", "effects": ["money -3", "rep +3"] },
+          { "weight": 45, "text": "They drink your drink, toast 'to old friends,' and say something quiet and surgical that only you can hear. You spend the rest of the night composing replies you'll never use.", "effects": ["money -3", "stat cha -1"] }
+        ]
+      },
+      {
+        "text": "Drink them under the table",
+        "check": { "stat": "con", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "It takes hours and costs you tomorrow morning, but they slide off the stool first, mid-sentence, and the sentence was about you. The room's verdict is unanimous and legally binding.", "effects": ["hp -2", "rep +4", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You wake under the table you meant to drink them under. Someone has tucked a bar rag over you like a blanket, which is somehow the worst part. Your rival paid your tab on the way out, ostentatiously.", "effects": ["hp -4", "rep -3"] }
+        ]
+      },
+      {
+        "text": "Pay the barkeep to serve them the house special",
+        "requires": { "money": 2 },
+        "outcomes": [
+          { "weight": 50, "text": "The house special does what the house special does. Your rival exits at speed, dignity in escrow, and the barkeep keeps your secret at the standard rate of forever.", "effects": ["money -2", "rep +2"] },
+          { "weight": 50, "text": "Your rival drinks the house special, pronounces it 'robust,' and orders another. The barkeep, impressed, tells them who paid. That story travels faster than you do.", "effects": ["money -2", "rep -3"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_news_duel",
+    "locations": ["tavern"],
+    "weight": 10,
+    "slots": { "news": "chronicle_news" },
+    "text": "Two regulars at {site} are one insult from a duel over the news: \"{news}\" One swears it's true because his cousin saw it. The other swears it's false because HER cousin saw it. Seconds are being appointed.",
+    "choices": [
+      {
+        "text": "Fact-check both of them",
+        "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You lay out what's known, what's rumored, and what's cousin-based. Both duelists discover they agree on everything except which of them said it first. The tavern names you arbiter and arbiters drink free.", "effects": ["stat int +1", "hp +2", "rep +2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You introduce a third version of events, sourced to a cousin of your own invention. Now there are three factions, and the one thing they agree on is you.", "effects": ["hp -2", "rep -2"] }
+        ]
+      },
+      {
+        "text": "Take bets on the duel",
+        "requires": { "money": 3 },
+        "outcomes": [
+          { "weight": 60, "text": "The duel is called off when both parties see the odds you've posted and take offense at their own price. They unite to bet on a proxy arm-wrestle instead, and the house - you - always wins.", "effects": ["money +7"] },
+          { "weight": 40, "text": "The duel resolves into a hug at the exact moment you finish taking positions. All bets void, all stakes refunded, except the ones you'd already counted as profit.", "effects": ["money -3"] }
+        ]
+      },
+      {
+        "text": "Loudly back the one buying drinks",
+        "outcomes": [
+          { "weight": 100, "text": "Principles are for people with full purses. Your side wins the shouting, buys the room a round, and includes you in it. The truth remains unresolved, as is traditional.", "effects": ["hp +2", "rep -1"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_snail_derby",
+    "locations": ["tavern"],
+    "weight": 11,
+    "text": "Race night at {site}: six snails, one chalk track down the bar, and a crowd treating it like the event of the season. The favorite is called Lightning. The joke was old before the snail was.",
+    "choices": [
+      {
+        "text": "Bet on Lightning",
+        "requires": { "money": 3 },
+        "outcomes": [
+          { "weight": 55, "text": "Lightning delivers a performance the announcer calls 'blistering, for a snail,' crossing the line a full shell ahead. Short odds, honest money.", "effects": ["money +4"] },
+          { "weight": 45, "text": "Lightning stops mid-track to investigate a drop of ale and never recovers ambition. The winner is a snail called Barry that nobody bet on, including Barry's owner.", "effects": ["money -3"] }
+        ]
+      },
+      {
+        "text": "Enter your own snail",
+        "requires": { "money": 5 },
+        "outcomes": [
+          { "weight": 40, "text": "Your entry - found in the yard, named Doubtful - runs the race of its life. The purse is yours, and Doubtful retires undefeated to a cabbage of honor.", "effects": ["money -5", "money +12"] },
+          { "weight": 60, "text": "Doubtful lives up to the name, executing a slow, deliberate U-turn at the halfway chalk. The crowd finds this funnier than the actual result. You lose the fee but gain a certain fondness.", "effects": ["money -5"] }
+        ]
+      },
+      {
+        "text": "Salt a rival snail's lane",
+        "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "A pinch of salt at the far chalk, invisible, decisive. Lightning's main rival declines to finish and your late bet on the favorite pays out. You feel exactly as good about this as you deserve to.", "effects": ["money +8", "rep -2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You are caught salting a snail track, which is a sentence you'll hear repeated at your expense for years. The stewards fine you, and the snail community - there is a snail community - remembers.", "effects": ["money -4", "rep -4"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_fire_breather",
+    "locations": ["tavern"],
+    "weight": 11,
+    "text": "A fire-breather is performing at {site}, which the rafters have opinions about. For the finale she needs a volunteer to hold the hoop. The last volunteer's eyebrows are still growing back, she says, as a selling point.",
+    "choices": [
+      {
+        "text": "Hold the hoop",
+        "check": { "stat": "dex", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "You hold it high, steady, and - crucially - at the recommended distance. The flame roars through clean. The crowd's tips get split two ways, and she teaches you the trick with the lamp oil, in confidence.", "effects": ["money +5", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You flinch at the exact wrong instant. Nothing important burns, but 'nothing important' is doing some work in that sentence, and your sleeve needed replacing anyway.", "effects": ["hp -3"] }
+        ]
+      },
+      {
+        "text": "Sell ale to the crowd during the show",
+        "requires": { "money": 2 },
+        "outcomes": [
+          { "weight": 100, "text": "You buy a tray of mugs wholesale from the barkeep and retail them to an audience too transfixed to check their change. Fire makes people thirsty. Commerce makes you money.", "effects": ["money -2", "money +6"] }
+        ]
+      },
+      {
+        "text": "Point out the rafters are, technically, kindling",
+        "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You propose moving the finale under the stone chimney arch. The fire-breather adopts the change, the barkeep nearly weeps with relief, and both of them pay you for the same idea without consulting each other.", "effects": ["money +6", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You raise safety concerns at full volume during the quiet part. The crowd boos. The fire-breather incorporates your heckling into the act, at your expense, professionally.", "effects": ["stat cha -1"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_cheap_room",
+    "locations": ["tavern"],
+    "weight": 10,
+    "text": "The room upstairs at {site} costs a third of the usual rate. The barkeep slides the key over without meeting your eyes. 'North room. Lovely views. Previous guests report... company. Non-refundable.'",
+    "choices": [
+      {
+        "text": "Sleep there anyway",
+        "outcomes": [
+          { "weight": 45, "text": "The ghost, it turns out, mostly wants the window open a crack and the boots off the second chair - house rules from a century ago. You comply. In exchange you get the best night's sleep of the season and, at dawn, frost-writing on the glass: 'ACCEPTABLE GUEST.'", "effects": ["money -1", "hp +5"] },
+          { "weight": 40, "text": "The company hums. All night. One song. When you finally hum the harmony out of desperation, it stops, offended, and sulks in the wardrobe until dawn. You sleep in the last two hours.", "effects": ["money -1", "hp -2"] },
+          { "weight": 15, "text": "You wake at midnight to the ghost going through your pack - not stealing, organizing. Everything is folded. Your coins are stacked by size. Deeply unsettling. Extremely convenient.", "effects": ["money -1", "stat wis +1"] }
+        ]
+      },
+      {
+        "text": "Interview the ghost properly",
+        "check": { "stat": "wis", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Candle, patience, and no sudden theology. By the small hours the ghost is telling you things about this town's history that the histories left out on purpose. You take notes. The notes are worth more than the room.", "effects": ["money -1", "learn 1", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your opening question - 'so how did you die' - is apparently the ghost equivalent of asking someone's salary. The temperature drops, the door opens itself, and you finish the night in the stable, socially deceased.", "effects": ["money -1", "hp -2"] }
+        ]
+      },
+      {
+        "text": "Rent it and sell haunted tours",
+        "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Two coppers a head, candle included, gasps guaranteed. The ghost, a natural performer, hams it up magnificently - the wardrobe knock kills every time. You split nothing with it, which it seems to find correct.", "effects": ["money -1", "money +9"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The ghost declines to perform for tourists, on principle, and the refunds come out of your purse. Worse, it does something impressive the moment the last customer leaves. You both know what it did.", "effects": ["money -5"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_turnip_festival",
+    "locations": ["city"],
+    "weight": 12,
+    "text": "You've arrived during the Festival of the First Turnip, and the parade has annexed every street in {site}. There are drummers, banners, and a ceremonial turnip on a velvet cushion, guarded more seriously than most treasuries.",
+    "choices": [
+      {
+        "text": "Join the parade",
+        "outcomes": [
+          { "weight": 60, "text": "Somebody hands you a banner and by the third street you know the chant. You are fed festival bread at four separate corners on the grounds that marchers must be maintained. Belonging: surprisingly caloric.", "effects": ["hp +3"] },
+          { "weight": 40, "text": "You are conscripted to carry the rear end of the Great Effigy, a duty performed bent double and blind. The front end sets the pace. The front end has never once considered the rear end.", "effects": ["hp -2", "rep +2"] }
+        ]
+      },
+      {
+        "text": "Cut through the alleys ahead of it",
+        "check": { "stat": "dex", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Three fences, one washing line, one startled cat. You pop out ahead of the parade just as the cushion-bearer trips - and catch the ceremonial turnip one-handed before it touches cobbles. The city treats this roughly like sainthood.", "effects": ["money +6", "rep +4"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The alley dead-ends into the parade's staging yard, and you emerge through a banner, wearing it. Fifty drummers watch you fight the fabric and lose. There is a woodcut of it by evening.", "effects": ["hp -2", "stat cha -1"] }
+        ]
+      },
+      {
+        "text": "Work a snack stall for the rush",
+        "outcomes": [
+          { "weight": 100, "text": "The fried-turnip stall is drowning in customers and hires you mid-sentence. Four hours of hot oil and shouted orders later, you're paid, fed, and permanently unable to smell turnip without flinching.", "effects": ["money +6", "hp +1"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_museum_provenance",
+    "locations": ["city"],
+    "weight": 10,
+    "text": "The Museum of Provenance Unclear, admission two gold. Exhibits include 'Sword (old)', 'Crown, Probably', and a jar labeled 'DO NOT SHAKE - ONGOING'. The curator watches you with the hunger of a man whose last visitor left in spring.",
+    "choices": [
+      {
+        "text": "Pay and take the full tour",
+        "requires": { "money": 2 },
+        "outcomes": [
+          { "weight": 100, "text": "The curator's commentary is ninety percent apology and ten percent accidental revelation - between the shrugs, he knows this region's real history cold. You leave educated despite the exhibits' best efforts.", "effects": ["money -2", "learn 1", "stat wis +1"] }
+        ]
+      },
+      {
+        "text": "Correct the placards",
+        "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "'Crown, Probably' is a chamber pot, and you can prove it. The curator takes it better than expected - 'attendance will TRIPLE' - and hires you on the spot to misidentify things more rigorously.", "effects": ["money +6", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your reattribution of 'Sword (old)' is refuted by the blade's original owner, who is visiting, elderly, and armed with the exhibit. You are escorted out under the sign that says NO SCHOLARSHIP WITHOUT APPOINTMENT.", "effects": ["stat cha -1", "rep -2"] }
+        ]
+      },
+      {
+        "text": "Donate your lucky rock as an artifact",
+        "requires": { "item": "lucky_rock" },
+        "outcomes": [
+          { "weight": 100, "text": "The curator receives it with both hands and genuine tears. It is catalogued as 'Stone of Significance (donor: a hero)' and given its own shelf. There's a small honorarium, a plaque, and the strange immortality of a museum label.", "effects": ["removeitem lucky_rock", "money +5", "rep +4"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_sewer_hum",
+    "locations": ["city"],
+    "weight": 10,
+    "text": "A sewer crew stands around an open grate in {site}, not going in. From below comes a low, steady hum, like a choir warming up under the street. The foreman offers day rates to 'anyone whose knees still work and whose curiosity doesn't.'",
+    "choices": [
+      {
+        "text": "Go down and find the hum",
+        "check": { "stat": "con", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "The hum is an old drainage valve singing in the current - and wedged in its housing, a strongbox someone once flushed in a hurry. The crew swears you to a split. The smell washes off in a week.", "effects": ["money +8", "loot common"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The hum is a valve. The thing living BEHIND the valve is not, and it objects to visitors at length. You surface at speed, get paid half rate for 'partial reconnaissance,' and burn those trousers.", "effects": ["hp -4", "money +4"] }
+        ]
+      },
+      {
+        "text": "Lower a lantern on a rope first",
+        "requires": { "item": "rope" },
+        "outcomes": [
+          { "weight": 100, "text": "The lantern comes back up intact, which answers the important question, and its light catches a valve, a snagged strongbox, and nothing with eyes. You sell the foreman the layout and let the crew do the wading. Consulting: the driest trade.", "effects": ["money +5", "stat wis +1"] }
+        ]
+      },
+      {
+        "text": "Advise them to brick it up",
+        "outcomes": [
+          { "weight": 100, "text": "'Some hums,' you say, 'are load-bearing.' The foreman finds this so profound he writes it on the grate in chalk. The crew knocks off early, relieved. Nobody pays you, but nobody down there gets to meet you either.", "effects": ["stat wis +1"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_street_pulpit",
+    "locations": ["city"],
+    "weight": 9,
+    "slots": { "god": "god" },
+    "text": "A preacher has claimed the corner of {site} with a crate, a bell, and the unstoppable confidence of the recently inspired. The sermon is about {god}, god of {god_domain} - who is, per the preacher, feeling {god_mood} about this town SPECIFICALLY. The collection plate is watching you.",
+    "choices": [
+      {
+        "text": "Donate to the plate",
+        "requires": { "money": 3 },
+        "outcomes": [
+          { "weight": 100, "text": "The coins ring on the plate and the preacher blesses you by name, which is alarming, because you never gave it. Somewhere behind the weather, something notes the gesture in your column.", "effects": ["money -3", "favor +3"] }
+        ]
+      },
+      {
+        "text": "Debate the theology",
+        "check": { "stat": "int", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You cite doctrine the preacher has clearly never read, and the crowd migrates to your side of the corner. The tips are excellent. The sky, however, develops a single small cloud that follows you for an hour. Noted, apparently.", "effects": ["money +5", "stat int +1", "favor -2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The preacher has an answer for everything, delivered through the bell. The crowd enjoys your defeat enormously. The cloud shows up anyway, out of principle.", "effects": ["stat cha -1", "favor -2"] }
+        ]
+      },
+      {
+        "text": "Listen politely from the back",
+        "outcomes": [
+          { "weight": 100, "text": "Forty minutes on {god_domain}, of which four are useful and one is genuinely unsettling. Attendance, it turns out, counts for something in the ledgers that matter.", "effects": ["stat wis +1", "favor +1"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_oddities_stall",
+    "locations": ["city"],
+    "weight": 9,
+    "slots": { "npc": "figure_alive" },
+    "text": "A stall of imported oddities in {site}, and behind it - checking a strongbox with one hand while selling with the other - stands {npc}, {npc_trait} {npc_prof} of {npc_faction}. The sign says EVERYTHING AUTHENTIC. The prices say otherwise.",
+    "choices": [
+      {
+        "text": "Buy the mystery box",
+        "requires": { "money": 6 },
+        "outcomes": [
+          { "weight": 100, "when": ["npc robbed"], "text": "{npc} wraps your purchase slowly, watching your hands the whole time. 'Light fingers about, these days,' they say, to you, specifically. The box turns out to contain a single rock and a note: 'I REMEMBER.' No refunds.", "effects": ["money -6", "rep -2"] },
+          { "weight": 35, "text": "Inside: something genuinely fine, mislabeled and underpriced by whoever packed it a continent ago. {npc} watches you unwrap it and mutters 'that was supposed to be the display one.'", "effects": ["money -6", "loot fine"] },
+          { "weight": 45, "text": "Inside: an assortment best described as 'useful, eventually.' Fair value, no miracles. {npc} shakes your hand like the deal was bigger than it was, which is its own kind of craft.", "effects": ["money -6", "loot common"] },
+          { "weight": 20, "text": "Inside: packing straw, more packing straw, and at the bottom a smaller box labeled MYSTERY BOX. It's straw all the way down. {npc} points at the ALL SALES FINAL sign with real warmth.", "effects": ["money -6"] }
+        ]
+      },
+      {
+        "text": "Ask them to vouch for you around town",
+        "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You talk shop until {npc} decides you're 'one of the sensible ones' and says so, loudly, to three merchants and a guard sergeant. The word of a {npc_prof} carries here. Doors will be easier for a while.", "effects": ["rep +5"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your pitch lands somewhere between flattery and audit. {npc} smiles the smile of someone filing you under 'wants something' and tells the whole row about it before you've cleared the stall.", "effects": ["rep -2"] }
+        ]
+      },
+      {
+        "text": "Case the strongbox",
+        "check": { "stat": "dex", "dc": 14 },
+        "success": [
+          { "weight": 100, "text": "One customer rush, one dropped crate of chimes as cover, one clean reach. The strongbox is lighter now, and you're three streets away before {npc} finishes making change.", "effects": ["money +12", "rep -5", "npc_mark robbed"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The strongbox has a false latch and a real bell. {npc}, {npc_trait} to the core, doesn't even shout - just names your face to the row while the crowd supplies the consequences.", "effects": ["hp -3", "money -4", "rep -6"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_runaway_apprentice",
+    "locations": ["city"],
+    "weight": 11,
+    "text": "A wild-eyed teenager in a scorched guild apron ducks behind you and hisses 'I am not here.' Down the street comes a master craftsman, moving like weather, holding the remains of what was recently either a masterpiece or a kiln.",
+    "choices": [
+      {
+        "text": "Hide the apprentice",
+        "outcomes": [
+          { "weight": 65, "text": "You develop a sudden loud interest in a vegetable cart while the apprentice becomes one with a doorway. The master storms past. The apprentice presses a hand-stitched thank-you into your palm - guild work, even on the run.", "effects": ["item sewing_kit", "rep +1"] },
+          { "weight": 35, "text": "The master doubles back - masters always double back - and finds you mid-shield. The lecture that follows covers you both, historically, at length. You are somehow assigned partial fault for the kiln.", "effects": ["rep -2"] }
+        ]
+      },
+      {
+        "text": "Broker a peace on the spot",
+        "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You get the master talking about his own apprentice years, which - as you gambled - featured a fire of his own. Terms are reached over your handshake: the kiln comes out of wages, the shouting stops now. Both of them tip you, separately, secretly.", "effects": ["money +5", "rep +3"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your opening line, 'surely the kiln shares some blame,' unites them instantly - against you. They walk off together, reconciled by the ancient bond of resenting a stranger's opinion.", "effects": ["stat cha -1"] }
+        ]
+      },
+      {
+        "text": "Point the master the right way for the fee",
+        "outcomes": [
+          { "weight": 100, "text": "Guilds pay a standing rate for runaway apprentices, and the master pays it without breaking stride. The apprentice's look, as they're marched back to the workshop, files you under a heading you won't enjoy. Coin spends anyway.", "effects": ["money +6", "rep -3"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_plaza_permit",
+    "locations": ["city"],
+    "weight": 11,
+    "text": "The plaza in {site} now requires a Transit Permit (Form 9-C), announced by a sign newer than the paint on it. The queue for the permit window wraps the plaza it permits. The window closes for lunch, per a second sign, 'when the clerk feels lunch approaching.'",
+    "choices": [
+      {
+        "text": "Queue like a lawful person",
+        "outcomes": [
+          { "weight": 60, "text": "Three hours. You make queue friends, hear queue gossip, and reach the window forty seconds before lunch feels approachable. Stamped. The permit is beautiful, in the way of things that cost a morning.", "effects": ["hp -1", "stat wis +1"] },
+          { "weight": 40, "text": "Two people from the window, lunch approaches. The shutter drops. The queue disperses with the practiced grief of locals. An old woman pats your arm: 'First time.'", "effects": ["hp -1"] }
+        ]
+      },
+      {
+        "text": "Find the loophole",
+        "check": { "stat": "int", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Form 9-C exempts 'couriers on guild business.' Guild business can be created by carrying a letter. The clerk, delighted by the first correct exploitation of her system in years, stamps you through and hands you an actual courier contract, 'since you clearly have the aptitude.'", "effects": ["stat int +1", "contract"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your loophole exists, but invoking it requires Form 9-D, which is issued only at the window, which requires a 9-C to reach. The clerk explains this with the serenity of a woman who designed it. You pay the day-pass fee like everyone else.", "effects": ["money -3"] }
+        ]
+      },
+      {
+        "text": "Slip the clerk a consideration",
+        "requires": { "money": 5 },
+        "outcomes": [
+          { "weight": 60, "text": "The consideration vanishes into the cash drawer's undocumented sibling, and your form is stamped with the special stamp - the one that doesn't smudge. You're through before the queue notices the queue.", "effects": ["money -5"] },
+          { "weight": 40, "text": "The clerk holds your coin up to the light, rings the little bell, and announces 'ATTEMPTED EXPEDITING' to the entire queue. The fine is double the bribe. The shame is included free.", "effects": ["money -8", "rep -3"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_pigeon_syndicate",
+    "locations": ["city"],
+    "weight": 11,
+    "text": "The pigeons of {site} are working the market in shifts: one distracts, two lift, a fourth stands lookout on the fountain. One of them is wearing a tiny ring. They are, you realize with slow horror, organized.",
+    "choices": [
+      {
+        "text": "Follow them to the stash",
+        "check": { "stat": "wis", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Two rooftops and a drainpipe later: a gutter hoard of coins, buttons, a monocle, and one ceremonial ring (tiny). You leave the buttons - you're not a monster - and the syndicate watches you go with what you choose to read as professional respect.", "effects": ["money +7", "item monocle"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The lookout marks you at the second rooftop. The flock's response is coordinated, aerial, and from all angles at once. You retreat under a market awning while the whole street pretends not to laugh.", "effects": ["hp -2", "stat cha -1"] }
+        ]
+      },
+      {
+        "text": "Report the operation to the market warden",
+        "outcomes": [
+          { "weight": 100, "text": "The warden hears you out, nods grimly, and unlocks a drawer containing a five-year file labeled THE BIRDS. You are the first witness willing to sign. There's a stipend for that, and a warning: 'they'll know it was you.'", "effects": ["money +4", "rep +2"] }
+        ]
+      },
+      {
+        "text": "Buy their loyalty with bread",
+        "requires": { "item": "bread" },
+        "outcomes": [
+          { "weight": 60, "text": "You tear the loaf into shares and distribute it like a payroll. The ringed one studies you, then leaves a shiny copper at your boot. Over the next hour, small valuable things arrive at intervals. You appear to have a crew now.", "effects": ["removeitem bread", "money +5"] },
+          { "weight": 40, "text": "They take the bread in one coordinated pass, ring and all, and offer nothing in return. You have been robbed by pigeons in broad daylight, an experience the market witnessed in full.", "effects": ["removeitem bread"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_curfew_bell",
+    "locations": ["city"],
+    "weight": 11,
+    "text": "The curfew bell of {site} catches you on the wrong side of town, streets emptying around you like a tide going out. A lantern patrol rounds the corner ahead. Behind you, a cobbler is closing his shutters with the speed of a man who has seen how this goes.",
+    "choices": [
+      {
+        "text": "Talk your way through the patrol",
+        "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You produce a story involving a sick aunt, a misread sundial, and sincere admiration for the watch's thankless work. The sergeant, a man with aunts of his own, walks you to your district personally, complaining about his knees the whole way. Educational.", "effects": ["stat wis +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your sick aunt's name changes twice in one sentence. The fine for curfew breach is six gold; the fine for insulting the watch's intelligence is included at no extra charge.", "effects": ["money -6"] }
+        ]
+      },
+      {
+        "text": "Take the rooftop route",
+        "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Gutter, shed roof, wall-walk, home. The town at night, from above, is all lamplight and secrets - you spot two things through skylights that will be useful to know later.", "effects": ["stat wis +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The third gutter was ornamental. You and it descend together into a rain barrel, which the patrol hears, investigates, and - to their credit - helps you out of before writing the fine. Wet coin spends the same.", "effects": ["hp -3", "money -4"] }
+        ]
+      },
+      {
+        "text": "Rent floor space from the cobbler",
+        "requires": { "money": 2 },
+        "outcomes": [
+          { "weight": 100, "text": "Two gold buys a spot between the boot racks, a blanket that smells of wax, and breakfast. The cobbler talks shop till midnight; you now know more about heels than most cavalry. You sleep the sleep of the legally uncomplicated.", "effects": ["money -2", "hp +3"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_bake_tribunal",
+    "locations": ["city"],
+    "weight": 11,
+    "text": "You take a shortcut through the market square of {site} and are seized by both arms. 'The JUDGE is here!' someone cries. Before you can clarify, you're seated at a bunting-draped table facing forty pies, and the real judge, presumably, is stuck on a road somewhere, blameless and warm.",
+    "choices": [
+      {
+        "text": "Judge boldly and commit",
+        "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You deploy phrases like 'structural crumb' and 'a confident lattice' with total authority. Your chosen champion weeps. The crowd approves the verdict. You are paid the judge's honorarium and gone before anyone checks credentials.", "effects": ["money +7", "hp +2", "rep +2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The real judge arrives at the exact moment you crown a winner. The word 'impostor' moves through the crowd like weather. You exit through the pie table, which is not an expression.", "effects": ["hp -2", "rep -3"] }
+        ]
+      },
+      {
+        "text": "Confess immediately, then help anyway",
+        "outcomes": [
+          { "weight": 100, "text": "'I'm not your judge,' you announce, 'but I am hungry and honest.' The organizers confer and appoint you People's Taster on the spot - no authority, unlimited samples. The real judge later ratifies your top three, which you take personally as a triumph.", "effects": ["hp +4", "rep +2"] }
+        ]
+      },
+      {
+        "text": "Taste everything before the truth surfaces",
+        "check": { "stat": "con", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Forty pies, one sitting, no survivors. You deliver a verdict from a place beyond fullness and depart at a waddle before questions form. A baker presses the winning entry's sibling into your hands as tribute.", "effects": ["hp +3", "item bread"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Pie nineteen contains a rhubarb that has wronged you personally. The remaining twenty-one watch you concede. You render a partial verdict from a chair, holding your ribs, respected by no one.", "effects": ["hp -3"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_snow_economy",
+    "locations": ["city"],
+    "weight": 12,
+    "when": ["snowing"],
+    "text": "Overnight snow has buried the market row of {site} to the shutters. Merchants stand in their doorways waving coin at anyone holding anything shovel-shaped. The urchins have already tripled their rates. It is, briefly, a seller's market for backs.",
+    "choices": [
+      {
+        "text": "Dig for day wages",
+        "check": { "stat": "str", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "You clear three frontages before noon and get bid on for a fourth. Honest money, dishonest shoulders. The spice merchant tips extra for not shoveling it onto the fishmonger's side, 'like SOME people.'", "effects": ["money +8", "hp -1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The first drift conceals a hitching post, which wins. You finish one frontage slowly, get paid in sympathy rates, and spend the evening being old about your back.", "effects": ["money +3", "hp -2"] }
+        ]
+      },
+      {
+        "text": "Organize the urchins into one crew",
+        "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You unite six rival shovel gangs under one rate card and take a management fee for standing still and pointing. By dusk the row is clear, the urchins are rich, and you've been called 'boss' by people who mean it.", "effects": ["money +10", "rep +2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The urchins hear your proposal, confer for eleven seconds, and unionize against you specifically. Your rates are undercut, your snow is re-shoveled onto your boots, and their new rate card has a 'consultant tax' with your silhouette on it.", "effects": ["money -3", "stat cha -1"] }
+        ]
+      },
+      {
+        "text": "Sculpt the snow instead",
+        "outcomes": [
+          { "weight": 60, "text": "By midday you've raised a snow figure of the town's founder, twice life size, dignity intact. A crowd gathers, coins land in your upturned hat, and the founder's actual descendant buys you a hot wine, moved.", "effects": ["money +4", "stat cha +1"] },
+          { "weight": 40, "text": "Your snow figure is interpreted, by consensus, as an unflattering likeness of the magistrate. A guard makes you demolish it, but pays you a copper first to wait while he fetches the other guards to see it. Art is compromise.", "effects": ["money +1"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_stocks_soup",
+    "locations": ["city"],
+    "weight": 10,
+    "text": "A man is locked in the stocks of {site} under a placard reading 'SOLD SOUP AS STEW.' The market flows around him with studied indifference. 'It thickened OVERNIGHT,' he announces to no one, hourly, like a bell.",
+    "choices": [
+      {
+        "text": "Feed him and hear him out",
+        "requires": { "money": 1 },
+        "outcomes": [
+          { "weight": 100, "text": "You buy a pastry and hold it for him bite by bite, which is how you learn the whole saga: the broth, the barley, the rival vendor who tipped off the inspector. In gratitude he tells you where his cart is stabled and what's in the strongbox under the ladle rack. For later. When he's out.", "effects": ["money -1", "rep +3", "stat wis +1"] }
+        ]
+      },
+      {
+        "text": "Argue his case at the magistrate's window",
+        "check": { "stat": "int", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You argue that thickness is a spectrum and intent requires proof of thinness at time of sale. The clerk, weary, reduces the sentence to time served rather than define soup in writing. The freed man ladles gratitude on you and the crowd approves of a good lawyering.", "effects": ["stat int +1", "rep +4"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The clerk produces the inspection ladle, the written standard, and a flow demonstration. Soup law is settled law, apparently. Your court costs are assessed on the spot for 'frivolous advocacy.'", "effects": ["money -4"] }
+        ]
+      },
+      {
+        "text": "Guard his pockets from the urchins for a cut",
+        "outcomes": [
+          { "weight": 70, "text": "A man in stocks is a buffet for light fingers, and you spend the afternoon as the least official bodyguard in town. He pays the agreed cut on release and rounds it up, 'for the principle of it.'", "effects": ["money +4", "rep +1"] },
+          { "weight": 30, "text": "You deter four urchins successfully and the fifth turns out to be a decoy for the sixth. His pockets are emptied on your watch, and your cut becomes an apology, paid by you.", "effects": ["money -2"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_unclaimed_auction",
+    "locations": ["city"],
+    "weight": 10,
+    "text": "The city's annual auction of unclaimed goods in {site}: a hall of the lost, the seized, and the abandoned. Lot 14 is a locked chest, contents unknown, provenance 'found.' The auctioneer's patter suggests he knows something. His patter always suggests that.",
+    "choices": [
+      {
+        "text": "Bid on the locked chest",
+        "requires": { "money": 8 },
+        "outcomes": [
+          { "weight": 40, "text": "The lock yields to a pry bar back at your lodgings. Inside, wrapped in oilcloth by someone careful who never came back: goods worth triple your bid. Sometimes the mystery pays out. Don't get used to it.", "effects": ["money -8", "loot fine"] },
+          { "weight": 35, "text": "Inside: a modest bundle of decent kit and a letter you decide not to read twice. Roughly worth the bid. The chest itself is nice, if you like chests, which you now own.", "effects": ["money -8", "loot common"] },
+          { "weight": 25, "text": "Inside: a single key. Rusty. It fits nothing you own, nothing at the auction house, and - per the clerk - nothing in the city registry. It is now your problem, and problems like this have a way of maturing.", "effects": ["money -8", "item rusty_key"] }
+        ]
+      },
+      {
+        "text": "Bid on the boring crate of tools",
+        "requires": { "money": 5 },
+        "outcomes": [
+          { "weight": 100, "text": "Nobody else bids - no mystery, no glamour, just a dead tinker's kit in oiled cloth, complete and cared for. You win it at the opening price. The romantics overpaid for the chest; you got the thing that fixes things.", "effects": ["money -5", "item repair_kit"] }
+        ]
+      },
+      {
+        "text": "Read the room and sell your read",
+        "check": { "stat": "wis", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You clock which bidder keeps touching the chest's manifest and which one the auctioneer won't look at. A nervous merchant pays well for your whispered read, wins his lot cheap, and tips you a percentage. You bought nothing and left richer, which is auctioneering played correctly.", "effects": ["money +6", "stat wis +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your confident read - 'the widow is bluffing' - is disproven when the widow produces a purse the size of a ham. Your client overextends on your advice and the look he gives you afterward costs you the fee and then some.", "effects": ["money -3"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_broadsheet_quote",
+    "locations": ["city"],
+    "weight": 10,
+    "text": "A printer's runner corners you in {site} with ink-stained fingers and a deadline. 'The broadsheet's doing a piece on travelers. One quote. Tomorrow, two hundred copies, every tavern in the district. What do you SAY, wanderer?' The quill hovers.",
+    "choices": [
+      {
+        "text": "Give them something quotable",
+        "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You produce one sentence, weathered and modest with a flash of iron, and watch the runner's eyes go wide. By tomorrow evening, strangers are buying you drinks and repeating your own words back at you slightly wrong. Fame arrives in newsprint.", "effects": ["rep +5", "trait +famous"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Under pressure, you say something about roads being 'like paths, but longer.' It runs. Verbatim. Under your name and a woodcut that isn't even flattering. The district's mockery is affectionate but thorough.", "effects": ["rep -3", "stat cha -1"] }
+        ]
+      },
+      {
+        "text": "Pay to stay out of print",
+        "requires": { "money": 4 },
+        "outcomes": [
+          { "weight": 100, "text": "The runner pockets the coin with the smoothness of established custom - 'the ABSENCE fee, very popular with your sort' - and strikes your name. Anonymity, like everything in this town, has a rate card.", "effects": ["money -4"] }
+        ]
+      },
+      {
+        "text": "Sell them a scandal instead",
+        "outcomes": [
+          { "weight": 60, "text": "You trade an overheard tidbit about a warehouse, a magistrate's brother-in-law, and some creatively counted grain. The printer pays source rates on the spot. The piece runs without your name, which was the entire negotiation.", "effects": ["money +6"] },
+          { "weight": 40, "text": "Your tidbit turns out to be common knowledge plus one error, and the error is traceable to you. The correction names you as 'a source of no fixed reliability.' It's the 'no fixed' that stings.", "effects": ["rep -3"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_history_loosely",
+    "locations": ["city"],
+    "weight": 10,
+    "text": "A theater troupe has boarded over half the square in {site} for tonight's production of 'Recent History, Loosely.' The director is auditioning passersby against their will. 'YOU,' she says, meaning you. 'You have the face of someone things happen to. We open at dusk.'",
+    "choices": [
+      {
+        "text": "Take the role",
+        "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You play 'Second Stranger' with such conviction that the director expands the part between scenes. At the curtain, the square roars, and your share of the gate is bumped to principal rates. The role, you realize later, was based on you. Loosely.", "effects": ["money +7", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You dry up mid-line and improvise a speech the script did not contain and history did not support. The crowd's produce is soft, at least - it's a family show. The director bills you for the dry-cleaning of an era.", "effects": ["hp -2", "stat cha -1"] }
+        ]
+      },
+      {
+        "text": "Work the ropes backstage",
+        "outcomes": [
+          { "weight": 100, "text": "Curtains, counterweights, and the thunder-sheet, which you get to hit twice. Steady pay, zero exposure, and the best view in the house of how the trick horse works. The stage manager calls you 'reliable,' the highest honor in theater.", "effects": ["money +4"] }
+        ]
+      },
+      {
+        "text": "Review it loudly from the crowd",
+        "check": { "stat": "int", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Your running commentary on the play's historical liberties is sharper than the script, and the crowd around you starts paying more attention to you than the stage. At intermission, the director hires you as 'dramaturg,' a word she clearly hopes you won't look up. The pay is real.", "effects": ["money +5", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your critique of the siege scene is interrupted by a veteran of the actual siege, seated behind you, who reviews your review. The crowd sides with the primary source. You watch the second act in silence, from further back.", "effects": ["stat cha -1"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "b2t_statue_typo",
+    "locations": ["city"],
+    "weight": 10,
+    "text": "A crowd fills the square of {site} for the unveiling of a statue honoring a local hero. The sheet drops, the band plays, and you - standing close - notice the plaque before anyone else does. The mason has spelled the hero's name wrong. Prominently. In bronze.",
+    "choices": [
+      {
+        "text": "Announce it to the square",
+        "outcomes": [
+          { "weight": 50, "text": "You call it out with the cheer of a pub quiz. The crowd gasps, the mason faints, and the hero's family - who apparently never liked the mason's bid - thanks you for your eye and your nerve. Free honesty, generously received. This time.", "effects": ["rep +3"] },
+          { "weight": 50, "text": "The crowd, mid-ceremony, does not want the truth; it wants the band. You are shushed by two hundred people at once, an experience like being disapproved of by weather. The plaque stays wrong. Everyone knows. No one forgives you for it.", "effects": ["rep -2"] }
+        ]
+      },
+      {
+        "text": "Sell the mason a quiet fix",
+        "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You catch the mason's sleeve, show him the plaque, and watch the blood leave his face. Your plan - a 'ceremonial patina cloth' over the plaque until a corrected plate can be swapped at dawn - costs him plenty and saves his charter. He pays like a man buying back his own name, which he is.", "effects": ["money +8"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your whispered warning is overheard by the hero's smallest, loudest grandchild, who reads the plaque aloud to the square. In the chaos, the mason decides you orchestrated the whole thing and says so, repeatedly, to anyone in a sash.", "effects": ["rep -3"] }
+        ]
+      },
+      {
+        "text": "Say nothing and savor it",
+        "outcomes": [
+          { "weight": 100, "text": "You keep the secret and watch the ceremony conclude in flawed, oblivious splendor. For years afterward, every time you pass the plaque, it will be quietly, privately yours. Some treasures can't be carried.", "effects": ["stat wis +1"] }
+        ]
+      }
+    ]
+  }
+]

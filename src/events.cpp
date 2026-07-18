@@ -132,12 +132,14 @@ const Event* EventDeck::find(const std::string& id) const {
     return nullptr;
 }
 
-const Event* EventDeck::draw(Rng& rng, const std::string& location) {
+const Event* EventDeck::draw(Rng& rng, const std::string& location,
+                             const std::set<std::string>* exclude) {
     for (int pass = 0; pass < 2; pass++) {
         std::vector<const Event*> pool;
         int total = 0;
         for (auto& e : events_) {
             if (used_.count(e.id)) continue;
+            if (exclude && exclude->count(e.id)) continue;
             for (auto& l : e.locations) {
                 if (l == location) {
                     pool.push_back(&e);
@@ -157,16 +159,16 @@ const Event* EventDeck::draw(Rng& rng, const std::string& location) {
                             if (l == location) isHere = true;
                 if (!isHere) keep.insert(id);
             }
+            // If recycling frees nothing new (everything eligible was
+            // already tried this deal), give up rather than loop.
+            if (keep.size() == used_.size()) return nullptr;
             used_ = keep;
             continue;
         }
         int roll = rng.range(1, total > 0 ? total : 1);
         for (auto* e : pool) {
             roll -= e->weight;
-            if (roll <= 0) {
-                used_.insert(e->id);
-                return e;
-            }
+            if (roll <= 0) return e; // caller marks used when actually shown
         }
     }
     return nullptr;

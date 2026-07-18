@@ -168,7 +168,10 @@ bool Game::init() {
     });
     if (deck_.size() == 0) dataError_ = "content missing: assets/data/events/";
     if (items_.size() == 0) dataError_ = "content missing: assets/data/items.json";
-    nextSeed_ = (uint64_t)time(nullptr) % 1000000000ULL;
+    // Scramble the clock so fresh visitors don't all see near-identical
+    // 78xxxxxxx seeds — every digit should feel rolled (R9).
+    nextSeed_ = ((uint64_t)time(nullptr) * 6364136223846793005ULL +
+                 1442695040888963407ULL) % 1000000000ULL;
     audio_.init();
     profile_ = LoadProfile();
     // Settings persist across sessions (R7).
@@ -1311,8 +1314,11 @@ void Game::dealEvent() {
     std::string tag = deckTag_;
     if ((deckTag_ == "dungeon" || deckTag_ == "crash") && eventsLeftHere_ == 1)
         tag = "dungeon_finale";
-    for (int attempt = 0; attempt < 6; attempt++) {
-        current_ = deck_.draw(runRng_, tag);
+    // Ineligible draws (failed gates/slots) return to the pool unseen; the
+    // tried-set stops this loop from redrawing them within one deal (R9).
+    std::set<std::string> tried;
+    for (int attempt = 0; attempt < 12; attempt++) {
+        current_ = deck_.draw(runRng_, tag, &tried);
         if (!current_ && tag == "dungeon_finale") { tag = "dungeon"; continue; }
         if (!current_ && tag == "crash") { tag = "dungeon"; continue; }
         // Biome decks are smaller; when one runs dry the land defaults.
@@ -1320,6 +1326,7 @@ void Game::dealEvent() {
         if (!current_ && (tag == "mountains" || tag == "coast")) { tag = "road"; continue; }
         if (!current_ && tag == "sea") { tag = "coast"; continue; }
         if (!current_) { enterTravel(); return; }
+        tried.insert(current_->id);
         // Event-level gate: "trait wanted" events only find the wanted.
         bool gated = false;
         for (auto& w : current_->when)
@@ -1329,6 +1336,7 @@ void Game::dealEvent() {
         pendingArtifact_ = -1;
         slotFigure_ = -1;
         if (!resolveSlots(*current_, ctx)) continue;
+        deck_.markUsed(current_->id); // only genuinely-seen cards leave the pool
         currentCtx_ = ctx;
         currentText_ = grammar_.expand(current_->text, runRng_, ctx);
         choiceTexts_.clear();
@@ -1886,6 +1894,7 @@ void Game::drawTitle(Vector2 mouse) {
         injectLegacy(-1);
         chronPage_ = 0;
         chronCachedPage_ = -1;
+        chronDetail_ = -1;
         screen_ = CHRONICLE;
         return;
     }
@@ -2578,16 +2587,36 @@ void Game::drawChronicle(Vector2 mouse) {
     std::string head = "THE CHRONICLE OF " + world_.name.conlang;
     for (auto& c : head) c = (char)toupper((unsigned char)c);
     DrawText(head.c_str(), (kW - MeasureText(head.c_str(), 10)) / 2, 6, 10, PAL_GOLD);
+    // A tapped line opens the whole entry, unclipped (R9).
+    if (chronDetail_ >= 0 && chronDetail_ < (int)chronLines_.size()) {
+        DrawTextWrapped(chronLines_[chronDetail_], 12, 30, kW - 24, PAL_INK, kH - 24);
+        const char* hint = "tap anywhere to go back";
+        DrawText(hint, (kW - MeasureText(hint, 10)) / 2, kH - 16, 10, PAL_DARK);
+        if (pressed_ || GetKeyPressed() != 0) chronDetail_ = -1;
+        return;
+    }
     std::string era = chronLines_.empty() ? "" :
         std::string(EraName(history_.chron[chronPage_ * kPerPage].year)) +
         "  -  page " + std::to_string(chronPage_ + 1) + "/" + std::to_string(pages);
     DrawText(era.c_str(), (kW - MeasureText(era.c_str(), 10)) / 2, 18, 10, PAL_DIM);
     int y = 32;
-    for (auto& line : chronLines_) {
+    for (int i = 0; i < (int)chronLines_.size(); i++) {
+        const std::string& line = chronLines_[i];
         std::string l = line;
-        while (!l.empty() && MeasureText((l + "..").c_str(), 10) > kW - 12) l.pop_back();
-        if (l.size() < line.size()) l += "..";
-        DrawText(l.c_str(), 6, y, 10, PAL_INK);
+        bool clipped = false;
+        while (!l.empty() && MeasureText((l + "..").c_str(), 10) > kW - 12) {
+            l.pop_back();
+            clipped = true;
+        }
+        if (clipped) l += "..";
+        Rectangle row{4, (float)(y - 1), kW - 8, 12};
+        bool hover = CheckCollisionPointRec(mouse, row);
+        DrawText(l.c_str(), 6, y, 10, hover ? PAL_GOLD : PAL_INK);
+        if (hover && pressed_) {
+            audio_.blip();
+            chronDetail_ = i;
+            return;
+        }
         y += 13;
     }
     if (chronLines_.empty())

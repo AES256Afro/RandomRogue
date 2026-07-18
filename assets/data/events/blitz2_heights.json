@@ -1,0 +1,756 @@
+[
+  {
+    "id": "b2h_mine_canary",
+    "locations": ["mountains"],
+    "weight": 14,
+    "text": "Dust is still settling out of the adit mouth when you arrive. The canary made it out - it's sitting on the winch handle, radiating survivor's smugness - but the timber cracked behind the day shift's newest, and somewhere under the mountain a man named Pell is knocking a slow, steady rhythm on a pipe. The miners are already organizing. What they're short of is you.",
+    "choices": [
+      { "text": "Get on a shovel", "check": { "stat": "con", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Four hours in a relay of backs and buckets, spelling men twice your experience and half your remaining energy. When the gap opens, Pell crawls out, shakes everyone's hand in strict order of arrival, and yours is in it. The mine pays rescue wages. The village pays in never buying your own ale again.", "effects": ["money +8", "rep +5", "stat con +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You dig like a hero for one hour and like a liability for the second, and a foreman retires you to the water station before you become the next rhythm on the pipe. Pell comes out anyway - miners are good at this - and thanks you for the water with a straight face.", "effects": ["hp -4", "rep +1"] }
+        ] },
+      { "text": "Shore it properly before anyone digs", "check": { "stat": "int", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You make them stop. You make them STOP, and brace, and only then dig - and when the second slump comes, as you said it would, it lands on your timber instead of the rescue party. The foreman watches the props hold and offers you a job underground, which you decline, and his respect, which you keep.", "effects": ["money +10", "rep +4", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your bracing theory is sound for a mine that isn't this one. The first prop you place squeals like an offended pig and the miners un-place it, and you, with speed and tact. They dig Pell out the way their grandfathers would have. You hold lanterns.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Run for the far shaft crew",
+        "outcomes": [
+          { "weight": 100, "text": "Somebody has to fetch the night shift from the far portal, and it's two miles of scree at a dead sprint. You arrive breathless, they arrive fast, and Pell is out an hour sooner than he would have been. Nobody saw you do anything heroic, which is why the miners keep telling everyone about it.", "effects": ["rep +4", "hp -2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_glacier_border_post",
+    "locations": ["mountains"],
+    "weight": 12,
+    "text": "The border post sits on the pass, one hut, two flags, and a problem: the border follows the glacier, and the glacier has moved. Again. The two guards - one from each kingdom, both stationed here so long they've merged into a single opinion - are re-measuring it with a chain and arguing about whose turn it is to be invaded. Your paperwork, they agree, is somebody's jurisdiction.",
+    "choices": [
+      { "text": "Pay whichever toll is cheaper", "requires": { "money": 4 },
+        "outcomes": [
+          { "weight": 100, "text": "You get both stamps for the price of one, on the theory that neither can prove the other wrong. The stamps are beautiful. One of them is technically for livestock. You are now a legally imported goat in at least one kingdom, and the paperwork will outlive everyone involved.", "effects": ["money -4", "stat wis +1"] }
+        ] },
+      { "text": "Offer to arbitrate the glacier", "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You propose the obvious thing nobody official could: the border is wherever the chain says TODAY, re-measured each solstice, losers host the dinner. Both guards find this so sensible they suspect a trick, fail to find one, and wave you through toll-free with a letter of commendation each. The letters contradict each other. You keep both.", "effects": ["money +6", "rep +3", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your compromise involves the phrase 'shared sovereignty,' and both guards - united for the first time in a decade - decide you are a spy for a third kingdom neither has heard of. The search of your pack is thorough, professional, and finds your emergency biscuit, which is confiscated as contraband.", "effects": ["removeitem bread", "hp -1"] }
+        ] },
+      { "text": "Climb around above the post", "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "There is always a goat line above a border post, and you find it: forty minutes of good ledges and one committing step across the very glacier in dispute. You cross the border at the one altitude where nobody owns anything, and descend to the trail whistling, stamped by nothing but wind.", "effects": ["stat dex +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The goat line is for goats. You discover this at the committing step, backward, in view of both guards, who watch your descent with binoculars and score it. Reentering the queue with gravel in your collar, you pay full toll plus what they solemnly call a 'style surcharge.'", "effects": ["hp -4", "money -3"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_hot_spring_terraces",
+    "locations": ["mountains"],
+    "weight": 12,
+    "slots": { "god": "god" },
+    "text": "Steam rises off a staircase of stone pools, each one milk-blue and exactly body temperature plus courage. The shrine at the top says the terraces are {god}'s own bath, drawn fresh from the mountain's heart, and the attendant confirms the god is currently {god_mood} - 'you can tell by the third pool.' The third pool is, indeed, doing something the others aren't.",
+    "choices": [
+      { "text": "Soak in the ordinary pools",
+        "outcomes": [
+          { "weight": 100, "text": "An hour in divine bathwater, second pool from the top, watching snow fall into steam and vanish like bad memories. Every ache you have been carrying files for departure. You emerge pink, boneless, and briefly convinced that all wars are a misunderstanding about bathing schedules.", "effects": ["hp +5", "favor 1"] }
+        ] },
+      { "text": "Leave an offering and enter the third pool", "requires": { "money": 3 },
+        "outcomes": [
+          { "weight": 60, "text": "The third pool receives you the way a held breath receives a decision. The water hums. Something vast and warm pays attention to you for exactly eleven seconds - long enough to be weighed, not long enough to be judged - and lets you go with the sense of a debt written down in your favor.", "effects": ["money -3", "favor 2", "stat wis +1"] },
+          { "weight": 40, "text": "The third pool is having a day, the way gods have days. You are boiled gently but pointedly for the length of one apology and exit at speed, pinker than intended. The attendant nods: 'Third pool.' The offering stays offered. The god, you feel, appreciated the gesture more than your company.", "effects": ["money -3", "hp -2", "favor 1"] }
+        ] },
+      { "text": "Scrape mineral bloom off the rim to sell", "check": { "stat": "dex", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "The crystalline crust on the top pool's lip is prized by apothecaries and forbidden by nobody in writing. You harvest a discreet pouch of it while the attendant is elsewhere, and your conscience files the incident under 'gray area, warm.'", "effects": ["money +9"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The rim is slick, the crust is sharp, and the pool beneath is precisely deep enough to make the lesson memorable. You surface to find the attendant already holding out a towel, with the weary efficiency of a man who has fished many economists out of this exact water.", "effects": ["hp -3", "rep -2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_bell_foundry",
+    "locations": ["mountains"],
+    "weight": 11,
+    "slots": { "figure": "figure_dead" },
+    "text": "The foundry town has one street and it is full: today they cast the memorial bell for {figure}, dead since {figure_year} and still, apparently, owed a voice. The furnace glow lights the whole valley wall. Tradition holds that strangers present at a pour must give the bell something - silver into the crucible, work at the ropes, or a true sentence about the dead spoken over the mold.",
+    "choices": [
+      { "text": "Throw silver into the pour", "requires": { "money": 5 },
+        "outcomes": [
+          { "weight": 100, "text": "Your coins go into the crucible and become, forever, a fraction of the bell's voice. The founder writes your name in the pour-book, which is read aloud once a year when the bell is rung longest. Somewhere in every toll of it, from now on, is money you'll never miss and a sound you somehow already do.", "effects": ["money -5", "trait +blessed", "rep +3"] }
+        ] },
+      { "text": "Take a place on the crucible ropes", "check": { "stat": "str", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "The crucible swings on chains and human arithmetic, and for ninety seconds your arms are part of the equation. The pour goes true. The founder pays rope-hands in coin and standing, and tells you what every founder knows: a bell remembers everyone who was holding it when it was born.", "effects": ["money +7", "stat str +1", "rep +2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your grip is willing and your timing is a stranger here. The pour survives your contribution because six other hands absorb it, and you spend the cooling hours doing penance at the bellows, which is where the foundry sends enthusiasm to be useful.", "effects": ["hp -3"] }
+        ] },
+      { "text": "Ask what {figure} did to earn a bell",
+        "outcomes": [
+          { "weight": 100, "text": "The founder's mother takes your elbow and tells you - the real version, not the pour-book version, the one with the flaws left in. It takes an hour and two cups of something fierce. When the bell finally speaks, years of tuning from now, you will be one of the few living people who knows exactly what it's saying.", "effects": ["stat wis +1", "learn 2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_condor_ledge",
+    "locations": ["mountains"],
+    "weight": 11,
+    "text": "Two condors have claimed the crag above the switchbacks, and the trail passes directly through their opinion of it. They are not aggressive. They are worse: attentive. They rotate their heads to follow your lunch with the intensity of creditors, and beneath their ledge, glinting among old bones, is the unmistakable litter of things dropped by birds that steal shiny objects professionally.",
+    "choices": [
+      { "text": "Climb to the litter ledge", "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You pick your moment - both birds aloft, riding the noon thermal like landlords surveying the estate - and make the ledge in eight quiet moves. The hoard is everything the valley has lost track of: buckles, a locket, coins from three currencies. You take a fair share and are down before the shadow crosses the crag again.", "effects": ["money +12", "loot common"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You are four moves up when a shadow the size of a rowboat crosses your hands. The condor does not attack. It LANDS, adjacent, and stares at you from a foot away until your nerve files for retirement and your descent becomes a controlled avalanche of dignity.", "effects": ["hp -4"] }
+        ] },
+      { "text": "Offer up your jerky", "requires": { "item": "jerky" },
+        "outcomes": [
+          { "weight": 100, "text": "You lay the jerky on a flat rock and back away, an ambassador presenting credentials. The larger condor descends, inspects, approves - and then, in the manner of great birds settling accounts, drops something from the hoard at the trailside as it leaves. Condors, it turns out, do not like being in debt.", "effects": ["removeitem jerky", "loot fine", "stat wis +1"] }
+        ] },
+      { "text": "Sketch them for the valley naturalist", "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You spend the afternoon on wingspans and wattle detail, and the pair, sensing an audience, perform: stalls, tandem spirals, one deliberate low pass you'd swear was showing off. The naturalist in the valley below pays for field studies and pays extra for these, because nobody else's subjects ever cooperated.", "effects": ["money +8", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your condors come out looking like offended turkeys, and worse, the actual condors seem to know. One of them relocates your hat forty feet down the scree, not violently - editorially.", "effects": ["hp -1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_barrel_stave_derby",
+    "locations": ["mountains"],
+    "weight": 11,
+    "when": ["season winter"],
+    "text": "The village of {site} has one industry, one religion, and one sport, and all three are sliding downhill extremely fast on barrel staves. It is derby day. The course drops from the chapel to the pond, includes a section named 'the Apology,' and the entry fee is waived for strangers because, as the reeve explains, 'you lot are the entertainment budget.'",
+    "choices": [
+      { "text": "Race", "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You survive the Apology by taking it low, pass the blacksmith's daughter in the tuck - a thing not done in living memory - and hit the pond flats third overall. Third, for a stranger, is a scandal and a triumph in equal measure. The prize is coin and a winter of free stories with you in them.", "effects": ["money +9", "trait +famous", "stat dex +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The Apology is named with precision. You leave the course at the exact point everyone gathered there expected, land in the straw they charitably provide, and are awarded the traditional consolation mug, which has your crash's silhouette scratched onto it by a spectating child. It is a good likeness.", "effects": ["hp -5", "rep +2"] }
+        ] },
+      { "text": "Wax staves for the racers", "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You have opinions about wax, temperature, and grain, and by the third heat the racers you've serviced are visibly faster and audibly telling each other. By the finals there's a queue at your bench and a hat filling with coins. The blacksmith's daughter wins on your wax and kisses the stave, which you choose to take as a professional compliment.", "effects": ["money +11", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your wax theory works beautifully on the top half of the course and becomes glue on the shaded bottom half. Three racers grind to a halt mid-slope like enchantments wearing off, and you spend the awards ceremony refunding hats.", "effects": ["money -4"] }
+        ] },
+      { "text": "Bet on the quiet one", "requires": { "money": 5 },
+        "outcomes": [
+          { "weight": 55, "text": "You back the small silent racer who waxed her own staves and looked at the Apology the way surgeons look at a procedure. She wins by the length of the pond. The bookmaker pays you with the face of a man revising his entire model of quiet people.", "effects": ["money +10"] },
+          { "weight": 45, "text": "The quiet one is quiet, it emerges, because she is deeply reckless and saving her voice for the scream. She exits the course at an altitude that becomes local legend. Your stake goes to the bookmaker, and her mug, everyone agrees, will need two children to scratch.", "effects": ["money -5"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_thin_air_teahouse",
+    "locations": ["mountains"],
+    "weight": 12,
+    "text": "At the top of the pass, where water boils lazy and lukewarm, someone has built a tea house anyway - out of spite, the keeper says, though the shelves of blends argue it graduated into love. The rule of the house is posted at the door: pay in coin, work, or one thing you have never told anyone at a lower altitude.",
+    "choices": [
+      { "text": "Pay coin for the keeper's choice", "requires": { "money": 4 },
+        "outcomes": [
+          { "weight": 100, "text": "She looks at you longer than she looks at the shelves, then brews something dark and resinous that tastes like the smell of rain hitting hot stone. You drink it watching clouds pass BELOW the window. Whatever was ringing in your ears since the last valley stops, and does not start again.", "effects": ["money -4", "hp +4", "stat wis +1"] }
+        ] },
+      { "text": "Pay in work: haul her water up from the spring", "check": { "stat": "con", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "The spring is four hundred feet of switchbacks below, because of course it is. Three trips with the yoke and your lungs learn what the tea house always knew about thin air. She pays in the good tea, a heel of honey bread, and the exact words a person hauling water most wants to hear: 'the last one took four trips.'", "effects": ["hp +3", "stat con +1", "item honeycomb"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Trip two, the yoke and the altitude hold a meeting about you and vote. You deliver one and a half buckets and your dignity in a similar fraction. She serves you the ordinary tea, which is still better than most valleys' best, and lets you sit by the stove until your breathing stops being a topic.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Pay in a secret",
+        "outcomes": [
+          { "weight": 100, "text": "You tell her the thing. The actual thing. She listens the way the mountain listens - completely, without weather - then nods once and brews the pot she doesn't keep on the shelf. You will never know what was in it. You know what left you while you drank it, and the pass is a pound lighter on the way down.", "effects": ["hp +3", "stat wis +1", "stat cha +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_summit_observatory",
+    "locations": ["mountains"],
+    "weight": 10,
+    "text": "The observatory clings to the summit like a limpet with a research grant. Its astronomer is on the steps, wind-whipped and furious with joy: the comet is TONIGHT, the comet is EARLY, and her new objective lens - two hundred pounds of Girdish crystal - is sitting in a crate at the bottom of the last pitch because her porter looked at the sky and went home to his family like a coward.",
+    "choices": [
+      { "text": "Haul the lens up the last pitch", "check": { "stat": "str", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Two hundred pounds, four hundred vertical feet, one rope, zero margin. You arrive with the crate and most of your vocabulary intact, and she pays you double the porter's rate out of the grant money with the giddy largesse of a woman about to see her comet. You get first look through the new glass. It is worth every fiber of your spine.", "effects": ["money +12", "stat str +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "At the crux, the crate and gravity reach an understanding that excludes you. You save the lens - the LENS is fine, she confirms, checking it before checking you - at the cost of a shoulder that will describe this evening to you for a week. She splints, apologizes, and names a minor crater after you, which she admits is not legally binding.", "effects": ["hp -5", "money +4"] }
+        ] },
+      { "text": "Stay for the comet",
+        "outcomes": [
+          { "weight": 100, "text": "Through the old lens, then, and it is enough: the comet unfurls across the eyepiece like a rumor about the size of everything. She narrates - orbits, ices, the mathematics of returning - and somewhere in the cold hours you understand, briefly and completely, how small your itinerary is and how little that diminishes it.", "effects": ["stat wis +1", "stat int +1"] }
+        ] },
+      { "text": "Copy her star charts while she's distracted", "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Unpublished comet charts are worth a season's wages to the right navigator, and her filing system is a haystack that trusts people. You copy three plates by lamplight and are innocently admiring the weather vane when she returns. The coins, later, are heavy. So, occasionally, at night, is the memory of how happy she was to have company.", "effects": ["money +13", "rep -3"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Astronomers notice things - it is the entire job. She catches you at plate two, says nothing, and simply reassigns you to bellows duty at the stove for the rest of the freezing night, trusting the shame and the altitude to split the lecture between them. They do.", "effects": ["hp -2", "rep -2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_firewatch_gambit",
+    "locations": ["mountains"],
+    "weight": 10,
+    "text": "The firewatch tower stands on the ridge like a punctuation mark for a very long sentence of trees. Its watcher hasn't spoken aloud in a season - not from any vow, he writes on his slate, he just 'got out of the habit.' What he has instead is a chessboard, and a game in progress against the next tower over, moves exchanged one per day by signal flag. He is, the slate admits, in trouble.",
+    "choices": [
+      { "text": "Find him a move", "check": { "stat": "int", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You study the board for an hour and find it: the quiet bishop retreat that looks like surrender and is actually a trap eleven days deep. He stares at it, then at you, then makes a sound - rusty, astonished - that turns out to be laughing. The flags go up. Four days later, so does the far tower's resignation. He pays you from the tin he was saving for the victory.", "effects": ["money +7", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your move is bold, aggressive, and loses by force in six, which the watcher demonstrates on the board with gentle, wordless brutality. He makes his own move instead - a better one - and feeds you soup with the air of a man comforting the recently defeated, which you are.", "effects": ["hp +1"] }
+        ] },
+      { "text": "Take his watch so he can sleep a full night",
+        "outcomes": [
+          { "weight": 100, "text": "You climb to the platform at dusk and do the job: quarter the horizon, learn the difference between mist and smoke, log the nothing that happens with the diligence nothing deserves. He sleeps twelve hours for the first time since spring. In the morning there's coin on the table and a slate that says the thing he got out of the habit of saying.", "effects": ["money +6", "rep +3", "stat wis +1"] }
+        ] },
+      { "text": "Carry his winter letters down the mountain",
+        "outcomes": [
+          { "weight": 100, "text": "A season of letters - to a sister, a pension office, and someone addressed only as 'M.' - has been waiting on a courier who never came. You take the bundle. In the valley, the sister feeds you, the pension office stamps things, and M., whoever they are, goes pale and then bright, and gives you a reply to carry that weighs nothing and clearly weighs everything.", "effects": ["money +5", "rep +4"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_cheese_cave",
+    "locations": ["mountains"],
+    "weight": 11,
+    "text": "Behind a door in the mountainside: the aging cave, cool and cathedral-quiet, racked floor to ceiling with wheels of cheese the size of cartwheels. The cavemaster taps each wheel and listens like a physician. All is well, she says, except row nine. Row nine has a wheel that hums back. It has been humming for a month. It is, she adds, getting better at it.",
+    "choices": [
+      { "text": "Buy a wedge of the proven stuff", "requires": { "money": 3 },
+        "outcomes": [
+          { "weight": 100, "text": "She cuts you a wedge from a wheel older than most local marriages, and the first bite reorganizes your understanding of what milk is capable of. You leave with a wrapped wedge that will outlast your other rations and improve every meal it attends.", "effects": ["money -3", "item rations", "hp +2"] }
+        ] },
+      { "text": "Investigate the humming wheel", "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You tap, listen, tap again, and work it out: a vein of singing quartz in the cave wall behind row nine, resonating through the rind - the wheel isn't haunted, it's an INSTRUMENT. The cavemaster is delighted and slightly disappointed in that order, renames the wheel 'the Choir,' and pays you a finder's fee for the tourism potential alone.", "effects": ["money +8", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You put your ear directly against the rind, which is the moment the hum stops. The silence of a large cheese that was audibly doing something and has now decided to wait until you leave is a specific kind of terrible. You purchase your wedge from row two and do not look back at nine.", "effects": ["hp -1"] }
+        ] },
+      { "text": "Help turn the wheels", "check": { "stat": "str", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Every wheel wants flipping on schedule, and the schedule does not care that each one weighs as much as a kneeling pony. You turn forty of them under the cavemaster's exacting eye and earn the turner's wage plus the traditional bonus: all the broken-rind ends you can carry, which is more supper than money could buy up here.", "effects": ["money +6", "item rations", "stat str +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Wheel eleven gets away from you on the flip, and there follows a brief, terrible bowling incident down the center aisle that the cavemaster arrests with her boot and one word in dialect. No wheels are harmed. Your wages are docked to zero and your supper is the look she gives you.", "effects": ["hp -3"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_lighthouse_relief",
+    "locations": ["coast"],
+    "weight": 13,
+    "text": "The lighthouse door is open and the keeper is at the bottom of the stairs, leg splinted with a chart-batten and temper splinted with nothing at all. He fell on the third landing, the supply boat isn't due for three days, and the light - he says this in the tone of a man reporting a death in the family - the light must not go dark. There's weather coming and the ledger lists four ships due past the point.",
+    "choices": [
+      { "text": "Keep the light burning yourself", "check": { "stat": "con", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Three nights of it: trimming wicks, hauling oil up ninety-one stairs, winding the clockwork that turns the lens, sleeping in scraps between. All four ships pass safe, and the third one, seeing the light through the murk, sounds her horn twice - keeper's thanks, he translates from his cot, hoarse. The service pays relief wages. The keeper pays in something better: he writes your name in the light's log.", "effects": ["money +10", "rep +5", "stat con +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Night two, you sleep through a wick-trim and the light dims to a rumor for an hour - the hour, of course, the coaster picks to round the point. She scrapes the outer bar, survives, and files a complaint that will follow the keeper professionally. He is decent enough to split the blame and honest enough to split it unevenly.", "effects": ["hp -3", "rep -3"] }
+        ] },
+      { "text": "See to the leg properly", "requires": { "item": "bandages" },
+        "outcomes": [
+          { "weight": 100, "text": "You re-set the splint with actual bandages instead of chart furniture, rig him a rope-and-pulley chair on the stair rail, and by evening the keeper is hauling himself up to his own lamp room, growling with satisfaction. He insists on paying coin and adds the item every keeper hoards: a spare storm coat, which he mimes is nonnegotiable.", "effects": ["removeitem bandages", "money +7", "rep +3"] }
+        ] },
+      { "text": "Fetch the retired keeper from the village", "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Old Maren swore she'd never climb those stairs again, and it takes you an hour of porch diplomacy to learn that what she actually swore was never to climb them UNASKED. You ask. She's up the point with her old coat on before you finish, and the two keepers' bickering that night is audible from the village and sounds exactly like a lighthouse working properly.", "effects": ["money +6", "rep +4", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You lead with the word 'emergency,' which Maren has heard from that lighthouse forty years running and no longer converts into motion. By the time you find the right words the afternoon is gone, and you spend a long night hauling oil as her penance and yours - she takes the lamp, you take the stairs.", "effects": ["hp -4", "rep +2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_fish_auction",
+    "locations": ["coast"],
+    "weight": 12,
+    "slots": { "beast": "beast_here" },
+    "text": "The dawn fish auction runs on speed, tide, and an auctioneer whose voice could shuck oysters at range. Crates fly, numbers blur - and then the showpiece: a tarpaulined crate the auctioneer swears contains a steak cut from {beast} itself, 'the terror of the region, {beast_kills} kills, taste the legend.' The crowd is skeptical. The crate is very large. Something in it is very fresh.",
+    "choices": [
+      { "text": "Bid on the legend", "requires": { "money": 6 },
+        "outcomes": [
+          { "weight": 50, "text": "You win the crate, and under the tarpaulin is - genuinely, verifiably, scarred exactly where the ballads say - the real article. A collector of grim curiosities pays you triple before you're even off the dock, and the auctioneer tips his cap: legends move fastest when someone's fool enough to bid first.", "effects": ["money +12"] },
+          { "weight": 50, "text": "Under the tarpaulin: an extremely large, extremely ordinary halibut with cosmetic scarring that on close inspection was applied with a fork. The crowd's laughter is warm, at least. The halibut, to its credit, is delicious, and feeds you for days.", "effects": ["money -6", "item rations"] }
+        ] },
+      { "text": "Inspect the crate before bidding closes", "check": { "stat": "int", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You know your monster anatomy, and one look under the tarp settles it - you announce your finding to the market at volume. Half the crowd pays you gratitude, the other half pays you commission for saving their bids, and the auctioneer, a professional above all, hires you on the spot to authenticate the NEXT three lots.", "effects": ["money +9", "rep +3", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You declare it a fake with expert confidence approximately four seconds before the tarp shifts on its own. The crate's contents are real, alive-adjacent, and briefly at large on the dock. The auction resumes twenty minutes later with everyone soaked and you formally banned from expertise.", "effects": ["hp -3", "rep -2"] }
+        ] },
+      { "text": "Work the morning as a crate-runner",
+        "outcomes": [
+          { "weight": 100, "text": "Honest work at dishonest hours: you run crates from scale to cart for three hours at the speed the tide dictates. The pay is fair, the fish tossed to runners at close is tradition, and by the end you know every buyer, seller, and scam on this dock by first name, which is worth more than the wage.", "effects": ["money +5", "item jerky", "stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_tide_clock",
+    "locations": ["coast"],
+    "weight": 11,
+    "text": "The harbor's pride is the tide clock: a shopfront machine of floats, chains, and brass that has predicted every tide for sixty years, and around which the entire port schedules itself. This morning it has stopped, hands frozen mid-ebb, and the clockmaker's granddaughter - who inherited the shop but not, she admits freely, the knack - is watching the fleet mill about the harbor mouth like a sentence missing its verb.",
+    "choices": [
+      { "text": "Open the machine and find the fault", "check": { "stat": "int", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Inside is sixty years of one man's mind rendered in brass, and you read it slowly, like his diary. The fault is small and human: a float chain jumped its sprocket, one worn tooth. You re-seat it and the whole shop inhales - chains ticking, floats bobbing, hands sweeping to the true tide. The fleet sails on schedule. The granddaughter pays the repair rate and writes down everything you tell her about tooth wear, fast.", "effects": ["money +11", "rep +4", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You find three faults, fix two, and cause a fourth - the machine now runs backward, predicting with great confidence the tides of last Tuesday. The granddaughter thanks you for narrowing it down, which is generous, and sends for the instrument maker three towns over. You contribute to the postage.", "effects": ["money -3", "hp -1"] }
+        ] },
+      { "text": "Call the tide the old way for the fleet", "check": { "stat": "wis", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Before there was a clock there was looking: the set of the current on the harbor piles, the wrack line, the birds. You walk the seawall, read the water like your grandmother allegedly could, and chalk the tide times on the harbor board. The fleet sails on your word and comes home fat and vindicated. The harbormaster pays the clock's maintenance fee to you, this once, with ceremony.", "effects": ["money +9", "rep +3", "stat wis +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The water's grammar has a dialect here you don't speak, and your chalked times are off by forty minutes - enough to ground the eager and enrage the grounded. The harbor's opinion of traveling tide-callers is chalked up on the same board before you leave, in a firmer hand.", "effects": ["rep -3"] }
+        ] },
+      { "text": "Buy the old prototype gathering dust in the window", "requires": { "money": 8 },
+        "outcomes": [
+          { "weight": 100, "text": "In the window sits the clockmaker's first attempt: a hand-sized tide clock, temperamental, beautiful, and labeled NOT FOR SALE in ink faded to a suggestion. The granddaughter sells it to you - 'he'd rather it traveled than watched' - and it ticks against your pack all the way up the coast road, keeping the time of a sea you're walking away from.", "effects": ["money -8", "loot fine"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_sand_keep",
+    "locations": ["coast"],
+    "weight": 10,
+    "text": "On the flat below the dunes, a sculptor has spent nine days building a full-scale gatehouse out of sand - portcullis, arrow slits, a small heraldic crab - and has built it, deliberately, below the tideline. Tonight's high water will take all of it. Half the coast has gathered to watch. The sculptor is still working, unhurried, adding gargoyles to a building with six hours to live.",
+    "choices": [
+      { "text": "Pick up a trowel and help finish", "check": { "stat": "dex", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "She assigns you the east parapet without a word, and for six hours you learn how sand wants to be held. The gatehouse is FINISHED when the water reaches it - complete, perfect, crab and all - and the crowd goes silent as the tide takes the walls in order, like a story being read. Afterward she shakes your hand, sandy and satisfied: 'It got to be whole. That's the whole trick.'", "effects": ["stat dex +1", "stat wis +1", "rep +2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your parapet develops what engineers call a progressive failure and children call 'the good part,' collapsing an hour early and taking the east wall's nerve with it. The sculptor rebuilds it herself in twenty minutes, kindly, which is worse than anger, and reassigns you to keeping the crowd's dogs off the barbican.", "effects": ["hp -1"] }
+        ] },
+      { "text": "Run a book on which tower falls last", "requires": { "money": 4 },
+        "outcomes": [
+          { "weight": 55, "text": "You post odds on the four towers, and the crowd bets like the fate of nations rides on hydraulics. The northwest tower - your long-odds pick, built on the old shingle spine only you noticed - stands a full twenty minutes past its siblings, alone in the moonlit wash. You pay out the two other believers and pocket a very satisfactory margin.", "effects": ["money +10"] },
+          { "weight": 45, "text": "The sea, which does not respect bookmaking, takes all four towers in a single unsporting surge. Every bet is technically a tie. You refund the crowd coin by coin under close public supervision, and the heraldic crab, last thing standing, appears to watch you do it.", "effects": ["money -4"] }
+        ] },
+      { "text": "Ask her why below the tideline",
+        "outcomes": [
+          { "weight": 100, "text": "She doesn't stop working. 'Everything's below the tideline,' she says, smoothing a merlon. 'Kingdoms. Us. The trick isn't building where it's safe, there's no such shelf. The trick is building it true anyway, and being there for the water, and clapping.' That night, when the sea reaches the gate, you find that you are, in fact, clapping.", "effects": ["stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_candle_cove",
+    "locations": ["coast"],
+    "weight": 12,
+    "text": "The cave behind the surf-curtain is stacked with crates stenciled CANDLES in the too-large letters of a lie that isn't trying very hard. Under the top crate's loose lid: silk, brandy, and unstamped tobacco - a smuggler's stock between tides. From the shingle outside, carrying over the surf, comes whistling. Returning footsteps. Two sets, maybe three.",
+    "choices": [
+      { "text": "Take one crate and go, fast", "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "One crate, the smallest, the densest, out the surf-curtain and up the goat path while the whistling is still two bends away. The brandy inside is the kind that customs stamps exist to make expensive, and it sells inland, quietly, jar by jar, to people who toast your health without asking your name.", "effects": ["money +13", "rep -1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The goat path and the crate disagree about your center of gravity, loudly, at the worst bend. The smugglers find you at the bottom of a modest cliff decorated in silk and shame. They take their crate back, plus your purse as 'handling,' and leave you your boots on the grounds that the story is payment enough.", "effects": ["hp -4", "money -6"] }
+        ] },
+      { "text": "Wait and offer to carry for them", "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You are sitting ON the crates when they come in, which is either suicide or an interview, and you talk fast enough to make it the second. One night's portage over the headland to the drop cart, no questions in either direction, pay in advance because you insisted charmingly. Heavy work, dark work, honest by the standards of nobody but well paid by the standards of everyone.", "effects": ["money +11", "hp -2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your opening line dies against the leader's expression, which has heard every clever stranger the coast produces. You are escorted from the cove with professional courtesy and one educational shove into the surf, and advised that the beach is lovely this time of year somewhere else.", "effects": ["hp -3"] }
+        ] },
+      { "text": "Sell the location to the excise office",
+        "outcomes": [
+          { "weight": 60, "text": "The excise captain pays informant's rates without looking up from her ledger, and the raid two nights later is, you hear, a career-making haul. Your name appears in no document - she's careful, you checked - but coastal villages have a sense for these things, the way they sense weather, and some taverns are cooler than the season explains.", "effects": ["money +9", "rep -3"] },
+          { "weight": 40, "text": "The excise office pays, raids, and finds a cave containing forty crates of - candles. Actual candles. The smugglers were warned, or careful, or both, and the captain's look suggests your informant credit is spent. The candles, in a final insult, are of noticeably poor quality.", "effects": ["money +4", "rep -2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_kelp_lattice",
+    "locations": ["coast"],
+    "weight": 11,
+    "text": "At low water the seaweed farm shows its bones: a lattice of ropes staked across the bay, strung with kelp like a harvest of green flags. The farmer is mid-harvest and mid-crisis in equal parts - the picking tide is short, her crew is down two hands with the coughing fever, and overhead the gulls wheel in numbers that suggest organized labor.",
+    "choices": [
+      { "text": "Get in the water and pick", "check": { "stat": "con", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Cold to the waist for four hours, cutting kelp at the rope line while the tide breathes around your ribs. You fill six baskets to her crew's five, which she notes aloud for morale purposes and pays accordingly - coin plus a bundle of the eating-grade, which fries up better than anything green has a right to.", "effects": ["money +8", "item rations", "stat con +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The cold finds the gap in your resolve around hour two, and your harvest technique degrades from 'cutting' to 'negotiating.' The tide comes back with a third of your row unpicked, which the farmer absorbs with the fatalism of the profession. You warm up by the wrack fire, chastened, holding soup.", "effects": ["hp -3", "money +3"] }
+        ] },
+      { "text": "Engineer something about those gulls", "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You rig her spare netting into a moving scarecrow line - floats, twine, and one sacrificial hat - that ripples with the current and reads, to a gull, as competition. The flock relocates to bother the next bay by noon. The farmer pays invention rates and asks you to draw it, twice, from two angles, in her account book.", "effects": ["money +9", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your scarecrow line works magnificently for one hour, after which the gulls hold whatever meeting gulls hold and return with a policy: they perch ON it. It is now infrastructure. The farmer watches a gull ride your invention like a ferry across her kelp beds and declines, gently, to pay for it.", "effects": ["hp -1"] }
+        ] },
+      { "text": "Buy a bundle of the midnight kelp", "requires": { "money": 5 },
+        "outcomes": [
+          { "weight": 100, "text": "From the rope she doesn't let the crew touch, she cuts you a bundle of the midnight strain - kelp black as ink that grows only where the cold current touches the bay, prized by healers and priced like it. Chewed slow, it settles wounds and stomachs alike. Sold inland, it would triple. You'll decide when you're hungrier.", "effects": ["money -5", "item healing_potion"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_storm_glass",
+    "locations": ["coast"],
+    "weight": 11,
+    "text": "The ship chandler's window is full of storm glasses - sealed vials where crystals bloom and fade with the coming weather, sold to the credulous, trusted by the smart. The chandler himself is standing very still in his own doorway, holding his personal glass, the sixty-year one, his grandfather's. Its crystals haven't bloomed. They have SOLIDIFIED, wall to wall, white as a held breath. 'It has never done this,' he says. The fleet went out at dawn.",
+    "choices": [
+      { "text": "Ride the cliff road and warn the fleet", "check": { "stat": "con", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Five miles of cliff path at a pace the path disapproves of, to the signal station on the head, where your shouted argument and the chandler's note get the black cone hoisted. The fleet reads it and runs for home, grumbling - and the storm that arrives that evening arrives like a verdict, the kind that would have kept widows in this village busy for a generation. Nobody grumbles after. The fleet fund pays you without being asked.", "effects": ["money +12", "rep +5", "stat con +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The cliff path takes its toll at the slumped section, and you limp into the signal station an hour behind your own plan. The cone goes up late; most of the fleet makes it in on seamanship and luck, and the one crew that takes a battering is the one that would've ignored the signal anyway - which comforts no one, least of all you.", "effects": ["hp -5", "rep +2"] }
+        ] },
+      { "text": "Help him ring the storm bell without the harbormaster's leave",
+        "outcomes": [
+          { "weight": 65, "text": "The storm bell is for CONFIRMED weather, and the harbormaster confirms nothing on the word of a vial. You and the chandler ring it anyway - two fugitives from meteorological bureaucracy, hauling the rope in turns. The fleet comes home on the bell's authority. So does the storm. The harbormaster's apology, days later, is a masterpiece of not technically apologizing, and the fishermen's gratitude is the real currency anyway.", "effects": ["rep +4", "stat cha +1"] },
+          { "weight": 35, "text": "You ring the bell, the fleet comes home, and the weather arrives as - a stiff blow. Rough, no worse. The glass, it turns out, solidifies for pressure it can feel and mortals can ride out. The harbormaster fines the chandler, the fleet lost a day's catch, and your name is attached to the whole affair with sailor's adhesive, which does not wash off.", "effects": ["money -4", "rep -3"] }
+        ] },
+      { "text": "Buy a storm glass off the shelf", "requires": { "money": 6 },
+        "outcomes": [
+          { "weight": 100, "text": "Whatever happens today, a vial that argues with the sky is worth having. The chandler sells you a good one distractedly, throws in the reading card, and grips your arm at the door: 'When it goes solid - and it will, once, in your life - believe it. Whatever it costs you to believe it, believe it.' The glass rides in your pack, quietly blooming and fading, keeping its one appointment.", "effects": ["money -6", "loot fine", "stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_gull_parliament",
+    "locations": ["coast"],
+    "weight": 10,
+    "text": "Several hundred gulls stand on the seawall in dead silence, arranged in a rough ring, all facing one gull in the center. Nobody is eating anything, which for gulls is a constitutional crisis in itself. A fisherman mending nets nearby doesn't look up: 'Parliament. Third one this year. Don't walk through it, they remember.' The accused gull shifts its feet. The ring tightens by an inch.",
+    "choices": [
+      { "text": "Watch the proceedings to the end",
+        "outcomes": [
+          { "weight": 100, "text": "It takes two hours. There are what can only be called statements - single birds stepping forward, screaming once, stepping back. At the end the ring opens on the landward side, and the accused walks out through the gap, alone, and flies inland, where gulls don't go. The parliament disperses instantly into ordinary chaos. You have understood nothing and witnessed everything, and you find you would testify to its fairness.", "effects": ["stat wis +1"] }
+        ] },
+      { "text": "Toss bread into the middle of it", "requires": { "item": "bread" },
+        "outcomes": [
+          { "weight": 50, "text": "The bread lands dead center, and several hundred gulls hold their discipline for one full, quivering second - a second of pure institutional agony - before parliament dissolves into a screaming white riot. In the chaos the accused escapes seaward, which may have been your ruling all along. One gull lands near you afterward and leaves a small shiny washer at your feet. A fee, or a bribe, or thanks.", "effects": ["removeitem bread", "money +3", "rep +1"] },
+          { "weight": 50, "text": "The bread lands dead center and NOTHING MOVES. Several hundred gulls turn their heads to you in perfect unison, and you experience being formally noted in the minutes. The fisherman sucks air through his teeth. For the rest of your time on this coast, you are never - not once - free of exactly one watching gull.", "effects": ["removeitem bread", "trait +marked"] }
+        ] },
+      { "text": "Advocate for the accused", "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You stand at the edge of the ring and deliver, with full courtroom gravity, a defense of a bird whose crime you cannot know: character evidence, mitigating circumstances, the fallibility of eyewitness gulls. The parliament listens - LISTENS - and when you rest your case, the ring breaks up without a verdict. Mistrial. The fisherman is laughing too hard to mend, and the story buys your drinks for a week.", "effects": ["rep +3", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You are three sentences into your opening argument when the entire parliament - accused included - lifts as one and relocates thirty yards down the wall, reconvening with its back to you. Overruled, in the most complete sense available to birds. The fisherman offers you a place mending nets, 'since the law's not working out.'", "effects": ["rep -1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_whale_stranding",
+    "locations": ["coast"],
+    "weight": 12,
+    "text": "The young whale came in on the night tide and the night tide left without it. It lies in the shallows at {site} like a capsized cathedral, breathing - still breathing - while the whole village forms up with buckets and wet canvas and the particular grim speed of coast people who have done this before and lost. High water is at dusk. The whale's eye, when you get close, finds you and holds on.",
+    "choices": [
+      { "text": "Take charge of the refloat", "check": { "stat": "int", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Somebody has to think instead of haul: you organize the bucket lines, get the canvas shaded and soaked in rotation, and set the diggers on a channel BEHIND the whale where the tide will reach first. At dusk the water comes up the channel like an answer, and the whale feels it, gathers, and goes - one stroke, two, then out and down and gone. The village stands in the wet dark cheering itself hoarse. You will be welcome here for life.", "effects": ["rep +6", "stat int +1", "stat wis +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your channel is dug true but your tide arithmetic is coastal-fair rather than coastal-perfect, and the water arrives late and shallow. It takes the dusk tide AND the next dawn's, a brutal doubled vigil, before the whale swims free - it does swim free - and the village is too tired and too glad to assign blame anywhere but the sea, where it belongs.", "effects": ["hp -4", "rep +3"] }
+        ] },
+      { "text": "Dig the channel", "check": { "stat": "str", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You take the deep end of the channel, where the digging is heaviest and the water fights back, and you move sand like it insulted your family. When the tide runs up your trench at dusk and lifts thirty tons of stranded life off the bar, some measurable fraction of that is your shoulders. The whale's flukes, going, throw spray across the whole line of diggers. Nobody wipes it off.", "effects": ["rep +4", "stat str +1", "hp -2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The wet sand wins on points. Your section of channel keeps slumping, and a fisherman twice your age quietly re-digs it while you're catching your breath, which he never once mentions, which is somehow worse. The whale gets off on the dusk tide regardless. You cheer with everyone and privately apologize to your arms.", "effects": ["hp -4", "rep +1"] }
+        ] },
+      { "text": "Stay at its head and keep it calm",
+        "outcomes": [
+          { "weight": 100, "text": "Someone has to be at the eye, the old women say, or the whale gives up before the water comes. So you stand waist-deep for six hours, hand on the great jaw, talking - about nothing, about roads, about {world} and everything in it you've seen - while the eye watches you and the breath comes slow and huge like weather. When the tide lifts it free, the whale pauses, impossibly, and rolls the eye at you once more before going. You are cold to the bone and will never entirely warm up, in the best way.", "effects": ["hp -3", "trait +blessed", "stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_salt_flower",
+    "locations": ["coast"],
+    "weight": 10,
+    "text": "The saltworks terrace down to the sea in shallow pans, each one growing its skin of crystal under the sun. Today is the flower harvest - the fragile top bloom, the salt of salts, worth ten times the coarse stuff below it - and the salter is watching two things with equal horror: the pans, which are perfect, and the horizon, which is assembling clouds with visible intent. Rain on the pans means starting the season's finest work from zero.",
+    "choices": [
+      { "text": "Rake ahead of the weather", "check": { "stat": "con", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "The flower is skimmed with a wooden lute in strokes the salter demonstrates once and expects forever, and you rake pan after pan while the clouds stack up like unpaid bills. The last basket comes off the last pan as the first drops crater the brine. The salter pays full harvest share and stands with you under the drying-shed eave, watching the rain ruin nothing, saying nothing, entirely happy.", "effects": ["money +10", "stat con +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your lute strokes are enthusiastic, which is the wrong thing for them to be: you sink the bloom in two pans, mixing flower into coarse, a season's finest demoted to table grade by your wrists. The salter absorbs it the way farmers absorb hail. You work the remaining pans under closer instruction and thinner wages, and the rain, arriving, feels personally smug.", "effects": ["money +3", "hp -2"] }
+        ] },
+      { "text": "Grade the pans by taste", "check": { "stat": "wis", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "The salter's late wife could taste which pan a crystal came from, and he hasn't trusted a palate since. Yours, it emerges, will do: you walk the terraces tasting on a wet fingertip - this pan mineral, this one sweet, this one touched by the iron spring and best kept for the fish-curers. He re-prices the harvest on your tongue's word and the buyers, days later, confirm every call. Your share reflects it.", "effects": ["money +9", "stat wis +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "By pan six your palate files for leave; by pan ten everything tastes like the concept of white. Your gradings, checked against his records, are confidently random. The salter feeds you bread and vinegar to reset your mouth and reassigns you to carrying baskets, where opinions are not required.", "effects": ["hp -1", "money +3"] }
+        ] },
+      { "text": "Offer to buy stock cheap before the rain does", "requires": { "money": 5 },
+        "outcomes": [
+          { "weight": 100, "text": "You make the offer with the rain as your negotiating partner: coin now, certain, versus pans possibly ruined within the hour. He takes it, half insulted, half relieved. The rain, as it happens, veers inland - but a sack of salt flower is a currency all its own on the road, and cooks, healers, and one alarming pickler will pay you well above what the weather charged.", "effects": ["money +3", "loot common"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_lantern_squid",
+    "locations": ["sea"],
+    "weight": 13,
+    "text": "The fishermen's trick for a dark calm night: hang a lantern low over the stern and the squid rise to it, curious, glittering, catchable. You rig it and it works immediately - the water beneath the sloop fills with darting silver question marks. It works, in fact, slightly too well. Below the squid, at the edge of the lantern's reach, something considerably larger has also noticed the light, and is circling it the way you'd circle a bakery.",
+    "choices": [
+      { "text": "Fish fast and keep one eye down", "check": { "stat": "dex", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You work the jig like a pickpocket at a festival - quick, greedy, gone before anything larger commits. Two dozen squid come aboard slick and indignant, and when the big shape finally rises through the empty lantern-light, you are already dark, already moving, already composing the recipe. Fried, fresh, at sea, under stars: there are kings eating worse tonight.", "effects": ["money +9", "item rations", "stat dex +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "One squid too many. The shape declines to wait its turn, and its arrival under the boat is announced by every remaining squid leaving at once and the sloop rising an inch on displaced water. You douse the lantern, ship the line, and spend ten minutes being very quiet cargo while something taps the hull twice - inquiring - and sinks away unanswered.", "effects": ["hp -2", "removeitem rations"] }
+        ] },
+      { "text": "Douse the light the moment you see it",
+        "outcomes": [
+          { "weight": 100, "text": "Old rule: when something joins the queue below you, close the shop. You snuff the lantern and sit in the dark with your modest early catch, listening to the sea decide you're boring. The shape circles once more and departs to bother a light three miles off - some other fisherman's problem now, may he count his squid and his blessings in that order.", "effects": ["item jerky", "stat wis +1"] }
+        ] },
+      { "text": "Lower the lantern deeper and fish for the big one", "check": { "stat": "con", "dc": 14 },
+        "success": [
+          { "weight": 100, "text": "Madness, and you commit to it: lantern on a weighted line, heaviest hook, half a squid for bait, and a two-hour argument with something that treats your sloop as negotiable. You win on stubbornness. What comes over the rail is ugly, vast, and - per the fishmonger at your next landfall, who pays in reverent silence first and coin second - the finest deep-lantern catch this season.", "effects": ["money +14", "stat con +1", "hp -2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The take, when it comes, nearly takes YOU - the line hisses out, the rail dips to the water, and you let go one crucial second late. Lantern, line, hook, and a piece of your palm depart into the deep together. Somewhere below, something now owns a lit lantern, which is a thought you will revisit at anchor for the rest of your life.", "effects": ["hp -5", "money -3"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_raft_market",
+    "locations": ["sea"],
+    "weight": 12,
+    "slots": { "rumor": "chronicle_random" },
+    "text": "It appears out of the haze like a rumor with rigging: a floating market, nine hulls lashed gunwale to gunwale, drifting where the currents cross. Awnings, cookfires, a tethered goat with sea legs. Boats hang off it like piglets. A crier stands on the center barge selling the news itself at a copper a headline, and the free sample carries across the water: '{rumor}!'",
+    "choices": [
+      { "text": "Trade coin for cargo", "requires": { "money": 6 },
+        "outcomes": [
+          { "weight": 100, "text": "Market law afloat: everything is priced in what the seller couldn't use and the buyer can't find ashore. You come away with a bundle that cost six coins and no tax, ever, on anything, which is the entire business model and the reason the market never anchors anywhere with a flag.", "effects": ["money -6", "loot fine"] }
+        ] },
+      { "text": "Sell your news to the crier", "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You are fresher from shore than anyone aboard, and you know how to land a headline. The crier buys three of your items outright and splits the take on a fourth - your account of the road behind you, punched up, sold back to the sea at a copper a listener. Hearing your own week hawked across the water in a stranger's showman voice is worth nearly as much as the coin.", "effects": ["money +8", "stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your news, the crier explains with terrible kindness, lacks structure. No hook, no villain, buried the flood. He gives you a free lesson in headline construction using your own life as the negative example, at volume, to an appreciative crowd. You buy a bowl of stew to have something to do with your face.", "effects": ["money -2", "hp +1"] }
+        ] },
+      { "text": "Tie up, eat hot food, hear everything", "requires": { "money": 3 },
+        "outcomes": [
+          { "weight": 100, "text": "A bowl of the center barge's stew - fish, obviously, but fish with AMBITION - and two hours among people whose whole lives are current-borne. You leave knowing which harbor's excise captain retired, which strait has gone strange, and what the goat's name is (Admiral). The market drifts one way, you sail the other, both fractionally richer.", "effects": ["money -3", "hp +3", "stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_whale_road",
+    "locations": ["sea"],
+    "weight": 12,
+    "text": "By mid-morning it's undeniable: you have sailed onto a whale road. Pods pass all day in one direction, unhurried, spaced like traffic that solved itself - backs breaking the swell to port and starboard, breath hanging in the air like slow smoke. Your sloop is a pebble on their highway. They know exactly where they're going, which is currently more than you can say.",
+    "choices": [
+      { "text": "Turn and follow the road",
+        "outcomes": [
+          { "weight": 65, "text": "Whales don't commute for scenery: the road leads somewhere rich. You follow at a respectful distance for half a day, and the road delivers - a churning upwelling where the sea turns silver with baitfish and everything with a mouth attends. You fish the margins of the feast until the hold complains, then peel off with a full larder and, absurdly, a lump in your throat as the pods carry on without you.", "effects": ["money +8", "item rations"] },
+          { "weight": 35, "text": "You follow for half a day, at which point it becomes clear the road's destination is measured in weeks and hemispheres. The whales have somewhere to be by winter. You do not. You peel off, well off your course and obscurely embarrassed, like a traveler who boarded a long-haul cart to see where it went.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Hold your course and cross the road", "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Crossing lanes of forty-ton traffic calls for timing, not courage, and you find the seam - hard over between two pods, sheets in, the sloop skating the gap while a barnacled flank rises alongside close enough to smell. One whale rolls an eye over you in passing, files you under 'driftwood, cheeky,' and the road closes behind you like you were never there.", "effects": ["stat dex +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your gap is not a gap, it is an interval, and the difference surfaces directly ahead. The evasion is yours to make and costs you a crash-tack, a boom to the ribs, and a wave over the rail that the whale - entirely unaware any of this occurred - contributes with one lazy fluke. You complete the crossing bailing and reciting new personal rules about traffic.", "effects": ["hp -4"] }
+        ] },
+      { "text": "Heave to and listen through the hull",
+        "outcomes": [
+          { "weight": 100, "text": "You strike sail, lie down in the bilge, and press your ear to the planking - and there it is, what the hull has been feeling all day: the road is SINGING. Calls passing up and down the line for miles, relayed, answered, harmonized, a conversation older than every chart aboard. You can't understand a word. You lie there until dusk anyway, being one plank away from it, which feels like enough.", "effects": ["stat wis +1", "hp +2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_sweetwater_rain",
+    "locations": ["sea"],
+    "weight": 12,
+    "when": ["raining"],
+    "text": "Rain at sea, steady and warm and freshwater-generous, hammering the deck and turning the swell to hammered pewter. Ashore, rain is a nuisance. Out here it is a delivery: every sailor knows the arithmetic of water casks, and the sky is currently running a promotion. The sloop drums under it like an instrument. The salt on everything you own begins, hopefully, to loosen.",
+    "choices": [
+      { "text": "Rig every scrap of canvas to catch it", "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Sail cover funneled to the cask, oilskin guttering the cabin top, even your hat conscripted at a cunning angle: within two hours you have caught more sweet water than a week of rationing would save. Cask full, spares full, kettle full. You celebrate with the sailor's rarest luxury - washing in fresh water, wastefully, on purpose, laughing.", "effects": ["hp +4", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your catchment design has one flaw, which is that the boom disagrees with it. A shifting gust re-rigs your funnel into a scoop, the scoop selects the half-full cask, and your day's catch plus reserve goes to the bilge, now the best-hydrated part of the ship. You catch the rest of the rain in the kettle, cup by cup, character-buildingly.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Strip off and stand in it",
+        "outcomes": [
+          { "weight": 100, "text": "There is nobody for thirty miles to be dignified for. You stand on deck in the warm rain and let it take the salt out of your hair, your clothes (washed and wrung on the spot), and some third thing that isn't either. The sloop steers herself kindly for half an hour. You put your wet clothes back on a different person.", "effects": ["hp +4", "stat wis +1"] }
+        ] },
+      { "text": "Rain means wind behind it: make distance", "check": { "stat": "dex", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "The old rule holds - the rain's trailing edge carries a firm, useful wind, and you're trimmed for it before it arrives. The sloop puts her shoulder down and RUNS, rain hissing off the bow wave, and you make a day and a half's distance by dusk, soaked, grinning, and precisely where the chart didn't expect you until tomorrow.", "effects": ["stat dex +1", "hp +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The wind behind this rain arrives all at once and from the wrong quarter, catches you carrying too much sail out of greed, and administers a twenty-minute lesson in reefing under pressure. Nothing breaks except your rhythm and one batten, but the distance made is modest and the bruises are not.", "effects": ["hp -3"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_stowaway_cat",
+    "locations": ["sea"],
+    "weight": 10,
+    "when": ["!companion"],
+    "text": "Two days out, the forepeak sneezes. Investigation produces a cat: lean, sea-gray, entirely unapologetic, sitting on your spare canvas like a deposit paid. It has done this before - there's a nick in one ear and a knowledge of hatches in its eyes. It looks at you, then at the horizon, with the air of a passenger who booked in advance and would prefer not to discuss it further.",
+    "choices": [
+      { "text": "Feed it properly", "requires": { "item": "jerky" },
+        "outcomes": [
+          { "weight": 100, "text": "You split your jerky with it, establishing terms. That night you learn what you'd shipped besides the cat: a rat, which the cat presents to you at dawn on the cockpit sole, arranged, with the modest ceremony of an invoice. Behind the rat's nest in the forepeak: a previous crew's forgotten cache. The cat accepts a share of your breakfast as commission and pretends to sleep.", "effects": ["removeitem jerky", "loot common", "hp +1"] }
+        ] },
+      { "text": "Put it to work on watch",
+        "outcomes": [
+          { "weight": 100, "text": "The cat cannot steer, reef, or navigate, and does all three anyway in the sense that it sits at the bow for hours staring at exactly one point of the horizon until you nervously check it. Twice, the point produces weather early enough to matter. You stop questioning the arrangement. The night watches, shared with a warm disdainful weight against your boot, are shorter than they used to be.", "effects": ["stat wis +1", "hp +2"] }
+        ] },
+      { "text": "Ashore at the next landfall, no arguments",
+        "outcomes": [
+          { "weight": 60, "text": "At the next harbor you set it on the quay with a strip of fish, firm about it. The cat eats the fish, watches you warp out, and walks off without a backward glance to case the moored fleet - a professional between ships, already working. You feel briefly, absurdly, like one of a long line of exes.", "effects": ["stat wis +1"] },
+          { "weight": 40, "text": "At the next harbor you set it on the quay, firm about it, and it lets you have the moment. Three days and one sea later, the forepeak sneezes. You don't even look up from the tiller: 'The good hatch was latched.' Silence, then the sound of a cat choosing not to dignify that. You feed it. Terms have been established, just not yours.", "effects": ["hp +1", "removeitem jerky"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_barnacle_assessor",
+    "locations": ["sea"],
+    "weight": 10,
+    "text": "The rowboat comes off the mid-sea buoy with bureaucratic determination, and its occupant hails you with a title: Assessor of the Ancient and Honorable Court of the Waterline. He has a ledger, a brass scraper on a chain of office, and a claim: under barnacle law - 'predates every kingdom, look it up, you can't, that's how old' - all hulls passing this buoy owe fouling tithe, assessed by him, payable now.",
+    "choices": [
+      { "text": "Pay the tithe", "requires": { "money": 4 },
+        "outcomes": [
+          { "weight": 100, "text": "Four coins for the pageantry alone, and the pageantry over-delivers: he circles your hull in his rowboat making disapproving notes, then SCRAPES it - properly, expertly, an hour's professional work below the waterline while reciting statutes he is inventing on the spot. The sloop is half a knot faster when he's done. It's a fake court with a real service, or possibly the reverse, and either way you sail off cleaner.", "effects": ["money -4", "stat wis +1"] }
+        ] },
+      { "text": "Challenge the statute on its merits", "check": { "stat": "int", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You engage with the jurisprudence. If the court predates kingdoms, you argue, it predates coinage, and tithes must therefore be payable in kind - specifically in barnacles, of which your hull, he has just testified, has plenty; he is welcome to collect them. The Assessor stares, then slowly grins, then writes it in the ledger as precedent with your name attached. He scrapes the hull anyway, 'for the appeal record,' and waives all fees on grounds of respect.", "effects": ["stat int +1", "rep +2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You cite maritime law you half-remember, and he cites back with terrifying fluency - fake courts leave a lot of time for reading real statutes. Twenty minutes later you have lost a case that doesn't exist, in a court that doesn't exist, and are somehow paying costs, which do. The scraping, at least, is included.", "effects": ["money -6"] }
+        ] },
+      { "text": "Scrape your own hull, publicly, out of spite", "check": { "stat": "con", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You anchor by the buoy, strip to the waist, and go over the side with your knife to scrape your own hull while he watches - depriving the court of jurisdiction one barnacle at a time. It is cold, awful, two-hour work. The Assessor observes in silence, then formally enters you in the ledger as 'sovereign hull, self-assessing,' and gives you the salute one professional gives another. The sloop runs faster. So, oddly, do you.", "effects": ["stat con +1", "rep +2", "hp -2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Self-assessment, it emerges, is a skill. You surface gasping after forty minutes with a quarter of the hull done, a knife dropped somewhere in forty fathoms, and knuckles that have paid tithe in the oldest currency. The Assessor tows you the last stretch to your own rail, magnanimous in victory, and marks the ledger: 'settled in blood, receipt issued.'", "effects": ["hp -4"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_sulking_mainsail",
+    "locations": ["sea"],
+    "weight": 11,
+    "text": "Every sailor knows canvas has moods, and this morning your mainsail is in one: luffing in a clean breeze, refusing to set on the port tack, cracking irritably at nothing. There is a reason - there is always a reason, in the seams or the sheeting or the cut - but the sail is not saying, and the sloop, loyal to her rig, is sailing like a cart with a stone in one shoe.",
+    "choices": [
+      { "text": "Go over every seam with needle and palm", "requires": { "item": "sewing_kit" },
+        "outcomes": [
+          { "weight": 100, "text": "You drop the sail on deck and interview it inch by inch, and there it is: a hand's length of seam gone soft at the second reef, working itself looser with every crack. An hour of proper sailmaker's stitching - flat, tight, waxed - and the sail goes back up and SETS, instantly, sweetly, like an apology accepted. The whole boat sails better. So does your mood.", "effects": ["stat int +1", "hp +2"] }
+        ] },
+      { "text": "Re-lead the sheets and retune the whole rig", "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "The sail isn't sulking, you decide, it's protesting: something in the rig has crept out of true. You spend the morning re-leading, easing, tensioning - and find it, a sheet lead worked loose and dragging the clew a hand-span out of its life's calling. Corrected, the sloop lifts and settles into a groove she hasn't found all season. The chart says you make port half a day early.", "effects": ["stat int +1", "stat dex +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your retuning is systematic, thorough, and wrong in one cumulative direction, and by noon the rig is a stranger to itself: three new problems, original problem retained. You put everything back the way it was by memory and apology. The sail luffs on, vindicated. Some arguments you lose by having them.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Talk to it. Out loud. Like a person", "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Nobody is out here to see you address your own canvas, so you do it properly: acknowledgment of long service, review of weather endured together, one specific compliment about that gale in the spring. Then you trim the sheet a whisker on instinct - and the sail fills, rounds, and stays full. Coincidence, says the part of your mind that will not survive a life at sea. You thank the sail. Quietly. Forever after, it sets better for you than for anyone.", "effects": ["stat cha +1", "hp +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You are mid-sentence - a generous sentence, a KIND sentence - when the wind shifts, the boom swings, and the entire conversation is concluded from the sail's side with a wallop that sits you down in the cockpit. Point taken. Some canvas prefers a professional relationship.", "effects": ["hp -3"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_taste_of_land",
+    "locations": ["sea"],
+    "weight": 10,
+    "text": "An old pilot once told you the sea has vintages, and you laughed. You are not laughing now: the bucket you hauled for washing tastes WRONG - a thread of sweetness, a green note, river-water and leaf-rot, out here past the sight of any land the chart admits to. Somewhere upstream of this current is fresh water in quantity, which means land, or something doing an excellent impression of it.",
+    "choices": [
+      { "text": "Follow the taste to its source", "check": { "stat": "wis", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You track it like a hound, bucket by bucket, tacking up the freshening thread for a day - and the chart is wrong, or coy: a low green islet in a ring of foul reefs, a river no wider than a lane, and the wreck-cache of every crew that found this place before you and left in a hurry. You fill your casks with the sweetest water of the voyage and your pockets with what the hurried left behind. The islet goes in your private notes, and nowhere else.", "effects": ["money +11", "loot common", "stat wis +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The thread of sweetness frays into contradictions - stronger here, gone there, strong again where it can't be - and after a day of bucket-tasting and second-guessing you have drunk an heroic amount of seawater and found nothing but more sea. The current keeps its secret. Your stomach keeps a grudge.", "effects": ["hp -3"] }
+        ] },
+      { "text": "Log the current for the chart office",
+        "outcomes": [
+          { "weight": 100, "text": "You do it properly: position by dead reckoning, taste notes like a wine cellar's ledger ('sweet, green, faint iron - insistent'), drift and temperature morning and evening for two days as you cross the stream. Chart offices pay for verified current data the way collectors pay for stamps, and the freshwater anomaly gets your observation into the season's supplement - your name, in small print, permanently attached to a mystery.", "effects": ["money +7", "stat int +1"] }
+        ] },
+      { "text": "Fresh water out here is somebody's, and they're not advertising",
+        "outcomes": [
+          { "weight": 100, "text": "Rivers mean land, unmarked land means unmarked people, and unmarked people have their reasons. You note the taste, hold your course, and let the current keep whatever it's carrying. That night, far off, you see the faintest smudge of woodsmoke on the horizon where the chart shows nothing at all - and you nod to it, one keeper of counsel to another, and sail on.", "effects": ["stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_burning_wake",
+    "locations": ["sea"],
+    "weight": 10,
+    "text": "You notice it at the change of watch: the sea has caught fire, coldly. Every wave-crest glows blue-green, the bow wave burns, and your wake writes a long bright sentence behind you across the dark. Sailors call it sea-fire and argue about what it means. What it means tonight is that the whole ocean is luminous, your hull is outlined in ghost-light, and anything below can read you like a signature.",
+    "choices": [
+      { "text": "Write in it",
+        "outcomes": [
+          { "weight": 100, "text": "You spend an hour steering figures across the glowing sea - loops, spirals, your own name in letters half a mile long, blazing and fading behind you. It is completely useless and you will remember it on your last day: the night the ocean was ink and you were, briefly, the pen. The stars watch. Something below matches your course for a while, playing in the bright wake, then sounds and is gone.", "effects": ["stat cha +1", "hp +2"] }
+        ] },
+      { "text": "Jar the glowing water to sell", "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "The glow is alive - tiny lives, uncountable - and keeping it lit is a puzzle of sea-water, air, and agitation that you solve by the third jar: a layer of sand, a loose seal, a daily swirl. Two jars survive to landfall still burning their cold fire, and an alchemist and a jeweler bid against each other with gratifying results. The third jar you keep, and do not sell at any price.", "effects": ["money +10", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "By morning your six jars hold six measures of gray seawater, dead as ditchwater, with a faint smell of disappointment. Whatever the glow is, it declines to be owned. You pour them back over the side with something like apology, and the sea, absorbing its own again, briefly flickers - which you choose not to interpret.", "effects": ["hp -1"] }
+        ] },
+      { "text": "Swim in it", "check": { "stat": "con", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You heave to, tie a line around your waist, and go over the side into liquid light. Every movement blazes - you are a comet with elbows, a constellation learning breaststroke. Cold beyond argument, glorious beyond sense. You climb out shaking and shining, faintly luminous at the fingertips for three full days, and are never entirely certain the glow ever completely leaves.", "effects": ["trait +glowing", "hp +2", "stat con +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The water is colder than the glow advertised, the line is shorter than you tied it, and the sloop, drifting, develops opinions about where to be. Your luminous swim becomes a luminous scramble, visible for miles to anything with eyes, and you regain the deck glowing, gasping, and cured of romance for at least a week.", "effects": ["hp -4"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2h_wayworn_passenger",
+    "locations": ["sea"],
+    "weight": 10,
+    "text": "It arrives at dusk with the last of its strength: a small land bird, hundreds of miles from any hedge, dropping onto your rigging like a spent coin. A thrush, maybe - a thing of gardens and worm-rich mornings, blown out to sea by some storm it never saw coming, now gripping your topping lift with its whole remaining opinion. It looks at you. Sailors say such birds are owed. They do not say what.",
+    "choices": [
+      { "text": "Take it in: water, crumbs, a box by the stove", "requires": { "item": "bread" },
+        "outcomes": [
+          { "weight": 100, "text": "You give it water from your own cup and bread from your own ration, and rig it a nest-box in the warmest corner aboard. For three days it rides with you, recovering, singing at dawn - garden song, hedgerow song, six hundred miles from any hedge, and worth the bread at triple the price. When the coast rises it goes without ceremony, straight and strong toward land. The old sailors are right: it was owed. You find you were glad to pay.", "effects": ["removeitem bread", "trait +blessed", "stat wis +1"] }
+        ] },
+      { "text": "Note its species and heading, and think", "check": { "stat": "int", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "A hedge-thrush means land upwind within its flying range, and its line of flight before collapse, back-plotted against the storm's track, means land WHERE, roughly. Your arithmetic says the chart's coast is closer than your dead reckoning believed - a full day closer. You correct, and the landfall proves you right, saving a day's rations and a night of anxious sounding. The thrush, recovered, leaves at the first smell of land, having paid its passage in navigation.", "effects": ["stat int +1", "money +6", "hp +2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your back-plotting is confident and your bird identification is not: what you took for a coastal thrush is, a harbor birdwatcher later informs you with relish, a long-range wanderer that thinks nothing of a week over open water. Your 'corrected' course adds half a day of empty horizon and a permanent humility about feathers. The bird, at least, recovers and leaves without commenting.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Cage it for the fancier's market",
+        "outcomes": [
+          { "weight": 100, "text": "Storm-blown rarities fetch real coin from collectors, and a biscuit tin makes a serviceable cage. The bird sells at the next port to a fancier who is delighted, and pays like it. The coin spends normally. The dawn silences, on the rest of the voyage, in the warm corner where a box could have been - those spend differently, and keep charging interest.", "effects": ["money +7", "rep -2", "stat wis -1"] }
+        ] }
+    ]
+  }
+]

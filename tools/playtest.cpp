@@ -175,17 +175,26 @@ int main(int argc, char** argv) {
             for (int e = 0; e < nEvents && !s.c.dead; e++) {
                 std::string useTag = tag;
                 if (dungeonish && e == nEvents - 1) useTag = "dungeon_finale";
-                const Event* ev = deck.draw(s.rng, useTag);
-                if (!ev && useTag != tag) ev = deck.draw(s.rng, tag);
-                if (!ev && tag == "crash") ev = deck.draw(s.rng, "dungeon");
-                if (!ev) break;
-                // event-level gate
-                bool gated = false;
-                for (auto& w : ev->when)
-                    if (!botCond(s, w)) gated = true;
-                if (gated) { e--; continue; }
-                // skip events with unsatisfiable slots (approximate: 60% ok)
-                if (!ev->slots.empty() && s.rng.chance(30)) continue;
+                // Mirror the game (R9): ineligible draws return to the pool;
+                // a tried-set + attempt cap replaces the old auto-marking.
+                std::set<std::string> tried;
+                const Event* ev = nullptr;
+                for (int attempt = 0; attempt < 12; attempt++) {
+                    ev = deck.draw(s.rng, useTag, &tried);
+                    if (!ev && useTag != tag) { useTag = tag; continue; }
+                    if (!ev && tag == "crash") { useTag = "dungeon"; continue; }
+                    if (!ev) break;
+                    tried.insert(ev->id);
+                    bool gated = false;
+                    for (auto& w : ev->when)
+                        if (!botCond(s, w)) gated = true;
+                    if (gated) { ev = nullptr; continue; }
+                    // skip events with unsatisfiable slots (approximate)
+                    if (!ev->slots.empty() && s.rng.chance(30)) { ev = nullptr; continue; }
+                    break;
+                }
+                if (!ev) continue;
+                deck.markUsed(ev->id);
 
                 // follow goto chains up to 5 hops
                 for (int hop = 0; hop < 5 && ev && !s.c.dead; hop++) {

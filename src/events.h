@@ -70,7 +70,14 @@ struct ResolvedOutcome {
 class EventDeck {
 public:
     void loadJsonText(const char* jsonText);
-    const Event* draw(Rng& rng, const std::string& location);
+    // Draws a weighted random unused event for a location. Does NOT mark it
+    // used — call markUsed once the event is actually shown; gated or
+    // slot-failed draws go back in the pool so they don't silently drain it
+    // and cause early repeats (R9). `exclude` skips ids already tried this
+    // deal so the retry loop can't spin on the same ineligible card.
+    const Event* draw(Rng& rng, const std::string& location,
+                      const std::set<std::string>* exclude = nullptr);
+    void markUsed(const std::string& id) { used_.insert(id); }
     const Event* find(const std::string& id) const;
     void resetUsed() { used_.clear(); }
     size_t size() const { return events_.size(); }

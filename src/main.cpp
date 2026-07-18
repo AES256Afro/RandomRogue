@@ -24,6 +24,7 @@ Game gGame;
 // directly and feeds the game one unified pointer.
 float gPtrX = 0.0f, gPtrY = 0.0f; // canvas CSS coords
 bool gPtrPressed = false;         // edge: a press happened since last frame
+bool gParkPending = false;        // touch lifted: hide hover after this frame
 
 EM_BOOL onMouse(int type, const EmscriptenMouseEvent* e, void*) {
     gPtrX = (float)e->targetX;
@@ -38,6 +39,11 @@ EM_BOOL onTouch(int type, const EmscriptenTouchEvent* e, void*) {
         gPtrY = (float)e->touches[0].targetY;
     }
     if (type == EMSCRIPTEN_EVENT_TOUCHSTART) gPtrPressed = true;
+    // Touch has no hover: after the finger lifts, park the pointer offscreen
+    // so the last-tapped row doesn't stay gold like a hint (R9). Deferred to
+    // after the next frame so a quick tap's press still lands on its row.
+    if (type == EMSCRIPTEN_EVENT_TOUCHEND || type == EMSCRIPTEN_EVENT_TOUCHCANCEL)
+        gParkPending = true;
     return EM_TRUE; // consume: no ghost mouse events / page gestures
 }
 
@@ -111,6 +117,14 @@ void UpdateDrawFrame() {
     // The frame the player asked to keep (death card) is now in the texture.
     if (gGame.consumeCardRequest()) ExportDeathCard();
 
+#if defined(PLATFORM_WEB)
+    // Finger lifted and its press has been consumed: end the fake hover.
+    if (gParkPending) {
+        if (!gPtrPressed) { gPtrX = -1000.0f; gPtrY = -1000.0f; }
+        gParkPending = false;
+    }
+#endif
+
     // Screen shake: jitter the blit, never the game state.
     float shake = gGame.shakeAmount();
     if (shake > 0.0f) {
@@ -149,6 +163,8 @@ int main() {
     emscripten_set_mousemove_callback("#canvas", nullptr, 1, onMouse);
     emscripten_set_touchstart_callback("#canvas", nullptr, 1, onTouch);
     emscripten_set_touchmove_callback("#canvas", nullptr, 1, onTouch);
+    emscripten_set_touchend_callback("#canvas", nullptr, 1, onTouch);
+    emscripten_set_touchcancel_callback("#canvas", nullptr, 1, onTouch);
     emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
 #else
     SetTargetFPS(60);

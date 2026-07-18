@@ -219,6 +219,7 @@ private:
     int chronPage_ = 0;                    // chronicle browser page
     std::vector<std::string> chronLines_;  // cached rendered page
     int chronCachedPage_ = -1;
+    int chronDetail_ = -1; // tapped line: show the full entry (R9)
     std::string scoresJson_;     // today's fallen (web leaderboard)
     bool scoresRequested_ = false;
     bool scoreSubmitted_ = false;

@@ -360,3 +360,24 @@ Steam packaging remains the only deferred item.
 - **Web mods** - ?mod=<url> fetches a community events file and merges
   it into the deck ("mod: +N events" on the title). Data only, never
   code. Documented in MODDING.md.
+
+---
+
+## Release 9 (shipped) - Player-Feedback Round One
+
+- **The repeat fix** - drawn-but-ineligible events (failed when-gates or
+  slots) were silently marked used, draining location pools 2-3x faster
+  than players saw cards and forcing early recycling. Draws now return
+  to the pool unless actually shown; a per-deal tried-set stops retry
+  spins. Repeats now only occur when a location's pool is truly seen out.
+- **+122 events** - blitz2_town (32 tavern/city), blitz2_deep (30
+  dungeon/cave/crash/finale), blitz2_wilds (30 forest/road/swamp),
+  blitz2_heights (30 mountains/coast/sea). 289 events total across 25
+  files; validator green; bot reaches 283/289.
+- **Chronicle tap-to-read** - every line in the chronicle browser opens
+  the full entry, word-wrapped; tap to dismiss.
+- **Seed scramble** - the boot seed was raw time %% 1e9, so every visitor
+  saw a near-identical 78xxxxxxx number; it now rolls all nine digits.
+- **Touch-hover fix** - on iPad the last tap's position kept a choice row
+  highlighted gold (read as a hint). The pointer parks offscreen after
+  each tap, deferred one frame so fast taps still land.

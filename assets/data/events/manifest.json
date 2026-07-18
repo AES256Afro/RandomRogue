@@ -20,6 +20,10 @@
     "mountains.json",
     "coast.json",
     "gods.json",
-    "naval.json"
+    "naval.json",
+    "blitz2_town.json",
+    "blitz2_deep.json",
+    "blitz2_wilds.json",
+    "blitz2_heights.json"
   ]
 }

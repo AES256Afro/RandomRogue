@@ -1,0 +1,737 @@
+[
+  {
+    "id": "b2w_forest_elder_oak",
+    "locations": ["forest"],
+    "weight": 10,
+    "text": "An oak old enough to predate the concept of paths has grown a face, mostly by accident, and uses it to disapprove of things. As you pass, it clears its throat, which takes a while. 'Boots,' it rumbles. 'In MY leaf litter.'",
+    "choices": [
+      { "text": "Apologize for the boots", "check": { "stat": "cha", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "Nobody has apologized to the oak in two centuries. It is so thoroughly mollified it tells you where the squirrels bury things that are not acorns.", "effects": ["money +6", "stat wis +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your apology is judged insincere. The lecture on soil compaction lasts three hours. You doze off standing up and wake with a crick and a bark pattern on your cheek.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Argue right of way",
+        "outcomes": [
+          { "weight": 60, "text": "You cite common law, ancient custom, and the fact that the path was here first. The oak grinds out something like a laugh. 'Four hundred years since anyone argued back. Pass, lawyer.'", "effects": ["stat cha +1"] },
+          { "weight": 40, "text": "The oak does not argue. The oak has acorns, altitude, and a grudge with excellent aim.", "effects": ["hp -3"] }
+        ] },
+      { "text": "Ask what it has seen",
+        "outcomes": [
+          { "weight": 100, "text": "Kings, fires, one very confused whale, and every secret ever whispered under its branches on the assumption that trees don't listen. Trees listen. Trees remember. The oak shares, slowly, until dark.", "effects": ["learn 3", "stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_forest_treed_hunter",
+    "locations": ["forest"],
+    "weight": 10,
+    "text": "In a clearing you find a hunter sitting in a tree, and beneath the tree, a white stag, standing with the patience of a creditor. 'Three days,' the hunter hisses down at you. 'It won't leave. It KNOWS I shot at it.'",
+    "choices": [
+      { "text": "Negotiate on the hunter's behalf", "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Terms: a formal apology, the hunter's entire jerky supply as reparations, and a signed vow re-worded twice at the stag's insistence. The stag accepts. The hunter pays your fee from the tree, gratefully, before descending.", "effects": ["money +7"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your opening offer is judged insulting. The stag now includes you in the grievance, and escorts you from the clearing with its antlers at parade angle.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Side with the stag",
+        "outcomes": [
+          { "weight": 100, "text": "You review the hunter's marksmanship, loudly, from below. The stag inclines its head a fraction, which from a stag is a standing ovation. Later it crosses your path once more, deliberately, to show you a clean spring.", "effects": ["stat wis +1", "hp +3"] }
+        ] },
+      { "text": "Sell the hunter siege rations", "requires": { "item": "rations" },
+        "outcomes": [
+          { "weight": 100, "text": "A man three days up a tree does not haggle. You throw the rations up; the coin purse comes down. The stag watches this commerce with the expression of a creature settling in for a fourth day.", "effects": ["removeitem rations", "money +8"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_forest_feral_shrine",
+    "locations": ["forest"],
+    "weight": 9,
+    "slots": { "god": "god" },
+    "text": "A wayside shrine to {god} has gone feral. Untended for decades, it has rooted, sprouted, and started collecting its own offerings: snail shells, bright feathers, one entire birdbath. The little altar growls softly as you approach, then recognizes the shape of a worshipper and settles.",
+    "choices": [
+      { "text": "Tend it - prune, sweep, straighten", "check": { "stat": "wis", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You groom it like a nervous animal, which is what it is now. By the end it leans into the cloth. Somewhere, {god} - who holds {god_domain} - notices that someone bothered.", "effects": ["favor +2", "hp +2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You prune the wrong tendril. The shrine bites, in the way that shrines bite: splinters, all at once, from surfaces that were smooth a moment ago.", "effects": ["hp -3"] }
+        ] },
+      { "text": "Leave an offering of food", "requires": { "item": "bread" },
+        "outcomes": [
+          { "weight": 100, "text": "The bread sinks into the moss on the altar like a coin into a purse. After a decent interval, the shrine nudges something from its own collection toward your feet. Regifting, but sacred.", "effects": ["removeitem bread", "favor +1", "loot common"] }
+        ] },
+      { "text": "Take a feather from its collection",
+        "outcomes": [
+          { "weight": 50, "text": "The feather is from no bird you can name, and a collector in the next town will not care that you can't. The shrine watches you take it and says nothing, which is worse than growling.", "effects": ["money +6", "favor -1"] },
+          { "weight": 50, "text": "The shrine's shadow gets longer than the shrine. You put the feather back. The shadow stays long the whole way out of the grove, and so do the scratches you acquire from bushes that were not previously thorny.", "effects": ["hp -2", "favor -1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_forest_mushroom_election",
+    "locations": ["forest"],
+    "weight": 10,
+    "text": "You come upon a hollow where the mushrooms are holding an election. You can tell by the shouting, which is silent but unmistakable, and by the fact that half the caps have turned red while the other half refuse to comment. A toadstool with excellent posture appears to be the incumbent.",
+    "choices": [
+      { "text": "Serve as neutral election observer", "check": { "stat": "int", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "You certify the count - spore density, adjusted for wind. Both parties accept the result, and both parties bribe you anyway, on principle. Fungal democracy is further along than most kingdoms.", "effects": ["stat int +1", "money +4"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You stand slightly nearer the red caps while counting. This is noticed. You are declared partisan by both sides simultaneously and gassed with spores of censure.", "effects": ["hp -3"] }
+        ] },
+      { "text": "Vote - you are technically standing in the district",
+        "outcomes": [
+          { "weight": 55, "text": "Your candidate wins by one. Patronage arrives within the hour: a small cache of useful things, delivered by beetle, no note, none needed.", "effects": ["loot common"] },
+          { "weight": 45, "text": "Your candidate loses by one. Every mushroom in the hollow now knows exactly whose fault that is. You are on a list. The list is mycelial. The list is everywhere.", "effects": ["stat cha -1"] }
+        ] },
+      { "text": "Refuse to legitimize the process",
+        "outcomes": [
+          { "weight": 100, "text": "You walk through the hollow without engaging, like a person declining a petition. The incumbent's posture somehow conveys respect. Politics: occasionally the winning move is boots, moving.", "effects": ["stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_forest_lost_dell",
+    "locations": ["forest"],
+    "weight": 9,
+    "text": "A dell where lost things wash up. Single gloves. Half a key on half a ribbon. A child's wooden sword, chewed. They drift in along no visible current and settle in slow, sorted drifts, as if the forest runs a lost-and-found and never expects anyone to claim.",
+    "choices": [
+      { "text": "Search the drifts for something useful", "check": { "stat": "wis", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "The trick is not to look for what you want but for what wants out. Your hand closes on something practical near the bottom of the glove drift, and the dell lets it go without complaint.", "effects": ["loot common"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You dig too greedily. When you leave, your coin purse is lighter, and you never feel it happen. The dell doesn't steal. The dell collects. There is apparently a fee for browsing.", "effects": ["money -3"] }
+        ] },
+      { "text": "Donate to the collection", "requires": { "money": 2 },
+        "outcomes": [
+          { "weight": 100, "text": "You lose two coins on purpose, which the dell finds so novel it reciprocates immediately: a sewing kit surfaces at your feet, complete, someone's whole tidy life in a tin.", "effects": ["money -2", "item sewing_kit"] }
+        ] },
+      { "text": "Watch to see how things arrive",
+        "outcomes": [
+          { "weight": 100, "text": "An hour of stillness. Then a mitten fades in at the edge of your vision, arriving from a direction that isn't one of the usual six. You couldn't walk that way if you tried, but knowing it exists rearranges something in your head, usefully.", "effects": ["stat int +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_forest_birdsong_union",
+    "locations": ["forest"],
+    "weight": 10,
+    "text": "The birds in this stretch of forest have unionized. A jay lands on a stump with the bearing of a shop steward and lays out the fee schedule: silence costs, morning chorus costs more, and the dawn special is priced at 'what have you got.'",
+    "choices": [
+      { "text": "Pay for the dawn special", "requires": { "money": 3 },
+        "outcomes": [
+          { "weight": 100, "text": "Worth it. Forty voices in actual arrangement, with a wren soloist who has clearly been saving something. You walk the morning miles lighter than the coin explains.", "effects": ["money -3", "hp +3"] }
+        ] },
+      { "text": "Decline and endure the freemium tier",
+        "outcomes": [
+          { "weight": 100, "text": "The freemium tier is one starling doing impressions of a cart axle, at irregular intervals, for six miles. Technically music. Legally harassment.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Barter jerky for a season pass", "requires": { "item": "jerky" },
+        "outcomes": [
+          { "weight": 100, "text": "The steward inspects the jerky, calls a vote, and stamps your pack with guano in a pattern the whole flock recognizes. Membership includes intelligence services: three sparrows escort you to a purse someone dropped last week.", "effects": ["removeitem jerky", "money +4", "stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_forest_extra_clearing",
+    "locations": ["forest"],
+    "weight": 9,
+    "text": "The map says trees. Twenty years of travelers say trees. Yet here: a clearing, circular, mown - MOWN - with grass the exact green of a childhood you didn't have. It was not here on the way in. It may not be here on the way out.",
+    "choices": [
+      { "text": "Rest in it",
+        "outcomes": [
+          { "weight": 60, "text": "The best sleep of the season, on grass that adjusts. You wake fed, though you didn't eat, and rested, though you dreamed of running. The clearing waits politely for you to leave before it stops existing.", "effects": ["hp +5"] },
+          { "weight": 40, "text": "You wake at the tree line with your pack under your head. The clearing is gone. Something combed your hair while you slept, and for a few days you give off a faint green light in the dark, like a compliment you can't return.", "effects": ["hp +2", "trait +glowing"] }
+        ] },
+      { "text": "Map it out of spite", "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Bearings, paces, a sketch with defiant precision. The cartographers' guild pays real money for documented anomalies, and yours has footnotes.", "effects": ["stat int +1", "money +6"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your pencil lines keep bending. By the third attempt the clearing has edited your whole map, and according to your own paperwork you are now lost. It takes two humiliating hours to disagree with yourself successfully.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Walk around it on principle",
+        "outcomes": [
+          { "weight": 100, "text": "Some doors are shaped like clearings. You keep to the trees the whole way round, and at the far side the forest gives you a small approving corridor of easy walking, colleague to colleague.", "effects": ["stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_forest_better_echo",
+    "locations": ["forest"],
+    "weight": 9,
+    "text": "There is an echo in this valley that comes back a beat late and slightly improved. You say 'hello'; it returns 'hello' with better diction. Your test cough comes back as a small aria.",
+    "choices": [
+      { "text": "Sing to it", "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You give it a verse; it gives you a duet. When you finish, the echo pays royalties in the only coin it has: it repeats, once, a conversation two smugglers had here about where they buried the take.", "effects": ["money +7"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The echo improves your song so thoroughly it is no longer yours. You stand in the valley listening to what you meant, performed correctly, by nobody. Devastating. Educational, but devastating.", "effects": ["stat cha -1"] }
+        ] },
+      { "text": "Say the thing you've never said aloud",
+        "outcomes": [
+          { "weight": 100, "text": "It comes back a beat later, better said - kinder, in your own voice, the way you'd say it to a friend. You stand there a while. The valley keeps your secret; the improvement, you keep.", "effects": ["stat wis +1", "hp +2"] }
+        ] },
+      { "text": "Shout insults",
+        "outcomes": [
+          { "weight": 50, "text": "The echo returns each one polished to a cruel shine. You take notes. Your repertoire improves measurably. Somewhere a future tavern argument is already lost by the other party.", "effects": ["stat cha +1"] },
+          { "weight": 50, "text": "It escalates. You lose an argument with yourself, in public, in front of a squirrel. The squirrel tells everyone. You can feel it telling everyone.", "effects": ["stat cha -1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_forest_hollow_post",
+    "locations": ["forest"],
+    "weight": 9,
+    "text": "A dead hollow tree with a slot worn smooth at shoulder height. Inside: letters. Dozens, sealed in wax against the weather, addressed in every hand from noble copperplate to charcoal scrawl. A post office run by no one, robbed by no one, trusted by everyone who has ever needed to say something to somewhere else.",
+    "choices": [
+      { "text": "Deliver the ones addressed along your road",
+        "outcomes": [
+          { "weight": 100, "text": "Eleven letters, four hamlets, one very long day. You are wept on twice, fed three times, and tipped by a widow who has waited two years for a reply that says only 'yes.' The forest post has a new opinion of you, and so do the villages.", "effects": ["rep +4", "money +4"] }
+        ] },
+      { "text": "Read them",
+        "outcomes": [
+          { "weight": 55, "text": "Sad ones, funny ones, one entirely in code, one entirely in crumbs. You reseal them all with more care than you opened them, feeling like a person who has looked through a keyhole into forty houses at once.", "effects": ["stat wis +1"] },
+          { "weight": 45, "text": "One letter concerns business adjacent to yours - names, dates, a warning meant for someone slower than you. You memorize it, reseal it, and leave knowing things the Chronicle hasn't printed yet. Your hands take a while to feel clean.", "effects": ["learn 3", "stat wis -1"] }
+        ] },
+      { "text": "Post a letter of your own",
+        "outcomes": [
+          { "weight": 100, "text": "You write to the person you'll be in ten years, seal it, and feed it to the slot. The tree accepts it with a creak that sounds exactly like 'filed.' You have no idea how delivery works. You believe in it completely.", "effects": ["stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_forest_moth_court",
+    "locations": ["forest"],
+    "weight": 9,
+    "when": ["season summer"],
+    "text": "On warm summer nights the moths hold court, and tonight the court convenes around YOUR lantern: hundreds in slow orbit, ranked by wingspan, and one great silver emperor moth that alights on your shoulder with the gravity of a crown arriving at a coronation.",
+    "choices": [
+      { "text": "Hold still and be a throne",
+        "outcomes": [
+          { "weight": 100, "text": "Petitions are heard. Disputes are settled. You understand none of it and preside over all of it, dusted in wing-silver, honored beyond your species. At dawn the court adjourns and you are left standing in the ordinary world, over-qualified for it.", "effects": ["hp +2", "stat wis +1"] }
+        ] },
+      { "text": "Follow the emperor when court ends", "check": { "stat": "dex", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Soft-footed through the dark, lantern hooded, guided by a silver flicker. The emperor's hollow is lined with everything shiny that moths have adored and abandoned for a generation. You tithe respectfully and take the rest.", "effects": ["money +8"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Moths do not look back, and branches do not announce themselves. You lose the emperor at the third tree and find the fourth tree personally.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Douse the lantern out of respect for the old dark",
+        "outcomes": [
+          { "weight": 100, "text": "The court dissolves into the night it came from. You stand in the full dark and let your eyes learn it, and the old dark - which keeps accounts longer than any kingdom - marks you down, once, in your favor.", "effects": ["stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_forest_snow_ledger",
+    "locations": ["forest"],
+    "weight": 9,
+    "when": ["snowing"],
+    "text": "Fresh snow has turned the forest into a ledger. Every movement since dawn, itemized: hare, fox, boot, boot, and something with too many toes that walked beside the boots for half a mile and then, at a certain point, didn't.",
+    "choices": [
+      { "text": "Follow the boots", "check": { "stat": "wis", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "The boots belong to a trapper walking in the slow, dignified spiral of the completely lost. He pays your guide fee without haggling and does not ask about the other tracks, which means he saw them too.", "effects": ["money +6"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The boot tracks circle. Then your tracks circle. Then you notice the too-many-toes tracks have joined YOUR trail, one pace behind and one pace to the left, and you hurry, and the hidden log under the snow files its objection.", "effects": ["hp -3"] }
+        ] },
+      { "text": "Follow the too-many-toes",
+        "outcomes": [
+          { "weight": 50, "text": "The tracks end at the base of a pine. Nothing went up. Nothing is up there. The snow around the last print is melted in a perfect circle, and you decide, with the wisdom of the still-breathing, that curiosity has been fully serviced today.", "effects": ["stat wis +1"] },
+          { "weight": 50, "text": "You find the spot where it sat and watched the trail - a patient hollow in the snow, and in the center, placed, not dropped, a small parcel of useful things. A gift, a toll, or bait for next time. You take it anyway.", "effects": ["loot common"] }
+        ] },
+      { "text": "Camp and let the snow close the ledger", "requires": { "item": "campfire_kit" },
+        "outcomes": [
+          { "weight": 100, "text": "Fire, shelter, snowfall doing its patient accounting over every track including yours. By morning the forest has a clean page and so, remarkably, do you.", "effects": ["removeitem campfire_kit", "hp +6"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_forest_rain_truce",
+    "locations": ["forest"],
+    "weight": 9,
+    "when": ["raining"],
+    "text": "The rain arrives like a decision. Under the broadest oak, a truce is already in session: two rabbits, a fox pretending very hard not to be a fox, one soaked and furious hawk, and now you. Nobody eats anybody in the rain. This is known.",
+    "choices": [
+      { "text": "Honor the truce",
+        "outcomes": [
+          { "weight": 100, "text": "You stand among prey and predator while the world comes down in sheets. The fox and the rabbits ignore each other with tremendous professionalism. It is the most civilized hour of your month.", "effects": ["hp +2", "stat wis +1"] }
+        ] },
+      { "text": "Share your bread around", "requires": { "item": "bread" },
+        "outcomes": [
+          { "weight": 100, "text": "Rabbits, fox, and hawk each accept a piece, in that order, by seniority. The hawk - who shares nothing, ever - watches you do it and files the information away. Days later a hawk drops a coin purse near your camp. Probably unrelated.", "effects": ["removeitem bread", "money +6"] }
+        ] },
+      { "text": "Push on through the downpour",
+        "outcomes": [
+          { "weight": 60, "text": "Soaked to the architecture, but three miles ahead of everyone with sense. The truce oak watches you go with what you choose to interpret as respect.", "effects": ["hp -2", "money +3"] },
+          { "weight": 40, "text": "The forest in heavy rain is one long slide with occasional trees. You arrive at shelter eventually, wearing a great deal of the intervening terrain.", "effects": ["hp -4"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_road_twin_tolls",
+    "locations": ["road"],
+    "weight": 10,
+    "text": "Two toll booths, ten feet apart, each manned by a brother, each insisting the other's stretch is 'the fake road.' The tolls are identical. The paperwork is identical. The hatred is artisanal.",
+    "choices": [
+      { "text": "Pay one of them", "requires": { "money": 2 },
+        "outcomes": [
+          { "weight": 100, "text": "You pick a booth at random. The chosen brother stamps your hand with vindicated fury while the other watches with the face of a man composing a letter to their mother. Your receipt includes, free of charge, everything wrong with the bridge ahead.", "effects": ["money -2", "stat wis +1"] }
+        ] },
+      { "text": "Broker a merger", "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Forty minutes of shuttle diplomacy across ten feet of road. They weep. They embrace. They form the Brothers' Toll Consortium on the spot and pay your arbitration fee out of the disputed box, which turns out to have been shared all along.", "effects": ["money +9"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You have achieved unity: they agree, for the first time in nine years, that YOU are the problem. Double toll, plus a surcharge itemized only as 'tone.'", "effects": ["money -4"] }
+        ] },
+      { "text": "Walk the strip between the booths", "check": { "stat": "dex", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "Ten feet of unclaimed road, walked with ceremony. Neither brother can legally charge you and both know it. They salute your loophole with matching grudging nods, the most agreement this crossing has seen in years.", "effects": ["stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The strip between the booths, it turns out, is where they throw things at each other. You cross during business hours.", "effects": ["hp -2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_road_reversed_pilgrims",
+    "locations": ["road"],
+    "weight": 10,
+    "text": "A column of pilgrims marching the wrong way with great confidence. Their shrine, they explain, moved. Not spiritually. Physically. It was there in spring; now there is a hole shaped like devotion and a set of drag marks heading east.",
+    "choices": [
+      { "text": "Join the pursuit for a day",
+        "outcomes": [
+          { "weight": 60, "text": "At dusk a scout spots it: their shrine, resting in a ravine like a cat that knows it has been naughty. The pilgrims' joy is total and extremely loud. Chasing a fleeing god's house across two counties clarifies a person wonderfully.", "effects": ["stat wis +1"] },
+          { "weight": 40, "text": "At the crossroads the drag marks split into three. The schism is immediate and total - three columns, three doctrines, three marching songs in incompatible keys. You slip away as the committees form. Theology is best studied from a distance.", "effects": ["stat int +1"] }
+        ] },
+      { "text": "Sell them trail supplies", "requires": { "item": "rations" },
+        "outcomes": [
+          { "weight": 100, "text": "Pilgrims pay pilgrim prices, which is to say they round up for the good of their souls. You are also blessed four times, twice by people arguably qualified.", "effects": ["removeitem rations", "money +8"] }
+        ] },
+      { "text": "Study the drag marks", "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Not dragged. WALKED. Little stone feet, taking little stone steps, heading east at maybe a mile a day. You plot the intercept and hand it over. The gratitude collection is immediate and heavy.", "effects": ["money +6", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You announce, confidently, that the shrine was stolen by giants. The pilgrims begin arming themselves. Word of who provided this analysis will travel faster than you can.", "effects": ["rep -3"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_road_left_shoe_peddler",
+    "locations": ["road"],
+    "weight": 10,
+    "text": "A peddler whose entire stock is left shoes. Rows of them, laced and polished, sorted by size and regret. 'Right shoes sell themselves,' he says, before you can ask. 'This is the difficult inventory. This is where the ART is.'",
+    "choices": [
+      { "text": "Buy the mystery bundle", "requires": { "money": 4 },
+        "outcomes": [
+          { "weight": 60, "text": "Wrapped in oilcloth at the bottom of the cart: the thing he can't sell to his usual customers, priced to move. You unwrap it a mile down the road and laugh out loud at your luck.", "effects": ["money -4", "loot common"] },
+          { "weight": 40, "text": "Three left shoes and a pamphlet titled 'SO YOU'VE PURCHASED THE BUNDLE.' You have learned a great deal about markets, none of it flattering to you.", "effects": ["money -4", "stat wis +1"] }
+        ] },
+      { "text": "Interrogate the economics",
+        "outcomes": [
+          { "weight": 100, "text": "Twenty minutes on the secondary shoe market: one-legged veterans, dogs that only eat rights, a duchess who buys lefts to spite a duke. Every word is plausible. Every word might be a lie. Either way, it is an education.", "effects": ["stat wis +1"] }
+        ] },
+      { "text": "Pitch him a partnership - you'll source rights", "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "His eyes go damp. 'Twenty years,' he whispers, 'and nobody offered to HELP.' He advances you procurement capital on a handshake. You are now, technically, in shoes.", "effects": ["money +7"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "'Pair them UP?' He explains why that is the stupidest idea he has ever heard, at length, with diagrams, in front of two other customers who nod along. The shoe economy is apparently load-bearing and you nearly collapsed it.", "effects": ["stat cha -1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_road_wreck_auction",
+    "locations": ["road"],
+    "weight": 10,
+    "text": "A cart lies wrecked in the ditch, and a man in an official-adjacent hat is auctioning the remains to a crowd of two. 'Lot one: wheel, former. Lot two: crate, contents unknown, smells ambitious. Lot three: the ditch itself, inquire within.'",
+    "choices": [
+      { "text": "Bid on the mystery crate", "requires": { "money": 5 },
+        "outcomes": [
+          { "weight": 55, "text": "Sold, to the stranger with functioning coins. Inside: bottled swamp wine, packed in straw, the good kind that makes cartographers honest. You keep one and sell the rest before the auctioneer recalculates.", "effects": ["money -5", "item swamp_wine", "money +4"] },
+          { "weight": 45, "text": "Inside: hats. Damp hats. One, at the bottom, is genuinely fancy and nearly dry. The auctioneer's face suggests he knew, and that this is the third time this month the hat crate has found a new owner.", "effects": ["money -5", "item fancy_hat"] }
+        ] },
+      { "text": "Question the auctioneer's authority", "check": { "stat": "int", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "Three questions in, it unravels: he OWNS the cart. Crashed it himself, and the 'auction' converts disaster into a doctrine of sales before his guild hears about the axle. Your silence has a market rate. He pays it.", "effects": ["money +7"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The crowd of two turns out to be his sons. Your line of questioning is adjourned, physically, to the far side of the ditch.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Salvage the unsold axle yourself", "check": { "stat": "str", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "Nobody bid on the heaviest lot, which is how you acquire it for the price of carrying it. The wheelwright two towns over pays honest coin for honest iron.", "effects": ["money +5"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The axle has one more roll left in it, and chooses your shin as the destination. The auctioneer, professionally, opens bidding on your dignity.", "effects": ["hp -3"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_road_editing_milestones",
+    "locations": ["road"],
+    "weight": 9,
+    "text": "A milestone: 'CAPITAL - 12 MILES.' An hour later, the next one: 'CAPITAL - 14 MILES.' The one after that says only 'ROUGHLY.'",
+    "choices": [
+      { "text": "Trust the road and keep walking",
+        "outcomes": [
+          { "weight": 100, "text": "The road, you decide, is testing commitment, and you refuse to blink first. The next milestone reads '9. FINE. 9.' You feel you have won something, and you are right.", "effects": ["stat wis +1"] }
+        ] },
+      { "text": "Inspect the stones closely", "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "The numbers are carved over older numbers. Someone is editing distance itself. Behind the third stone you find the reviser's chalk, his ledger of adjustments, and his payment cache - which you consider fair compensation for peer review.", "effects": ["money +6", "stat int +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You measure, remeasure, and lean on the milestone to think. When you straighten up it reads 'YOU - 0 MILES,' and somehow the sun has moved an hour without consulting you.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Camp beside one and catch it changing",
+        "outcomes": [
+          { "weight": 50, "text": "At moonrise, an old man arrives with a chisel and the unhurried air of a craftsman on his usual rounds. Caught, he shrugs: 'Roads lie. Somebody has to keep the lies consistent.' He pays for your discretion in coin and one genuinely excellent shortcut.", "effects": ["money +5", "stat wis +1"] },
+          { "weight": 50, "text": "Nothing happens all night. Nothing happens with tremendous discipline. At dawn the stone reads '12 MILES (YOU LOOKED AWAY)' and you are too stiff and unslept to argue with masonry.", "effects": ["hp -2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_road_migrating_inn",
+    "locations": ["road"],
+    "weight": 9,
+    "text": "The Wandering Goose is famous for two things: its stew, and not being where it was. Tonight you have caught it mid-move - the whole building groaning eastward on log rollers, staff heaving in shifts, the innkeeper strolling alongside. 'Better foot traffic west,' he says. 'Mostly it was the inn's idea.'",
+    "choices": [
+      { "text": "Book a room in transit", "requires": { "money": 4 },
+        "outcomes": [
+          { "weight": 70, "text": "Sleeping in a moving inn is the finest rock-a-bye in the known world. You wake in a different county, deeply rested, to the smell of stew that has also traveled well.", "effects": ["money -4", "hp +7"] },
+          { "weight": 30, "text": "Sleeping in a moving inn is being gently shaken all night by a building. You wake in a different county, greenish, holding the washbasin like an old friend.", "effects": ["money -4", "hp +2"] }
+        ] },
+      { "text": "Lend your back to the rollers", "check": { "stat": "str", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Four hours on the ropes with the moving crew, who sing songs about buildings that got away. Pay at shift's end, stew on the house, and the head porter's professional respect, which is rarer than either.", "effects": ["money +6", "hp +2"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Log rollers are a dance, and you have two left boots. The inn rolls over the spot where your toes recently made plans.", "effects": ["hp -3"] }
+        ] },
+      { "text": "Ask where it's really going", "check": { "stat": "wis", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "The innkeeper checks that the staff are out of earshot. 'Not TOWARD custom,' he says quietly. 'AWAY.' He shows you the east wall, where four long gouges run through the timber at shoulder height. On a wall that was, until spring, forty feet up.", "effects": ["stat wis +1", "learn 3"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "'West,' he says pleasantly, and offers you a flyer. The inn, you would swear, picks up speed slightly.", "effects": [] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_road_crew_rain",
+    "locations": ["road"],
+    "weight": 9,
+    "when": ["raining"],
+    "text": "A road crew is filling potholes in the pouring rain, which is like bailing a boat with a fork, and they know it, and they keep doing it. The foreman watches each patch dissolve with the calm of a man being paid by the hour to witness futility.",
+    "choices": [
+      { "text": "Lend a back for an hour", "check": { "stat": "str", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "You fill six holes. Four dissolve. The crew counts that as a triumph and pays you from the day-labor purse, plus a standing invitation to 'the dry season, if it comes.'", "effects": ["money +5"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The mud accepts you at full length. The crew rates the fall 'a strong seven' and helps you up with the tenderness of connoisseurs.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Share your coffee around", "requires": { "item": "coffee" },
+        "outcomes": [
+          { "weight": 100, "text": "Eight men in streaming oilskins pass the pot in reverent silence. You are now, permanently, 'the coffee one' along this entire stretch of road. The foreman marks your map with which fords will kill you this month, which is love, in road crew.", "effects": ["removeitem coffee", "rep +4", "stat wis +1"] }
+        ] },
+      { "text": "Ask why they fill holes in the rain",
+        "outcomes": [
+          { "weight": 100, "text": "The foreman doesn't look up. 'Budget year ends Friday.' The rain falls. A patch dissolves. Somewhere in a dry office, a ledger balances, and you understand the kingdom completely.", "effects": ["stat wis +1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_road_bandit_process",
+    "locations": ["road"],
+    "weight": 10,
+    "text": "Bandits, but with process. Painted cones narrow the road to a single lane, where a masked clerk sits at a folding table under a banner: 'SCHEDULED ROBBERY IN PROGRESS. PLEASE HAVE VALUABLES READY. FEEDBACK FORMS AVAILABLE AT THE EXIT.'",
+    "choices": [
+      { "text": "Pay the scheduled rate", "requires": { "money": 3 },
+        "outcomes": [
+          { "weight": 100, "text": "Three coins, stamped receipt, complimentary boiled sweet. The receipt, you learn later, is honored by every crew on this road for a fortnight - robbed once, robbed everywhere, as the small print says. Genuinely useful paperwork.", "effects": ["money -3", "stat wis +1"] }
+        ] },
+      { "text": "Request the complaints procedure", "check": { "stat": "cha", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You escalate past the clerk, past the supervisor, to the captain herself, citing an inconsistency between the posted rate and the rate schedule appendix. She checks. You are right. The robbery is voided and a settlement issued, with apologies for the inconvenience of nearly being robbed incorrectly.", "effects": ["money +8"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "There is an escalation fee. There is a fee for asking about the escalation fee. The system, you realize too late, is fees all the way down, and it was designed by someone who was once a customer like you.", "effects": ["money -4"] }
+        ] },
+      { "text": "Refuse to be processed - run the cones", "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You take the cones like a steeplechase and are gone before the clerk finds the correct form. Behind you, applause - the crew is contractually obligated to note exceptional performance. 'EXCEPTION NOTED' drifts down the road after you, almost fondly.", "effects": ["stat dex +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You are apprehended in an orderly fashion by two large men whose job title is, per their sashes, 'COMPLIANCE.' Processing includes the standard rate, the evasion surcharge, and bruises itemized separately.", "effects": ["hp -3", "money -3"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_road_rival_fork",
+    "locations": ["road"],
+    "weight": 9,
+    "slots": { "rival": "rival" },
+    "text": "Ahead at the fork: {rival}. Of course. Of all the roads in {world}. They see you seeing them and straighten up, casually, the way people do when they have been walking badly and want history to record otherwise. The left path is rumored shorter. Neither of you knows. Both of you would rather eat the map than ask the other.",
+    "choices": [
+      { "text": "Race them down the left path", "check": { "stat": "dex", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Shorter, and you are faster. You arrive at the rejoin with time to arrange yourself against a fence post, examining your nails, the picture of someone who has been waiting SO long. The look on their face will keep you warm for a month.", "effects": ["stat cha +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The left path was not shorter. The left path was a suggestion drawn by an optimist. You arrive scratched, late, and mud-hemmed to find {rival} rested and sipping something, having strolled the right path like a person with nothing to prove. The worst part is they don't even gloat. They just look concerned.", "effects": ["stat cha -1", "hp -2"] }
+        ] },
+      { "text": "Propose a truce for one mile",
+        "outcomes": [
+          { "weight": 60, "text": "One mile becomes five. You almost forget what {rival} is to you, which is {rival_meaning}, and for an hour they are just a person who hates the same innkeepers you do. At the next fork you separate without a word, which is how your kind says thank you.", "effects": ["stat wis +1"] },
+          { "weight": 40, "text": "The truce, it emerges afterward, was an interview. They now know your route, your funds, and your opinion of the eastern bridge, and they depart at speed with all three. You knew what they were. You told them anyway.", "effects": ["stat wis -1"] }
+        ] },
+      { "text": "Take the long path on purpose",
+        "outcomes": [
+          { "weight": 100, "text": "Some races you win by refusing entry. The long road is empty, unhurried, and lined with plum trees nobody competitive has ever slowed down enough to notice.", "effects": ["hp +2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_road_war_arithmetic",
+    "locations": ["road"],
+    "weight": 9,
+    "when": ["war_here"],
+    "text": "The war has reached this road: a supply column stalled in the ditch-mud, oxen steaming, and a quartermaster shouting arithmetic at a wagon as though the wagon might confess. He spots you. 'You there. Can you count? Honestly. Can ANYONE.'",
+    "choices": [
+      { "text": "Help with the count", "check": { "stat": "int", "dc": 11 },
+        "success": [
+          { "weight": 100, "text": "Two hours of tally marks in the rain-smell of oxen. Your total and the manifest disagree by exactly one wagon, which the quartermaster receives with the grim nod of a man whose suspicions are now arithmetic. You are paid from the discrepancy, which explains the discrepancy.", "effects": ["money +7"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your count produces a third total, unrelated to the first two. The quartermaster stares at it for a long moment, then asks you, with wartime courtesy, to leave the mathematics.", "effects": [] }
+        ] },
+      { "text": "Sell supplies at war prices", "requires": { "item": "rations" },
+        "outcomes": [
+          { "weight": 100, "text": "An army marches on its stomach, and its stomach pays cash. The quartermaster doesn't haggle; haggling requires believing in tomorrow's prices.", "effects": ["removeitem rations", "money +10"] }
+        ] },
+      { "text": "Keep your head down and walk past",
+        "outcomes": [
+          { "weight": 70, "text": "Armies at rest have no attention to spare for pedestrians. You pass down the column through a corridor of steam and swearing, invisible as furniture.", "effects": [] },
+          { "weight": 30, "text": "A sergeant decides you have a draftable look about you. You talk fast, walk faster, and leave a boot heel's worth of skin on the last fence of the detour.", "effects": ["hp -2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_road_snowdrift_annex",
+    "locations": ["road"],
+    "weight": 9,
+    "when": ["season winter"],
+    "text": "A snowdrift has annexed the road, with the calm authority of a thing that will be here until spring and knows it. Sticking out of it: a fence post, half a sled runner, and a pair of boots. The boots are moving. Occupied, then.",
+    "choices": [
+      { "text": "Dig out the owner of the boots", "check": { "stat": "str", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "A courier, upside down, furious, and alive - the drift caught him mid-shortcut and held him like a disapproving aunt. His satchel is intact, his pride is not, and his employer's standing reward for 'courier, returned, functional' is real money.", "effects": ["money +8"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The drift accepts your arms, then your shoulders, then most of your opinions about digging. A passing carter extracts you both with rope and commentary. The courier, still buried to the waist, rates your rescue 'ongoing.'", "effects": ["hp -3"] }
+        ] },
+      { "text": "Go around through the fields",
+        "outcomes": [
+          { "weight": 100, "text": "The long way: eleven fences, two suspicious dogs, one farmer who watches you cross his frozen field with the stillness of a man deciding whether you're a story worth telling. Safe, slow, and entirely made of climbing.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Tunnel through with commitment", "check": { "stat": "con", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You bore through the drift like a rumor through a small town. The tunnel holds. For weeks afterward, local children treat it as infrastructure and speak of the digger with reverence.", "effects": ["rep +4"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Halfway in, the drift closes behind you, gently, like a book being shut on a bookmark. The next several minutes are white, muffled, and characterbuilding. You emerge eventually, somewhere, wearing the drift.", "effects": ["hp -4"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_road_statue_unveiling",
+    "locations": ["road"],
+    "weight": 9,
+    "slots": { "hero": "figure_alive" },
+    "text": "A crossroads crowd, a tarp, a mason chewing his own mustache. They are unveiling a statue of {hero} - who is, awkwardly, still alive, and expected within the hour. The tarp has already slipped once. The nose, everyone privately agrees, is not survivable.",
+    "choices": [
+      { "text": "Fix the nose before they arrive", "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Masonry by desperation: a chisel, wet sand, and eleven minutes of the mason whispering 'gently, GENTLY' like a midwife. The new nose is merely heroic rather than structural. The mason splits the fee and swears you to a silence you both know he'll break in taverns forever.", "effects": ["money +7"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The nose is now what the mason, dabbing his forehead, calls 'a statement piece.' When the crowd gasps, he points at you with his whole chisel. The story that travels has your face in it.", "effects": ["rep -2"] }
+        ] },
+      { "text": "Lead the applause when {hero} arrives",
+        "outcomes": [
+          { "weight": 60, "text": "Your ovation catches like dry grass. {hero}, disarmed by the noise, studies the statue, pauses at the nose, and declares it 'bold.' The town exhales as one body. The feast afterward is excellent and slightly hysterical.", "effects": ["hp +3"] },
+          { "weight": 40, "text": "{hero} follows the crowd's carefully averted eyes directly to the nose. The silence has weather. You started the applause; you are, by the ancient law of crowds, now associated with the nose.", "effects": ["rep -3"] }
+        ] },
+      { "text": "Ask {hero} how much of the legend is true", "check": { "stat": "cha", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "'About a third,' says {hero}, watching their own stone face over your shoulder. 'But the third that matters.' Then, quietly, because someone finally asked, they tell you a true story better than anything the mason carved.", "effects": ["stat wis +1", "learn 3"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "'All of it,' says {hero}, in a voice with a drawbridge in it, and turns to greet someone worth greeting.", "effects": ["stat cha -1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_swamp_remembering_mud",
+    "locations": ["swamp"],
+    "weight": 10,
+    "slots": { "ghost": "figure_dead" },
+    "text": "This stretch of mud remembers. Step in an old footprint and you feel the walk that made it - a stranger's morning, decades gone, cold toes and a tune half-hummed. One line of prints, deeper than the rest, walks out toward open water and does not walk back. Local memory says they belonged to {ghost}, gone since year {ghost_year}.",
+    "choices": [
+      { "text": "Walk the prints to the end", "check": { "stat": "wis", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Print by print, you borrow the whole last walk: the resolve, the pocketful of everything owned, the pause at the third hummock to look back once. That pause is where they buried it. The mud gives up the cache without argument; it only ever wanted someone to know.", "effects": ["money +11", "stat wis +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The memory is heavier than the mud. You surface from someone else's last morning a hundred yards off the trail, on your knees, with grief in you that doesn't know your name.", "effects": ["hp -4"] }
+        ] },
+      { "text": "Add your own prints alongside, as company",
+        "outcomes": [
+          { "weight": 100, "text": "You walk beside the old trail, matching pace, the way you'd walk a friend to a gate. The mud takes your prints down carefully, next to theirs, the way an archivist accepts a companion volume. The swamp is lighter to walk through after, and so are you.", "effects": ["stat wis +1", "hp +2"] }
+        ] },
+      { "text": "Scoop a jar of the remembering mud",
+        "outcomes": [
+          { "weight": 50, "text": "A scholar in the next town pays handsomely and asks no questions, which is scholars for you. The jar, on the shelf between you and the door, quietly remembers being carried.", "effects": ["money +7"] },
+          { "weight": 50, "text": "The mud remembers being scooped and holds a grudge with the patience of sediment. For days, everything you own is inexplicably damp, and your boots replay the squelch of the theft at quiet moments.", "effects": ["hp -2"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_swamp_stilt_market",
+    "locations": ["swamp"],
+    "weight": 10,
+    "text": "The stilt-folk hold market on the water: a dozen boats lashed gunwale to gunwale, planks laid between, commerce conducted at a careful shuffle. Prices are shouted, then repeated politely for outsiders. The whole market drifts as it trades - you will disembark somewhere quite different from where you boarded, which the stilt-folk consider a feature.",
+    "choices": [
+      { "text": "Shop the floating stalls", "requires": { "money": 5 },
+        "outcomes": [
+          { "weight": 100, "text": "Smoked eel, waxed cord, remedies in unlabeled jars sold on eye contact alone. You spend more than you meant to and regret none of it, which is the stilt-folk's entire business model.", "effects": ["money -5", "loot common"] }
+        ] },
+      { "text": "Work a shift as plank-porter", "check": { "stat": "dex", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Four hours carrying crates across bouncing planks between moving boats, which is juggling performed with your entire body. At shift's end the market mother pays you and pronounces you 'nearly not a land person,' the highest compliment on the water.", "effects": ["money +6"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The plank goes one way, the boat goes the other, and you split the difference into the channel. The whole market applauds. You are fished out with a boat hook and billed, gently, for the crate of onions now feeding the eels.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Ride the drift wherever the market's going",
+        "outcomes": [
+          { "weight": 100, "text": "You settle in the stern of a spice boat and let the market carry you. Half a day of water-gossip washes over you - who's feuding, which channel silted up, what the herons saw - and by disembarking you know things about this swamp that maps refuse to.", "effects": ["stat wis +1", "learn 3"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_swamp_gas_organ",
+    "locations": ["swamp"],
+    "weight": 9,
+    "text": "Marsh gas seeps from a reef of hollow reeds, and at dusk the vents catch fire one by one: small blue flames that gutter and sing, each reed a different note. Someone, sometime, arranged them. The swamp has an organ, and dusk is its recital.",
+    "choices": [
+      { "text": "Play it", "check": { "stat": "int", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "You work the vents with cupped hands - damp this reed, free that one - until a melody rolls out over the black water. Things surface to listen, at a respectful distance, glistening. A poler drifts over and pays you the way you'd pay street music, which technically this is.", "effects": ["stat int +1", "money +5"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Wrong vent, wrong order. The organ clears its throat at you: one polite blue fireball, eyebrow-height, eyebrow-seeking.", "effects": ["hp -3"] }
+        ] },
+      { "text": "Listen from the mud, hat off",
+        "outcomes": [
+          { "weight": 100, "text": "The recital runs until full dark: slow chords in blue fire, answered now and then by a bittern who thinks it's a duet. Whoever tuned these reeds is centuries gone, and their music still gets an audience every clear evening. That's most of what anyone can hope for.", "effects": ["hp +2", "stat wis +1"] }
+        ] },
+      { "text": "Harvest a reed pipe for the road",
+        "outcomes": [
+          { "weight": 50, "text": "You cut one true-toned reed and cure it over your fire. A tavern bard two towns on pays silly money for an instrument with a story attached, and yours comes with a real one, which bards find deeply confusing.", "effects": ["money +6"] },
+          { "weight": 50, "text": "You cut the wrong reed and the whole organ sags a half-tone flat. The swamp notices. The mosquitoes receive instructions. Your evening is spent in negotiations you lose.", "effects": ["hp -3"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_swamp_wine_cellar",
+    "locations": ["swamp"],
+    "weight": 9,
+    "text": "A brick arch in a hummock, half-sunk: the cellar of a house long gone. The bog swallowed the building and kept the basement - cool, dark, and perfectly stocked. Racks of bottles under intact wax, a vintage from a vineyard that is now fish habitat.",
+    "choices": [
+      { "text": "Haul out a case", "check": { "stat": "str", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "One case, twelve bottles, up a slope of mud with a technique best described as prayerful. You keep one and sell the rest to a merchant who tastes it, goes quiet, and stops pretending he isn't going to pay your price.", "effects": ["item swamp_wine", "money +8"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The rack has been waiting decades to go over and chooses now, in slow, expensive dominoes. You save exactly one bottle, cradled like an heir, and pay for it in skin on the way out.", "effects": ["item swamp_wine", "hp -3"] }
+        ] },
+      { "text": "Drink one here, and toast the house",
+        "outcomes": [
+          { "weight": 65, "text": "You drink to the vanished house, the drowned vineyard, and whoever laid these bottles down thinking of a wedding or a peace. It aged into something astonishing. For a while, sitting in a sunken doorway, you are the last guest at the best party.", "effects": ["hp +4"] },
+          { "weight": 35, "text": "It aged into vinegar with ambitions. You toast the house anyway, because manners, and your stomach spends the afternoon drafting a formal complaint.", "effects": ["hp -2"] }
+        ] },
+      { "text": "Seal the cellar back up",
+        "outcomes": [
+          { "weight": 100, "text": "Some cellars are graves with better shelving. You wedge the arch stones tight, cut turf over the gap, and leave the vintage to whoever the bog is saving it for. As you tamp the last sod down, the ground under your palms exhales, slow and warm.", "effects": ["trait +blessed"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_swamp_oracle_frog",
+    "locations": ["swamp"],
+    "weight": 9,
+    "text": "A bullfrog the size of a footstool sits on a drowned log, and the locals have built it a little rail of offerings, because it answers questions. One croak yes, two croaks no. Its accuracy rate is the subject of three feuds and at least one marriage.",
+    "choices": [
+      { "text": "Pay and ask about the road ahead", "requires": { "money": 2 },
+        "outcomes": [
+          { "weight": 100, "text": "It croaks once before you finish the question, which is either mastery or contempt. You take the indicated channel. The other one, you learn at the next village, currently contains a very territorial snapping turtle and two abandoned boats.", "effects": ["money -2", "stat wis +1"] }
+        ] },
+      { "text": "Ask it the question nobody dares", "check": { "stat": "wis", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Three croaks. THREE. The attending locals gasp like a dropped tray. The frog holds your gaze with the amusement of something old wearing a frog the way you'd wear a coat, and for one sideways moment you understand exactly what the third croak means. You will spend years trying to say it.", "effects": ["stat wis +1", "learn 3"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The frog declines to answer, which apparently constitutes blasphemy on YOUR part. The attendants levy the fee with regretful firmness. The frog watches you pay. Once, slowly, it blinks.", "effects": ["money -3"] }
+        ] },
+      { "text": "Audit its accuracy", "check": { "stat": "int", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "Thirty control questions later, the pattern emerges: the frog is right exactly as often as the question is honest. Vague askers get vague fates. You write this up; a collector of curiosities pays for the monograph and the frog, you'd swear, approves of peer review.", "effects": ["money +7"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "Your control questions annoy it. For the next hour it croaks twice at everything you say, including 'hello,' including 'sorry,' including, devastatingly, 'you can't just no everything.' Two croaks. The locals take its side.", "effects": ["stat cha -1"] }
+        ] }
+    ]
+  },
+  {
+    "id": "b2w_swamp_rising_water",
+    "locations": ["swamp"],
+    "weight": 9,
+    "when": ["raining"],
+    "text": "The rain is not stopping and the swamp knows it. The water is rising with quiet competence, erasing the trail behind you at a walking pace. The frogs have gone up. The snakes have gone up. Everything with sense is going up, and the mud you're standing on has started to feel like an opinion.",
+    "choices": [
+      { "text": "Race the water to the ridge", "check": { "stat": "con", "dc": 12 },
+        "success": [
+          { "weight": 100, "text": "You beat it by a hundred yards and a full lung. From the ridge you watch the swamp rearrange itself below - channels becoming lakes, islands trading places - like furniture being moved by someone enormous and unhurried.", "effects": ["stat con +1"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "The water wins the last stretch on a technicality called 'being water.' You arrive at the ridge floating, towed by your own pack, having drunk more of the swamp than etiquette allows.", "effects": ["hp -4"] }
+        ] },
+      { "text": "Climb a tree and wait it out with everything else",
+        "outcomes": [
+          { "weight": 100, "text": "You share a branch with two herons, a snake observing strict neutrality, and a possum who has clearly done this before. The flood slides past below like scenery. Nobody eats anybody above the waterline; this, too, is known.", "effects": ["hp +2", "stat wis +1"] }
+        ] },
+      { "text": "Grab what the flood washes past", "check": { "stat": "dex", "dc": 13 },
+        "success": [
+          { "weight": 100, "text": "Floods are the swamp's estate sale. From a stout root you snag a sealed cask, a floating strongbox, and somebody's entire garden fence, in that order of usefulness. The swamp giveth, mostly what it previously tooketh.", "effects": ["loot common", "money +4"] }
+        ],
+        "fail": [
+          { "weight": 100, "text": "You lunge for a promising log. The log is Gerald. Gerald does not care to be grabbed. You are reintroduced to the flood at speed and personally escorted downstream past your own hat.", "effects": ["hp -3"] }
+        ] }
+    ]
+  }
+]
