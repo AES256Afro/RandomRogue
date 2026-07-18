@@ -98,7 +98,7 @@ jobs:
       - name: Assemble site
         run: |
           mkdir -p _site/play
-          cp site/index.html _site/
+          cp site/index.html site/favicon.png site/favicon.ico _site/
           cp build-web/random_rogue.html _site/play/index.html
           cp build-web/random_rogue.js build-web/random_rogue.wasm build-web/random_rogue.data _site/play/
           cp site/play/manifest.webmanifest site/play/sw.js site/play/icon-192.png site/play/icon-512.png _site/play/

@@ -15,6 +15,8 @@ const LOAD_KEY = "REDACTED-see-deployed-worker";
 
 const FILES = {
   "index.html": "text/html; charset=utf-8",
+  "favicon.png": "image/png",
+  "favicon.ico": "image/x-icon",
   "play/index.html": "text/html; charset=utf-8",
   "play/random_rogue.js": "application/javascript",
   "play/random_rogue.wasm": "application/wasm",
