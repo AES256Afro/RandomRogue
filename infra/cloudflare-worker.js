@@ -156,7 +156,9 @@ export default {
     if (!body) return new Response("content not loaded yet", { status: 503 });
     return new Response(body, { headers: {
       "content-type": type,
-      "cache-control": p.endsWith(".html") || p.endsWith("sw.js") ? "public, max-age=300" : "public, max-age=86400"
+      // Releases replace unversioned files in place; anything longer than a
+      // few minutes lets a browser pair new HTML with yesterday's wasm.
+      "cache-control": "public, max-age=300, must-revalidate"
     }});
   }
 };
