@@ -81,6 +81,35 @@ const Color PAL_RED   = {231, 82, 86, 255};
 const Color PAL_GREEN = {126, 196, 93, 255};
 const Color PAL_ROW   = {38, 33, 55, 255};
 
+// Word-wrap into lines without drawing; honors '\n'. The measuring half of
+// DrawTextWrapped, shared by the scrollable readers (R9b).
+std::vector<std::string> WrapLines(const std::string& text, int width) {
+    const int fs = 10;
+    std::vector<std::string> lines;
+    std::string line, word;
+    for (size_t i = 0; i <= text.size(); i++) {
+        char c = (i < text.size()) ? text[i] : ' ';
+        if (c == ' ' || c == '\n') {
+            std::string candidate = line.empty() ? word : line + " " + word;
+            if (MeasureText(candidate.c_str(), fs) <= width) {
+                line = candidate;
+            } else {
+                lines.push_back(line);
+                line = word;
+            }
+            word.clear();
+            if (c == '\n') {
+                lines.push_back(line);
+                line.clear();
+            }
+        } else {
+            word += c;
+        }
+    }
+    if (!line.empty()) lines.push_back(line);
+    return lines;
+}
+
 // Wrap by words; honors '\n'. Never draws past maxY: the final visible line
 // gets a ".." marker instead of spilling into buttons or off the canvas.
 int DrawTextWrapped(const std::string& text, int x, int y, int width, Color color,
@@ -1344,6 +1373,7 @@ void Game::dealEvent() {
             choiceTexts_.push_back(c.requires_.label() +
                                    grammar_.expand(c.text, runRng_, ctx));
         reveal_ = 0.0f;
+        textScroll_ = 0;
         if (tag == "dungeon_finale") finalesSeen_++;
         // The company keeps its own commentary.
         compLine_.clear();
@@ -1612,6 +1642,7 @@ void Game::chooseOption(int idx) {
         step.outcome = outcome_.text.substr(0, 110);
         journey_.push_back(step);
     }
+    textScroll_ = 0;
     screen_ = OUTCOME;
 }
 
@@ -1633,6 +1664,7 @@ void Game::continueAfterOutcome() {
                         choiceTexts_.push_back(c.requires_.label() +
                                                grammar_.expand(c.text, runRng_, ctx));
                     reveal_ = 0.0f;
+        textScroll_ = 0;
                     compLine_.clear();
                     audio_.dirge();
                     screen_ = EVENT;
@@ -1665,6 +1697,7 @@ void Game::continueAfterOutcome() {
                     choiceTexts_.push_back(c.requires_.label() +
                                            grammar_.expand(c.text, runRng_, ctx));
                 reveal_ = 0.0f;
+        textScroll_ = 0;
                 screen_ = EVENT;
                 return;
             }
@@ -1696,6 +1729,7 @@ void Game::openVendor() {
 
 void Game::showInfo(const std::string& text) {
     infoText_ = text;
+    textScroll_ = 0;
     infoBack_ = INVENTORY;
     screen_ = INFO;
 }
@@ -1721,10 +1755,10 @@ void Game::frame(Vector2 mouse, bool pressed) {
         case AMBITION:  drawAmbitionPick(mouse); break;
         case TRAVEL:    drawTravel(mouse); break;
         case EVENT:     drawEvent(mouse); break;
-        case OUTCOME:   drawOutcome(); break;
+        case OUTCOME:   drawOutcome(mouse); break;
         case DEATH:     drawDeath(mouse); break;
         case INVENTORY: drawInventory(mouse); break;
-        case INFO:      drawInfo(); break;
+        case INFO:      drawInfo(mouse); break;
         case VENDOR:    drawVendor(mouse); break;
         case WORLDMAP:  drawWorldMap(mouse); break;
         case CHRONICLE: drawChronicle(mouse); break;
@@ -1748,27 +1782,88 @@ bool Game::uiButton(Rectangle r, const char* label, Vector2 mouse) {
     return false;
 }
 
+// A row gets a second line when its label needs one (R9b) — no more choice
+// text vanishing behind "..". Two lines is the cap; beyond that we trim.
+static std::vector<std::string> rowLines(const std::string& label) {
+    std::vector<std::string> lines = WrapLines(label, kW - 16);
+    if (lines.size() > 2) {
+        lines.resize(2);
+        while (!lines[1].empty() &&
+               MeasureText((lines[1] + " ..").c_str(), 10) > kW - 16)
+            lines[1].pop_back();
+        lines[1] += " ..";
+    }
+    return lines;
+}
+
+int Game::optionRowsHeight(const std::vector<std::string>& rows) const {
+    int h = 0;
+    for (size_t i = 0; i < rows.size(); i++) {
+        std::string label = std::to_string(i + 1) + ") " + rows[i];
+        h += (int)rowLines(label).size() > 1 ? 24 : 13;
+    }
+    return h;
+}
+
 int Game::optionRows(const std::vector<std::string>& rows,
                      const std::vector<bool>& enabled, Vector2 mouse) {
-    const int rowH = 13;
     int n = (int)rows.size();
-    int y0 = kH - n * rowH - 4;
+    int y0 = kH - optionRowsHeight(rows) - 4;
     int clicked = -1;
+    int y = y0;
     for (int i = 0; i < n; i++) {
-        Rectangle r = {4, (float)(y0 + i * rowH - 1), kW - 8, rowH - 1};
+        std::string label = std::to_string(i + 1) + ") " + rows[i];
+        std::vector<std::string> lines = rowLines(label);
+        int rowH = (int)lines.size() > 1 ? 24 : 13;
+        Rectangle r = {4, (float)(y - 1), kW - 8, (float)(rowH - 1)};
         bool hover = enabled[i] && CheckCollisionPointRec(mouse, r);
         if (hover) DrawRectangleRec(r, PAL_ROW);
-        std::string label = std::to_string(i + 1) + ") " + rows[i];
-        while (!label.empty() && MeasureText((label + "..").c_str(), 10) > kW - 16)
-            label.pop_back();
-        if (label.size() < rows[i].size() + 3) label += "..";
-        DrawText(label.c_str(), 8, y0 + i * rowH, 10, enabled[i] ? (hover ? PAL_GOLD : PAL_INK) : PAL_DARK);
+        Color c = enabled[i] ? (hover ? PAL_GOLD : PAL_INK) : PAL_DARK;
+        DrawText(lines[0].c_str(), 8, y, 10, c);
+        if (lines.size() > 1) DrawText(lines[1].c_str(), 18, y + 11, 10, c);
         if (hover && pressed_) clicked = i;
+        y += rowH;
     }
     for (int i = 0; i < n && i < 9; i++)
         if (IsKeyPressed(KEY_ONE + i) || IsKeyPressed(KEY_KP_1 + i))
             if (enabled[i]) clicked = i;
     return clicked;
+}
+
+// The scrollable reader. `follow` keeps the newest line visible (typewriter);
+// once follow is off, the ^ / v buttons page through at the reader's pace.
+bool Game::drawScrollText(const std::vector<std::string>& lines, int x, int yTop,
+                          int maxY, Color color, Vector2 mouse, bool follow) {
+    const int lineH = 11;
+    int rowsFit = (maxY - yTop) / lineH;
+    if (rowsFit < 1) rowsFit = 1;
+    int total = (int)lines.size();
+    int maxScroll = total > rowsFit ? total - rowsFit : 0;
+    if (follow) textScroll_ = maxScroll;
+    if (textScroll_ > maxScroll) textScroll_ = maxScroll;
+    if (textScroll_ < 0) textScroll_ = 0;
+    int y = yTop;
+    for (int i = textScroll_; i < total && i < textScroll_ + rowsFit; i++) {
+        DrawText(lines[i].c_str(), x, y, 10, color);
+        y += lineH;
+    }
+    bool consumed = false;
+    if (maxScroll > 0 && !follow) {
+        // Slim page controls on the right edge; keys work too.
+        if (textScroll_ > 0 &&
+            (uiButton({(float)(kW - 16), (float)yTop, 14, 14}, "^", mouse) ||
+             IsKeyPressed(KEY_UP))) {
+            textScroll_ -= rowsFit > 1 ? rowsFit - 1 : 1;
+            consumed = true;
+        }
+        if (textScroll_ < maxScroll &&
+            (uiButton({(float)(kW - 16), (float)(maxY - 16), 14, 14}, "v", mouse) ||
+             IsKeyPressed(KEY_DOWN))) {
+            textScroll_ += rowsFit > 1 ? rowsFit - 1 : 1;
+            consumed = true;
+        }
+    }
+    return consumed;
 }
 
 void Game::drawTopBar() {
@@ -2237,16 +2332,19 @@ void Game::drawEvent(Vector2 mouse) {
             pressed_)
             reveal_ = (float)currentText_.size();
     }
-    int choicesTop = kH - (int)current_->choices.size() * 13 - 6;
+    int choicesTop = kH - optionRowsHeight(choiceTexts_) - 6;
     int textBottom = compLine_.empty() ? choicesTop : choicesTop - 13;
-    int ty = DrawTextWrapped(currentText_.substr(0, (size_t)reveal_), 8, 22, kW - 16,
-                             PAL_INK, textBottom);
-    if (!compLine_.empty() && reveal_ >= (float)currentText_.size()) {
+    // The reader: long cards scroll instead of clipping (R9b). While the
+    // typewriter runs it follows the newest line; afterwards ^ / v page it.
+    std::vector<std::string> lines =
+        WrapLines(currentText_.substr(0, (size_t)reveal_), kW - 24);
+    drawScrollText(lines, 8, 22, textBottom, PAL_INK, mouse, !done);
+    if (!compLine_.empty() && done) {
         std::string cl = compLine_;
         while (!cl.empty() && MeasureText((cl + "..").c_str(), 10) > kW - 16)
             cl.pop_back();
         if (cl.size() < compLine_.size()) cl += "..";
-        DrawText(cl.c_str(), 8, (ty < textBottom ? ty + 2 : textBottom), 10, PAL_DARK);
+        DrawText(cl.c_str(), 8, choicesTop - 12, 10, PAL_DARK);
     }
 
     std::vector<bool> ok;
@@ -2256,7 +2354,7 @@ void Game::drawEvent(Vector2 mouse) {
     if (IsKeyPressed(KEY_TAB)) openInventory();
 }
 
-void Game::drawOutcome() {
+void Game::drawOutcome(Vector2 mouse) {
     drawTopBar();
     int y = 22;
     if (!outcome_.rollText.empty()) {
@@ -2265,20 +2363,22 @@ void Game::drawOutcome() {
                             success ? PAL_GREEN : PAL_RED, kH - 18);
         y += 4;
     }
-    y = DrawTextWrapped(outcome_.text, 8, y, kW - 16, PAL_INK, kH - 18);
+    // Everything below the roll scrolls as one readable block (R9b).
+    std::string body = outcome_.text;
     std::string fx;
     for (auto& e : outcome_.effects)
         if (e.rfind("die", 0) != 0 && e != "shop" && e.rfind("goto", 0) != 0)
             fx += "[" + e + "] ";
-    if (!fx.empty()) y = DrawTextWrapped(fx, 8, y + 4, kW - 16, PAL_DARK, kH - 18);
+    if (!fx.empty()) body += "\n" + fx;
     if (blessingSpent_)
-        DrawTextWrapped("The blessing spends itself. You live. Somewhere, a ledger updates.",
-                        8, y + 4, kW - 16, PAL_GOLD, kH - 18);
+        body += "\nThe blessing spends itself. You live. Somewhere, a ledger updates.";
+    bool scrolled = drawScrollText(WrapLines(body, kW - 24), 8, y, kH - 18,
+                                   PAL_INK, mouse, false);
 
     const char* prompt = "[tap or Enter to continue]";
     DrawText(prompt, kW - MeasureText(prompt, 10) - 6, kH - 13, 10, PAL_DIM);
-    if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE) ||
-        pressed_) {
+    if (!scrolled && (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE) ||
+        pressed_)) {
         continueAfterOutcome();
     }
 }
@@ -2461,13 +2561,15 @@ void Game::drawInventory(Vector2 mouse) {
     }
 }
 
-void Game::drawInfo() {
+void Game::drawInfo(Vector2 mouse) {
     drawTopBar();
-    DrawTextWrapped(infoText_, 8, 22, kW - 16, PAL_INK, kH - 18);
+    // Books, contracts, and long excerpts scroll instead of clipping (R9b).
+    bool scrolled = drawScrollText(WrapLines(infoText_, kW - 24), 8, 22, kH - 18,
+                                   PAL_INK, mouse, false);
     const char* prompt = "[Enter]";
     DrawText(prompt, kW - MeasureText(prompt, 10) - 6, kH - 13, 10, PAL_DIM);
-    if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_TAB) ||
-        pressed_) {
+    if (!scrolled && (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE) ||
+        IsKeyPressed(KEY_TAB) || pressed_)) {
         screen_ = ch_.dead ? DEATH : infoBack_;
     }
 }

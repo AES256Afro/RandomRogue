@@ -97,10 +97,10 @@ private:
     void offerContract();
     void checkPurposes(); // ambition + contract completion
     void drawEvent(Vector2 mouse);
-    void drawOutcome();
+    void drawOutcome(Vector2 mouse);
     void drawDeath(Vector2 mouse);
     void drawInventory(Vector2 mouse);
-    void drawInfo();
+    void drawInfo(Vector2 mouse);
     void drawVendor(Vector2 mouse);
     void drawTopBar();
     void drawWorldMap(Vector2 mouse);
@@ -129,6 +129,14 @@ private:
     void clearRun();
     int optionRows(const std::vector<std::string>& rows,
                    const std::vector<bool>& enabled, Vector2 mouse);
+    // Total pixel height optionRows will use (rows wrap to two lines, R9b).
+    int optionRowsHeight(const std::vector<std::string>& rows) const;
+    // Scrollable reader: draws `lines` from textScroll_ within [yTop, maxY),
+    // with ^ / v controls when they overflow. Returns true when a scroll
+    // control consumed this frame's press, so tap-to-continue screens don't
+    // also advance. No scenario text is ever unreadable again (R9b).
+    bool drawScrollText(const std::vector<std::string>& lines, int x, int yTop,
+                        int maxY, Color color, Vector2 mouse, bool follow);
     // Touch-friendly clickable button; returns true on click/tap.
     bool uiButton(Rectangle r, const char* label, Vector2 mouse);
 
@@ -271,6 +279,8 @@ private:
     bool modLoaded_ = false;
     std::string modLine_; // "mod loaded: N events" on the title
     int lastBoardKey_ = -2; // refetch scores/ghosts/deeds when this changes
+
+    int textScroll_ = 0; // line offset of the scrollable reader (R9b)
 
     // audio / juice / meta
     AudioBank audio_;
