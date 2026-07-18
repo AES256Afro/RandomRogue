@@ -15,6 +15,16 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "war_here"
+            ],
+            "text": "Tonight the rumor cannot compete with the war outside the walls. The teller keeps glancing at the door mid-sentence, and every story bends toward the fighting whether it started there or not. You listen anyway. Someone has to remember the small things.",
+            "effects": [
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "You commit it to memory, slightly wrong, continuing a proud oral tradition.",
             "effects": [
               "stat wis +1"
@@ -28,6 +38,17 @@
           "money": 2
         },
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "money <= 5"
+            ],
+            "text": "The teller clocks your thin purse before the barkeep can pour and waves your coin away. 'Story tax runs the other way for the broke,' they say, and buy YOUR round instead. The ending, told for free, is better than anything money gets.",
+            "effects": [
+              "money +3",
+              "stat wis +1"
+            ]
+          },
           {
             "weight": 70,
             "text": "Lubricated, they add details: names, dates, a startling amount of slander. Someone slips you a coin for the entertainment.",
@@ -47,6 +68,16 @@
       {
         "text": "Loudly declare it never happened",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "trait famous"
+            ],
+            "text": "You declare it never happened, and because it is YOU saying so, the rumor dies on the spot. The teller deflates. By morning the story is officially untrue everywhere, and you are in it anyway, as the ending.",
+            "effects": [
+              "rep +3"
+            ]
+          },
           {
             "weight": 60,
             "text": "The tavern turns on you. Historical revisionism is a bar-fight offense here.",
@@ -76,6 +107,17 @@
       {
         "text": "Drink it",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "trait cursed"
+            ],
+            "text": "The fizz meets your curse and, briefly, they cancel out. For one gleaming hour nothing goes wrong at all. Then the bubbles fade and the universe resumes billing, but you remember what quiet felt like.",
+            "effects": [
+              "hp +3",
+              "stat wis +1"
+            ]
+          },
           {
             "weight": 55,
             "text": "It's just soda. From space, apparently. Weirdly invigorating.",
@@ -122,6 +164,14 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "raining"
+            ],
+            "text": "You step out into the rain, and behind you the gutters fizz where the drops land. Tonight everything fizzes. You put your hood up and walk considerably faster than dignity allows.",
+            "effects": []
+          },
+          {
+            "weight": 100,
             "text": "Coward. Effective, living coward.",
             "effects": []
           }
@@ -145,6 +195,17 @@
         "success": [
           {
             "weight": 100,
+            "when": [
+              "companion"
+            ],
+            "text": "Grundle's arm falls. Your companion's victory scream shatters two mugs and one social norm, and the bar chants your name in shifts. The payout comes with a deduction for the mugs, which is fair.",
+            "effects": [
+              "money +15",
+              "rep +2"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "Grundle's arm hits the table with a sound like a landslide. The bar goes silent, then erupts. Grundle nods, respectfully.",
             "effects": [
               "money +20"
@@ -152,6 +213,16 @@
           }
         ],
         "fail": [
+          {
+            "weight": 100,
+            "when": [
+              "companion"
+            ],
+            "text": "Your arm loses decisively, but your companion catches you before you hit the floor and glares at Grundle until the golem apologizes. In gravel. It helps more than the bandages do.",
+            "effects": [
+              "hp -2"
+            ]
+          },
           {
             "weight": 70,
             "text": "Your arm makes a noise arms should not make.",
@@ -203,6 +274,30 @@
             ]
           }
         ]
+      },
+      {
+        "text": "Offer to be Grundle's promoter",
+        "requires": {
+          "stat": "cha",
+          "gte": 12
+        },
+        "outcomes": [
+          {
+            "weight": 70,
+            "text": "You spend the evening barking odds and collecting a promoter's cut. Grundle wins every match. Grundle always wins. You knew that going in, which is the entire business model.",
+            "effects": [
+              "money +8",
+              "rep +2"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "The house already HAS a promoter, who explains the concept of territory using a chair.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ]
       }
     ]
   },
@@ -242,6 +337,16 @@
         "text": "Ask what's in it",
         "outcomes": [
           {
+            "weight": 100,
+            "when": [
+              "plague_here"
+            ],
+            "text": "'Stew,' says the cook. Then, quieter: 'Boiled twice. Plague rules.' It is the most reassuring sentence anyone has said to you all week. You eat. It is, if nothing else, extremely boiled.",
+            "effects": [
+              "hp +2"
+            ]
+          },
+          {
             "weight": 60,
             "text": "The cook stares at you for a long time. 'Stew,' they say. You decide not to eat the stew. Wise.",
             "effects": []
@@ -260,10 +365,45 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "season winter"
+            ],
+            "text": "The bread arrives warm, which in deep winter promotes it to the finest meal in the province. You hold it a while before eating, like a small rented hearth.",
+            "effects": [
+              "hp +2",
+              "money -1"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "The bread is fine. The bread is always fine. Boring, but fine.",
             "effects": [
               "hp +1",
               "money -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Produce your own jar of stew and propose a taste-off",
+        "requires": {
+          "item": "stew_jar"
+        },
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "The cook tries yours, goes very still, and offers coin and dinner for the recipe. You invent a recipe on the spot. Everyone wins except the truth.",
+            "effects": [
+              "removeitem stew_jar",
+              "money +6",
+              "hp +3"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "The two stews should never have been introduced. Something curdles at a distance. You are asked to leave and to take 'that' with you.",
+            "effects": [
+              "stat cha -1"
             ]
           }
         ]
@@ -284,6 +424,17 @@
           "dc": 12
         },
         "success": [
+          {
+            "weight": 100,
+            "when": [
+              "trait famous"
+            ],
+            "text": "You bow, and the room realizes the ballad is TRUE and its subject is HERE. The bard nearly swallows a lute string. The take doubles, and the barkeep names the good chair after you.",
+            "effects": [
+              "money +12",
+              "rep +3"
+            ]
+          },
           {
             "weight": 100,
             "text": "You bow. The crowd roars. Hats fill with coins, and one of the hats is yours.",
@@ -328,6 +479,14 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "trait wanted"
+            ],
+            "text": "You slip out mid-verse, which is wise, because verse four rhymes 'reward' with 'sword' and half the room has started doing arithmetic. The back alley has never looked lovelier.",
+            "effects": []
+          },
+          {
+            "weight": 100,
             "text": "You escape. Behind you, the ballad gains a verse about your mysterious vanishing. Cool points, technically.",
             "effects": []
           }
@@ -349,6 +508,14 @@
           "dc": 11
         },
         "success": [
+          {
+            "weight": 100,
+            "when": [
+              "rep >= 15"
+            ],
+            "text": "The barkeep reads the name on the tab, goes pale, and blames the ambiance charge on 'a new hire.' Everything is comped, including, mysteriously, the drink. Reputation: the only currency that compounds.",
+            "effects": []
+          },
           {
             "weight": 100,
             "text": "You argue the ambiance was, at best, adequate. The barkeep, a professional, respects the negotiation and comps everything but the drink.",
@@ -373,6 +540,18 @@
           "money": 12
         },
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "money >= 60"
+            ],
+            "text": "You pay from a purse so fat the barkeep's professionalism audibly strains. By the time you finish your drink the tab has grown a 'wealth ambiance surcharge.' You pay that too. It is cheaper than the argument and funnier than the ambiance.",
+            "effects": [
+              "money -15",
+              "stat cha +1",
+              "rep +2"
+            ]
+          },
           {
             "weight": 100,
             "text": "You pay in full with a flourish. Word spreads. By sundown, three taverns claim you drank there, and one has named a sandwich after you.",
@@ -426,6 +605,18 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "ship"
+            ],
+            "text": "She hears you have a ship and sobers completely. 'Then you want THIS one.' It is marked with soundings, reefs, and a note reading 'trust the third island.' Same price. Better map.",
+            "effects": [
+              "money -8",
+              "item treasure_map",
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "She picks one seemingly at random, kisses it for luck, and hands it over with the solemnity of a state funeral.",
             "effects": [
               "money -8",
@@ -451,6 +642,17 @@
           }
         ],
         "fail": [
+          {
+            "weight": 100,
+            "when": [
+              "trait cursed"
+            ],
+            "text": "Mid-haggle, the ink on every map within arm's reach runs. Slightly. Only near you. She watches it happen, then charges full price plus a surcharge listed as 'whatever that was.'",
+            "effects": [
+              "money -9",
+              "item treasure_map"
+            ]
+          },
           {
             "weight": 100,
             "text": "She counter-haggles UP, citing 'emotional labor.' You pay nine before you understand what happened.",
@@ -502,6 +704,18 @@
               "hp -3",
               "money -6",
               "rep -4"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "rep >= 15"
+            ],
+            "text": "They know your name before you give it. 'Sit,' they say, and for an hour you trade true stories like contraband. When the scars are compared, yours hold up. Half the room is quietly taking notes.",
+            "effects": [
+              "money -3",
+              "rep +3",
+              "stat cha +1"
             ]
           },
           {
@@ -596,6 +810,17 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "plague_here"
+            ],
+            "text": "You offer condolences and the grief cracks wide open: with plague in the streets, the stranger has been rehearsing eulogies for the living. You sit with them a long while. They press their grandparent's bandages on you. 'Somebody should get the use.'",
+            "effects": [
+              "item bandages",
+              "rep +3"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "You listen to the whole family history. All of it. The stranger, unburdened, pays for your dinner and calls you 'the only decent soul left.'",
             "effects": [
               "hp +3",
@@ -667,6 +892,16 @@
         },
         "outcomes": [
           {
+            "weight": 100,
+            "when": [
+              "companion"
+            ],
+            "text": "Your companion stands behind your chair, arms folded, studying the dealer's hands with unsettling patience. The house dice roll honest for the first time in their careers. You win modest, clean money, which confuses everyone.",
+            "effects": [
+              "money +6"
+            ]
+          },
+          {
             "weight": 45,
             "text": "The dice like you tonight. The dealer's smile loses a tooth of confidence.",
             "effects": [
@@ -700,6 +935,17 @@
         "fail": [
           {
             "weight": 100,
+            "when": [
+              "trait wanted"
+            ],
+            "text": "Caught. Worse: recognized. The dealer glances at the poster behind the bar and names a price for forgetting your face. You pay it. The table suddenly remembers other appointments.",
+            "effects": [
+              "money -12",
+              "rep -2"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "Caught. The house takes your stake plus a 'cheater's tithe,' and everyone gets to watch.",
             "effects": [
               "money -9",
@@ -715,6 +961,29 @@
             "weight": 100,
             "text": "You clock the loaded dice, the sleeve, and the mirror in the lamp. An education, free of charge.",
             "effects": [
+              "stat int +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Produce your own dice and insist on neutral equipment",
+        "requires": {
+          "item": "dice_set"
+        },
+        "outcomes": [
+          {
+            "weight": 65,
+            "text": "Your dice, their table, everyone watching everyone. The game turns honest and you turn out to be good at it. The dealer respects you the way sharks respect other sharks.",
+            "effects": [
+              "money +9"
+            ]
+          },
+          {
+            "weight": 35,
+            "text": "The dealer agrees, swaps your dice back out with a sleight so fine it is practically legal, and beats you with your own equipment. You keep the dice and the lesson.",
+            "effects": [
+              "money -5",
               "stat int +1"
             ]
           }
@@ -738,6 +1007,17 @@
         "success": [
           {
             "weight": 100,
+            "when": [
+              "trait famous"
+            ],
+            "text": "They came for open-verse night. They got YOU. The room sings the chorus back with your name in it before you have taught it to them. The tip hat requires a second hat.",
+            "effects": [
+              "money +12",
+              "stat cha +1"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "You bring the house down with a ballad about a goblin toll collector and his rock. Coins rain. The barkeep declares your tab 'historical fiction.'",
             "effects": [
               "money +9",
@@ -758,6 +1038,17 @@
       {
         "text": "Play something instrumental. No words, no risk",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "raining"
+            ],
+            "text": "You play to the rhythm of the rain on the roof, and the rain, flattered, keeps time. The whole tavern goes quiet and warm at once. Nobody tips a moment like that. Somebody tips anyway.",
+            "effects": [
+              "money +4",
+              "hp +2"
+            ]
+          },
           {
             "weight": 100,
             "text": "Wordless and haunting. Nobody can mock lyrics that don't exist. A tactician's performance, modestly tipped.",
@@ -801,6 +1092,17 @@
         "success": [
           {
             "weight": 100,
+            "when": [
+              "season winter"
+            ],
+            "text": "It goes down like a furnace deciding to be your friend. The winter outside stops mattering for a full day. The barkeep nods: 'That's why we chain it in summer.'",
+            "effects": [
+              "hp +4",
+              "stat con +1"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "It tastes like lightning that's been through something. You remain standing. The bar applauds. The barkeep frames the waiver, unneeded.",
             "effects": [
               "hp +3",
@@ -833,6 +1135,17 @@
       {
         "text": "Ask what's in it",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "war_here"
+            ],
+            "text": "'War ration,' says the barkeep, patting the keg. 'A quartermaster left it as payment last war. We added the chain after what it did to the quartermaster.' You order water and drink to the quartermaster.",
+            "effects": [
+              "hp +1",
+              "stat wis +1"
+            ]
+          },
           {
             "weight": 100,
             "text": "The barkeep leans in: 'The last three people who asked are the reason for the chain.' You order water. The water is excellent.",

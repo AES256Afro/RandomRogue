@@ -8,16 +8,19 @@
     "choices": [
       { "text": "Share your supplies", "requires": { "item": "rations" },
         "outcomes": [
-          { "weight": 100, "text": "Your rations vanish into a dozen grateful hands. An old woman presses something into your palm 'for luck' - a coin from a kingdom that no longer exists as of Tuesday.", "effects": ["removeitem rations", "rep +6", "item lucky_rock"] }
+          { "weight": 100, "text": "Your rations vanish into a dozen grateful hands. An old woman presses something into your palm 'for luck' - a coin from a kingdom that no longer exists as of Tuesday.", "effects": ["removeitem rations", "rep +6", "item lucky_rock"] },
+          { "weight": 100, "when": ["snowing"], "text": "Snow on top of exile. Your rations go to the children first, by unspoken law. The old woman presses the dead kingdom's coin into your hand and closes your fingers over it like a secret. 'Luck. It has to live somewhere.'", "effects": ["removeitem rations", "rep +8", "item lucky_rock"] }
         ] },
       { "text": "Ask what happened",
         "outcomes": [
-          { "weight": 100, "text": "Everyone answers at once. The siege, the fire, the piano (it's a long story). You leave knowing more about this war than its generals do.", "effects": ["stat wis +1"] }
+          { "weight": 100, "text": "Everyone answers at once. The siege, the fire, the piano (it's a long story). You leave knowing more about this war than its generals do.", "effects": ["stat wis +1"] },
+          { "weight": 100, "when": ["companion"], "text": "Your companion sits with the children and takes over piano-guarding duty while you listen. People talk more freely when someone is minding their piano. You leave with the truth of the war and an open invitation to a city that currently does not exist.", "effects": ["stat wis +1", "rep +3"] }
         ] },
       { "text": "Buy the piano", "requires": { "money": 10 },
         "outcomes": [
           { "weight": 60, "text": "The family weeps with relief - it was grandmother's, and carrying it was killing them. You now own a war piano. You cannot carry a piano. You donate it to the next tavern for a hero's welcome.", "effects": ["money -10", "rep +8", "stat cha +1"] },
-          { "weight": 40, "text": "Money changes hands. The piano immediately loses a leg in protest. The family waves goodbye to it without visible grief. You've been piano'd.", "effects": ["money -10"] }
+          { "weight": 40, "text": "Money changes hands. The piano immediately loses a leg in protest. The family waves goodbye to it without visible grief. You've been piano'd.", "effects": ["money -10"] },
+          { "weight": 100, "when": ["vehicle"], "text": "You have wheels, which changes the whole transaction. The piano is lashed aboard with rope and reverence, the family walks lighter, and you roll into the next town as the hero with the war piano. The tavern bidding gets heated.", "effects": ["money +5", "rep +8"] }
         ] }
     ]
   },
@@ -31,11 +34,13 @@
       { "text": "Submit to inspection",
         "outcomes": [
           { "weight": 70, "text": "You are prodded, sniffed at a distance, and declared 'adequately balanced.' The vinegar smell will follow you for a day, which honestly keeps the crowds off.", "effects": [] },
-          { "weight": 30, "text": "The warden doesn't like your pallor. You're quarantined in a tent for observation with excellent soup and terrible company. A day lost, oddly restful.", "effects": ["hp +3"] }
+          { "weight": 30, "text": "The warden doesn't like your pallor. You're quarantined in a tent for observation with excellent soup and terrible company. A day lost, oddly restful.", "effects": ["hp +3"] },
+          { "weight": 100, "when": ["hp <= 8"], "text": "You look, medically speaking, terrible. The warden takes one look and commits you to the observation tent: two days of enforced soup, firm cots, and a nun who does not accept 'fine' as an answer. Infuriatingly effective.", "effects": ["hp +6"] }
         ] },
       { "text": "Claim to be a physician", "check": { "stat": "int", "dc": 12 },
         "success": [
-          { "weight": 100, "text": "You improvise enough humoral theory that the warden takes NOTES. You're waved through and handed a consultation fee for your trouble.", "effects": ["money +7", "stat int +1"] }
+          { "weight": 100, "text": "You improvise enough humoral theory that the warden takes NOTES. You're waved through and handed a consultation fee for your trouble.", "effects": ["money +7", "stat int +1"] },
+          { "weight": 100, "when": ["has leech_kit"], "text": "You produce the leech kit. The warden's skepticism dies on the spot; nobody carries leeches ironically. You are waved through, consulted twice before reaching the market, and paid both times.", "effects": ["money +10", "stat int +1"] }
         ],
         "fail": [
           { "weight": 100, "text": "Your diagnosis of 'too much blood, probably' earns you a spoon-prod and a fine for practicing medicine without a theory.", "effects": ["money -5"] }
@@ -55,16 +60,19 @@
     "choices": [
       { "text": "Buy the broadsheet", "requires": { "money": 1 },
         "outcomes": [
-          { "weight": 100, "text": "Fresh ink, breathless prose, one factual error you catch immediately. Knowing things first is its own currency.", "effects": ["money -1", "stat int +1"] }
+          { "weight": 100, "text": "Fresh ink, breathless prose, one factual error you catch immediately. Knowing things first is its own currency.", "effects": ["money -1", "stat int +1"] },
+          { "weight": 100, "when": ["trait famous"], "text": "Page two is about you. The likeness is generous, the quotes are invented, and the facts are wrong in your favor. You buy a copy and leave it lying somewhere prominent.", "effects": ["money -1", "rep +3"] }
         ] },
       { "text": "Argue with the room about what it means",
         "outcomes": [
           { "weight": 55, "text": "Your analysis carries the bar. Someone calls you 'the sensible one,' which in this tavern is a coronation.", "effects": ["stat cha +1"] },
-          { "weight": 45, "text": "The room splits into factions. You are somehow blamed for the schism AND both factions' positions.", "effects": ["stat cha -1"] }
+          { "weight": 45, "text": "The room splits into factions. You are somehow blamed for the schism AND both factions' positions.", "effects": ["stat cha -1"] },
+          { "weight": 100, "when": ["war_here"], "text": "The news is war news, and the room has sons and daughters in it. The arguing is quieter than usual and stops entirely twice. You buy a round you can't really afford, because someone had to.", "effects": ["money -3", "rep +4"] }
         ] },
       { "text": "Ask the crier what he ISN'T reporting", "check": { "stat": "wis", "dc": 12 },
         "success": [
-          { "weight": 100, "text": "He goes pale, glances at the door, and whispers the part his editor cut. It's worth money to the right people, and you know some wrong ones.", "effects": ["money +8", "stat wis +1"] }
+          { "weight": 100, "text": "He goes pale, glances at the door, and whispers the part his editor cut. It's worth money to the right people, and you know some wrong ones.", "effects": ["money +8", "stat wis +1"] },
+          { "weight": 100, "when": ["trait wanted"], "text": "He goes pale for a different reason: the story his editor cut is YOUR notice, held back for a bigger reward. For a modest consideration he loses it entirely. You pay the freelance rate for unpublishing.", "effects": ["money -5", "stat wis +1"] }
         ],
         "fail": [
           { "weight": 100, "text": "'I report EVERYTHING,' he says, wounded, and dedicates the next broadsheet to 'suspicious strangers asking suspicious questions.'", "effects": ["rep -3"] }
@@ -80,14 +88,17 @@
     "choices": [
       { "text": "Push through it", "check": { "stat": "con", "dc": 12 },
         "success": [
-          { "weight": 100, "text": "Cold to the bone, but you make the next shelter with a story and all your toes.", "effects": [] }
+          { "weight": 100, "text": "Cold to the bone, but you make the next shelter with a story and all your toes.", "effects": [] },
+          { "weight": 100, "when": ["vehicle"], "text": "Wheels find the buried road better than feet do, mostly by hitting its edges. You arrive frosted but fast, your machine steaming like a kettle with opinions.", "effects": [] }
         ],
         "fail": [
-          { "weight": 100, "text": "The snow wins on points. You arrive eventually, shaking, having renamed several gods after your extremities.", "effects": ["hp -3"] }
+          { "weight": 100, "text": "The snow wins on points. You arrive eventually, shaking, having renamed several gods after your extremities.", "effects": ["hp -3"] },
+          { "weight": 100, "when": ["!vehicle"], "text": "On foot the drifts are thigh-deep and personally motivated. You arrive eventually, shaking, having promoted your boots from 'equipment' to 'named enemies.'", "effects": ["hp -4"] }
         ] },
       { "text": "Shelter and wait it out",
         "outcomes": [
-          { "weight": 100, "text": "You find an overhang, build a small fire, and watch the world be erased and redrawn. Some delays are gifts.", "effects": ["hp +2", "stat wis +1"] }
+          { "weight": 100, "text": "You find an overhang, build a small fire, and watch the world be erased and redrawn. Some delays are gifts.", "effects": ["hp +2", "stat wis +1"] },
+          { "weight": 100, "when": ["companion"], "text": "Two people, one overhang, one small fire: arithmetic that has kept the species going. You split the watch, share the warmth, and trade the kind of stories that only come out while the world is being erased.", "effects": ["hp +4", "stat wis +1"] }
         ] },
       { "text": "Catch snowflakes on your tongue",
         "outcomes": [

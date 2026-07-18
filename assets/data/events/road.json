@@ -20,6 +20,17 @@
               "money +10",
               "stat cha +1"
             ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "vehicle"
+            ],
+            "text": "You race on your own machine, which changes everything. You take the leader on the last bend and the gang goes silent, then feral with joy. Tribute flows to YOU, plus a respectful oil change.",
+            "effects": [
+              "money +12",
+              "stat cha +1"
+            ]
           }
         ],
         "fail": [
@@ -28,6 +39,16 @@
             "text": "You crash into the one bush on an otherwise empty plain. The gang laughs so hard two of them also crash. Tribute is waived for entertainment value, but the bush wants damages.",
             "effects": [
               "hp -3"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "raining"
+            ],
+            "text": "Rain has turned the course to soup. You go down in the mud at the first bend, along with half the gang, out of solidarity with physics. Tribute is waived. Laundry is not.",
+            "effects": [
+              "hp -2"
             ]
           }
         ]
@@ -44,6 +65,16 @@
             "effects": [
               "money -4"
             ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "trait famous"
+            ],
+            "text": "The leader squints, then yanks her goggles off entirely. 'It's YOU.' Tribute is refused, an autograph is demanded, and you are escorted a mile up the road with full honk honors.",
+            "effects": [
+              "rep +3"
+            ]
           }
         ]
       },
@@ -57,6 +88,18 @@
           {
             "weight": 100,
             "text": "There's a form. Of course there's a form. You're now an associate member with scooter privileges and a cut of today's tribute.",
+            "effects": [
+              "money +8",
+              "stat cha +1",
+              "trait +gang_member"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "trait wanted"
+            ],
+            "text": "They've seen your poster. The leader pins it to the clubhouse board on the spot, which is apparently the gang equivalent of a diploma. Membership is immediate and enthusiastic.",
             "effects": [
               "money +8",
               "stat cha +1",
@@ -103,6 +146,17 @@
             "effects": [
               "credits +12"
             ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "raining"
+            ],
+            "text": "The road is mud and the jack keeps sinking, so you do it the ugly way: shoulder under the axle in the rain while the merchant screams encouragement. Double pay from DO NOT ASK, no questions either direction.",
+            "effects": [
+              "money +12",
+              "hp -1"
+            ]
           }
         ],
         "fail": [
@@ -111,6 +165,16 @@
             "text": "The wagon rolls off the jack and onto your foot. The merchant apologizes on behalf of gravity.",
             "effects": [
               "hp -3"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "raining"
+            ],
+            "text": "The wagon slides off the jack, through the mud, and onto your foot with slow, greasy inevitability. The merchant apologizes on behalf of gravity and weather both.",
+            "effects": [
+              "hp -4"
             ]
           }
         ]
@@ -148,6 +212,33 @@
             "effects": [
               "money -7",
               "hp -2"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "companion"
+            ],
+            "text": "The crate SHRIEKS. Your companion, bless them, fakes a coughing fit so committed that the merchant only charges half the awakening fee, out of concern.",
+            "effects": [
+              "money -4",
+              "hp -2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Hand over your repair kit and supervise",
+        "requires": {
+          "item": "repair_kit"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Proper tools change the whole afternoon. The wheel goes on true, the merchant keeps the kit 'for emergencies,' and pays what a wheelwright would charge plus a mystery bonus from the middle crate.",
+            "effects": [
+              "removeitem repair_kit",
+              "money +12"
             ]
           }
         ]
@@ -188,6 +279,16 @@
             "weight": 40,
             "text": "'Sky-metal hinges,' they whisper. 'Fell off a star-wagon.' Everything is sky-debris to salespeople now.",
             "effects": []
+          },
+          {
+            "weight": 100,
+            "when": [
+              "snowing"
+            ],
+            "text": "The hinges are frozen. The cart half-unfolds, groans, and sticks, wedged open like a wooden crab. You spend an hour thawing sky-metal with the peddler, who pays in something hot and one apologetic discount item.",
+            "effects": [
+              "item coffee"
+            ]
           }
         ]
       },
@@ -198,6 +299,16 @@
             "weight": 100,
             "text": "The cart refolds and trundles off, playing a tinny jingle that will live in your head for three days.",
             "effects": []
+          },
+          {
+            "weight": 100,
+            "when": [
+              "war_here"
+            ],
+            "text": "The peddler packs up fast when the wind carries drums. 'Roads are only roads until they're routes,' they mutter, folding the shopfront away, and trundle off in the exact opposite direction of the smoke.",
+            "effects": [
+              "stat wis +1"
+            ]
           }
         ]
       }
@@ -236,6 +347,17 @@
             ]
           },
           {
+            "weight": 100,
+            "when": [
+              "raining"
+            ],
+            "text": "It is raining, which is the single best sales environment for a boot-drying cantrip. He demonstrates on yours mid-puddle. You walk two miles warm-footed through a downpour, converted for life.",
+            "effects": [
+              "stat int +1",
+              "hp +2"
+            ]
+          },
+          {
             "weight": 40,
             "text": "He talks the entire way about his ex-apprentice. THE ENTIRE WAY. At the crossroads he pays you for the therapy in coin, as is proper.",
             "effects": [
@@ -251,6 +373,41 @@
             "weight": 100,
             "text": "He looks back down the road. Far away, faintly, something honks. 'Geese,' he says. 'A grudge. Don't ask more.' You don't. The honking continues, patient.",
             "effects": [
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "war_here"
+            ],
+            "text": "He looks back down the road, where the smoke is. 'Recruiters,' he says. 'They want battle-wizards. I do boots.' He teaches you the ditch-spotting trick he uses whenever wagons with banners come by.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask him to do something about your sword",
+        "requires": {
+          "item": "rusty_sword"
+        },
+        "outcomes": [
+          {
+            "weight": 70,
+            "text": "He tuts at the rust, mutters at the blade, and hands back something a smith would charge real money for. 'Edge-keeping charm. Do not thank me, it embarrasses the geese.'",
+            "effects": [
+              "removeitem rusty_sword",
+              "item decent_sword"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "The spell takes the rust off, along with a certain amount of sword. What remains is technically a very committed dagger. He insists this is an upgrade in spirit.",
+            "effects": [
+              "removeitem rusty_sword",
+              "item dagger",
               "stat wis +1"
             ]
           }
@@ -303,6 +460,16 @@
             "effects": [
               "hp -3"
             ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "raining"
+            ],
+            "text": "You attempt the hack in the rain, wet-fingered, on a machine that runs on lightning. The pillar does not even need to aim. The survey afterward includes a question about 'moisture-related user error.'",
+            "effects": [
+              "hp -5"
+            ]
           }
         ]
       },
@@ -314,6 +481,32 @@
             "text": "The pillar watches you the whole way, projecting the word 'NOTED.' The brush is full of thorns and the moral high ground.",
             "effects": [
               "hp -1"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "trait wanted"
+            ],
+            "text": "Halfway through the brush, the pillar's light sweeps over you and stops. 'IDENTITY MATCHED: BOUNTY DATABASE.' It projects your poster at parade size for every traveler on the road. The thorns are now the second-worst part.",
+            "effects": [
+              "hp -1",
+              "rep -3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Invoke the celebrity exemption",
+        "requires": {
+          "trait": "famous"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "'IDENTITY MATCHED: PERSON OF NOTE.' The pillar plays a fanfare from a civilization that no longer exists and opens with what can only be described as reverence. It asks you to rate your passage. You give it five.",
+            "effects": [
+              "rep +2"
             ]
           }
         ]
@@ -342,6 +535,29 @@
               "removeitem campfire_kit",
               "hp +7"
             ]
+          },
+          {
+            "weight": 60,
+            "when": [
+              "snowing"
+            ],
+            "text": "Fire in falling snow: the kit earns its weight twice over. You sleep in a dome of orange quiet while the world is erased around you, and wake to a clean page.",
+            "effects": [
+              "removeitem campfire_kit",
+              "hp +8"
+            ]
+          },
+          {
+            "weight": 40,
+            "when": [
+              "companion"
+            ],
+            "text": "The kit, plus someone to split the watch. You get the deep half of the night and wake to breakfast already going. Civilization is a fire with two people at it.",
+            "effects": [
+              "removeitem campfire_kit",
+              "hp +8",
+              "stat cha +1"
+            ]
           }
         ]
       },
@@ -367,6 +583,26 @@
             "effects": [
               "hp -2"
             ]
+          },
+          {
+            "weight": 60,
+            "when": [
+              "raining"
+            ],
+            "text": "It was already raining when you lay down, which even you recognize as a decision. The shelter funnels the entire county's weather onto your bedroll by the small hours.",
+            "effects": [
+              "hp -4"
+            ]
+          },
+          {
+            "weight": 40,
+            "when": [
+              "season winter"
+            ],
+            "text": "Winter ground takes heat the way a debt collector takes coin: entirely, and with interest. You spend the night doing arithmetic about dawn.",
+            "effects": [
+              "hp -5"
+            ]
           }
         ]
       },
@@ -379,6 +615,16 @@
             "effects": [
               "hp -1",
               "money +3"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "vehicle"
+            ],
+            "text": "Night riding: cold, fast, and gloriously stupid. You cover double distance with your eyes streaming and arrive before your reputation does.",
+            "effects": [
+              "money +4"
             ]
           },
           {
@@ -413,6 +659,18 @@
               "hp +3",
               "stat wis +1"
             ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "raining"
+            ],
+            "text": "Rain is a gift to the profession. Umbrellas bloom in black rows, and your unfeigned misery at being soaked reads as top-shelf grief. The head mourner offers you occasional work, and the wake-lunch is doubled.",
+            "effects": [
+              "hp +3",
+              "money +4",
+              "stat wis +1"
+            ]
           }
         ]
       },
@@ -424,6 +682,16 @@
             "text": "You thread the gap between casket and clergy at a jog. Gasps. Someone faints professionally. You clear it, pursued only by reputation.",
             "effects": [
               "rep -4"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "vehicle"
+            ],
+            "text": "You take the gap at speed with the engine snarling. The procession will describe this event for years. So will the wanted-poster artist for the temple district, working from six eyewitness sketches.",
+            "effects": [
+              "rep -8"
             ]
           },
           {
@@ -449,6 +717,17 @@
             "effects": [
               "money +5",
               "stat wis +1"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "trait famous"
+            ],
+            "text": "The head mourner recognizes you and breaks character entirely. The whole saga comes out, plus an offer: walk graveside as a Celebrity Mourner. Your presence upgrades the funeral's prestige tier, and the estate pays appearance rates.",
+            "effects": [
+              "money +9",
+              "rep +2"
             ]
           }
         ],
@@ -493,6 +772,27 @@
             "effects": [
               "hp +1"
             ]
+          },
+          {
+            "weight": 60,
+            "when": [
+              "war_here"
+            ],
+            "text": "The boring road is full of soldiers' wagons and requisitioned mules. Boring is over in this county. You give the columns a wide berth along the field edges, which costs you daylight and one boot's dignity.",
+            "effects": [
+              "hp -1",
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 40,
+            "when": [
+              "snowing"
+            ],
+            "text": "Snow has buried every road equally, but the boring one has fresh cart ruts to walk in. Whoever went first did the hard part, which is the entire point of civilization.",
+            "effects": [
+              "hp +2"
+            ]
           }
         ]
       },
@@ -502,6 +802,17 @@
           {
             "weight": 100,
             "text": "You paint 'FREE SOUP AHEAD' pointing into a swamp. It's cruel. It's hilarious. Somewhere down the line, a berry-goblin nods in professional respect.",
+            "effects": [
+              "stat cha +1",
+              "stat wis -1"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "companion"
+            ],
+            "text": "Your companion watches you paint 'FREE SOUP AHEAD' with the expression of someone updating their opinion of you in real time. They fix your kerning anyway. Everyone needs a hobby with witnesses.",
             "effects": [
               "stat cha +1",
               "stat wis -1"

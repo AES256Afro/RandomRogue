@@ -31,6 +31,28 @@
               "money -1",
               "stat cha +1"
             ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "raining"
+            ],
+            "text": "The rain has driven half the market inside, and the curator is charging them all double for 'weather admission.' You shelter among the exhibits with the damp crowd and learn more from their arguing than from any of the plaques.",
+            "effects": [
+              "money -2",
+              "stat int +1"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "trait famous"
+            ],
+            "text": "The curator recognizes you from the broadsheets and waives the fee, on the condition that you stand beside the breathing exhibit while he letters 'HERO VISITS COLLECTION' for the window. Fame: worth two coins a day, apparently.",
+            "effects": [
+              "stat cha +1",
+              "rep +2"
+            ]
           }
         ]
       },
@@ -81,6 +103,17 @@
             "effects": [
               "stat cha +1",
               "rep +3"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "war_here"
+            ],
+            "text": "With the war this close, nobody laughs. The goblin reads all nine articles into a silence that actually listens, and the whole tavern drinks to Article One like it might work. For one evening, in one room, everyone calms down.",
+            "effects": [
+              "rep +5",
+              "stat wis +1"
             ]
           }
         ]
@@ -205,6 +238,30 @@
             ]
           }
         ]
+      },
+      {
+        "text": "Feed it your credit chip",
+        "requires": {
+          "item": "credit_chip"
+        },
+        "outcomes": [
+          {
+            "weight": 70,
+            "text": "The slot swallows the chip with the satisfaction of a machine finally doing its actual job. 'BALANCE TRANSFERRED. THANK YOU FOR CHOOSING US. YOU HAD NO CHOICE.' Coins of several dead currencies rattle from a hatch, most still legal somewhere.",
+            "effects": [
+              "removeitem credit_chip",
+              "money +13"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "'CHIP EXPIRED 763 YEARS AGO,' it announces, keeping the chip. 'A LATE FEE HAS BEEN ASSESSED.' You have somehow left this transaction owing money to a wall.",
+            "effects": [
+              "removeitem credit_chip",
+              "money -2"
+            ]
+          }
+        ]
       }
     ]
   },
@@ -225,6 +282,28 @@
             "effects": [
               "hp +3",
               "stat wis +1"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "snowing"
+            ],
+            "text": "Snow muffles everything except the chant and the slow creak of the cracked bell. Forty gray hoods going white, and you among them, breath keeping time. When they anoint your forehead at parting, the oil is somehow warm.",
+            "effects": [
+              "hp +4",
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "trait cursed"
+            ],
+            "text": "Halfway through the second chant, the eldest monk stops, sniffs, and looks at you the way a plumber looks at a wall. The procession forms a circle without discussion. Whatever they chant next has corners on it, and when it ends, something that has been riding you for miles is simply gone.",
+            "effects": [
+              "trait -cursed",
+              "hp +2"
             ]
           }
         ]
@@ -282,6 +361,18 @@
             "text": "Two hours. Mud, soup shortages, a heroic goat. By the end you remember the siege too, which is the entire point. He stands straighter when you leave.",
             "effects": [
               "stat wis +1",
+              "rep +3"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "war_here"
+            ],
+            "text": "With a war on THIS road NOW, the old man's stories stop being stories. He sketches the fortifications in the dust, marks where supply lines break, and tells you which of it still applies. All of it, as it turns out.",
+            "effects": [
+              "stat wis +1",
+              "learn 1",
               "rep +3"
             ]
           }
@@ -444,6 +535,29 @@
               "hp +4",
               "stat cha -1"
             ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "plague_here"
+            ],
+            "text": "'Plague in town,' says the eldest delegate, and doubles the price with a look that dares you to complain. You pay it. The paste burns going down like a disinfectant with opinions, and for days afterward you are the healthiest thing in the district.",
+            "effects": [
+              "money -6",
+              "hp +6",
+              "stat con +1"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "money <= 5"
+            ],
+            "text": "The eldest delegate looks at your purse, then your face, then pushes a jar across for a single coin. 'Eat,' she says, in the tone of every grandmother who ever lived. You do not argue with the tone.",
+            "effects": [
+              "money -1",
+              "hp +5"
+            ]
           }
         ]
       },
@@ -490,6 +604,17 @@
             "text": "You memorize three faces and two rewards. Knowledge like this either makes you money or makes you careful. Ideally both.",
             "effects": [
               "stat int +1"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "trait wanted"
+            ],
+            "text": "You study the top row the way a tradesman reads competitors' prices. Two of the bounties are higher than yours, which is somehow insulting. You memorize their mistakes, which in your line of work counts as free education.",
+            "effects": [
+              "stat int +1",
+              "stat wis +1"
             ]
           }
         ]
@@ -758,6 +883,29 @@
               "hp +4",
               "trait +glowing"
             ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "money >= 60"
+            ],
+            "text": "Word of your purse travels the alley faster than you do. Vendors intercept you with their FINEST - the stuff under the counter, the skewer with a waiting list of its own. You eat like a magistrate and tip like a legend.",
+            "effects": [
+              "money -12",
+              "hp +6",
+              "rep +3"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "season autumn"
+            ],
+            "text": "It's harvest season and the alley knows it: mushroom skewers, spiced squash, a mulled cider that has clearly been places. Even stall seven has mellowed. Autumn is when this street tells the truth.",
+            "effects": [
+              "money -4",
+              "hp +5"
+            ]
           }
         ]
       },
@@ -929,6 +1077,17 @@
               "hp +3",
               "stat wis +1"
             ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "companion"
+            ],
+            "text": "Two glasses, raised to the fallen rafters. Your companion says a few words in a language you decide not to ask about, and for a moment the cellar has enough guests to count as a gathering. The dead house pours generously for company.",
+            "effects": [
+              "hp +4",
+              "stat wis +1"
+            ]
           }
         ]
       }
@@ -961,6 +1120,18 @@
             "text": "The chant has seventy verses and you learn all of them against your will. Weeks from now you will hum verse forty in a dungeon and feel inexplicably safe.",
             "effects": [
               "money -3",
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "raining"
+            ],
+            "text": "The wagon is standing room only - rain converts more pilgrims than any sermon. You wedge in among wet wool and shared bread, and the chant, with this many voices, does something to your sternum that you decline to examine.",
+            "effects": [
+              "money -3",
+              "hp +3",
               "stat wis +1"
             ]
           }
@@ -1310,6 +1481,32 @@
             ]
           }
         ]
+      },
+      {
+        "text": "Enter your own jar of stew as a third contender",
+        "requires": {
+          "item": "stew_jar"
+        },
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "You unstopper the jar with ceremony. Road stew: aged in a pack, seasoned with weather. Both cooks taste it, go pale, and unite to buy the recipe off you just to keep it out of the region.",
+            "effects": [
+              "removeitem stew_jar",
+              "money +9",
+              "rep +2"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "Both cooks taste it and, for the first time in nine years, laugh at the same thing. The feud dissolves into pity. You are fed properly, as an act of charity, and your jar is quietly emptied into the pig trough.",
+            "effects": [
+              "removeitem stew_jar",
+              "hp +3",
+              "stat cha -1"
+            ]
+          }
+        ]
       }
     ]
   },
@@ -1329,6 +1526,29 @@
             "effects": [
               "money +14",
               "loot common",
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "trait cursed"
+            ],
+            "text": "You bow. The goat's rectangular pupils fix on something just over your shoulder - something that has been riding you for days. It walks over, chews the air beside your ear with terrible deliberation, and swallows. The curse is gone. The goat returns to the throne. Court is adjourned.",
+            "effects": [
+              "trait -cursed",
+              "money +8",
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "carrying_artifact"
+            ],
+            "text": "The goat's eyes go to your pack and stay there. It knows what you're carrying - things on thrones always do. It permits your tribute-taking, but as you leave, it bleats once, in what you will later realize was a warning.",
+            "effects": [
+              "money +12",
               "stat wis +1"
             ]
           }

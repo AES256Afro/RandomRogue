@@ -10,10 +10,10 @@
 // Leaderboard + share: relative fetches so they work on random-rogue.com
 // and fail silently anywhere else.
 EM_JS(void, rr_submit_score, (const char* json), {
-    try { fetch('/__score', { method: 'POST', headers: { 'content-type': 'application/json' }, body: UTF8ToString(json) }).catch(function(){}); } catch (e) {}
+    try { fetch('https://random-rogue.com/__score', { method: 'POST', headers: { 'content-type': 'application/json' }, body: UTF8ToString(json) }).catch(function(){}); } catch (e) {}
 });
 EM_JS(void, rr_fetch_scores, (int day), {
-    try { fetch('/__scores?day=' + day).then(function(r){ return r.text(); }).then(function(t){ window.__rrScores = t; }).catch(function(){ window.__rrScores = '[]'; }); } catch (e) { window.__rrScores = '[]'; }
+    try { fetch('https://random-rogue.com/__scores?day=' + day).then(function(r){ return r.text(); }).then(function(t){ window.__rrScores = t; }).catch(function(){ window.__rrScores = '[]'; }); } catch (e) { window.__rrScores = '[]'; }
 });
 EM_JS(char*, rr_get_scores, (), {
     var s = window.__rrScores || "";
@@ -26,7 +26,7 @@ EM_JS(void, rr_copy_text, (const char* text), {
     try { navigator.clipboard.writeText(UTF8ToString(text)); } catch (e) {}
 });
 EM_JS(void, rr_fetch_ghosts, (int day, const char* notName), {
-    try { fetch('/__ghosts?day=' + day + '&n=3&not=' + encodeURIComponent(UTF8ToString(notName))).then(function(r){ return r.text(); }).then(function(t){ window.__rrGhosts = t; }).catch(function(){ window.__rrGhosts = "[]"; }); } catch (e) { window.__rrGhosts = "[]"; }
+    try { fetch('https://random-rogue.com/__ghosts?day=' + day + '&n=3&not=' + encodeURIComponent(UTF8ToString(notName))).then(function(r){ return r.text(); }).then(function(t){ window.__rrGhosts = t; }).catch(function(){ window.__rrGhosts = "[]"; }); } catch (e) { window.__rrGhosts = "[]"; }
 });
 EM_JS(char*, rr_get_ghosts, (), {
     var s = window.__rrGhosts || "";
@@ -37,7 +37,7 @@ EM_JS(char*, rr_get_ghosts, (), {
 });
 EM_JS(void, rr_fetch_replay, (int id), {
     window.__rrReplay = "";
-    try { fetch('/__replay?id=' + id).then(function(r){ return r.text(); }).then(function(t){ window.__rrReplay = t; }).catch(function(){ window.__rrReplay = "[]"; }); } catch (e) { window.__rrReplay = "[]"; }
+    try { fetch('https://random-rogue.com/__replay?id=' + id).then(function(r){ return r.text(); }).then(function(t){ window.__rrReplay = t; }).catch(function(){ window.__rrReplay = "[]"; }); } catch (e) { window.__rrReplay = "[]"; }
 });
 EM_JS(char*, rr_get_replay, (), {
     var s = window.__rrReplay || "";
@@ -47,10 +47,10 @@ EM_JS(char*, rr_get_replay, (), {
     return buf;
 });
 EM_JS(void, rr_submit_deed, (const char* json), {
-    try { fetch('/__deed', { method: 'POST', headers: { 'content-type': 'application/json' }, body: UTF8ToString(json) }).catch(function(){}); } catch (e) {}
+    try { fetch('https://random-rogue.com/__deed', { method: 'POST', headers: { 'content-type': 'application/json' }, body: UTF8ToString(json) }).catch(function(){}); } catch (e) {}
 });
 EM_JS(void, rr_fetch_deeds, (int day), {
-    try { fetch('/__deeds?day=' + day).then(function(r){ return r.text(); }).then(function(t){ window.__rrDeeds = t; }).catch(function(){ window.__rrDeeds = "[]"; }); } catch (e) { window.__rrDeeds = "[]"; }
+    try { fetch('https://random-rogue.com/__deeds?day=' + day).then(function(r){ return r.text(); }).then(function(t){ window.__rrDeeds = t; }).catch(function(){ window.__rrDeeds = "[]"; }); } catch (e) { window.__rrDeeds = "[]"; }
 });
 EM_JS(char*, rr_get_deeds, (), {
     var s = window.__rrDeeds || "";
@@ -421,7 +421,8 @@ void Game::saveRun() {
                       {"fac", contract_.faction}, {"rw", contract_.reward}}},
         {"comp", {{"id", comp_.id}, {"name", comp_.name}, {"kind", comp_.kind},
                   {"trait", comp_.trait}, {"passive", comp_.passive},
-                  {"pb", comp_.packBonus}, {"active", comp_.active}}},
+                  {"pb", comp_.packBonus}, {"active", comp_.active},
+                  {"dt", comp_.daysTogether}}},
         {"finales", finalesSeen_}, {"books", booksThisRun_},
         {"cdone", contractsDone_}, {"wars", wars},
         {"plague", history_.plaguedRegions},
@@ -553,6 +554,7 @@ bool Game::loadRun() {
         comp_.passive = c.value("passive", "");
         comp_.packBonus = c.value("pb", 0);
         comp_.active = c.value("active", false);
+        comp_.daysTogether = c.value("dt", 0);
     }
     finalesSeen_ = j.value("finales", 0);
     booksThisRun_ = j.value("books", 0);
@@ -606,13 +608,12 @@ void Game::bindQuirk(ItemInstance& item) {
     if (!runRng_.chance(50)) return; // plenty of items are just honest items
 
     bool mechanical = runRng_.chance(45);
-    if (mechanical && !items_.quirkTexts().empty()) {
-        item.quirk = runRng_.pick(items_.quirkTexts());
-        item.quirkPassive = runRng_.chance(60) && !items_.goodPassives().empty()
-                                ? runRng_.pick(items_.goodPassives())
-                                : (!items_.badPassives().empty()
-                                       ? runRng_.pick(items_.badPassives())
-                                       : "");
+    if (mechanical && !items_.quirkPairs().empty()) {
+        // Text and mechanics are one record now (R10): the description IS
+        // the explanation, even when the player never learns the numbers.
+        const auto& pair = runRng_.pick(items_.quirkPairs());
+        item.quirk = pair.first;
+        item.quirkPassive = pair.second;
         return;
     }
 
@@ -1059,6 +1060,12 @@ void Game::enterTravel() {
         if (vehicle) o.days = (o.days + 1) / 2;
         o.label = s.name + " (" + s.type + ", " + std::to_string(o.days) +
                   (o.days == 1 ? " day)" : " days)");
+        // The world's condition travels with the signpost (R10).
+        if (history_.plaguedRegions.count(s.region)) o.label += " [plague]";
+        int owner = regionOwner(s.region);
+        if (owner >= 0)
+            for (auto& w : history_.liveWars)
+                if (w.a == owner || w.b == owner) { o.label += " [war]"; break; }
         return o;
     };
 
@@ -1161,6 +1168,24 @@ void Game::dailyTick() {
         newsLine_ = RenderChronEntry(history_.chron.back(), history_, world_,
                                      grammar_, liveRng_);
         audio_.chime();
+    }
+    // The road builds trust one shared day at a time (R10). A devoted
+    // companion leans in: their passive sharpens.
+    if (comp_.active) {
+        comp_.daysTogether++;
+        if (comp_.daysTogether == 10) {
+            // "check dex +1" -> "check dex +2", once, at devotion.
+            std::istringstream ps(comp_.passive);
+            std::string verb, which; int v = 0;
+            ps >> verb >> which >> v;
+            if (verb == "check" && v > 0) {
+                comp_.passive = "check " + which + " +" + std::to_string(v + 1);
+                ch_.companionPassive = comp_.passive;
+            }
+            newsLine_ = comp_.name + " has stopped keeping one eye on the exits. " +
+                        "You two are a unit now.";
+            audio_.chime();
+        }
     }
     // The rival is out there too, having a run of their own (R4).
     if (rival_.alive && liveRng_.chance(16)) {
@@ -1399,6 +1424,39 @@ void Game::dealEvent() {
     enterTravel();
 }
 
+// Drops the least valuable non-artifact item; narrates it on the card.
+bool Game::dropCheapest(const std::string& why) {
+    int worst = -1, worstVal = 1 << 20;
+    for (int i = 0; i < (int)ch_.pack.size(); i++) {
+        if (ch_.pack[i].artifactId >= 0) continue; // never auto-drop relics
+        if (ch_.pack[i].value < worstVal) { worstVal = ch_.pack[i].value; worst = i; }
+    }
+    if (worst < 0) return false;
+    outcome_.text += "\n(You leave behind " + ch_.pack[worst].name + " " + why + ".)";
+    ch_.pack.erase(ch_.pack.begin() + worst);
+    return true;
+}
+
+void Game::takeItem(const ItemInstance& item) {
+    if ((int)ch_.pack.size() >= ch_.capacity()) {
+        // Swap only if the find beats the worst thing you carry.
+        int worst = -1, worstVal = 1 << 20;
+        for (int i = 0; i < (int)ch_.pack.size(); i++) {
+            if (ch_.pack[i].artifactId >= 0) continue;
+            if (ch_.pack[i].value < worstVal) { worstVal = ch_.pack[i].value; worst = i; }
+        }
+        if (worst < 0 || item.value <= worstVal) {
+            outcome_.text += "\n(Your pack is full; " + item.name + " stays behind.)";
+            return;
+        }
+        outcome_.text += "\n(Pack full: you swap " + ch_.pack[worst].name + " for " +
+                         item.name + ".)";
+        ch_.pack.erase(ch_.pack.begin() + worst);
+    }
+    ch_.pack.push_back(item);
+    audio_.chime();
+}
+
 void Game::applyEffects(const std::vector<std::string>& effects) {
     for (auto& fx : effects) {
         std::istringstream ss(fx);
@@ -1442,18 +1500,12 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
             if (ch_.stats[i] < 1) ch_.stats[i] = 1;
         } else if (verb == "item") {
             std::string id; ss >> id;
-            if ((int)ch_.pack.size() < ch_.packMax) {
-                ch_.pack.push_back(makeItem(id));
-                audio_.chime();
-            }
+            takeItem(makeItem(id));
         } else if (verb == "loot") {
             std::string tier; ss >> tier;
-            if ((int)ch_.pack.size() < ch_.packMax) {
-                ItemInstance item = items_.loot(runRng_, tier);
-                bindQuirk(item);
-                ch_.pack.push_back(item);
-                audio_.chime();
-            }
+            ItemInstance item = items_.loot(runRng_, tier);
+            bindQuirk(item);
+            takeItem(item);
         } else if (verb == "removeitem") {
             std::string id; ss >> id;
             ch_.removeItem(id);
@@ -1510,7 +1562,11 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
         } else if (verb == "goto") {
             ss >> forcedNextId_;
         } else if (verb == "take_artifact") {
-            if (pendingArtifact_ >= 0 && (int)ch_.pack.size() < ch_.packMax) {
+            // A full pack makes room for a true artifact: the cheapest thing
+            // you carry gets left behind, and the card says so (R10).
+            if (pendingArtifact_ >= 0 && (int)ch_.pack.size() >= ch_.capacity())
+                dropCheapest("to make room for what you found");
+            if (pendingArtifact_ >= 0 && (int)ch_.pack.size() < ch_.capacity()) {
                 HArtifact& a = history_.artifacts[pendingArtifact_];
                 a.claimed = true;
                 a.restingSite = -1;
@@ -2001,6 +2057,8 @@ void Game::drawTitle(Vector2 mouse) {
         chronPage_ = 0;
         chronCachedPage_ = -1;
         chronDetail_ = -1;
+        chronFilterActor_ = chronFilterFaction_ = -1;
+        chronFilterList_.clear();
         screen_ = CHRONICLE;
         return;
     }
@@ -2248,7 +2306,8 @@ void Game::drawTravel(Vector2 mouse) {
     if (!newsLine_.empty()) sky += "  NEWS: " + newsLine_;
     y = DrawTextWrapped(sky, 8, y + 1, kW - 16, PAL_DIM, y + 24);
     if (comp_.active) {
-        std::string cline = "With you: " + comp_.name + ", " + comp_.kind;
+        std::string cline = "With you: " + comp_.name + ", " + comp_.kind +
+                            (comp_.devoted() ? " (devoted)" : "");
         y = DrawTextWrapped(cline, 8, y + 1, kW - 16, PAL_DIM, y + 13);
     }
     std::string purpose;
@@ -2418,7 +2477,7 @@ void Game::drawVendor(Vector2 mouse) {
         for (auto& item : vendorStock_) {
             int price = buyPrice(item);
             rows.push_back(item.displayName() + " - " + std::to_string(price) + "g");
-            ok.push_back(ch_.money >= price && (int)ch_.pack.size() < ch_.packMax);
+            ok.push_back(ch_.money >= price && (int)ch_.pack.size() < ch_.capacity());
         }
         if (vendorStock_.empty()) {
             DrawTextWrapped("Sold out. The vendor gestures proudly at nothing.", 8, y + 18,
@@ -2455,7 +2514,7 @@ void Game::drawInventory(Vector2 mouse) {
     drawTopBar();
     if (invSelected_ < 0) {
         std::string head = "Your pack (" + std::to_string(ch_.pack.size()) + "/" +
-                           std::to_string(ch_.packMax) + ")";
+                           std::to_string(ch_.capacity()) + ")";
         DrawText(head.c_str(), 8, 22, 10, PAL_GOLD);
         if (ch_.pack.empty()) {
             DrawTextWrapped("Empty. Your worldly possessions are: hope.", 8, 38, kW - 16, PAL_DIM);
@@ -2677,41 +2736,98 @@ void Game::drawWorldMap(Vector2 mouse) {
     }
 }
 
-// Page through the whole thousand-year Chronicle, era by era (R3).
+// Page through the whole thousand-year Chronicle: era jumps, latest,
+// and follow-the-thread filters by figure or faction (R3, R10).
 void Game::drawChronicle(Vector2 mouse) {
-    const int kPerPage = 9;
-    int total = (int)history_.chron.size();
+    const int kPerPage = 8;
+    bool filtered = chronFilterActor_ >= 0 || chronFilterFaction_ >= 0;
+    int total = filtered ? (int)chronFilterList_.size() : (int)history_.chron.size();
+    auto entryAt = [&](int i) -> int {
+        return filtered ? chronFilterList_[i] : i;
+    };
     int pages = total > 0 ? (total + kPerPage - 1) / kPerPage : 1;
     if (chronPage_ < 0) chronPage_ = 0;
     if (chronPage_ >= pages) chronPage_ = pages - 1;
     if (chronCachedPage_ != chronPage_) {
         chronLines_.clear();
+        chronIdx_.clear();
         // A throwaway RNG: browsing must never disturb run determinism.
         Rng browse(masterSeed_ ^ 0xB00C5ULL, (uint64_t)(chronPage_ + 7));
         for (int i = chronPage_ * kPerPage;
              i < total && i < (chronPage_ + 1) * kPerPage; i++) {
-            const ChronEntry& e = history_.chron[i];
+            const ChronEntry& e = history_.chron[entryAt(i)];
             std::string line = "y" + std::to_string(e.year) + "  " +
                 RenderChronEntry(e, history_, world_, grammar_, browse);
             chronLines_.push_back(line);
+            chronIdx_.push_back(entryAt(i));
         }
         chronCachedPage_ = chronPage_;
     }
     std::string head = "THE CHRONICLE OF " + world_.name.conlang;
     for (auto& c : head) c = (char)toupper((unsigned char)c);
     DrawText(head.c_str(), (kW - MeasureText(head.c_str(), 10)) / 2, 6, 10, PAL_GOLD);
-    // A tapped line opens the whole entry, unclipped (R9).
+    // A tapped line opens the whole entry, unclipped (R9), with a THREAD
+    // button that filters the whole book to that figure or faction (R10).
     if (chronDetail_ >= 0 && chronDetail_ < (int)chronLines_.size()) {
-        DrawTextWrapped(chronLines_[chronDetail_], 12, 30, kW - 24, PAL_INK, kH - 24);
-        const char* hint = "tap anywhere to go back";
-        DrawText(hint, (kW - MeasureText(hint, 10)) / 2, kH - 16, 10, PAL_DARK);
+        DrawTextWrapped(chronLines_[chronDetail_], 12, 30, kW - 24, PAL_INK, kH - 40);
+        const ChronEntry& de = history_.chron[chronIdx_[chronDetail_]];
+        if (!filtered && (de.actor >= 0 || de.faction >= 0) &&
+            uiButton({(float)(kW / 2 - 52), (float)(kH - 22), 104, 18},
+                     "FOLLOW THIS THREAD", mouse)) {
+            chronFilterActor_ = de.actor;
+            chronFilterFaction_ = de.actor >= 0 ? -1 : de.faction;
+            chronFilterList_.clear();
+            for (int i = 0; i < (int)history_.chron.size(); i++) {
+                const ChronEntry& e = history_.chron[i];
+                bool hit = (chronFilterActor_ >= 0 && e.actor == chronFilterActor_) ||
+                           (chronFilterFaction_ >= 0 &&
+                            (e.faction == chronFilterFaction_ ||
+                             e.faction2 == chronFilterFaction_));
+                if (hit) chronFilterList_.push_back(i);
+            }
+            chronPage_ = 0;
+            chronCachedPage_ = -1;
+            chronDetail_ = -1;
+            return;
+        }
+        const char* hint = "tap elsewhere to go back";
+        DrawText(hint, 8, kH - 16, 10, PAL_DARK);
         if (pressed_ || GetKeyPressed() != 0) chronDetail_ = -1;
         return;
     }
-    std::string era = chronLines_.empty() ? "" :
-        std::string(EraName(history_.chron[chronPage_ * kPerPage].year)) +
-        "  -  page " + std::to_string(chronPage_ + 1) + "/" + std::to_string(pages);
+    std::string era;
+    if (!chronLines_.empty()) {
+        if (filtered) {
+            std::string who = chronFilterActor_ >= 0
+                ? history_.figures[chronFilterActor_].name
+                : history_.factions[chronFilterFaction_].name;
+            era = "the thread of " + who + "  -  " + std::to_string(total) + " entries";
+        } else {
+            era = std::string(EraName(history_.chron[entryAt(chronPage_ * kPerPage)].year)) +
+                  "  -  page " + std::to_string(chronPage_ + 1) + "/" + std::to_string(pages);
+        }
+    }
+    while (!era.empty() && MeasureText(era.c_str(), 10) > kW - 12) era.pop_back();
     DrawText(era.c_str(), (kW - MeasureText(era.c_str(), 10)) / 2, 18, 10, PAL_DIM);
+    // Era jump row: the five ages plus NOW (R10). Hidden inside a thread.
+    if (!filtered) {
+        static const int kEraStart[6] = {0, 251, 451, 651, 751, -1};
+        static const char* kEraBtn[6] = {"I", "II", "III", "IV", "V", "NOW"};
+        for (int b = 0; b < 6; b++) {
+            if (uiButton({(float)(kW - 152 + b * 25), 2, 22, 13}, kEraBtn[b], mouse)) {
+                if (kEraStart[b] < 0) {
+                    chronPage_ = pages - 1;
+                } else {
+                    int idx = 0;
+                    for (int i = 0; i < (int)history_.chron.size(); i++)
+                        if (history_.chron[i].year >= kEraStart[b]) { idx = i; break; }
+                    chronPage_ = idx / kPerPage;
+                }
+                chronCachedPage_ = -1;
+                return;
+            }
+        }
+    }
     int y = 32;
     for (int i = 0; i < (int)chronLines_.size(); i++) {
         const std::string& line = chronLines_[i];
@@ -2742,9 +2858,18 @@ void Game::drawChronicle(Vector2 mouse) {
         (uiButton({56, (float)(kH - 20), 48, 16}, "NEXT >", mouse) ||
          IsKeyPressed(KEY_RIGHT)))
         chronPage_++;
-    if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
+    if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16},
+                 filtered ? "ALL" : "BACK", mouse) ||
         IsKeyPressed(KEY_TAB) || IsKeyPressed(KEY_ESCAPE)) {
-        screen_ = TITLE;
+        if (filtered) {
+            // Leave the thread, back to the whole book.
+            chronFilterActor_ = chronFilterFaction_ = -1;
+            chronFilterList_.clear();
+            chronPage_ = 0;
+            chronCachedPage_ = -1;
+        } else {
+            screen_ = TITLE;
+        }
     }
 }
 

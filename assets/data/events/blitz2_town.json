@@ -9,7 +9,8 @@
         "text": "Step up and throw",
         "check": { "stat": "dex", "dc": 12 },
         "success": [
-          { "weight": 100, "text": "Triple ring, twice, and a finish so clean the opposing team checks the board for magnets. The Mudlarks carry you a lap around the bar and split the pot.", "effects": ["money +8", "stat cha +1"] }
+          { "weight": 100, "text": "Triple ring, twice, and a finish so clean the opposing team checks the board for magnets. The Mudlarks carry you a lap around the bar and split the pot.", "effects": ["money +8", "stat cha +1"] },
+          { "weight": 100, "when": ["trait famous"], "text": "The crowd recognizes you before the first dart lands, which doubles the side bets and the pressure. Triple ring, twice. The pot swells to famous-person rates and the Mudlarks rename a house rule after you.", "effects": ["money +12", "rep +2"] }
         ],
         "fail": [
           { "weight": 100, "text": "Your third dart hits the chalkboard, the lamp, and the captain's boot, in that order. The boot was already bet. Everyone loses.", "effects": ["hp -2", "stat cha -1"] }
@@ -55,7 +56,8 @@
       {
         "text": "Drink the free ale and keep your head down",
         "outcomes": [
-          { "weight": 100, "text": "You raise a quiet mug to a stranger's memory. The stew comes around twice. Grief, it turns out, caters well.", "effects": ["hp +2"] }
+          { "weight": 100, "text": "You raise a quiet mug to a stranger's memory. The stew comes around twice. Grief, it turns out, caters well.", "effects": ["hp +2"] },
+          { "weight": 100, "when": ["plague_here"], "text": "With plague in town, wakes have become the local calendar, and this one is defiant about it: MORE ale, LOUDER stories, grief with its sleeves rolled up. You drink to a stranger, and everyone here drinks to strangers they are braced to lose. It gets to you.", "effects": ["hp +2", "stat wis +1"] }
         ]
       },
       {
@@ -77,7 +79,8 @@
         "text": "Blend in as a distant cousin",
         "check": { "stat": "cha", "dc": 12 },
         "success": [
-          { "weight": 100, "text": "You are 'from the mother's side, obviously' and nobody on either side will admit to not remembering you. Three courses, two dances, one slice of cake the size of a shield.", "effects": ["hp +4"] }
+          { "weight": 100, "text": "You are 'from the mother's side, obviously' and nobody on either side will admit to not remembering you. Three courses, two dances, one slice of cake the size of a shield.", "effects": ["hp +4"] },
+          { "weight": 100, "when": ["companion"], "text": "A couple blends better than a stray. You and your companion are 'the cousins from the coast' within minutes - seated, fed, and taught the family dances. Your companion, alarmingly, already knows them.", "effects": ["hp +4", "rep +2"] }
         ],
         "fail": [
           { "weight": 100, "text": "Both sides compare notes on you at exactly the wrong moment. You are escorted out mid-bite by an aunt with a grip like a dockworker.", "effects": ["hp -2", "stat cha -1"] }
@@ -118,7 +121,8 @@
         "text": "Lure it out with jerky",
         "requires": { "item": "jerky" },
         "outcomes": [
-          { "weight": 100, "text": "A trail of dried meat from cask to door. The badger follows it out with the dignity of a paying customer leaving of its own accord. Bloodless, professional, and the barkeep pays full rate.", "effects": ["removeitem jerky", "money +7"] }
+          { "weight": 100, "text": "A trail of dried meat from cask to door. The badger follows it out with the dignity of a paying customer leaving of its own accord. Bloodless, professional, and the barkeep pays full rate.", "effects": ["removeitem jerky", "money +7"] },
+          { "weight": 100, "when": ["season winter"], "text": "The badger looks at the jerky, then at the snow through the cellar grate, then back at the jerky, and declines to relocate in this economy. You broker winter lodging terms instead: the badger keeps the rats down, the barkeep keeps the small casks locked. Your consulting fee reflects the difficulty.", "effects": ["money +6"] }
         ]
       },
       {
@@ -244,7 +248,8 @@
         "text": "Auction your seat",
         "outcomes": [
           { "weight": 70, "text": "A soaked wool merchant pays four gold without haggling, which tells you he'd have paid six. You lean against the wall, damp but liquid.", "effects": ["money +4"] },
-          { "weight": 30, "text": "The bidding war between two drenched clerks gets genuinely heated. The winner overpays out of spite. You admire spite; it's reliable.", "effects": ["money +7"] }
+          { "weight": 30, "text": "The bidding war between two drenched clerks gets genuinely heated. The winner overpays out of spite. You admire spite; it's reliable.", "effects": ["money +7"] },
+          { "weight": 100, "when": ["money >= 60"], "text": "You have more gold than anyone in this room, and auctioning a chair suddenly feels like bullying. You install the oldest, wettest merchant in it, buy the fire a fresh log, and stand a round for the whole crush. It costs a small fortune. The room will retell it for years.", "effects": ["money -12", "rep +5"] }
         ]
       },
       {
@@ -301,7 +306,8 @@
         "text": "Eat The Egg",
         "check": { "stat": "con", "dc": 14 },
         "success": [
-          { "weight": 100, "text": "It tastes like the founding: vinegar, hardship, and something the recipe books call 'notes of regret.' You keep it down. The pot is yours, your name goes on the jar's lid, and a new egg goes in before you've finished counting.", "effects": ["money +12", "rep +3"] }
+          { "weight": 100, "text": "It tastes like the founding: vinegar, hardship, and something the recipe books call 'notes of regret.' You keep it down. The pot is yours, your name goes on the jar's lid, and a new egg goes in before you've finished counting.", "effects": ["money +12", "rep +3"] },
+          { "weight": 100, "when": ["trait cursed"], "text": "The curse, whatever else it does, has deadened your palate for months - and today that is a gift. The Egg goes down like a boiled apology while the tavern watches in horror. You collect the pot without changing expression. First useful thing the curse has done.", "effects": ["money +12", "rep +3"] }
         ],
         "fail": [
           { "weight": 100, "text": "The Egg wins, as The Egg has always won. You spend the evening in the alley making your peace with the founding, and the pot rolls over, fattened by your entry fee.", "effects": ["hp -5", "money -2"] }
@@ -338,7 +344,8 @@
         "outcomes": [
           { "weight": 55, "text": "An hour later he's back, calmer, and pays the five like a man concluding legitimate business. You will never know, and not knowing is included in the price.", "effects": ["money +8"] },
           { "weight": 30, "text": "The watch comes through asking about a cask. You say it's yours, which becomes complicated when they ask what's in it and you have to choose a liquid at random. 'Soup' was the wrong answer, but they lose interest before it matters. He never returns. You keep the three and the cask of, as it turns out, unlabeled brandy.", "effects": ["money +3", "loot common"] },
-          { "weight": 15, "text": "The watch comes through, asks about the cask, and does not lose interest. The sweating man watches from across the street as you're fined for possession of 'uncustomed goods.' The three gold covers a third of it.", "effects": ["money -6", "rep -3"] }
+          { "weight": 15, "text": "The watch comes through, asks about the cask, and does not lose interest. The sweating man watches from across the street as you're fined for possession of 'uncustomed goods.' The three gold covers a third of it.", "effects": ["money -6", "rep -3"] },
+          { "weight": 100, "when": ["trait wanted"], "text": "A warm cask of somebody else's problem is exactly the company a wanted face doesn't need. You relocate the cask to the alley, the three gold to your purse, and yourself to the far side of town before anyone official gets curious about EITHER of you.", "effects": ["money +3", "stat wis +1"] }
         ]
       },
       {
@@ -435,7 +442,8 @@
         "requires": { "money": 3 },
         "outcomes": [
           { "weight": 55, "text": "Lightning delivers a performance the announcer calls 'blistering, for a snail,' crossing the line a full shell ahead. Short odds, honest money.", "effects": ["money +4"] },
-          { "weight": 45, "text": "Lightning stops mid-track to investigate a drop of ale and never recovers ambition. The winner is a snail called Barry that nobody bet on, including Barry's owner.", "effects": ["money -3"] }
+          { "weight": 45, "text": "Lightning stops mid-track to investigate a drop of ale and never recovers ambition. The winner is a snail called Barry that nobody bet on, including Barry's owner.", "effects": ["money -3"] },
+          { "weight": 100, "when": ["has lucky_rock"], "text": "The lucky rock goes warm in your pocket as the snails line up, which has never happened before and definitely means something. You double your stake. Lightning RUNS - insofar as the word applies - and the payout is the talk of the bar.", "effects": ["money +7"] }
         ]
       },
       {
@@ -526,6 +534,13 @@
         "fail": [
           { "weight": 100, "text": "The ghost declines to perform for tourists, on principle, and the refunds come out of your purse. Worse, it does something impressive the moment the last customer leaves. You both know what it did.", "effects": ["money -5"] }
         ]
+      },
+      {
+        "text": "Burn incense and negotiate terms",
+        "requires": { "item": "incense" },
+        "outcomes": [
+          { "weight": 100, "text": "The incense fills the north room like a formal apology. The ghost materializes enough to be negotiated with, and terms are struck: window open a crack, boots off the second chair, no humming after midnight - from either party. You sleep like a signed treaty, and the frost-writing at dawn reads 'PREFERRED GUEST.'", "effects": ["removeitem incense", "money -1", "hp +6"] }
+        ]
       }
     ]
   },
@@ -602,7 +617,8 @@
         "text": "Go down and find the hum",
         "check": { "stat": "con", "dc": 12 },
         "success": [
-          { "weight": 100, "text": "The hum is an old drainage valve singing in the current - and wedged in its housing, a strongbox someone once flushed in a hurry. The crew swears you to a split. The smell washes off in a week.", "effects": ["money +8", "loot common"] }
+          { "weight": 100, "text": "The hum is an old drainage valve singing in the current - and wedged in its housing, a strongbox someone once flushed in a hurry. The crew swears you to a split. The smell washes off in a week.", "effects": ["money +8", "loot common"] },
+          { "weight": 100, "when": ["plague_here"], "text": "With plague in town, nobody else will touch sewer work at any price, which is why the foreman pays yours without blinking. The hum is a singing valve; the strongbox wedged behind it is a bonus. You scrub down twice and receive a certificate declaring you 'PROBABLY CLEAN.'", "effects": ["money +13"] }
         ],
         "fail": [
           { "weight": 100, "text": "The hum is a valve. The thing living BEHIND the valve is not, and it objects to visitors at length. You surface at speed, get paid half rate for 'partial reconnaissance,' and burn those trousers.", "effects": ["hp -4", "money +4"] }
@@ -735,7 +751,8 @@
         "text": "Queue like a lawful person",
         "outcomes": [
           { "weight": 60, "text": "Three hours. You make queue friends, hear queue gossip, and reach the window forty seconds before lunch feels approachable. Stamped. The permit is beautiful, in the way of things that cost a morning.", "effects": ["hp -1", "stat wis +1"] },
-          { "weight": 40, "text": "Two people from the window, lunch approaches. The shutter drops. The queue disperses with the practiced grief of locals. An old woman pats your arm: 'First time.'", "effects": ["hp -1"] }
+          { "weight": 40, "text": "Two people from the window, lunch approaches. The shutter drops. The queue disperses with the practiced grief of locals. An old woman pats your arm: 'First time.'", "effects": ["hp -1"] },
+          { "weight": 100, "when": ["snowing"], "text": "The queue in falling snow becomes a brotherhood. Someone starts a fire in a bucket. Someone shares chestnuts. By the time the shutter opens you have three new friends, two business leads, and no feeling in your feet. Stamped.", "effects": ["hp -2", "stat wis +1", "rep +2"] }
         ]
       },
       {
@@ -787,6 +804,14 @@
           { "weight": 60, "text": "You tear the loaf into shares and distribute it like a payroll. The ringed one studies you, then leaves a shiny copper at your boot. Over the next hour, small valuable things arrive at intervals. You appear to have a crew now.", "effects": ["removeitem bread", "money +5"] },
           { "weight": 40, "text": "They take the bread in one coordinated pass, ring and all, and offer nothing in return. You have been robbed by pigeons in broad daylight, an experience the market witnessed in full.", "effects": ["removeitem bread"] }
         ]
+      },
+      {
+        "text": "Commission them for a job",
+        "requires": { "money": 6 },
+        "outcomes": [
+          { "weight": 60, "text": "You lay six coins on the fountain rim and nod, discreetly, toward the fattest merchant's stall. The syndicate studies you, then the coins, then the stall. By dusk a steady trickle of small valuables arrives at your boot, laundered through three gutters. You do not ask their methods. They do not ask your motives.", "effects": ["money -6", "money +13", "rep -2"] },
+          { "weight": 40, "text": "The syndicate takes the retainer in one coordinated pass and delivers nothing. Days later you spot the ringed one wearing your coin on a tiny chain, as jewelry. There is no complaints procedure. There is no procedure at all.", "effects": ["money -6"] }
+        ]
       }
     ]
   },
@@ -800,10 +825,12 @@
         "text": "Talk your way through the patrol",
         "check": { "stat": "cha", "dc": 12 },
         "success": [
-          { "weight": 100, "text": "You produce a story involving a sick aunt, a misread sundial, and sincere admiration for the watch's thankless work. The sergeant, a man with aunts of his own, walks you to your district personally, complaining about his knees the whole way. Educational.", "effects": ["stat wis +1"] }
+          { "weight": 100, "text": "You produce a story involving a sick aunt, a misread sundial, and sincere admiration for the watch's thankless work. The sergeant, a man with aunts of his own, walks you to your district personally, complaining about his knees the whole way. Educational.", "effects": ["stat wis +1"] },
+          { "weight": 100, "when": ["trait famous"], "text": "The sergeant's lantern finds your face and his whole posture changes. 'It's YOU.' Curfew, it turns out, contains an unwritten exemption for people from the broadsheets. You are escorted home like visiting nobility and asked, twice, to say your famous line.", "effects": ["rep +2", "stat wis +1"] }
         ],
         "fail": [
-          { "weight": 100, "text": "Your sick aunt's name changes twice in one sentence. The fine for curfew breach is six gold; the fine for insulting the watch's intelligence is included at no extra charge.", "effects": ["money -6"] }
+          { "weight": 100, "text": "Your sick aunt's name changes twice in one sentence. The fine for curfew breach is six gold; the fine for insulting the watch's intelligence is included at no extra charge.", "effects": ["money -6"] },
+          { "weight": 100, "when": ["trait wanted"], "text": "The lantern light finds your face and holds there one beat too long. You don't wait for the poster to surface in his memory - you pay the 'fine' he improvises on the spot, which both of you know is hush money, and vanish before arithmetic becomes recognition.", "effects": ["money -10"] }
         ]
       },
       {
@@ -844,7 +871,8 @@
       {
         "text": "Confess immediately, then help anyway",
         "outcomes": [
-          { "weight": 100, "text": "'I'm not your judge,' you announce, 'but I am hungry and honest.' The organizers confer and appoint you People's Taster on the spot - no authority, unlimited samples. The real judge later ratifies your top three, which you take personally as a triumph.", "effects": ["hp +4", "rep +2"] }
+          { "weight": 100, "text": "'I'm not your judge,' you announce, 'but I am hungry and honest.' The organizers confer and appoint you People's Taster on the spot - no authority, unlimited samples. The real judge later ratifies your top three, which you take personally as a triumph.", "effects": ["hp +4", "rep +2"] },
+          { "weight": 100, "when": ["season autumn"], "text": "It's autumn, which means every pie on this table was picked, pressed, or preserved within the week. As People's Taster you eat the entire harvest in miniature. The orchard pies alone justify the season.", "effects": ["hp +5", "rep +2"] }
         ]
       },
       {

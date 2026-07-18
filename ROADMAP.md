@@ -381,3 +381,39 @@ Steam packaging remains the only deferred item.
 - **Touch-hover fix** - on iPad the last tap's position kept a choice row
   highlighted gold (read as a hint). The pointer parks offscreen after
   each tap, deferred one frame so fast taps still land.
+
+---
+
+## Release 10 (shipped) - Depth Over Breadth
+
+The audit's design program, executed:
+
+- **The context pass** - 100 of the strongest events deepened in place by
+  four parallel editors: 183 new conditional outcome variants (6 -> 190
+  game-wide) keyed to war, plague, weather, seasons, fame, wanted status,
+  curses, wealth, poverty, companions, artifacts, and carried items; 25
+  new requires-gated choices, including the game's first four-choice
+  cards. The same card now reads differently in a siege, in the snow,
+  or with your name on a poster.
+- **Best-in-kind equipment** - only your best weapon and best armor
+  count toward a check; armor no longer stacks; trinkets still add up.
+  Satchels grant +2 pack capacity. Full packs swap the cheapest item
+  for better loot (never silently discarding), narrated on the card;
+  artifacts always make room.
+- **Site states surfaced** - travel signposts show [war] and [plague];
+  war-sacked cities were already becoming ruins that deal the dungeon
+  deck, and now you can see trouble coming.
+- **Chronicle navigation** - era jump buttons (I-V and NOW), and every
+  entry's detail view offers FOLLOW THIS THREAD: the whole book filters
+  to that figure's or faction's story; ALL returns.
+- **Companion devotion** - ten shared days makes a companion devoted:
+  their check bonus sharpens and the travel screen says so.
+- **Provenance-coherent quirks** - quirk text and mechanics are one
+  record now (24 paired entries): "repels dogs" reads as a charisma
+  problem, not a strength bonus.
+- **Itch builds are online** - all six endpoints use the absolute
+  random-rogue.com base, so the shared graveyard, leaderboards,
+  replays, and deeds work from any host.
+- **Worker hardening** - per-IP hourly write budgets (D1 ratelimit
+  table, deployed) and control-character sanitization on all
+  player-supplied strings before storage or MUD forwarding.

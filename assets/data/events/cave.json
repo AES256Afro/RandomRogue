@@ -15,6 +15,16 @@
         "success": [
           {
             "weight": 100,
+            "when": [
+              "day >= 15"
+            ],
+            "text": "You have interviewed innkeepers, goblins, and at least one rock by now. The echo never stood a chance. It gives up the stash coordinates, the backup stash coordinates, and an apology.",
+            "effects": [
+              "money +12"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "Through careful questioning you determine the echo is guarding a stash it can't spend, being an echo. It trades coordinates for conversation.",
             "effects": [
               "money +10"
@@ -22,6 +32,14 @@
           }
         ],
         "fail": [
+          {
+            "weight": 100,
+            "when": [
+              "companion"
+            ],
+            "text": "The echo answers your questions with questions. Your companion, incensed on your behalf, starts arguing with it. Twenty minutes later they are still going, and neither will yield. You drag your companion out by the sleeve, headache-free. Delegation works.",
+            "effects": []
+          },
           {
             "weight": 100,
             "text": "The echo answers every question with your own question, but smugger. You leave with a headache and existential doubts.",
@@ -34,6 +52,16 @@
       {
         "text": "Apologize and keep walking",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "!companion"
+            ],
+            "text": "'THANK YOU,' says the echo, and then, quieter: 'NOT MANY SAY SORRY DOWN HERE. FEWER STILL COME ALONE.' It walks you past two pits and a loose ledge, chatting the whole way. Down here, manners are company.",
+            "effects": [
+              "hp +1"
+            ]
+          },
           {
             "weight": 100,
             "text": "'THANK YOU,' says the echo, mollified. It guides you around a pit as a courtesy. Manners: still undefeated.",
@@ -78,6 +106,16 @@
         "success": [
           {
             "weight": 100,
+            "when": [
+              "trait glowing"
+            ],
+            "text": "Sneaking is complicated when you are a light source. You wrap your cloak tight, leaking starlight at the seams, and drift past like a polite moon. The something dreams of dawn and smiles. The tip jar on the far side is labeled 'FOR THE QUIET ONES.' You qualify, technically.",
+            "effects": [
+              "money +6"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "You ghost past it, stepping between snores. On the far side, someone has left a tip jar labeled 'FOR THE QUIET ONES.' You take a cut.",
             "effects": [
               "money +6"
@@ -85,6 +123,16 @@
           }
         ],
         "fail": [
+          {
+            "weight": 100,
+            "when": [
+              "hp <= 3"
+            ],
+            "text": "You step on the crunchy rock. One enormous eye opens, takes in the state of you, and narrows with something like professional disappointment. It huffs you back down the passage with a single breath. Even monsters have standards about finishing the nearly-finished.",
+            "effects": [
+              "hp -1"
+            ]
+          },
           {
             "weight": 100,
             "text": "You step on the one crunchy rock in the cave. The something opens one eye, decides you're not worth digesting, and swats you into a wall.",
@@ -97,6 +145,14 @@
       {
         "text": "Poke it",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "companion"
+            ],
+            "text": "Your finger is an inch from its hide when your companion catches your wrist. 'No.' The something sleeps on, unpoked. You pout for the rest of the passage, alive.",
+            "effects": []
+          },
           {
             "weight": 80,
             "text": "Management was right. Management is always right. You survive on pure cardio.",
@@ -122,6 +178,22 @@
             "effects": []
           }
         ]
+      },
+      {
+        "text": "Leave rations by its snout as tribute",
+        "requires": {
+          "item": "rations"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The nostrils flare. Still asleep, it inhales your rations, sighs like a forge banking down for the night, and nudges something shiny out of its hoard toward you with one claw. A transaction conducted entirely in dreams. Management can hardly object.",
+            "effects": [
+              "removeitem rations",
+              "money +9"
+            ]
+          }
+        ]
       }
     ]
   },
@@ -141,6 +213,17 @@
         "success": [
           {
             "weight": 100,
+            "when": [
+              "trait glowing"
+            ],
+            "text": "The worms take one look at your glow and decide you are either a god or a very large relative. They descend willingly, arranging themselves into a jar-shaped constellation before you even open the jar. Alchemists pay extra for volunteers.",
+            "effects": [
+              "money +8",
+              "stat cha +1"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "You bottle a soft constellation. Alchemists pay well for portable starlight.",
             "effects": [
               "money +8"
@@ -148,6 +231,14 @@
           }
         ],
         "fail": [
+          {
+            "weight": 100,
+            "when": [
+              "trait glowing"
+            ],
+            "text": "The worms coordinate and every light goes out at once. It would be terrifying, except you glow. In your own steady light you watch the dripping thing think better of it and retreat, muttering. Being a lantern has perks.",
+            "effects": []
+          },
           {
             "weight": 100,
             "text": "The worms coordinate. Every light goes out at once, and in the black something drips meaningfully. You leave with wet boots and an apology.",
@@ -160,6 +251,17 @@
       {
         "text": "Just watch for a while",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "companion"
+            ],
+            "text": "You lie on the flat rock together, not talking. The constellations drift. At some point your companion says 'huh' in exactly the right way, and that is the whole conversation, and it is enough.",
+            "effects": [
+              "hp +4",
+              "stat wis +1"
+            ]
+          },
           {
             "weight": 100,
             "text": "You lie on a flat rock and watch the ceiling drift. Whatever was wound tight in you unwinds a notch. The worms neither know nor care. Perfect.",
@@ -207,6 +309,16 @@
         "success": [
           {
             "weight": 100,
+            "when": [
+              "has rope"
+            ],
+            "text": "You tie your rope to a stalagmite and swim out with a lifeline. At the sunken shrine you fill your pockets calmly, unhurried by the cold, then haul yourself back to shore like laundry on a line. The ringing sounds approving.",
+            "effects": [
+              "money +13"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "The bell is a sunken shrine's. Around its clapper, offerings of centuries: coins, rings, one impressively preserved cheese. You tithe yourself a share.",
             "effects": [
               "money +13",
@@ -215,6 +327,16 @@
           }
         ],
         "fail": [
+          {
+            "weight": 100,
+            "when": [
+              "has rope"
+            ],
+            "text": "The cold vetoes you halfway, but your rope is tied to shore. You haul yourself back hand over hand, shivering, dignity soaked but core intact. The ringing sounds respectful now. Ropes: undefeated.",
+            "effects": [
+              "hp -2"
+            ]
+          },
           {
             "weight": 100,
             "text": "The cold gets a vote and vetoes you halfway. You crawl out shivering. The ringing sounds distinctly amused now.",
@@ -254,6 +376,21 @@
             ]
           }
         ]
+      },
+      {
+        "text": "Scout it with your spyglass first",
+        "requires": {
+          "item": "spyglass"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Through the lens: a sunken shrine, a bell, and, crucially, a dry ledge running most of the way out to it. You walk the ledge, keep your boots dry, and tithe yourself a handful of offerings from within arm's reach. Reconnaissance: the adventurer's least famous, best weapon.",
+            "effects": [
+              "money +9"
+            ]
+          }
+        ]
       }
     ]
   },
@@ -271,6 +408,17 @@
           "dc": 12
         },
         "success": [
+          {
+            "weight": 100,
+            "when": [
+              "trait cursed"
+            ],
+            "text": "The moment you touch the flat crystal, your curse resonates with the old magic like a struck fork. The chord locks instantly, adopting the curse as its bass note. The cave has never sounded better, and coins rain from the ceiling cracks in what can only be described as applause.",
+            "effects": [
+              "money +12",
+              "hp +2"
+            ]
+          },
           {
             "weight": 100,
             "text": "A quarter-turn, a held breath, and the chord LOCKS. The harmonic wave that rolls through the cave shakes loose centuries of dropped coins from the ceiling cracks.",
@@ -293,6 +441,17 @@
       {
         "text": "Sing along",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "companion"
+            ],
+            "text": "You take the missing note; your companion takes the harmony above it. For one full minute, a hole in the ground contains a choir. The crystals brighten to daylight, and afterward neither of you will admit to crying, which is itself a kind of harmony.",
+            "effects": [
+              "hp +3",
+              "stat cha +1"
+            ]
+          },
           {
             "weight": 60,
             "text": "You supply the missing note yourself. For one shining minute, you are part of a geological choir. Nothing about your life feels small right now.",

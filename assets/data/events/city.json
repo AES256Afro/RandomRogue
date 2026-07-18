@@ -27,6 +27,16 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "money <= 5"
+            ],
+            "text": "She looks at your purse, then your face, and slides over a slim, water-stained volume. 'Damaged stock. Free. Everyone gets one true book before the world finishes with them.' Chapter four has been torn out. Of course it has.",
+            "effects": [
+              "item book"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "She stares at you until you leave. Somehow you know three new things about the world anyway, none of them comfortable.",
             "effects": [
               "stat wis +1"
@@ -51,6 +61,17 @@
           }
         ],
         "fail": [
+          {
+            "weight": 100,
+            "when": [
+              "war_here"
+            ],
+            "text": "'Haggling? During a WAR?' She raises the price to eight and taps the chapter on sieges. 'You'll be wanting that one soon anyway.' She is not wrong. You pay.",
+            "effects": [
+              "money -8",
+              "item book"
+            ]
+          },
           {
             "weight": 100,
             "text": "She raises the price to seven, citing 'haggling tax.' You pay it. Chapter four remains unavailable.",
@@ -98,6 +119,14 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "raining"
+            ],
+            "text": "She consults her notes, then the sky. 'A WET one,' she adds, gesturing at the rain with sudden confidence. The crowd around her stall doubles on the spot. Weather is her best salesman, and today it is working overtime.",
+            "effects": []
+          },
+          {
+            "weight": 100,
             "text": "She consults her notes. 'One of them,' she admits. Refreshing honesty. She gives you a discount rock for free.",
             "effects": []
           }
@@ -106,6 +135,17 @@
       {
         "text": "Point out it's currently Tuesday",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "trait cursed"
+            ],
+            "text": "She opens her mouth to argue, looks at you properly, and stops. 'Oh. OH. Forget Tuesday. You have bigger problems.' She presses a charm into your hand free of charge and backs away making warding signs. Not comforting. Possibly effective.",
+            "effects": [
+              "item lucky_rock",
+              "stat wis +1"
+            ]
+          },
           {
             "weight": 60,
             "text": "She screams and sprints away. The crowd applauds. Someone hands you a celebratory pastry.",
@@ -150,6 +190,16 @@
         "fail": [
           {
             "weight": 100,
+            "when": [
+              "money >= 60"
+            ],
+            "text": "You grab air. They grab your purse, feel the weight of it, and audibly stagger. The escape becomes a lopsided waddle, but the crowd closes behind them anyway. Carrying that much coin was, in retrospect, an advertisement.",
+            "effects": [
+              "money -12"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "You grab air. They grab your purse. The whistling fades into the crowd like an insult.",
             "effects": [
               "money -8"
@@ -160,6 +210,16 @@
       {
         "text": "Shout 'STOP, THIEF!'",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "trait wanted"
+            ],
+            "text": "'STOP, THIEF!' you shout. Three citizens look at the pickpocket. Two guards look at YOU, then at a poster, then back. You leave before the comparison completes, purse written off as a professional expense.",
+            "effects": [
+              "money -6"
+            ]
+          },
           {
             "weight": 50,
             "text": "The whole street tackles them out of civic enthusiasm. Your gold is returned, slightly dented.",
@@ -212,6 +272,16 @@
           }
         ],
         "fail": [
+          {
+            "weight": 100,
+            "when": [
+              "war_here"
+            ],
+            "text": "'War levy,' he corrects, upgrading the extortion with patriotism. Citing tax code during wartime turns out to carry its own surcharge. You pay ten and receive a receipt stamped with a boot.",
+            "effects": [
+              "money -10"
+            ]
+          },
           {
             "weight": 100,
             "text": "He invents a fine for 'citing.' Now you owe seven.",
@@ -281,6 +351,30 @@
             ]
           }
         ]
+      },
+      {
+        "text": "Offer him the ale instead",
+        "requires": {
+          "item": "ale"
+        },
+        "outcomes": [
+          {
+            "weight": 75,
+            "text": "He looks at the bottle, then down the long gray corridor of his remaining shift. The halberd lowers. 'Tax paid.' You part as the closest thing this city has to friends.",
+            "effects": [
+              "removeitem ale",
+              "rep +2"
+            ]
+          },
+          {
+            "weight": 25,
+            "text": "'Bribing a guard? With ONE ale?' He is not offended by the bribe. He is offended by the amount. He takes the ale AND the five gold, as a tutorial.",
+            "effects": [
+              "removeitem ale",
+              "money -5"
+            ]
+          }
+        ]
       }
     ]
   },
@@ -297,6 +391,17 @@
           "money": 8
         },
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "ship"
+            ],
+            "text": "You turn the blinking piece over with a shipowner's eye. It is a bilge sensor. A GOOD bilge sensor. The vendor has no idea what he is sitting on, and you pay his silly price for a part worth triple to anyone with a hull.",
+            "effects": [
+              "money -8",
+              "item repair_kit"
+            ]
+          },
           {
             "weight": 50,
             "text": "It's a 'credit chip,' whatever that is. The vendor swears it's money somewhere. It does feel like money.",
@@ -325,6 +430,14 @@
       {
         "text": "Ask where exactly it fell from",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "snowing"
+            ],
+            "text": "The vendor points straight up into the falling snow and maintains eye contact while flakes settle on the merchandise. 'Same place as that.' The logic is unassailable. You buy nothing and admire everything.",
+            "effects": []
+          },
           {
             "weight": 100,
             "text": "The vendor points straight up and maintains eye contact. Technically unfalsifiable. You respect it.",
@@ -362,6 +475,17 @@
         "success": [
           {
             "weight": 100,
+            "when": [
+              "raining"
+            ],
+            "text": "You carry the child the last three streets under your coat, out of the rain. The steward watches this from the gate. The reward arrives with a hot meal attached, plus the first sincere thank-you this manor has produced in a generation.",
+            "effects": [
+              "money +12",
+              "hp +3"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "The manor guards initially arrest you, then the child vouches: 'This one is MY SERVANT.' The reward is generous. The title is not.",
             "effects": [
               "money +15"
@@ -395,6 +519,17 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "plague_here"
+            ],
+            "text": "You almost walk away. Then you remember what is loose in this city, and that small rich lungs are still small lungs. You point the child to the guard post and watch until the door closes behind them. Not your circus. Your conscience anyway.",
+            "effects": [
+              "stat wis +1",
+              "rep +2"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "The child watches you go, then declares, to the entire street, that you are their FAVORITE. You've never felt worse about a decision that cost nothing.",
             "effects": [
               "stat wis +1"
@@ -415,6 +550,16 @@
       {
         "text": "Browse the wares",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "war_here"
+            ],
+            "text": "The racks are half empty and every price has doubled; the army bought everything with an edge. 'War rates,' the smith shrugs, not proud of it. 'Steel goes where the dying is.'",
+            "effects": [
+              "shop"
+            ]
+          },
           {
             "weight": 100,
             "text": "The smith wipes their hands and starts the pitch.",
@@ -456,6 +601,16 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "snowing"
+            ],
+            "text": "Snow melts off your shoulders in the forge-light. The smith says nothing, hooks a stool closer to the heat with one foot, and lets you sit until feeling returns to your hands. Some kindnesses are load-bearing.",
+            "effects": [
+              "hp +3"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "The forge warms you to the bones. The smith nods. Some transactions are free.",
             "effects": [
               "hp +1"
@@ -478,6 +633,16 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "season winter"
+            ],
+            "text": "The winter stock is out: mittens, lamp oil, rope, and a bin labeled 'SLEDS (BROKEN (FIXABLE (PROBABLY))).' The shopkeeper looks meaningfully at your coat, then at the mitten shelf, then back at your coat.",
+            "effects": [
+              "shop"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "The shopkeeper emerges from behind a pyramid of jars, delighted to have a customer who isn't a cat.",
             "effects": [
               "shop"
@@ -496,6 +661,29 @@
             ]
           }
         ]
+      },
+      {
+        "text": "Offer to repaint the fading sign",
+        "requires": {
+          "item": "repair_kit"
+        },
+        "outcomes": [
+          {
+            "weight": 80,
+            "text": "An hour on a ladder with borrowed paint, and EVERYTHING MUST GO stands proud again in confident letters. The shopkeeper is moved nearly to retirement and pays you from a till drawer labeled 'miracles.'",
+            "effects": [
+              "money +7",
+              "rep +2"
+            ]
+          },
+          {
+            "weight": 20,
+            "text": "The ladder, it turns out, was also clearance stock. You, the paint, and the letter G descend together.",
+            "effects": [
+              "hp -2"
+            ]
+          }
+        ]
       }
     ]
   },
@@ -510,6 +698,17 @@
       {
         "text": "Sign up enthusiastically",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "rep >= 15"
+            ],
+            "text": "The recruiter finds your name already in the ledger of Notable Persons and skips 'member' entirely. You are inducted as an Honorary Something. The sash is nicer. The dues are waived. The meetings, tragically, are not.",
+            "effects": [
+              "money +6",
+              "rep +5"
+            ]
+          },
           {
             "weight": 60,
             "text": "You're in. There's a stipend, a sash, and a meeting schedule you will never fully escape.",
@@ -559,6 +758,16 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "trait wanted"
+            ],
+            "text": "You reach for a pamphlet and the recruiter murmurs, without looking up: 'We don't check posters. That is rather the point of us.' It is the most tempting pitch you have heard all year. You keep the pamphlet. You keep walking. Mostly.",
+            "effects": [
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "The pamphlet is 90% sash diagrams. You feel you understand the organization completely now.",
             "effects": []
           }
@@ -579,6 +788,16 @@
           "money": 1
         },
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "trait cursed"
+            ],
+            "text": "Your coin sinks, pauses, and floats back up. The fountain refuses service. Somewhere below, something makes a sound like a lid closing. Even wishes have terms and conditions, and your account is flagged.",
+            "effects": [
+              "stat wis +1"
+            ]
+          },
           {
             "weight": 55,
             "text": "Nothing happens, but the plink is satisfying and hope is technically renewable.",
@@ -612,6 +831,17 @@
         "success": [
           {
             "weight": 100,
+            "when": [
+              "snowing"
+            ],
+            "text": "The snow has emptied the plaza and numbed the water. Nobody watches your harvest but the statues, who have seen worse. Your fingers stop cooperating around coin thirty, which is where an honest person would have stopped anyway.",
+            "effects": [
+              "money +11",
+              "hp -2"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "A swift, shameless harvest. You leave wet, richer, and cursed only by onlookers, which doesn't count.",
             "effects": [
               "money +9",
@@ -640,6 +870,29 @@
             "effects": [
               "hp -1",
               "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Offer the fountain your lucky rock",
+        "requires": {
+          "item": "lucky_rock"
+        },
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "The rock sinks with a plunk of unusual finality. The water goes still. Then every coin at the bottom shifts one inch toward you, which you elect to read as a blessing rather than a warning.",
+            "effects": [
+              "removeitem lucky_rock",
+              "trait +blessed"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "The fountain considers your offering and spits it back, hard. Not every gift is accepted; not every rock is as lucky as advertised. The bruise will be described, later, as 'mystical.'",
+            "effects": [
+              "hp -2"
             ]
           }
         ]
@@ -687,6 +940,17 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "money <= 5"
+            ],
+            "text": "You tip two of your last coins. The magician notices exactly what that costs you, makes them vanish, and returns them behind your ear with a wink. 'Trade rule: never rob the poor. No margins in it.'",
+            "effects": [
+              "hp +2",
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "The magician makes your tip vanish, then makes a rose appear behind your ear. Net loss, gross delight.",
             "effects": [
               "money -2",
@@ -698,6 +962,17 @@
       {
         "text": "Heckle",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "trait famous"
+            ],
+            "text": "You heckle, and the crowd gasps: a celebrity feud! The magician, no fool, challenges you to a duel of showmanship on the spot and splits the doubled take with you afterward. Everyone was a plant. It was beautiful.",
+            "effects": [
+              "money +8",
+              "stat cha +1"
+            ]
+          },
           {
             "weight": 50,
             "text": "The magician makes your eyebrows swap places for an hour. The crowd sides with the magician. So do your eyebrows.",
@@ -732,6 +1007,28 @@
           "money": 2
         },
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "plague_here"
+            ],
+            "text": "Half the pools are roped off and the attendant swears the steam 'boils the miasma out.' Medically dubious, spiritually unimpeachable. You emerge scalded pink and feeling, for one evening, immortal.",
+            "effects": [
+              "money -2",
+              "hp +4"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "season winter"
+            ],
+            "text": "Winter has made the bathhouse the most crowded building in the city. You soak shoulder to shoulder with strangers, every rank and grudge dissolved at temperature. Leaving is the hardest thing you do all week.",
+            "effects": [
+              "money -2",
+              "hp +5"
+            ]
+          },
           {
             "weight": 100,
             "text": "Two hours of heat, gossip, and mineral water. You emerge pruned, informed, and at peace.",
@@ -790,6 +1087,30 @@
             ]
           }
         ]
+      },
+      {
+        "text": "Sell your incense to the attendant",
+        "requires": {
+          "item": "incense"
+        },
+        "outcomes": [
+          {
+            "weight": 70,
+            "text": "The attendant sniffs it and her eyes widen. 'Real cedar? The patrons will think we've raised our standards.' You are paid on the spot and comped a soak while your former property perfumes the fog.",
+            "effects": [
+              "removeitem incense",
+              "money +8",
+              "hp +3"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "The attendant burns a sample. Somewhere in the fog, someone is violently allergic. The incense is returned. So are you, to the street.",
+            "effects": [
+              "rep -2"
+            ]
+          }
+        ]
       }
     ]
   },
@@ -808,6 +1129,17 @@
           "dc": 13
         },
         "success": [
+          {
+            "weight": 100,
+            "when": [
+              "trait famous"
+            ],
+            "text": "You step forward and the crowd recognizes you before you speak. The magistrate, sensing which way the ballads will be written, commutes the sentence mid-gasp. The mime performs 'gratitude' so hard it becomes briefly visible.",
+            "effects": [
+              "rep +5",
+              "stat cha +1"
+            ]
+          },
           {
             "weight": 100,
             "text": "Your speech about proportionality moves the magistrate to tears and the sentence to community theater. The mime thanks you, silently but at length.",
@@ -860,6 +1192,16 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "snowing"
+            ],
+            "text": "The snow has thinned the crowd to the truly committed, which is its own verdict on everyone still standing there. You leave your bootprints pointing away from the scaffold and think better of them than most of your tracks.",
+            "effects": [
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "You walk away from the roar of the square. Somewhere behind you, an invisible box gets its final performance. Your conscience travels light today.",
             "effects": [
               "stat wis +1"
@@ -884,6 +1226,18 @@
         },
         "outcomes": [
           {
+            "weight": 100,
+            "when": [
+              "ship"
+            ],
+            "text": "She spots the salt on your boots and the registry tag on your keys. 'Shipowner rate.' She pays out fair and throws in a chalk list of which ports still honor sky money, 'because captains gossip, and gossip is advertising.'",
+            "effects": [
+              "credits -5",
+              "money +11",
+              "stat wis +1"
+            ]
+          },
+          {
             "weight": 70,
             "text": "She counts out coins with the weariness of someone who's seen currencies die. Fair rate, all things considered.",
             "effects": [
@@ -907,6 +1261,17 @@
           "money": 12
         },
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "war_here"
+            ],
+            "text": "'War discount,' she says, sliding extra chips across. 'Everyone is dumping sky money for steel and bread. Their panic, your portfolio.' The abacus clicks in what might be approval.",
+            "effects": [
+              "money -12",
+              "credits +14"
+            ]
+          },
           {
             "weight": 100,
             "text": "'Investing in the sky economy,' she says, deadpan, sliding the blinking chips across. 'Bold.'",

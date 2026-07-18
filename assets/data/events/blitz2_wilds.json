@@ -19,7 +19,9 @@
         ] },
       { "text": "Ask what it has seen",
         "outcomes": [
-          { "weight": 100, "text": "Kings, fires, one very confused whale, and every secret ever whispered under its branches on the assumption that trees don't listen. Trees listen. Trees remember. The oak shares, slowly, until dark.", "effects": ["learn 3", "stat wis +1"] }
+          { "weight": 100, "text": "Kings, fires, one very confused whale, and every secret ever whispered under its branches on the assumption that trees don't listen. Trees listen. Trees remember. The oak shares, slowly, until dark.", "effects": ["learn 3", "stat wis +1"] },
+          { "weight": 100, "when": ["war_here"], "text": "'Wars,' it rumbles. 'Four. This one is walking the same roads as the second one.' Then it tells you where a paymaster buried a company chest, on the grounds that the man was rude about oaks. The directions still work.", "effects": ["money +8", "stat wis +1"] },
+          { "weight": 100, "when": ["season autumn"], "text": "The oak drops a leaf per sentence as it talks, one long slow exhale of a season. Autumn makes it honest. It tells you the one thing it has never told anyone, and you carry it out of the forest carefully, like an egg.", "effects": ["stat wis +1", "hp +2"] }
         ] }
     ]
   },
@@ -42,7 +44,8 @@
         ] },
       { "text": "Sell the hunter siege rations", "requires": { "item": "rations" },
         "outcomes": [
-          { "weight": 100, "text": "A man three days up a tree does not haggle. You throw the rations up; the coin purse comes down. The stag watches this commerce with the expression of a creature settling in for a fourth day.", "effects": ["removeitem rations", "money +8"] }
+          { "weight": 100, "text": "A man three days up a tree does not haggle. You throw the rations up; the coin purse comes down. The stag watches this commerce with the expression of a creature settling in for a fourth day.", "effects": ["removeitem rations", "money +8"] },
+          { "weight": 100, "when": ["money <= 5"], "text": "Your purse is empty enough to make ethics negotiable, and a man three days up a tree is a textbook seller's market. You name a figure that embarrasses you both. He pays it. The stag watches this commerce and appears, if anything, entertained.", "effects": ["removeitem rations", "money +11"] }
         ] }
     ]
   },
@@ -87,7 +90,8 @@
       { "text": "Vote - you are technically standing in the district",
         "outcomes": [
           { "weight": 55, "text": "Your candidate wins by one. Patronage arrives within the hour: a small cache of useful things, delivered by beetle, no note, none needed.", "effects": ["loot common"] },
-          { "weight": 45, "text": "Your candidate loses by one. Every mushroom in the hollow now knows exactly whose fault that is. You are on a list. The list is mycelial. The list is everywhere.", "effects": ["stat cha -1"] }
+          { "weight": 45, "text": "Your candidate loses by one. Every mushroom in the hollow now knows exactly whose fault that is. You are on a list. The list is mycelial. The list is everywhere.", "effects": ["stat cha -1"] },
+          { "weight": 100, "when": ["raining"], "text": "Rain doubles the electorate mid-count - new mushrooms shouldering up through the mulch, all demanding ballots. Your vote is lost in the surge, which everyone agrees is the fairest outcome available. The new caps send you a welcome basket by beetle.", "effects": ["loot common", "stat wis +1"] }
         ] },
       { "text": "Refuse to legitimize the process",
         "outcomes": [
@@ -147,7 +151,9 @@
       { "text": "Rest in it",
         "outcomes": [
           { "weight": 60, "text": "The best sleep of the season, on grass that adjusts. You wake fed, though you didn't eat, and rested, though you dreamed of running. The clearing waits politely for you to leave before it stops existing.", "effects": ["hp +5"] },
-          { "weight": 40, "text": "You wake at the tree line with your pack under your head. The clearing is gone. Something combed your hair while you slept, and for a few days you give off a faint green light in the dark, like a compliment you can't return.", "effects": ["hp +2", "trait +glowing"] }
+          { "weight": 40, "text": "You wake at the tree line with your pack under your head. The clearing is gone. Something combed your hair while you slept, and for a few days you give off a faint green light in the dark, like a compliment you can't return.", "effects": ["hp +2", "trait +glowing"] },
+          { "weight": 100, "when": ["hp <= 5"], "text": "You are limping when you find it, which may be why it found you. The grass arranges itself around your worst places, and you sleep for what feels like a season. You wake mended in ways you hadn't itemized, and the clearing looks quietly pleased with its work, then stops existing.", "effects": ["hp +7"] },
+          { "weight": 100, "when": ["companion"], "text": "The clearing, you notice, is exactly the right size for two - it has adjusted. You and your companion sleep back to back on grass that holds you like a verdict of innocence. In the morning neither of you mentions it, which is how you both know it mattered.", "effects": ["hp +5", "stat wis +1"] }
         ] },
       { "text": "Map it out of spite", "check": { "stat": "int", "dc": 12 },
         "success": [
@@ -194,7 +200,8 @@
     "choices": [
       { "text": "Deliver the ones addressed along your road",
         "outcomes": [
-          { "weight": 100, "text": "Eleven letters, four hamlets, one very long day. You are wept on twice, fed three times, and tipped by a widow who has waited two years for a reply that says only 'yes.' The forest post has a new opinion of you, and so do the villages.", "effects": ["rep +4", "money +4"] }
+          { "weight": 100, "text": "Eleven letters, four hamlets, one very long day. You are wept on twice, fed three times, and tipped by a widow who has waited two years for a reply that says only 'yes.' The forest post has a new opinion of you, and so do the villages.", "effects": ["rep +4", "money +4"] },
+          { "weight": 100, "when": ["plague_here"], "text": "Half the hamlets on your route are shut with plague, so you deliver by rope, basket, and shouting - letters hauled over fences and read aloud through shutters. In a season when nobody can visit anybody, a stranger carrying words is worth more than a doctor. They pay you like one.", "effects": ["rep +5", "money +6"] }
         ] },
       { "text": "Read them",
         "outcomes": [
@@ -286,7 +293,8 @@
     "choices": [
       { "text": "Pay one of them", "requires": { "money": 2 },
         "outcomes": [
-          { "weight": 100, "text": "You pick a booth at random. The chosen brother stamps your hand with vindicated fury while the other watches with the face of a man composing a letter to their mother. Your receipt includes, free of charge, everything wrong with the bridge ahead.", "effects": ["money -2", "stat wis +1"] }
+          { "weight": 100, "text": "You pick a booth at random. The chosen brother stamps your hand with vindicated fury while the other watches with the face of a man composing a letter to their mother. Your receipt includes, free of charge, everything wrong with the bridge ahead.", "effects": ["money -2", "stat wis +1"] },
+          { "weight": 100, "when": ["money <= 5"], "text": "You open your purse and both brothers look inside at the same moment, an act of coordination nine years in the making. A silence. Then, in unison, they wave you through - and immediately begin arguing about whose idea the mercy was. You leave them to it.", "effects": ["stat wis +1"] }
         ] },
       { "text": "Broker a merger", "check": { "stat": "cha", "dc": 13 },
         "success": [
@@ -462,7 +470,9 @@
     "choices": [
       { "text": "Pay the scheduled rate", "requires": { "money": 3 },
         "outcomes": [
-          { "weight": 100, "text": "Three coins, stamped receipt, complimentary boiled sweet. The receipt, you learn later, is honored by every crew on this road for a fortnight - robbed once, robbed everywhere, as the small print says. Genuinely useful paperwork.", "effects": ["money -3", "stat wis +1"] }
+          { "weight": 100, "text": "Three coins, stamped receipt, complimentary boiled sweet. The receipt, you learn later, is honored by every crew on this road for a fortnight - robbed once, robbed everywhere, as the small print says. Genuinely useful paperwork.", "effects": ["money -3", "stat wis +1"] },
+          { "weight": 100, "when": ["trait wanted"], "text": "The clerk checks your face against a folder, then closes the folder with respect. 'Trade rate,' he says, and stamps you through free of charge. Colleagues are never billed. There is a pamphlet about joining, dues structure included, which you accept to be polite.", "effects": ["stat cha +1"] },
+          { "weight": 100, "when": ["money >= 60"], "text": "The clerk sees your purse and produces a laminated card: PREMIUM TIER. The robbery includes a chair, a hot drink, and a commemorative sketch of you being robbed. It costs four times the standard rate, and you cannot honestly say it wasn't worth it.", "effects": ["money -12", "stat wis +1"] }
         ] },
       { "text": "Request the complaints procedure", "check": { "stat": "cha", "dc": 13 },
         "success": [
@@ -497,7 +507,8 @@
       { "text": "Propose a truce for one mile",
         "outcomes": [
           { "weight": 60, "text": "One mile becomes five. You almost forget what {rival} is to you, which is {rival_meaning}, and for an hour they are just a person who hates the same innkeepers you do. At the next fork you separate without a word, which is how your kind says thank you.", "effects": ["stat wis +1"] },
-          { "weight": 40, "text": "The truce, it emerges afterward, was an interview. They now know your route, your funds, and your opinion of the eastern bridge, and they depart at speed with all three. You knew what they were. You told them anyway.", "effects": ["stat wis -1"] }
+          { "weight": 40, "text": "The truce, it emerges afterward, was an interview. They now know your route, your funds, and your opinion of the eastern bridge, and they depart at speed with all three. You knew what they were. You told them anyway.", "effects": ["stat wis -1"] },
+          { "weight": 100, "when": ["companion"], "text": "Three walk easier than two who hate each other. Your companion, blessed with no history here, chats to {rival} about ordinary things - weather, boots, the eastern bridge - until the feud has nowhere to sit. At the next fork, {rival} nods to your companion, and then, at visible cost, to you.", "effects": ["stat wis +1", "rep +2"] }
         ] },
       { "text": "Take the long path on purpose",
         "outcomes": [
@@ -539,7 +550,8 @@
     "choices": [
       { "text": "Dig out the owner of the boots", "check": { "stat": "str", "dc": 12 },
         "success": [
-          { "weight": 100, "text": "A courier, upside down, furious, and alive - the drift caught him mid-shortcut and held him like a disapproving aunt. His satchel is intact, his pride is not, and his employer's standing reward for 'courier, returned, functional' is real money.", "effects": ["money +8"] }
+          { "weight": 100, "text": "A courier, upside down, furious, and alive - the drift caught him mid-shortcut and held him like a disapproving aunt. His satchel is intact, his pride is not, and his employer's standing reward for 'courier, returned, functional' is real money.", "effects": ["money +8"] },
+          { "weight": 100, "when": ["snowing"], "text": "It is still coming down as you dig, which means you are excavating a hole that is actively refilling - the drift's favorite game. When you finally haul the courier out, you are both half buried, and his gratitude is proportionate to the meteorology. So is the reward.", "effects": ["money +9", "rep +2"] }
         ],
         "fail": [
           { "weight": 100, "text": "The drift accepts your arms, then your shoulders, then most of your opinions about digging. A passing carter extracts you both with rope and commentary. The courier, still buried to the waist, rates your rescue 'ongoing.'", "effects": ["hp -3"] }
@@ -630,6 +642,10 @@
       { "text": "Ride the drift wherever the market's going",
         "outcomes": [
           { "weight": 100, "text": "You settle in the stern of a spice boat and let the market carry you. Half a day of water-gossip washes over you - who's feuding, which channel silted up, what the herons saw - and by disembarking you know things about this swamp that maps refuse to.", "effects": ["stat wis +1", "learn 3"] }
+        ] },
+      { "text": "Sell your spyglass to the boat folk", "requires": { "item": "spyglass" },
+        "outcomes": [
+          { "weight": 100, "text": "On the water, distance is money, and a glass that sees weather coming is worth its length in eels. The market mother tests it on three horizons, names a price above your asking, and pays it in front of witnesses so the story travels. You are now welcome at every stilt market in the swamp.", "effects": ["removeitem spyglass", "money +12", "rep +2"] }
         ] }
     ]
   },
@@ -704,6 +720,10 @@
         ],
         "fail": [
           { "weight": 100, "text": "Your control questions annoy it. For the next hour it croaks twice at everything you say, including 'hello,' including 'sorry,' including, devastatingly, 'you can't just no everything.' Two croaks. The locals take its side.", "effects": ["stat cha -1"] }
+        ] },
+      { "text": "Offer it your lucky rock", "requires": { "item": "lucky_rock" },
+        "outcomes": [
+          { "weight": 100, "text": "The frog regards the rock for a long moment, then swallows it whole. What follows is a croak in a register the attendants have never heard - the marriage feud ends on the spot out of sheer awe - and the frog fixes you with one gold eye and delivers a precise sequence of croaks you understand, somehow, as directions. They lead to a hollow stump and somebody's rainy-day cache.", "effects": ["removeitem lucky_rock", "money +10", "stat wis +1"] }
         ] }
     ]
   },
@@ -723,7 +743,8 @@
         ] },
       { "text": "Climb a tree and wait it out with everything else",
         "outcomes": [
-          { "weight": 100, "text": "You share a branch with two herons, a snake observing strict neutrality, and a possum who has clearly done this before. The flood slides past below like scenery. Nobody eats anybody above the waterline; this, too, is known.", "effects": ["hp +2", "stat wis +1"] }
+          { "weight": 100, "text": "You share a branch with two herons, a snake observing strict neutrality, and a possum who has clearly done this before. The flood slides past below like scenery. Nobody eats anybody above the waterline; this, too, is known.", "effects": ["hp +2", "stat wis +1"] },
+          { "weight": 100, "when": ["companion"], "text": "You and your companion take opposite branches of the same tree, packs slung between you, and split a watch neither of you needed to agree on out loud. The possum relocates to your companion's shoulder and falls asleep. The flood passes below like weather that lost your address.", "effects": ["hp +3", "stat wis +1"] }
         ] },
       { "text": "Grab what the flood washes past", "check": { "stat": "dex", "dc": 13 },
         "success": [

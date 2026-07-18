@@ -41,6 +41,8 @@ private:
         std::string id, name, kind, trait, passive;
         int packBonus = 0;
         bool active = false;
+        int daysTogether = 0; // trust, measured the only way roads can (R10)
+        bool devoted() const { return active && daysTogether >= 10; }
     };
     struct Ambition {
         std::string name, desc;
@@ -70,6 +72,11 @@ private:
     void newRun(int classIdx);
     ItemInstance makeItem(const std::string& id);
     void bindQuirk(ItemInstance& item);
+    // Pack management (R10): loot never vanishes silently. A full pack
+    // swaps out the cheapest thing you carry (if the new item beats it)
+    // and the outcome text says so.
+    void takeItem(const ItemInstance& item);
+    bool dropCheapest(const std::string& why);
     // Evaluates a `when` condition string against world + character state.
     bool evalCond(const std::string& cond) const;
     void enterTravel();
@@ -228,6 +235,10 @@ private:
     std::vector<std::string> chronLines_;  // cached rendered page
     int chronCachedPage_ = -1;
     int chronDetail_ = -1; // tapped line: show the full entry (R9)
+    std::vector<int> chronIdx_;      // chron entry index per cached line (R10)
+    int chronFilterActor_ = -1;      // following one figure's thread
+    int chronFilterFaction_ = -1;    // ...or one faction's
+    std::vector<int> chronFilterList_;
     std::string scoresJson_;     // today's fallen (web leaderboard)
     bool scoresRequested_ = false;
     bool scoreSubmitted_ = false;

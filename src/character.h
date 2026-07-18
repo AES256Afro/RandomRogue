@@ -63,33 +63,58 @@ struct Character {
         return false;
     }
 
-    // Sum of "check <stat> +N" passives across carried items (incl. quirks).
+    // Effective pack space: a satchel earns its slot back and then some (R10).
+    int capacity() const { return packMax + (hasItem("satchel") ? 2 : 0); }
+
+    // Best-in-kind equipment (R10): you fight with ONE weapon and wear ONE
+    // suit of armor, so only the best of each counts toward a given check.
+    // Trinkets and oddments (and quirks on the counted gear) still add up -
+    // that is what pockets are for.
+    static int passiveFor(const std::string& p, int stat) {
+        if (p.empty()) return 0;
+        std::istringstream ss(p);
+        std::string verb, which; int v = 0;
+        ss >> verb >> which >> v;
+        return (verb == "check" && statFromName(which) == stat) ? v : 0;
+    }
+
     int checkBonus(int stat) const {
-        int total = 0;
-        auto scan = [&](const std::string& p) {
-            if (p.empty()) return;
-            std::istringstream ss(p);
+        int total = 0, bestWeapon = 0, bestArmor = 0;
+        for (auto& i : pack) {
+            int contrib = passiveFor(i.passive, stat) + passiveFor(i.quirkPassive, stat);
+            if (i.type == "weapon") {
+                if (contrib > bestWeapon) bestWeapon = contrib;
+            } else if (i.type == "armor") {
+                if (contrib > bestArmor) bestArmor = contrib;
+            } else {
+                total += contrib;
+            }
+        }
+        total += bestWeapon + bestArmor;
+        if (!companionPassive.empty()) {
+            std::istringstream ss(companionPassive);
             std::string verb, which; int v = 0;
             ss >> verb >> which >> v;
             if (verb == "check" && statFromName(which) == stat) total += v;
-        };
-        for (auto& i : pack) { scan(i.passive); scan(i.quirkPassive); }
-        scan(companionPassive);
+        }
         return total;
     }
 
-    // Sum of "armor N" passives; flat damage reduction (never below 1 damage).
+    // Best single "armor N" (plus its quirk); plate does not stack on plate.
     int armor() const {
-        int total = 0;
-        auto scan = [&](const std::string& p) {
-            if (p.empty()) return;
+        int best = 0;
+        auto val = [](const std::string& p) {
+            if (p.empty()) return 0;
             std::istringstream ss(p);
             std::string verb; int v = 0;
             ss >> verb >> v;
-            if (verb == "armor") total += v;
+            return verb == "armor" ? v : 0;
         };
-        for (auto& i : pack) { scan(i.passive); scan(i.quirkPassive); }
-        return total > 3 ? 3 : total;
+        for (auto& i : pack) {
+            int a = val(i.passive) + val(i.quirkPassive);
+            if (a > best) best = a;
+        }
+        return best > 3 ? 3 : best;
     }
 
     static Character roll(Rng& rng, const NameForge& forge) {

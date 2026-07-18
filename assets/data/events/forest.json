@@ -23,6 +23,27 @@
               "stat wis +1",
               "stat cha -1"
             ]
+          },
+          {
+            "weight": 60,
+            "when": [
+              "raining"
+            ],
+            "text": "Rain makes the network chatty. Your one secret buys three: a coin cache, a dry shortcut, and something about the bear you didn't ask for and can't forget.",
+            "effects": [
+              "money +9",
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 40,
+            "when": [
+              "trait wanted"
+            ],
+            "text": "'Yours is already in circulation, dear,' says the mushroom. 'The posters. The likeness is unkind.' Out of professional sympathy it tells you which trails the patrols never bother checking.",
+            "effects": [
+              "stat wis +1"
+            ]
           }
         ]
       },
@@ -55,6 +76,16 @@
             "effects": [
               "hp -6"
             ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "season winter"
+            ],
+            "text": "It is frozen solid. You gnaw at what is essentially rude fungal ice while it waits, smug, for spring. Your teeth file a formal complaint.",
+            "effects": [
+              "hp -2"
+            ]
           }
         ]
       }
@@ -81,12 +112,33 @@
               "money +5",
               "hp +2"
             ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "companion"
+            ],
+            "text": "Your companion holds the paper flat while you read; between you it takes half the time and twice the gravitas. The bear, moved by the professionalism, pays consultation rates.",
+            "effects": [
+              "money +8",
+              "hp +2"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "You misread 'eviction' as 'invitation.' The bear attends the beaver gala. It does not go well. The bear blames you, physically.",
+            "effects": [
+              "hp -5"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "raining"
+            ],
+            "text": "The rain gets to the summons before you do. The ink runs, you improvise, and the bear attends a gala that no longer exists. It blames you, physically, in the wet.",
             "effects": [
               "hp -5"
             ]
@@ -129,6 +181,23 @@
             ]
           }
         ]
+      },
+      {
+        "text": "Bribe the beaver holding company",
+        "requires": {
+          "money": 8
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Beavers respect two things: sound timber and unsound money. The eviction is quietly reversed, the bear keeps the cave, and you keep the moral flexibility.",
+            "effects": [
+              "money -8",
+              "rep +5",
+              "stat wis +1"
+            ]
+          }
+        ]
       }
     ]
   },
@@ -153,6 +222,17 @@
             "effects": [
               "hp +4"
             ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "season summer"
+            ],
+            "text": "High summer, peak berry. They are ludicrously good, and there are enough ripe ones to fill your pack besides. The sign, for once, undersold.",
+            "effects": [
+              "hp +5",
+              "item rations"
+            ]
           }
         ],
         "fail": [
@@ -161,6 +241,16 @@
             "text": "The sign lied. Your tongue goes numb and your shadow looks wrong for an hour.",
             "effects": [
               "hp -4"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "season winter"
+            ],
+            "text": "Frozen berries. The poison is dormant, but so is the flavor. Mostly you have eaten cold, lying gravel.",
+            "effects": [
+              "hp -2"
             ]
           }
         ]
@@ -191,6 +281,17 @@
             "effects": [
               "hp +3",
               "money +3"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "companion"
+            ],
+            "text": "Your companion circles left while you circle right. The goblin, outflanked for the first time in his artistic career, surrenders the entire bribe budget.",
+            "effects": [
+              "hp +3",
+              "money +6"
             ]
           }
         ],
@@ -224,6 +325,18 @@
               "money -6",
               "hp +8"
             ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "trait cursed"
+            ],
+            "text": "The witch stops mid-chant. 'Who did THIS to you?' She works late, muttering professional criticism of whoever laid your curse. The curse stays, but out of sheer embarrassment it behaves itself for a while.",
+            "effects": [
+              "money -6",
+              "hp +8",
+              "stat wis +1"
+            ]
           }
         ]
       },
@@ -233,6 +346,16 @@
           {
             "weight": 100,
             "text": "The witch and the hut exchange a look. 'Corn,' says the witch, in the exact tone of a lie. The hut licks its doorstep. You've learned something you can't unlearn.",
+            "effects": [
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "snowing"
+            ],
+            "text": "'Corn,' says the witch. The hut is wearing four enormous knitted boots against the snow, and somewhere within, something crunches. 'CORN,' says the witch, louder. You nod. You keep nodding until you are out of sight.",
             "effects": [
               "stat wis +1"
             ]
@@ -260,6 +383,31 @@
             "text": "The hut takes it wrong and does a warning stomp. The resulting mud wave is personal.",
             "effects": [
               "hp -2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Trade your book for a lesson",
+        "requires": {
+          "item": "book"
+        },
+        "outcomes": [
+          {
+            "weight": 60,
+            "text": "She reads it in one sitting, cackles at the ending, and pays in tuition: one hour of hedge-craft, no refunds, mind the hut.",
+            "effects": [
+              "removeitem book",
+              "stat int +1",
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "'Already read it.' She keeps it anyway, on principle, and in exchange teaches you exactly one thing: how to leave a witch's clearing politely. It proves immediately useful.",
+            "effects": [
+              "removeitem book",
+              "stat cha +1"
             ]
           }
         ]
@@ -296,6 +444,17 @@
             "effects": [
               "hp -4"
             ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "trait cursed"
+            ],
+            "text": "The circle tastes your curse and perks up like a dog offered bacon. There is a brief, intense negotiation you are not part of. You step out lighter. Something in there is now wearing your curse, and seems pleased.",
+            "effects": [
+              "trait -cursed",
+              "hp -2"
+            ]
           }
         ]
       },
@@ -311,6 +470,18 @@
             "effects": [
               "money -2",
               "hp +3"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "money <= 5"
+            ],
+            "text": "You give what you can barely spare, which is the only coin the fair folk actually count. The moss purrs. The path out is short, downhill, and lined with ripe blackberries that were not there before.",
+            "effects": [
+              "money -2",
+              "hp +5",
+              "loot common"
             ]
           }
         ]
@@ -356,6 +527,17 @@
             "effects": [
               "item scooter"
             ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "has repair_kit"
+            ],
+            "text": "With actual tools it's twenty minutes' work instead of an hour of swearing. The mysterious lever turns out to be a bell. Deathwheel rode in style.",
+            "effects": [
+              "item scooter",
+              "stat int +1"
+            ]
           }
         ],
         "fail": [
@@ -364,6 +546,16 @@
             "text": "The mysterious lever did something after all. The scooter, briefly, flies. Then teaches you why it shouldn't.",
             "effects": [
               "hp -4"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "raining"
+            ],
+            "text": "Wet chain, wet hands, wet dignity. The lever does its one trick on a slick trail, and the landing is a puddle with rocks in it.",
+            "effects": [
+              "hp -5"
             ]
           }
         ]
@@ -376,6 +568,17 @@
             "text": "You wait ten, out of courtesy. Deathwheel does not return. Deathwheel has not returned for some time, the moss implies. You leave a small stone as a memorial and feel briefly, unaccountably noble.",
             "effects": [
               "stat wis +1"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "companion"
+            ],
+            "text": "You wait ten. Your companion, who has strong opinions about roadside memorials, arranges the stones properly and says a few words for Deathwheel. It is, against all odds, genuinely moving.",
+            "effects": [
+              "stat wis +1",
+              "hp +1"
             ]
           }
         ]
@@ -416,6 +619,16 @@
               "item honeycomb",
               "hp -1"
             ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "season winter"
+            ],
+            "text": "The hive is in winter cluster, dozing in a warm ball of bee. You lift a comb like a burglar in a nursery. One sentry opens one eye and decides you are spring's problem.",
+            "effects": [
+              "item honeycomb"
+            ]
           }
         ],
         "fail": [
@@ -424,6 +637,16 @@
             "text": "The guard rotation was for exactly this. The swarm escorts you a full quarter mile with prejudice.",
             "effects": [
               "hp -5"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "season summer"
+            ],
+            "text": "High summer: full staff, double shifts, zero mercy. The swarm has been drilling for this exact scenario and escorts you half a mile past the point of comedy.",
+            "effects": [
+              "hp -6"
             ]
           }
         ]
@@ -451,6 +674,16 @@
           {
             "weight": 100,
             "text": "An hour of watching reveals shift changes, a dance-based bureaucracy, and what is unmistakably a customs checkpoint. You take notes. Scholars will call you mad. Scholars weren't here.",
+            "effects": [
+              "stat int +1"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "raining"
+            ],
+            "text": "Rain stops play. The guard bees shelter under leaves in tidy rows while a work crew hauls wax to patch a leak with visible resentment. You take notes on emergency governance. Superb stuff.",
             "effects": [
               "stat int +1"
             ]

@@ -226,8 +226,8 @@ int main(int argc, char** argv) {
                         else if (verb == "credits") { int v; fs >> v; s.c.credits = std::max(0, s.c.credits + v); }
                         else if (verb == "stat") { std::string w; int v; fs >> w >> v; int i = statFromName(w); s.c.stats[i] = std::max(1, s.c.stats[i] + v); }
                         else if (verb == "trait") { std::string t; fs >> t; if (t[0] == '+') s.c.traits.insert(t.substr(1)); else s.c.traits.erase(t.substr(1)); }
-                        else if (verb == "item") { std::string id; fs >> id; if ((int)s.c.pack.size() < s.c.packMax) s.c.pack.push_back(items.make(id, s.rng)); }
-                        else if (verb == "loot") { std::string t; fs >> t; if ((int)s.c.pack.size() < s.c.packMax) s.c.pack.push_back(items.loot(s.rng, t)); }
+                        else if (verb == "item") { std::string id; fs >> id; if ((int)s.c.pack.size() < s.c.capacity()) s.c.pack.push_back(items.make(id, s.rng)); }
+                        else if (verb == "loot") { std::string t; fs >> t; if ((int)s.c.pack.size() < s.c.capacity()) s.c.pack.push_back(items.loot(s.rng, t)); }
                         else if (verb == "removeitem") { std::string id; fs >> id; s.c.removeItem(id); }
                         else if (verb == "goto") { fs >> gotoId; }
                         // Taken contracts complete about half the time in

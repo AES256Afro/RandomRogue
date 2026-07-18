@@ -14,6 +14,17 @@
         "text": "Take it",
         "outcomes": [
           {
+            "weight": 100,
+            "when": [
+              "trait cursed"
+            ],
+            "text": "The relic wakes at your touch and tastes the curse already riding you. 'Oh good,' it seems to sigh, 'someone pre-ruined.' It comes along without a single trap firing. Professional courtesy.",
+            "effects": [
+              "take_artifact",
+              "stat wis +1"
+            ]
+          },
+          {
             "weight": 70,
             "text": "Your fingers close around it. Nothing bites. Somewhere, several factions just felt a disturbance in their ledgers.",
             "effects": [
@@ -48,6 +59,17 @@
         "fail": [
           {
             "weight": 100,
+            "when": [
+              "hp <= 3"
+            ],
+            "text": "The dart mechanism clicks, swivels to aim, takes in the state of you, and lowers itself. Even traps have standards. You limp off with the relic, unshot.",
+            "effects": [
+              "take_artifact",
+              "hp -1"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "You find the trap by triggering it. The dart's note reads 'told you.' You grab the relic while bleeding.",
             "effects": [
               "take_artifact",
@@ -67,6 +89,22 @@
             ]
           }
         ]
+      },
+      {
+        "text": "Swap in your lucky rock, heist-style",
+        "requires": {
+          "item": "lucky_rock"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You place the rock as you lift the relic, one smooth motion, no daylight between them. The pedestal accepts the exchange. It may even prefer the rock; the rock, at least, will stay.",
+            "effects": [
+              "take_artifact",
+              "removeitem lucky_rock"
+            ]
+          }
+        ]
       }
     ]
   },
@@ -80,6 +118,22 @@
       {
         "text": "Enter confidently",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "trait glowing"
+            ],
+            "text": "You stride in, and your own glow finds the gap before your feet do: a neat black slot in the floor, annotated by physics. You step over it, radiantly smug. The dark is wasted on you.",
+            "effects": []
+          },
+          {
+            "weight": 100,
+            "when": [
+              "companion"
+            ],
+            "text": "Your companion, walking ahead and mid-sentence, finds the gap with one leg. You haul them out by the collar. They insist on adding 'THE GAP IS REAL' to the sign in charcoal before allowing the journey to continue.",
+            "effects": []
+          },
           {
             "weight": 60,
             "text": "There was a gap. You find it with your face. The dungeon's sense of humor is structural.",
@@ -141,6 +195,27 @@
       {
         "text": "Take the sword",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "carrying_artifact"
+            ],
+            "text": "The skeleton's sockets fix on the artifact you carry, and its jaw drops in what can only be respect. The fingers unclench from the hilt, one by one. Between looters, apparently, there is honor.",
+            "effects": [
+              "item decent_sword",
+              "rep +1"
+            ]
+          },
+          {
+            "weight": 100,
+            "when": [
+              "trait cursed"
+            ],
+            "text": "The sword starts its whisper, tastes the curse already on you, and goes quiet, like a salesman realizing the customer is a colleague. It comes free without a word of complaint.",
+            "effects": [
+              "item decent_sword"
+            ]
+          },
           {
             "weight": 55,
             "text": "Nothing happens. It's just a great sword and a very honest plaque.",
@@ -229,6 +304,16 @@
           },
           {
             "weight": 100,
+            "when": [
+              "day >= 15"
+            ],
+            "text": "The goblin squints at you. 'You've got the look of someone who's paid a LOT of tolls.' He stamps your hand at the veteran rate and notes it on the rock, which now bears an asterisk.",
+            "effects": [
+              "money -3"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "He stamps your hand with a mushroom. 'Receipt.' The bridge is sturdy and the transaction weirdly professional.",
             "effects": [
               "money -5"
@@ -268,6 +353,14 @@
         "success": [
           {
             "weight": 100,
+            "when": [
+              "has rope"
+            ],
+            "text": "You anchor your rope to a boulder and cross hand over hand, boots barely damp. The goblin holds up a slate reading 7/10. The rock holds up nothing, but you can tell it's impressed.",
+            "effects": []
+          },
+          {
+            "weight": 100,
             "text": "Cold, wet, free. The goblin watches you the whole way, taking notes for a fee he'll invent later.",
             "effects": [
               "hp -1"
@@ -277,9 +370,34 @@
         "fail": [
           {
             "weight": 100,
+            "when": [
+              "has rope"
+            ],
+            "text": "The river takes you, but the rope takes you back. You come up coughing, still holding the line, dignity waterlogged but attached.",
+            "effects": [
+              "hp -2"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "The river is deeper, colder, and more opinionated than expected. You emerge downstream with less dignity and one fewer boot.",
             "effects": [
               "hp -4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Offer jerky in lieu of coin",
+        "requires": {
+          "item": "jerky"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The goblin sniffs the jerky, consults the rock, and declares it legal tender. 'Bridge policy accepts snacks.' He waves you across mid-chew and stamps your hand twice, for flavor.",
+            "effects": [
+              "removeitem jerky"
             ]
           }
         ]
@@ -299,6 +417,18 @@
           "money": 5
         },
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "trait cursed"
+            ],
+            "text": "The coins vanish. The god, starving for any work at all, notices the curse on you the way a stray notices a sandwich. There is a sensation like being licked by warm static, and then the curse is simply gone. 'TIP JAR IS THE BOWL,' adds the dark, hopefully.",
+            "effects": [
+              "money -5",
+              "trait -cursed",
+              "hp +3"
+            ]
+          },
           {
             "weight": 60,
             "text": "Warmth floods the room. A voice, rusty with disuse: 'A CUSTOMER.' You are blessed with the enthusiasm of the recently remembered.",
@@ -323,6 +453,17 @@
         "text": "Take the three coins",
         "outcomes": [
           {
+            "weight": 100,
+            "when": [
+              "hp <= 3"
+            ],
+            "text": "Your hand shakes over the bowl. The dark watches you sway, and something like a sigh moves through the room. 'OH. OH NO. YOU'RE WORSE OFF THAN I AM. TAKE THEM. GET SOMETHING WARM.' Divine pity: still technically a blessing.",
+            "effects": [
+              "money +3",
+              "hp +2"
+            ]
+          },
+          {
             "weight": 50,
             "text": "Nothing happens. The god can't afford consequences right now.",
             "effects": [
@@ -345,6 +486,17 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "carrying_artifact"
+            ],
+            "text": "The dark goes very still around the artifact you carry. 'I REMEMBER THAT,' the god whispers. 'FROM WHEN I HAD A WHOLE THING.' You hold it up and let the god look, for old times' sake. Reverence flows the wrong direction for a while, and some of it sticks to you.",
+            "effects": [
+              "trait +blessed",
+              "hp +2"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "'...thank you,' says the dark, and means it. You leave feeling inexplicably taller.",
             "effects": [
               "stat wis +1",
@@ -365,6 +517,16 @@
       {
         "text": "Wait for it to pass",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "companion"
+            ],
+            "text": "Your companion, bored by minute six, starts tossing pebbles for the cube. The cube absorbs each one with what can only be called enthusiasm, then extrudes a small pre-cleaned treasure like a tip. You have taught a gelatinous cube to play fetch. History will not record this, but you will.",
+            "effects": [
+              "loot common"
+            ]
+          },
           {
             "weight": 70,
             "text": "Twenty minutes of respectful silence. The cube passes, leaving the corridor immaculate. You could eat off this floor. Something clearly has.",
@@ -474,9 +636,34 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "companion"
+            ],
+            "text": "You and your companion perform the riddle as a two-hander, complete with a dramatic pause and a wagon noise. The door opens halfway through, which in theater terms is a standing ovation.",
+            "effects": [
+              "stat cha +1"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "You pose one about a merchant, a wagon, and three crates labeled DO NOT ASK. The door thinks for a full minute, then opens out of intellectual courtesy. Doors get bored too.",
             "effects": [
               "stat cha +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Skip the riddle. Pick the lock",
+        "requires": {
+          "item": "lockpick"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The lock yields in under a minute. The door mutters something about the death of scholarly discourse, but rules are rules: open is open. The riddler's abandoned pack sits just inside, still packed.",
+            "effects": [
+              "loot common"
             ]
           }
         ]
@@ -496,6 +683,18 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "trait cursed"
+            ],
+            "text": "The circle senses the curse on you and goes reverently quiet. 'A lived-experience speaker,' whispers the bookshelf. You share. A barrel takes notes. You leave with the group's blessing, a commemorative token, and the rare warmth of being understood by furniture.",
+            "effects": [
+              "stat wis +1",
+              "loot common",
+              "hp +2"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "A barrel shares its fear of being opened 'for the wrong reasons.' You cry a little. Everyone pretends not to notice, which for mimics is deeply on-brand. They gift you a member's token.",
             "effects": [
               "stat wis +1",
@@ -507,6 +706,16 @@
       {
         "text": "Ask which of them is the real treasure chest",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "carrying_artifact"
+            ],
+            "text": "Every lid in the circle swivels toward the artifact you carry. Actual treasure. In the room. Unattended-adjacent. The group's collective willpower fails as one, and in the ensuing scramble of splinters and shame, coins scatter everywhere. You leave with a share and no one in a position to judge you.",
+            "effects": [
+              "money +10"
+            ]
+          },
           {
             "weight": 60,
             "text": "A hurt silence. 'We're ALL real,' says the bookshelf, quivering. You have set the group back weeks and are asked to leave.",
@@ -526,6 +735,18 @@
       {
         "text": "Share your own struggles with pretending",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "trait famous"
+            ],
+            "text": "They know the ballads. Hearing the person FROM the ballads admit the smile is fake breaks the whole circle open. Even the banner droops lower, moved. They insist you take provisions and a token of honorary membership. You are, officially, a mimic now: something pretending to be a treasure.",
+            "effects": [
+              "hp +4",
+              "item rations",
+              "loot common"
+            ]
+          },
           {
             "weight": 100,
             "text": "You talk about smiling through tavern ballads about your life. The circle is moved. A chest dabs its lid. You leave lighter, with the group's blessing and a snack for the road.",

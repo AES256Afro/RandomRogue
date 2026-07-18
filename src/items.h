@@ -47,10 +47,16 @@ public:
     const std::vector<std::string>& quirkTexts() const { return quirkTexts_; }
     const std::vector<std::string>& goodPassives() const { return goodPassives_; }
     const std::vector<std::string>& badPassives() const { return badPassives_; }
+    // Provenance-coherent quirks (R10): text and mechanics are one record,
+    // so an item that "repels dogs" never quietly grants strength.
+    const std::vector<std::pair<std::string, std::string>>& quirkPairs() const {
+        return quirkPairs_;
+    }
 
 private:
     std::map<std::string, ItemTemplate> templates_;
     std::vector<std::string> order_; // for random draws
     std::vector<std::string> quirkTexts_;
     std::vector<std::string> goodPassives_, badPassives_;
+    std::vector<std::pair<std::string, std::string>> quirkPairs_;
 };

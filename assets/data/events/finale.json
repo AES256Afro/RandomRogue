@@ -16,6 +16,19 @@
         "success": [
           {
             "weight": 100,
+            "when": [
+              "day >= 15"
+            ],
+            "text": "You have paid tolls, tithes, tariffs, and one fee for 'contempt of rock.' You know this enemy. You find the phylactery depreciation, the haunting-related home office deduction, AND a refund from a kingdom that still exists. The lich calls you 'the chosen one' with zero irony.",
+            "effects": [
+              "money +25",
+              "loot fine",
+              "stat int +1",
+              "rep +1"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "Three hours later, you've found a deduction for 'phylactery depreciation.' The lich weeps dust and pays you from its hoard.",
             "effects": [
               "money +25",
@@ -43,6 +56,17 @@
         "success": [
           {
             "weight": 100,
+            "when": [
+              "carrying_artifact"
+            ],
+            "text": "Mid-parry, the lich sees the artifact you carry and stops cold. 'You already emptied SOMEONE'S final chamber. Fine. I know how this ends.' It signs its hoard over to you like a resignation letter and sits back down with the parchment, muttering about succession planning.",
+            "effects": [
+              "money +22",
+              "loot fine"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "The lich crumbles, almost relieved. Its final words: 'tell them... I'm... exempt.' The hoard is yours, minus filing fees.",
             "effects": [
               "money +30",
@@ -51,6 +75,16 @@
           }
         ],
         "fail": [
+          {
+            "weight": 100,
+            "when": [
+              "hp <= 3"
+            ],
+            "text": "The lich raises the parchment sheaf, looks at you swaying on your feet, and lowers it. 'I am not filing paperwork on THAT. Sit. There is tea. It is dust, but it is tea.' You leave un-slain and faintly warmed.",
+            "effects": [
+              "hp -1"
+            ]
+          },
           {
             "weight": 100,
             "text": "The lich hits you with a sheaf of parchment. It's the deadliest thing in the room and it knows it.",
@@ -96,6 +130,17 @@
       {
         "text": "Fill your pockets, professionally",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "carrying_artifact"
+            ],
+            "text": "The vault's wards taste the artifact you carry and snap to attention, mistaking you for management. Inner cases you hadn't even noticed unlock themselves with an obsequious click. You are looted AT, efficiently.",
+            "effects": [
+              "money +25",
+              "loot fine"
+            ]
+          },
           {
             "weight": 60,
             "text": "Coins, trinkets, a thing that might be jewelry or dentistry. A clean haul.",
@@ -147,10 +192,38 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "trait famous"
+            ],
+            "text": "You sign the guest ledger with the name from the ballads. The quill trembles. A review from YOU could make or break a dungeon's whole season, and the stipend that materializes reflects this understanding precisely.",
+            "effects": [
+              "money +14",
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "You write 'atmospheric, good bones, gap unmarked' on the guest ledger. A small stipend of appreciation materializes. The dungeon has pride.",
             "effects": [
               "money +8",
               "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Rig a rope hoist and take a whole chest",
+        "requires": {
+          "item": "rope"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Pulleys, angles, one anchor point that is probably a gargoyle's elbow. The chest comes out whole and swinging. The rope does not survive the descent, but it dies doing what ropes love: holding entirely too much weight.",
+            "effects": [
+              "money +20",
+              "loot fine",
+              "removeitem rope"
             ]
           }
         ]
@@ -183,6 +256,17 @@
         "fail": [
           {
             "weight": 100,
+            "when": [
+              "companion"
+            ],
+            "text": "'Closet's for staff.' Then your companion picks up the spare mop and starts on the far corner, unprompted. The janitor watches, visibly moved. 'Staff,' he declares, 'and family.' The closet opens.",
+            "effects": [
+              "money +8",
+              "loot common"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "'Closet's for staff.' He mops you gently but firmly toward the exit. You grab a souvenir from the lost-and-found on the way out.",
             "effects": [
               "loot common"
@@ -193,6 +277,16 @@
       {
         "text": "Fight him. He's clearly the boss",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "hp <= 3"
+            ],
+            "text": "You raise your fists. He looks at you, swaying, held together mostly by stubbornness, and sets the mop down. 'I don't fight furniture.' He sits you on a crate and produces soup from somewhere janitorial. You don't ask. You drink.",
+            "effects": [
+              "hp +4"
+            ]
+          },
           {
             "weight": 70,
             "text": "He deflects your entire offense with the mop. Decades of technique. You wake up outside, neatly propped against a rock, with a pity coin in your palm.",
@@ -215,6 +309,18 @@
       {
         "text": "Offer to help mop",
         "outcomes": [
+          {
+            "weight": 100,
+            "when": [
+              "trait glowing"
+            ],
+            "text": "You mop, and your glow lights corners no torch has reached in decades. He finds three lost rings, a set of teeth, and closure on a stain he'd been wondering about since spring. He splits the ring money and calls you the best lamp he's ever worked with. You choose to be flattered.",
+            "effects": [
+              "money +14",
+              "stat wis +1",
+              "hp +2"
+            ]
+          },
           {
             "weight": 100,
             "text": "You mop. He talks. Three hours of dungeon gossip and a fair split of whatever rolls out from under the bones. Honest work.",
@@ -242,6 +348,17 @@
         },
         "outcomes": [
           {
+            "weight": 100,
+            "when": [
+              "trait cursed"
+            ],
+            "text": "As you pay, the novelty curse scrolls all rustle toward your genuine curse like fans at a stage door. The skeleton is thrilled. 'A REAL one. We don't get many collectors.' It upgrades your purchase to the premium shelf, on the house.",
+            "effects": [
+              "money -5",
+              "loot fine"
+            ]
+          },
+          {
             "weight": 60,
             "text": "The plush mimic is soft, judgmental, and possibly load-bearing to your happiness now.",
             "effects": [
@@ -265,6 +382,17 @@
         "outcomes": [
           {
             "weight": 100,
+            "when": [
+              "day >= 15"
+            ],
+            "text": "You've seen enough dungeons by now to talk shop, so you do: foot traffic, adventurer seasonality, mimic overhead. The skeleton gets misty-socketed. 'Nobody ASKS.' It comps you a keychain, a mug, and a franchise brochure you will never, ever read.",
+            "effects": [
+              "money +5",
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "'Franchised,' says the skeleton, adjusting its lanyard. 'The margins on terror are awful. Retail is forever.' It comps you a keychain for asking.",
             "effects": [
               "money +3",
@@ -282,6 +410,17 @@
         "success": [
           {
             "weight": 100,
+            "when": [
+              "has lockpick"
+            ],
+            "text": "Amateurs palm things off shelves. You unlock the display case, the one with the GOOD snow globes, and relock it behind you on the way out. The skeleton never looks up. Craftsmanship respects craftsmanship.",
+            "effects": [
+              "loot fine",
+              "money +4"
+            ]
+          },
+          {
+            "weight": 100,
             "text": "You palm a snow globe of the dungeon itself. Inside it, a tiny you palms a tinier snow globe. Best not to think about it.",
             "effects": [
               "loot fine"
@@ -294,6 +433,22 @@
             "text": "The plush mimics were real mimics. Of course they were. Store security is impeccable and has teeth.",
             "effects": [
               "hp -5"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "License your name for the merch line",
+        "requires": {
+          "trait": "famous"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The skeleton produces a contract with suspicious speed. By closing time there are mugs with your face on them, and the face is almost right. The royalty advance is real gold, and only slightly haunted by the knowledge of what you've become.",
+            "effects": [
+              "money +18",
+              "rep +1"
             ]
           }
         ]

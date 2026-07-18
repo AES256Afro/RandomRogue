@@ -72,6 +72,10 @@ void ItemDb::loadQuirksJsonText(const char* jsonText) {
     load("texts", quirkTexts_);
     load("good", goodPassives_);
     load("bad", badPassives_);
+    if (j.contains("paired") && j["paired"].is_array())
+        for (auto& p : j["paired"])
+            if (p.is_object())
+                quirkPairs_.emplace_back(p.value("text", ""), p.value("passive", ""));
 }
 
 ItemInstance ItemDb::make(const std::string& id, Rng& rng) const {
