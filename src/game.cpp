@@ -436,6 +436,10 @@ void Game::saveRun() {
     for (auto& st : journey_)
         steps.push_back({{"d", st.day}, {"s", st.site}, {"c", st.choice}, {"o", st.outcome}});
     j["journey"] = steps;
+    // Seen cards must survive CONTINUE, or the deck deals repeats (R9d).
+    j["usedEvents"] = std::vector<std::string>(deck_.used().begin(), deck_.used().end());
+    j["season"] = season_;
+    j["weather"] = weather_;
     SaveRawRun(j.dump());
 }
 
@@ -470,6 +474,13 @@ bool Game::loadRun() {
         rival_.alive = r.value("alive", true);
         rival_.deeds = r.value("deeds", 0);
     }
+    if (j.contains("usedEvents")) {
+        std::set<std::string> used;
+        for (auto& id : j["usedEvents"]) used.insert(id.get<std::string>());
+        deck_.setUsed(used);
+    }
+    season_ = j.value("season", season_);
+    weather_ = j.value("weather", weather_);
     favor_.clear();
     if (j.contains("favor") && j["favor"].is_object())
         for (auto& [gi, f] : j["favor"].items())
@@ -2939,7 +2950,7 @@ void Game::drawDeath(Vector2 mouse) {
                 for (auto& st : journey_)
                     steps.push_back({{"d", st.day}, {"s", st.site},
                                      {"c", st.choice}, {"o", st.outcome}});
-                nlohmann::json s = {{"day", (int)(time(nullptr) / 86400)},
+                nlohmann::json s = {{"day", bk}, // the board this world belongs to
                                     {"name", ch_.name.conlang + " \"" + ch_.name.meaning + "\""},
                                     {"meaning", ch_.name.meaning},
                                     {"days", ch_.day},

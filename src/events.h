@@ -80,6 +80,9 @@ public:
     void markUsed(const std::string& id) { used_.insert(id); }
     const Event* find(const std::string& id) const;
     void resetUsed() { used_.clear(); }
+    // Save/restore: seen cards must survive CONTINUE or they repeat (R9d).
+    const std::set<std::string>& used() const { return used_; }
+    void setUsed(const std::set<std::string>& u) { used_ = u; }
     size_t size() const { return events_.size(); }
 
     // Picks the outcome; item passives feed the check modifier. Outcomes

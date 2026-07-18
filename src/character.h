@@ -39,7 +39,11 @@ struct Character {
     int packMax = 9;              // a mimic porter raises this
     std::string companionPassive; // companion's check bonus, if any
 
-    static int mod(int stat) { return (stat - 10) / 2; }
+    // Floor division: stat 9 is -1 and stat 7 is -2, as the dice intend.
+    // Plain (stat-10)/2 rounded toward zero and let weak stats off easy.
+    static int mod(int stat) {
+        return stat >= 10 ? (stat - 10) / 2 : -((11 - stat) / 2);
+    }
 
     bool hasTrait(const std::string& t) const { return traits.count(t) > 0; }
 

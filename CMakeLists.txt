@@ -76,6 +76,9 @@ if(EMSCRIPTEN)
         "-sASYNCIFY"
         "-sFORCE_FILESYSTEM=1"
         "-sALLOW_MEMORY_GROWTH=1"
+        # miniaudio's JS callback reads Module.HEAPF32; modern emscripten no
+        # longer exports heap views by default, which silenced all web audio.
+        "-sEXPORTED_RUNTIME_METHODS=HEAPF32,HEAP32,HEAPU8,HEAPU32"
         "--shell-file" "${CMAKE_SOURCE_DIR}/web/shell.html"
         "--preload-file" "${CMAKE_SOURCE_DIR}/assets@assets"
     )
