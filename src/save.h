@@ -22,7 +22,7 @@ struct Profile {
     // volume: 0 low, 1 normal, 2 high.
     int textSpeed = 1;
     int volume = 2;
-    bool musicOff = false;
+    bool musicOff = true;
     bool reducedMotion = false;
     bool seenIntro = false;
 

@@ -50,7 +50,7 @@ Profile Profile::fromJson(const std::string& text) {
     p.vendettas = j.value("vendettas", 0);
     p.textSpeed = j.value("textSpeed", 1);
     p.volume = j.value("volume", 2);
-    p.musicOff = j.value("musicOff", false);
+    p.musicOff = j.value("musicOff", true);
     p.reducedMotion = j.value("reducedMotion", false);
     p.seenIntro = j.value("seenIntro", false);
     return p;

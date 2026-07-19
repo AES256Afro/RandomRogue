@@ -14,9 +14,9 @@ public:
     // Play (generating on first request) the loop for a location tag.
     // Seed makes each world's soundtrack its own.
     void playMusicFor(const std::string& tag, uint64_t worldSeed);
-    void update(); // call once per frame: restarts loop, applies mute
-    void toggleMute();
-    bool muted() const { return muted_; }
+    void update(); // call once per frame: restarts the music loop
+    void toggleMusic();
+    bool musicMuted() const { return musicMuted_; }
 
     void blip();   // UI select
     void coin();   // money gained
@@ -40,5 +40,5 @@ private:
     Sound sBlip_{}, sCoin_{}, sThud_{}, sDice_{}, sChime_{};
     Sound sDirge_{}, sFanfare_{};
     bool ready_ = false;
-    bool muted_ = false;
+    bool musicMuted_ = true;
 };

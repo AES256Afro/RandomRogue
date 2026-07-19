@@ -145,25 +145,25 @@ void AudioBank::playMusicFor(const std::string& tag, uint64_t worldSeed) {
     current_ = generateTrack(tag, worldSeed);
     hasTrack_ = true;
     currentTag_ = key;
-    if (!muted_) PlaySound(current_);
+    if (!musicMuted_) PlaySound(current_);
 }
 
 void AudioBank::update() {
-    if (!ready_ || !hasTrack_ || muted_) return;
+    if (!ready_ || !hasTrack_ || musicMuted_) return;
     if (!IsSoundPlaying(current_)) PlaySound(current_); // loop, lofi seam included
 }
 
-void AudioBank::toggleMute() {
-    muted_ = !muted_;
+void AudioBank::toggleMusic() {
+    musicMuted_ = !musicMuted_;
     if (!ready_ || !hasTrack_) return;
-    if (muted_) StopSound(current_);
+    if (musicMuted_) StopSound(current_);
     else PlaySound(current_);
 }
 
-void AudioBank::blip()  { if (ready_ && !muted_) PlaySound(sBlip_); }
-void AudioBank::coin()  { if (ready_ && !muted_) PlaySound(sCoin_); }
-void AudioBank::thud()  { if (ready_ && !muted_) PlaySound(sThud_); }
-void AudioBank::dice()  { if (ready_ && !muted_) PlaySound(sDice_); }
-void AudioBank::chime() { if (ready_ && !muted_) PlaySound(sChime_); }
-void AudioBank::dirge()   { if (ready_ && !muted_) PlaySound(sDirge_); }
-void AudioBank::fanfare() { if (ready_ && !muted_) PlaySound(sFanfare_); }
+void AudioBank::blip()  { if (ready_) PlaySound(sBlip_); }
+void AudioBank::coin()  { if (ready_) PlaySound(sCoin_); }
+void AudioBank::thud()  { if (ready_) PlaySound(sThud_); }
+void AudioBank::dice()  { if (ready_) PlaySound(sDice_); }
+void AudioBank::chime() { if (ready_) PlaySound(sChime_); }
+void AudioBank::dirge()   { if (ready_) PlaySound(sDirge_); }
+void AudioBank::fanfare() { if (ready_) PlaySound(sFanfare_); }

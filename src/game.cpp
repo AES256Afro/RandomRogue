@@ -208,7 +208,7 @@ bool Game::init() {
     profile_ = LoadProfile();
     // Settings persist across sessions (R7).
     SetMasterVolume(0.35f + 0.3f * (profile_.volume % 3));
-    if (profile_.musicOff && !audio_.muted()) audio_.toggleMute();
+    if (profile_.musicOff != audio_.musicMuted()) audio_.toggleMusic();
     return dataError_.empty();
 }
 
@@ -2525,7 +2525,11 @@ void Game::frame(Vector2 mouse, bool pressed) {
         shake_ -= GetFrameTime() * 10.0f;
         if (shake_ < 0.0f) shake_ = 0.0f;
     }
-    if (!enteringSeed_ && screen_ != TITLE && IsKeyPressed(KEY_M)) audio_.toggleMute();
+    if (!enteringSeed_ && screen_ != TITLE && IsKeyPressed(KEY_M)) {
+        audio_.toggleMusic();
+        profile_.musicOff = audio_.musicMuted();
+        SaveProfile(profile_);
+    }
     // Dev keys for content authoring: trait-gated events are untestable by
     // dice alone. Undocumented, harmless (roguelike full of curses anyway).
     if (IsKeyPressed(KEY_F9)) ch_.traits.insert("cursed");
@@ -2726,7 +2730,7 @@ void Game::drawTitle(Vector2 mouse) {
     }
     std::string seedLine = "world seed: " + std::to_string(nextSeed_);
     DrawText(seedLine.c_str(), (kW - MeasureText(seedLine.c_str(), 10)) / 2, 88, 10, PAL_DIM);
-    std::string hint = "S: set seed   M: mute";
+    std::string hint = "S: set seed   M: music";
     if (!pendingLegacy_.empty())
         hint = "this world remembers " + std::to_string(pendingLegacy_.size()) +
                " of your dead   S: set seed";
@@ -2858,7 +2862,12 @@ void Game::drawTitle(Vector2 mouse) {
     }
     int key = GetKeyPressed();
     if (key == KEY_S) { enteringSeed_ = true; seedInput_.clear(); return; }
-    if (key == KEY_M) { audio_.toggleMute(); return; }
+    if (key == KEY_M) {
+        audio_.toggleMusic();
+        profile_.musicOff = audio_.musicMuted();
+        SaveProfile(profile_);
+        return;
+    }
     if (key == KEY_R) {
         nextSeed_ = (nextSeed_ * 6364136223846793005ULL + 1442695040888963407ULL) % 1000000000ULL;
         return;
@@ -2933,7 +2942,7 @@ void Game::drawOptions(Vector2 mouse) {
     }
     if (uiButton({kW / 2 - 70, 104, 140, 18}, r3.c_str(), mouse)) {
         profile_.musicOff = !profile_.musicOff;
-        if (profile_.musicOff != audio_.muted()) audio_.toggleMute();
+        if (profile_.musicOff != audio_.musicMuted()) audio_.toggleMusic();
         SaveProfile(profile_);
     }
     if (uiButton({kW / 2 - 70, 128, 140, 18}, r4.c_str(), mouse)) {
