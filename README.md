@@ -59,13 +59,20 @@ src/language.cpp before touching RNG call sites.
 The playable deck contains 1,000 scenarios. Every card has a primary political
 theme and material consequences. The 351 legacy cards have been remastered
 around labor, housing, anti-fascism, anti-war resistance, survival, ecology,
-public care, freedom, failed revolution, and stubborn kindness. Release 18 adds
-59 connected eight-beat families, seven ideological endings, ten world
-conditions, and ten institutions that can grow, bureaucratize, collapse, or be
-rebuilt. Exact event ids deal without replacement for an entire life. Saves
-preserve that seen set, and each world carries a 240-card cooldown across
+public care, freedom, failed revolution, and stubborn kindness. Release 19
+turns the 59 connected eight-beat families into remembered campaigns. Cards
+recall earlier choices and witnesses, outcomes publish visible world responses,
+and players can join institutions, build standing, challenge bureaucracy, seek
+office, influence tendencies, or leave. Seven ideological endings now accept
+multiple coherent routes and produce later epilogues that persist into the
+world's legacy. Exact event ids deal without replacement for an entire life.
+Saves preserve that seen set, and each world carries a 240-card cooldown across
 generations. `tools/generate_r18.mjs`, `SCENARIO_1000.md`, and
 `assets/data/scenario_targets.json` define and verify the thousand-card recipe.
+
+Browser options include standard, large, and extra-large reader text, high
+contrast, reduced motion, separate music and sound-effect controls, background
+autosave, and portable save export/import. Music remains muted by default.
 
 ## Hosting (random-rogue.com)
 

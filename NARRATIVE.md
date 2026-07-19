@@ -183,3 +183,22 @@ No ending proves history is finished. A successful commune can decay. A failed
 strike can teach the next one. A tyrant can fall while the hierarchy remains.
 The best victories distribute power broadly enough that future people can
 defend them without needing another hero.
+
+## Release 19: The world answers back
+
+Story continuity must be visible, not merely stored. A returning campaign names
+the player's previous choice, its result, the region, and a remembered witness.
+Every material outcome produces a short world response that says what changed.
+The Story Ledger keeps those responses as a public record.
+
+Institutions are places the player can inhabit, not passive meters. Joining one
+creates standing and obligations. Members can strengthen common work, challenge
+bureaucracy, seek accountable office, shape a tendency, or leave without the
+game declaring the cause invalid. High bureaucracy and internal tension can
+produce a schism. Integrity and member pressure can prevent one.
+
+Endings are horizons rather than locks. Each has several material routes, and
+the Story Ledger describes the nearest one without exposing a numeric recipe.
+A completed life receives an immediate ending and a later epilogue. Partial
+victories, unresolved causes, institutional damage, and durable public goods
+can all cross into the next generation.

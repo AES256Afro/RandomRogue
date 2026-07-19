@@ -22,10 +22,12 @@ struct Profile {
     // volume: 0 low, 1 normal, 2 high.
     int textSpeed = 1;
     int volume = 2;
+    int readerSize = 0; // 0 standard, 1 large, 2 extra large
     bool musicOff = true;
+    bool sfxOff = false;
     bool reducedMotion = false;
     bool analyticsOff = false;
-    bool largeText = false;
+    bool largeText = false; // compatibility mirror for profiles before R19
     bool highContrast = false;
     bool seenIntro = false;
 
@@ -44,6 +46,8 @@ struct LegacyRecord {
     std::string deathSite;
     int days = 0;
     bool blessing = false; // an afterlife bargain: the heir starts blessed
+    std::string movementLegacy; // what this life left for people still organizing
+    std::vector<std::string> causes;
     // Up to two notable carried items become findable relics.
     std::vector<std::pair<std::string, std::string>> relics; // {name, quirk}
 };

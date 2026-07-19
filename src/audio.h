@@ -17,6 +17,8 @@ public:
     void update(); // call once per frame: restarts the music loop
     void toggleMusic();
     bool musicMuted() const { return musicMuted_; }
+    void setSfxMuted(bool muted) { sfxMuted_ = muted; }
+    bool sfxMuted() const { return sfxMuted_; }
 
     void blip();   // UI select
     void coin();   // money gained
@@ -44,4 +46,5 @@ private:
     Sound sSolidarity_{}, sWarning_{};
     bool ready_ = false;
     bool musicMuted_ = true;
+    bool sfxMuted_ = false;
 };

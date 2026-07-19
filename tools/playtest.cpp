@@ -40,6 +40,9 @@ struct BotState {
     std::set<std::string> storyFlags;
     std::map<std::string, int> world;
     std::map<std::string, int> institutions;
+    std::map<std::string, int> memberships;
+    std::map<std::string, int> standings;
+    std::map<std::string, std::string> tendencies;
     int rumors = 2, collective = 0;
     std::vector<std::pair<int, std::string>> scheduled;
 };
@@ -84,6 +87,40 @@ static bool botCond(BotState& s, const std::string& cond) {
     if (a == "echo") return s.echoes.count(b) > 0;
     if (a == "story") return s.storyFlags.count(b) > 0;
     if (a == "!story") return s.storyFlags.count(b) == 0;
+    if (a == "member") return s.memberships[b] > 0;
+    if (a == "!member") return s.memberships[b] == 0;
+    if (a == "tendency") return s.tendencies[b] == cc;
+    if (a == "ending_ready") {
+        int score = 0;
+        if (b == "common_future") score = 30 + s.world["worker_power"] * 4 +
+            s.world["solidarity"] * 4 - s.world["wealth_concentration"] * 3 -
+            s.world["rent_burden"] * 2 + s.institutions["union"] * 4;
+        else if (b == "another_attempt") score = 30 + s.world["worker_power"] * 3 +
+            s.world["solidarity"] * 4 - s.world["fascist_influence"] * 3 +
+            s.institutions["revolutionary_committee"] * 5;
+        else if (b == "broad_front_holds") score = 40 - s.world["fascist_influence"] * 5 +
+            s.world["solidarity"] * 2 + s.institutions["antifascist_coalition"] * 4;
+        else if (b == "demobilized_stars") score = 40 - s.world["militarization"] * 5 +
+            s.world["solidarity"] * 2 + s.institutions["peace_movement"] * 5;
+        else if (b == "waters_return") score = 40 - s.world["pollution"] * 5 +
+            s.world["food_security"] * 2 + s.institutions["restoration_crew"] * 5;
+        else if (b == "abundance_without_owners") score = 25 + s.world["food_security"] * 5 -
+            s.world["wealth_concentration"] * 3 + s.institutions["scientific_commons"] * 4 +
+            s.institutions["cooperative"] * 2;
+        else if (b == "naive_power") score = 20 + s.world["mutual_aid"] * 4 +
+            s.world["solidarity"] * 4 + s.collective * 6;
+        return s.c.day >= 18 && score >= 60;
+    }
+    if (a == "role") {
+        std::string valueText;
+        ss >> valueText;
+        int lhs = s.memberships[b], rhs = atoi(valueText.c_str());
+        if (cc == ">") return lhs > rhs;
+        if (cc == "<") return lhs < rhs;
+        if (cc == ">=") return lhs >= rhs;
+        if (cc == "<=") return lhs <= rhs;
+        return lhs == rhs;
+    }
     if (a == "world" || a == "institution") {
         std::string valueText;
         ss >> valueText;
@@ -183,6 +220,21 @@ int main(int argc, char** argv) {
         BotState s;
         s.rng = Rng(1000003ULL * (r + 1), 5);
         s.c = Character::roll(s.rng, dummyForge);
+        s.world["worker_power"] = s.rng.range(-1, 1);
+        s.world["rent_burden"] = s.rng.range(-1, 2);
+        s.world["wealth_concentration"] = s.rng.range(0, 2);
+        s.world["pollution"] = s.rng.range(-1, 2);
+        s.world["militarization"] = s.rng.range(-1, 1);
+        s.world["food_security"] = s.rng.range(-1, 1);
+        s.world["fascist_influence"] = s.rng.range(-1, 1);
+        s.world["solidarity"] = s.rng.range(-1, 1);
+        s.world["legitimacy"] = s.rng.range(-1, 1);
+        s.world["mutual_aid"] = s.rng.range(-1, 1);
+        for (const char* kind : {"union", "tenant_council", "mutual_aid",
+                 "cooperative", "revolutionary_committee", "antifascist_coalition",
+                 "pirate_assembly", "scientific_commons", "peace_movement",
+                 "restoration_crew"})
+            s.institutions[kind] = s.rng.range(0, 2);
         s.c.pack.push_back(items.make("rations", s.rng));
         s.c.pack.push_back(items.make(s.rng.chance(50) ? "rusty_sword" : "club", s.rng));
         deck.resetUsed();
@@ -331,7 +383,35 @@ int main(int argc, char** argv) {
                         }
                         else if (verb == "institution") {
                             std::string kind; int v = 0; fs >> kind >> v;
+                            int before = s.institutions[kind];
                             s.institutions[kind] = std::max(-3, std::min(8, s.institutions[kind] + v));
+                            if (before < 4 && s.institutions[kind] >= 4) s.collective++;
+                        }
+                        else if (verb == "join") {
+                            std::string kind; fs >> kind;
+                            if (!kind.empty()) {
+                                s.memberships[kind] = std::max(1, s.memberships[kind]);
+                                s.standings[kind] = std::max(1, s.standings[kind]);
+                            }
+                        }
+                        else if (verb == "leave") {
+                            std::string kind; fs >> kind;
+                            s.memberships[kind] = 0;
+                            s.standings[kind] = 0;
+                        }
+                        else if (verb == "standing") {
+                            std::string kind; int v = 0; fs >> kind >> v;
+                            s.standings[kind] = std::max(-5, std::min(10, s.standings[kind] + v));
+                            if (s.standings[kind] >= 7) s.memberships[kind] = std::max(3, s.memberships[kind]);
+                            else if (s.standings[kind] >= 4) s.memberships[kind] = std::max(2, s.memberships[kind]);
+                        }
+                        else if (verb == "role") {
+                            std::string kind; int v = 0; fs >> kind >> v;
+                            s.memberships[kind] = std::max(0, std::min(3, s.memberships[kind] + v));
+                        }
+                        else if (verb == "tendency") {
+                            std::string kind, value; fs >> kind >> value;
+                            if (!kind.empty() && !value.empty()) s.tendencies[kind] = value;
                         }
                         else if (verb == "story") {
                             std::string flag; fs >> flag;

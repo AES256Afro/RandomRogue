@@ -1,5 +1,6 @@
 ﻿#include "save.h"
 #include <nlohmann/json.hpp>
+#include <algorithm>
 #include <cstdlib>
 #include <filesystem>
 
@@ -26,7 +27,9 @@ std::string Profile::toJson() const {
               {"vendettas", vendettas},
               {"textSpeed", textSpeed},
               {"volume", volume},
+              {"readerSize", readerSize},
               {"musicOff", musicOff},
+              {"sfxOff", sfxOff},
               {"reducedMotion", reducedMotion},
               {"analyticsOff", analyticsOff},
               {"largeText", largeText},
@@ -53,10 +56,13 @@ Profile Profile::fromJson(const std::string& text) {
     p.vendettas = j.value("vendettas", 0);
     p.textSpeed = j.value("textSpeed", 1);
     p.volume = j.value("volume", 2);
+    p.readerSize = std::max(0, std::min(2, j.value(
+        "readerSize", j.value("largeText", false) ? 1 : 0)));
     p.musicOff = j.value("musicOff", true);
+    p.sfxOff = j.value("sfxOff", false);
     p.reducedMotion = j.value("reducedMotion", false);
     p.analyticsOff = j.value("analyticsOff", false);
-    p.largeText = j.value("largeText", false);
+    p.largeText = p.readerSize > 0;
     p.highContrast = j.value("highContrast", false);
     p.seenIntro = j.value("seenIntro", false);
     return p;
@@ -69,7 +75,8 @@ static json legacyToJson(const LegacyRecord& r) {
     for (auto& [name, quirk] : r.relics) items.push_back({{"name", name}, {"quirk", quirk}});
     return {{"name", r.name},   {"meaning", r.meaning},   {"epitaph", r.epitaph},
             {"deathSite", r.deathSite}, {"days", r.days}, {"relics", items},
-            {"blessing", r.blessing}};
+            {"blessing", r.blessing}, {"movementLegacy", r.movementLegacy},
+            {"causes", r.causes}};
 }
 
 static LegacyRecord legacyFromJson(const json& j) {
@@ -80,6 +87,8 @@ static LegacyRecord legacyFromJson(const json& j) {
     r.deathSite = j.value("deathSite", "");
     r.days = j.value("days", 0);
     r.blessing = j.value("blessing", false);
+    r.movementLegacy = j.value("movementLegacy", "");
+    r.causes = j.value("causes", std::vector<std::string>{});
     if (j.contains("relics"))
         for (auto& it : j["relics"])
             r.relics.emplace_back(it.value("name", ""), it.value("quirk", ""));

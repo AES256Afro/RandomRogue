@@ -51,6 +51,14 @@ effects alter three different scales of history. Structural fingerprints tell
 the Story Director when two different cards use the same opening, joke engine,
 social role, or choice geometry.
 
+Release 19 connects those families to playable institutional politics. Use
+`join`, `leave`, `standing`, `role`, and `tendency` effects when a choice changes
+the player's relationship to a movement. Conditions can test `member`,
+`!member`, `role`, and `tendency`. Ideological ending cards use
+`ending_ready <ending_id>` so the engine can recognize several coherent paths
+to the same horizon. The generator must continue to report zero repeated
+seven-word openings.
+
 ## Required pass
 
 1. Give every choice a different political or personal strategy.
@@ -67,6 +75,10 @@ social role, or choice geometry.
    oppression or extermination are never the punchline.
 9. Monsters and nonhuman minds have personhood unless a specific story
    establishes otherwise. Their bodies are not an automatic license to kill.
+10. Returning beats must make the earlier choice legible. Do not assume the
+    player remembers a campaign title or a decision made several sessions ago.
+11. A major effect should produce a visible public response, not only a hidden
+    meter change.
 
 Run these gates before committing:
 

@@ -171,7 +171,7 @@ const themeNegative = {
   propaganda: "world legitimacy -1", kindness: "world mutual_aid -1"
 };
 
-function stageEffects(family, beat) {
+function stageEffects(family, beat, mode) {
   const effects = [];
   if (beat === 0) effects.push(`story +r18_${family.id}_begun`);
   else effects.push(`story -r18_${family.id}_stage_${beat}`);
@@ -183,11 +183,22 @@ function stageEffects(family, beat) {
     effects.push(`story +r18_${family.id}_resolved`);
     effects.push(`converge r18_${family.id}`);
   }
+  if (mode === 0) {
+    effects.push(beat === 0 ? `join ${family.institution}` : `standing ${family.institution} +1`);
+    if (beat === 1) effects.push(`tendency ${family.institution} rank_and_file`);
+    if (beat === 7) effects.push(`role ${family.institution} +1`);
+  } else if (mode === 1) {
+    if (beat > 0) effects.push(`standing ${family.institution} +1`);
+    if (beat === 1) effects.push(`tendency ${family.institution} broad_front`);
+  } else {
+    effects.push(`standing ${family.institution} -1`);
+    if (beat === 1) effects.push(`tendency ${family.institution} direct_action`);
+  }
   return effects;
 }
 
 function makeChoice(family, beat, theme, mode) {
-  const stage = stageEffects(family, beat);
+  const stage = stageEffects(family, beat, mode);
   const pattern = (families.indexOf(family) * 3 + beat) % 6;
   if (mode === 0) {
     const success = {
@@ -209,7 +220,8 @@ function makeChoice(family, beat, theme, mode) {
     } else {
       if (pattern === 3) success.effects.unshift("money -3");
       choice.outcomes = [
-        { ...success, when: [`institution ${family.institution} >= 4`], effects: [...success.effects, "world mutual_aid +1"] },
+        { ...success, when: [`institution ${family.institution} >= 4`, `member ${family.institution}`], effects: [...success.effects, "world mutual_aid +1"] },
+        { ...success, when: [`institution ${family.institution} >= 4`] },
         failure
       ];
     }
@@ -235,6 +247,7 @@ function makeChoice(family, beat, theme, mode) {
     } else {
       if (pattern === 5) choice.requires = { money: 6 };
       choice.outcomes = [
+        { ...success, when: ["world legitimacy >= 3", `role ${family.institution} >= 2`], effects: [...success.effects, themePositive[theme], `standing ${family.institution} +1`] },
         { ...success, when: ["world legitimacy >= 3"], effects: [...success.effects, themePositive[theme]] },
         failure
       ];
@@ -297,7 +310,7 @@ for (let fi = 0; fi < families.length; fi++) {
       tags: [theme, "living_politics", family.institution, `beat_${beatNames[beat]}`, `voice_${fi % 12}`],
       fingerprints: [`opening_${beatNames[beat]}_${variant}`, `joke_${jokes[fi % jokes.length]}`, `role_${roles[fi % roles.length]}`, `shape_${shapes[(fi + beat) % shapes.length]}`],
       when,
-      text: `Regarding ${family.id.replaceAll("_", " ")}, ${leadSets[beat][variant].toLowerCase()}, ${beatBodies[beat](family)}`,
+      text: `${family.id.replaceAll("_", " ").toUpperCase()}\n\n${leadSets[beat][variant]}. ${beatBodies[beat](family)}`,
       choices: [0, 1, 2].map((mode) => makeChoice(family, beat, theme, (mode + fi + beat) % 3))
     });
     cursor++;
@@ -315,7 +328,7 @@ for (let i = 0; i < endingSpecs.length; i++) {
     family: "r18_ideological_endings",
     tags: [ending.theme, "ending", "living_politics", `voice_${i}`],
     fingerprints: [`opening_ending_${i}`, "joke_humane_aftermath", "role_world", `shape_ending_${i}`],
-    when: ending.when,
+    when: [`ending_ready ${ending.id}`],
     text: `${ending.title}\n\n${ending.text}`,
     choices: [
       { text: "Let this life become part of the new world", approach: "solidarity", outcomes: [{ text: "You stop wandering. The work does not stop with you.", effects: [`finish ${ending.epitaph}`] }] },

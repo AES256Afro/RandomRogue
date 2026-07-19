@@ -35,7 +35,8 @@ static const std::set<std::string> kVerbs = {
     "region", "region_flag", "region_spread", "network", "network_rel",
     "evidence", "doubt", "mystery_accuse", "mystery_trial", "converge",
     "rumor", "foreshadow", "agenda", "nemesis", "collective",
-    "world", "institution", "story"};
+    "world", "institution", "story", "join", "leave", "standing", "role",
+    "tendency"};
 static const std::set<std::string> kSlotQueries = {
     "chronicle_random", "chronicle_news", "artifact_here", "figure_alive",
     "figure_dead", "god", "beast_here", "stranger_here", "ghost_here",
@@ -45,6 +46,14 @@ static const std::set<std::string> kDecks = {
     "city", "tavern", "dungeon", "dungeon_finale", "cave", "forest", "road",
     "crash", "swamp", "mountains", "coast", "sea"};
 static const std::set<std::string> kStats = {"str", "dex", "con", "int", "wis", "cha"};
+static const std::set<std::string> kInstitutionKinds = {
+    "union", "tenant_council", "mutual_aid", "cooperative",
+    "revolutionary_committee", "antifascist_coalition", "pirate_assembly",
+    "scientific_commons", "peace_movement", "restoration_crew"};
+static const std::set<std::string> kEndingIds = {
+    "common_future", "another_attempt", "broad_front_holds",
+    "demobilized_stars", "waters_return", "abundance_without_owners",
+    "naive_power"};
 
 // Tokens the engine injects at runtime.
 static const std::set<std::string> kBuiltinCtx = {"site", "world", "placeword",
@@ -75,6 +84,9 @@ static bool validWhen(const std::string& w) {
     static const std::set<std::string> ops = {">", "<", ">=", "<=", "=="};
     if (unary.count(a)) return true;
     if (named.count(a)) return !b.empty();
+    if (a == "member" || a == "!member") return kInstitutionKinds.count(b);
+    if (a == "ending_ready") return kEndingIds.count(b);
+    if (a == "tendency") return kInstitutionKinds.count(b) && !c.empty();
     if (cmp.count(a)) return ops.count(b) && !c.empty();
     if (a == "stat") {
         std::string d;
@@ -89,18 +101,14 @@ static bool validWhen(const std::string& w) {
         };
         return fields.count(b) && ops.count(c) && !d.empty();
     }
-    if (a == "world" || a == "institution") {
+    if (a == "world" || a == "institution" || a == "role") {
         std::string d;
         ss >> d;
         static const std::set<std::string> worldFields = {
             "worker_power", "rent_burden", "wealth_concentration", "pollution",
             "militarization", "food_security", "fascist_influence", "solidarity",
             "legitimacy", "mutual_aid"};
-        static const std::set<std::string> institutionKinds = {
-            "union", "tenant_council", "mutual_aid", "cooperative",
-            "revolutionary_committee", "antifascist_coalition", "pirate_assembly",
-            "scientific_commons", "peace_movement", "restoration_crew"};
-        bool known = a == "world" ? worldFields.count(b) : institutionKinds.count(b);
+        bool known = a == "world" ? worldFields.count(b) : kInstitutionKinds.count(b);
         return known && ops.count(c) && !d.empty();
     }
     return false;
@@ -228,13 +236,9 @@ int main(int argc, char** argv) {
                     "fascist_influence", "solidarity", "legitimacy", "mutual_aid"};
                 if (!fields.count(a)) fail(id, "unknown world field: " + a);
             }
-            if (verb == "institution") {
-                static const std::set<std::string> kinds = {
-                    "union", "tenant_council", "mutual_aid", "cooperative",
-                    "revolutionary_committee", "antifascist_coalition",
-                    "pirate_assembly", "scientific_commons", "peace_movement",
-                    "restoration_crew"};
-                if (!kinds.count(a)) fail(id, "unknown institution: " + a);
+            if (verb == "institution" || verb == "join" || verb == "leave" ||
+                verb == "standing" || verb == "role" || verb == "tendency") {
+                if (!kInstitutionKinds.count(a)) fail(id, "unknown institution: " + a);
             }
         }
     };

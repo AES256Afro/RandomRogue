@@ -568,3 +568,28 @@ The audit's design program, executed:
 - **Ideological endings** - the final choices read accumulated material history
   instead of awarding a single moral answer. Victories remain unfinished and
   failures can still leave tools for another attempt.
+
+---
+
+## Release 19 - The World Answers Back
+
+- **Remembered campaigns** - every connected family records its prior choice,
+  outcome, place, witness, seen count, and resolution. Returning beats present
+  that history before asking for another decision.
+- **Visible public consequences** - choices append a world response to the
+  result and enter a public record in the Story Ledger. Regional shifts,
+  institutional changes, scheduled consequences, and campaign convergence no
+  longer hide behind counters.
+- **Membership and internal politics** - players can join any living
+  institution, build standing, challenge bureaucracy, seek office, influence
+  tendencies, leave, and witness schisms caused by unresolved tension.
+- **Several roads to an ending** - the seven ideological horizons use weighted
+  material histories rather than one strict checklist. The Ledger gives
+  directional guidance while preserving discovery.
+- **Legacy epilogues** - completed and incomplete lives produce later accounts
+  of what their movements built, lost, or left for another generation.
+- **Portable and accessible play** - three reader sizes, high contrast, reduced
+  motion, separate music and sound controls, larger touch targets, background
+  autosave, and browser save export/import. Music remains off by default.
+- **Editorial gate** - the 1,000-card deck retains full location and theme
+  coverage with zero repeated seven-word openings.

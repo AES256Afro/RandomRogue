@@ -19,6 +19,7 @@ class Game {
 public:
     bool init(); // load data; returns false if content missing
     void shutdown();
+    void suspend(); // save immediately when a browser tab is backgrounded
     // Draw + input for one frame. Called inside the virtual-canvas texture
     // mode; mouse is already in virtual (320x180) coordinates. `pressed` is
     // the unified click/tap edge from the platform layer.
@@ -38,7 +39,7 @@ private:
     enum Screen { TITLE, CLASSPICK, AMBITION, TRAVEL, EVENT, OUTCOME, DEATH,
                   INVENTORY, INFO, VENDOR, WORLDMAP, CHRONICLE, SAGA, REPLAY,
                   OPTIONS, CRAFT, JOURNAL, DIRECTOR, INVESTIGATION, NETWORK,
-                  BALANCE, RUMORS };
+                  BALANCE, RUMORS, INSTITUTIONS };
 
     // A hired sword, a talking badger, a disgraced accountant (P5).
     struct Companion {
@@ -113,7 +114,26 @@ private:
         int strength = 1;
         int integrity = 2;
         int bureaucracy = 0;
+        int tension = 0;
+        int membership = 0; // 0 outsider, 1 member, 2 delegate, 3 organizer
+        int standing = 0;
+        std::string tendency;
         bool active = true;
+    };
+    struct FamilyMemory {
+        int seen = 0;
+        int lastDay = 0;
+        int region = -1;
+        bool resolved = false;
+        std::string choice;
+        std::string outcome;
+        std::string witness;
+    };
+    struct PublicNotice {
+        int day = 0;
+        int region = -1;
+        std::string category;
+        std::string text;
     };
     struct Rumor {
         int id = 0;
@@ -198,6 +218,12 @@ private:
     void updatePoliticalWorld();
     Institution* institutionFor(const std::string& kind);
     const Institution* institutionFor(const std::string& kind) const;
+    std::string familyLabel(const std::string& family) const;
+    void rememberFamilyOutcome(const Choice& choice, int choiceIndex);
+    void recordPublicResponse(const std::vector<std::string>& effects);
+    int endingScore(const std::string& id) const;
+    std::string endingGuidance() const;
+    std::string buildEpilogue(bool completed) const;
     void advanceRumorsAndAgendas();
     void addRumor(const std::string& text, int truth, int region,
                   int figure = -1, bool planted = false,
@@ -229,6 +255,7 @@ private:
     void drawNetwork(Vector2 mouse);
     void drawBalance(Vector2 mouse);
     void drawRumors(Vector2 mouse);
+    void drawInstitutions(Vector2 mouse);
     bool craftRecipe(const ItemRecipe& recipe);
     void drawIntro(Vector2 mouse); // first-run how-to cards (R7)
     // Shared worlds (R7): daily and weekly seeds and their board keys.
@@ -261,6 +288,8 @@ private:
                         int maxY, Color color, Vector2 mouse, bool follow);
     // Touch-friendly clickable button; returns true on click/tap.
     bool uiButton(Rectangle r, const char* label, Vector2 mouse);
+    int readerFont() const { return profile_.readerSize == 2 ? 14 :
+                                    (profile_.readerSize == 1 ? 12 : 10); }
 
     Screen screen_ = TITLE;
     Grammar grammar_;
@@ -318,6 +347,9 @@ private:
     WorldConditions worldConditions_;
     std::vector<Institution> institutions_;
     std::set<std::string> storyFlags_;
+    std::map<std::string, FamilyMemory> familyMemories_;
+    std::vector<PublicNotice> publicNotices_;
+    std::string endingEpilogue_;
     std::vector<Rumor> rumors_;
     std::set<int> verifiedRumors_;
     std::vector<Agenda> agendas_;
@@ -449,6 +481,10 @@ private:
     std::string balanceJson_;
     bool balanceRequested_ = false;
     int autonomousArcResolutions_ = 0;
+    int institutionPage_ = 0;
+    int institutionSelected_ = -1;
+    std::string institutionMessage_;
+    int optionsPage_ = 0;
 
     // audio / juice / meta
     AudioBank audio_;

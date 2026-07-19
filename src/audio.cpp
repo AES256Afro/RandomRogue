@@ -165,12 +165,12 @@ void AudioBank::toggleMusic() {
     else PlaySound(current_);
 }
 
-void AudioBank::blip()  { if (ready_) PlaySound(sBlip_); }
-void AudioBank::coin()  { if (ready_) PlaySound(sCoin_); }
-void AudioBank::thud()  { if (ready_) PlaySound(sThud_); }
-void AudioBank::dice()  { if (ready_) PlaySound(sDice_); }
-void AudioBank::chime() { if (ready_) PlaySound(sChime_); }
-void AudioBank::dirge()   { if (ready_) PlaySound(sDirge_); }
-void AudioBank::fanfare() { if (ready_) PlaySound(sFanfare_); }
-void AudioBank::solidarity() { if (ready_) PlaySound(sSolidarity_); }
-void AudioBank::warning() { if (ready_) PlaySound(sWarning_); }
+void AudioBank::blip()  { if (ready_ && !sfxMuted_) PlaySound(sBlip_); }
+void AudioBank::coin()  { if (ready_ && !sfxMuted_) PlaySound(sCoin_); }
+void AudioBank::thud()  { if (ready_ && !sfxMuted_) PlaySound(sThud_); }
+void AudioBank::dice()  { if (ready_ && !sfxMuted_) PlaySound(sDice_); }
+void AudioBank::chime() { if (ready_ && !sfxMuted_) PlaySound(sChime_); }
+void AudioBank::dirge()   { if (ready_ && !sfxMuted_) PlaySound(sDirge_); }
+void AudioBank::fanfare() { if (ready_ && !sfxMuted_) PlaySound(sFanfare_); }
+void AudioBank::solidarity() { if (ready_ && !sfxMuted_) PlaySound(sSolidarity_); }
+void AudioBank::warning() { if (ready_ && !sfxMuted_) PlaySound(sWarning_); }

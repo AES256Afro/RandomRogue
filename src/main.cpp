@@ -49,6 +49,11 @@ EM_BOOL onTouch(int type, const EmscriptenTouchEvent* e, void*) {
     return EM_TRUE; // consume: no ghost mouse events / page gestures
 }
 
+EM_BOOL onVisibility(int, const EmscriptenVisibilityChangeEvent* e, void*) {
+    if (e && e->hidden) gGame.suspend();
+    return EM_FALSE;
+}
+
 // Hand a MEMFS file to the browser as a download (the death card).
 EM_JS(void, rr_download_file, (const char* path, const char* fname), {
     try {
@@ -189,6 +194,7 @@ int main() {
     emscripten_set_touchmove_callback("#canvas", nullptr, 1, onTouch);
     emscripten_set_touchend_callback("#canvas", nullptr, 1, onTouch);
     emscripten_set_touchcancel_callback("#canvas", nullptr, 1, onTouch);
+    emscripten_set_visibilitychange_callback(nullptr, 1, onVisibility);
     emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
 #else
     SetTargetFPS(60);

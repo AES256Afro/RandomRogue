@@ -92,6 +92,50 @@ EM_JS(char*, rr_get_balance, (), {
     stringToUTF8(s, buf, len);
     return buf;
 });
+EM_JS(void, rr_export_save, (), {
+    try {
+        var keys = ['random_rogue_profile', 'random_rogue_worlds',
+                    'random_rogue_run', 'random_rogue_run_backup',
+                    'random_rogue_marks'];
+        var values = {};
+        keys.forEach(function(key) { values[key] = localStorage.getItem(key) || String(); });
+        var payload = JSON.stringify({format:'random-rogue-save-v1', values:values}, null, 2);
+        var blob = new Blob([payload], {type:'application/json'});
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'random-rogue-save.json';
+        a.click();
+        setTimeout(function(){ URL.revokeObjectURL(a.href); }, 5000);
+    } catch (e) {}
+});
+EM_JS(void, rr_import_save, (), {
+    try {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json,application/json';
+        input.onchange = function() {
+            if (!input.files || !input.files[0]) return;
+            var reader = new FileReader();
+            reader.onload = function() {
+                try {
+                    var payload = JSON.parse(String(reader.result || String()));
+                    if (!payload || payload.format !== 'random-rogue-save-v1' ||
+                        !payload.values) return;
+                    var allowed = ['random_rogue_profile', 'random_rogue_worlds',
+                                   'random_rogue_run', 'random_rogue_run_backup',
+                                   'random_rogue_marks'];
+                    allowed.forEach(function(key) {
+                        var value = payload.values[key];
+                        if (typeof value === 'string') localStorage.setItem(key, value);
+                    });
+                    location.reload();
+                } catch (e) {}
+            };
+            reader.readAsText(input.files[0]);
+        };
+        input.click();
+    } catch (e) {}
+});
 #endif
 
 namespace {
@@ -233,11 +277,17 @@ bool Game::init() {
     // Settings persist across sessions (R7).
     SetMasterVolume(0.35f + 0.3f * (profile_.volume % 3));
     if (profile_.musicOff != audio_.musicMuted()) audio_.toggleMusic();
+    audio_.setSfxMuted(profile_.sfxOff);
     return dataError_.empty();
 }
 
 void Game::shutdown() {
     audio_.shutdown();
+}
+
+void Game::suspend() {
+    if (screen_ != TITLE && screen_ != CLASSPICK && screen_ != AMBITION)
+        saveRun();
 }
 
 std::vector<Game::StartClass> Game::startClasses() const {
@@ -464,6 +514,120 @@ std::set<std::string> Game::activeStoryFamilies() const {
     add(scheduledNextId_);
     for (const PendingConsequence& value : consequences_) add(value.eventId);
     return out;
+}
+
+std::string Game::familyLabel(const std::string& family) const {
+    std::string out = family;
+    if (out.rfind("r18_", 0) == 0) out.erase(0, 4);
+    for (char& ch : out) if (ch == '_') ch = ' ';
+    bool cap = true;
+    for (char& ch : out) {
+        if (cap && ch >= 'a' && ch <= 'z') ch = (char)(ch - 'a' + 'A');
+        cap = ch == ' ';
+    }
+    return out.empty() ? "Unnamed Trouble" : out;
+}
+
+int Game::endingScore(const std::string& id) const {
+    auto strength = [&](const std::string& kind) {
+        const Institution* value = institutionFor(kind);
+        return value ? value->strength : -3;
+    };
+    int score = 0;
+    if (id == "common_future")
+        score = 30 + worldConditions_.workerPower * 4 +
+            worldConditions_.solidarity * 4 -
+            worldConditions_.wealthConcentration * 3 -
+            worldConditions_.rentBurden * 2 + strength("union") * 4;
+    else if (id == "another_attempt")
+        score = 30 + worldConditions_.workerPower * 3 +
+            worldConditions_.solidarity * 4 -
+            worldConditions_.fascistInfluence * 3 +
+            strength("revolutionary_committee") * 5;
+    else if (id == "broad_front_holds")
+        score = 40 - worldConditions_.fascistInfluence * 5 +
+            worldConditions_.solidarity * 2 +
+            strength("antifascist_coalition") * 4;
+    else if (id == "demobilized_stars")
+        score = 40 - worldConditions_.militarization * 5 +
+            worldConditions_.solidarity * 2 + strength("peace_movement") * 5;
+    else if (id == "waters_return")
+        score = 40 - worldConditions_.pollution * 5 +
+            worldConditions_.foodSecurity * 2 + strength("restoration_crew") * 5;
+    else if (id == "abundance_without_owners")
+        score = 25 + worldConditions_.foodSecurity * 5 -
+            worldConditions_.wealthConcentration * 3 +
+            strength("scientific_commons") * 4 + strength("cooperative") * 2;
+    else if (id == "naive_power")
+        score = 20 + worldConditions_.mutualAid * 4 +
+            worldConditions_.solidarity * 4 + collectiveVictories_ * 6;
+    return std::max(0, std::min(100, score));
+}
+
+std::string Game::endingGuidance() const {
+    static const struct Horizon {
+        const char* id;
+        const char* name;
+    } horizons[] = {
+        {"common_future", "The Common Future"},
+        {"another_attempt", "Another Attempt"},
+        {"broad_front_holds", "The Broad Front Holds"},
+        {"demobilized_stars", "Demobilized Stars"},
+        {"waters_return", "The Waters Return"},
+        {"abundance_without_owners", "Abundance Without Owners"},
+        {"naive_power", "The Naive Power"}
+    };
+    const Horizon* best = &horizons[0];
+    int score = endingScore(best->id);
+    for (const Horizon& value : horizons) {
+        int candidate = endingScore(value.id);
+        if (candidate > score) { best = &value; score = candidate; }
+    }
+    std::string distance = score >= 60 ? "within reach" :
+        (score >= 55 ? "gathering" : (score >= 40 ? "visible" : "distant"));
+    std::string hint;
+    std::string id = best->id;
+    if (id == "common_future")
+        hint = worldConditions_.workerPower < 4 ? "Workers need durable power." :
+               "Reduce concentrated wealth and rent extraction.";
+    else if (id == "another_attempt")
+        hint = "Build accountable revolutionary organization without feeding authoritarian power.";
+    else if (id == "broad_front_holds")
+        hint = "Weaken fascist influence while keeping the coalition active.";
+    else if (id == "demobilized_stars")
+        hint = "Demobilize the world and strengthen organized peace.";
+    else if (id == "waters_return")
+        hint = "Repair ecosystems and make restoration crews durable.";
+    else if (id == "abundance_without_owners")
+        hint = "Raise food security while breaking private control of abundance.";
+    else
+        hint = "Turn mutual aid and solidarity into permanent infrastructure.";
+    return std::string(best->name) + " is " + distance + ". " + hint;
+}
+
+std::string Game::buildEpilogue(bool completed) const {
+    const Institution* strongest = nullptr;
+    for (const Institution& value : institutions_)
+        if (value.active && (!strongest || value.strength > strongest->strength))
+            strongest = &value;
+    std::string out = completed ? "Decades later, " : "Years later, ";
+    if (strongest)
+        out += strongest->name + " still meets, although its chairs have been replaced twice";
+    else
+        out += "people still meet in kitchens, workshops, and whatever rooms remain public";
+    if (worldConditions_.fascistInfluence <= -2)
+        out += ". The uniforms are gone, but the witnesses keep the records";
+    else if (worldConditions_.fascistInfluence >= 3)
+        out += ". The uniforms remain, but so do the names of those who resisted";
+    if (worldConditions_.pollution <= -2)
+        out += ". Children know the river as water rather than evidence";
+    else if (worldConditions_.pollution >= 3)
+        out += ". Cleanup crews inherit both the damage and the maps needed to fight it";
+    if (worldConditions_.mutualAid >= 3 || worldConditions_.solidarity >= 3)
+        out += ". Kindness survives by becoming a schedule";
+    else
+        out += ". Someone keeps the soup pot, the minutes, and one unfinished plan";
+    return out + ".";
 }
 
 void Game::offerContract() {
@@ -698,7 +862,7 @@ void Game::saveRun() {
         sites.push_back({{"name", s.name}, {"type", s.type}, {"deck", s.deck},
                          {"region", s.region}});
     nlohmann::json j = {
-        {"schema", 7},
+        {"schema", 8},
         {"seed", masterSeed_}, {"gen", pendingLegacy_.size()},
         {"name", ch_.name.conlang}, {"meaning", ch_.name.meaning},
         {"stats", std::vector<int>(ch_.stats, ch_.stats + STAT_COUNT)},
@@ -817,9 +981,26 @@ void Game::saveRun() {
                                     {"strength", value.strength},
                                     {"integrity", value.integrity},
                                     {"bureaucracy", value.bureaucracy},
+                                    {"tension", value.tension},
+                                    {"membership", value.membership},
+                                    {"standing", value.standing},
+                                    {"tendency", value.tendency},
                                     {"active", value.active}});
     j["institutions"] = institutionState;
     j["storyFlags"] = std::vector<std::string>(storyFlags_.begin(), storyFlags_.end());
+    nlohmann::json familyState = nlohmann::json::object();
+    for (const auto& [family, memory] : familyMemories_)
+        familyState[family] = {{"seen", memory.seen}, {"day", memory.lastDay},
+                               {"region", memory.region}, {"resolved", memory.resolved},
+                               {"choice", memory.choice}, {"outcome", memory.outcome},
+                               {"witness", memory.witness}};
+    j["familyMemories"] = familyState;
+    nlohmann::json noticeState = nlohmann::json::array();
+    for (const PublicNotice& value : publicNotices_)
+        noticeState.push_back({{"day", value.day}, {"region", value.region},
+                               {"category", value.category}, {"text", value.text}});
+    j["publicNotices"] = noticeState;
+    j["endingEpilogue"] = endingEpilogue_;
     j["mystery"] = {{"active", mystery_.active}, {"solved", mystery_.solved},
                      {"tried", mystery_.tried}, {"correct", mystery_.correctVerdict},
                      {"appealed", mystery_.appealed},
@@ -1166,6 +1347,10 @@ bool Game::loadRun() {
             institution.strength = value.value("strength", 1);
             institution.integrity = value.value("integrity", 2);
             institution.bureaucracy = value.value("bureaucracy", 0);
+            institution.tension = value.value("tension", 0);
+            institution.membership = value.value("membership", 0);
+            institution.standing = value.value("standing", 0);
+            institution.tendency = value.value("tendency", "democratic");
             institution.active = value.value("active", true);
             if (!institution.kind.empty()) institutions_.push_back(institution);
         }
@@ -1173,6 +1358,30 @@ bool Game::loadRun() {
     storyFlags_.clear();
     for (const std::string& flag : j.value("storyFlags", std::vector<std::string>{}))
         storyFlags_.insert(flag);
+    familyMemories_.clear();
+    if (j.contains("familyMemories") && j["familyMemories"].is_object())
+        for (auto& [family, value] : j["familyMemories"].items()) {
+            FamilyMemory memory;
+            memory.seen = value.value("seen", 0);
+            memory.lastDay = value.value("day", 0);
+            memory.region = value.value("region", -1);
+            memory.resolved = value.value("resolved", false);
+            memory.choice = value.value("choice", "");
+            memory.outcome = value.value("outcome", "");
+            memory.witness = value.value("witness", "");
+            if (memory.seen > 0) familyMemories_[family] = memory;
+        }
+    publicNotices_.clear();
+    if (j.contains("publicNotices") && j["publicNotices"].is_array())
+        for (const auto& value : j["publicNotices"]) {
+            PublicNotice notice;
+            notice.day = value.value("day", 0);
+            notice.region = value.value("region", -1);
+            notice.category = value.value("category", "Public life");
+            notice.text = value.value("text", "");
+            if (!notice.text.empty()) publicNotices_.push_back(notice);
+        }
+    endingEpilogue_ = j.value("endingEpilogue", "");
     if (j.contains("mystery") && j["mystery"].is_object()) {
         auto& value = j["mystery"];
         mystery_.active = value.value("active", false);
@@ -1442,6 +1651,28 @@ bool Game::evalCond(const std::string& cond) const {
     if (a == "echo") return storyEchoes_.count(b) > 0;
     if (a == "story") return storyFlags_.count(b) > 0;
     if (a == "!story") return storyFlags_.count(b) == 0;
+    if (a == "member" || a == "!member") {
+        const Institution* value = institutionFor(b);
+        bool joined = value && value->membership > 0;
+        return a == "member" ? joined : !joined;
+    }
+    if (a == "tendency") {
+        const Institution* value = institutionFor(b);
+        return value && value->tendency == c;
+    }
+    if (a == "role") {
+        std::string valueText;
+        ss >> valueText;
+        const Institution* value = institutionFor(b);
+        int lhs = value ? value->membership : 0;
+        int rhs = atoi(valueText.c_str());
+        if (c == ">") return lhs > rhs;
+        if (c == "<") return lhs < rhs;
+        if (c == ">=") return lhs >= rhs;
+        if (c == "<=") return lhs <= rhs;
+        return lhs == rhs;
+    }
+    if (a == "ending_ready") return ch_.day >= 18 && endingScore(b) >= 60;
     if (a == "world" || a == "institution") {
         std::string valueText;
         ss >> valueText;
@@ -1532,6 +1763,16 @@ void Game::injectLegacy(int classIdx) {
         for (int s = 0; s < (int)world_.sites.size(); s++)
             if (world_.sites[s].name == rec.deathSite) death.site = s;
         history_.chron.push_back(death);
+
+        if (!rec.movementLegacy.empty()) {
+            ChronEntry movement;
+            movement.id = (int)history_.chron.size();
+            movement.year = deathYear + 1;
+            movement.type = "region_shift";
+            movement.actor = fi;
+            movement.extra = rec.movementLegacy;
+            history_.chron.push_back(movement);
+        }
 
         // Their things scatter into the world, findable, name attached.
         for (size_t r = 0; r < rec.relics.size(); r++) {
@@ -1728,6 +1969,12 @@ void Game::newRun(int classIdx) {
     scheduledFigure_ = -1;
     scheduledRegion_ = -1;
     consequences_.clear();
+    familyMemories_.clear();
+    publicNotices_.clear();
+    endingEpilogue_.clear();
+    institutionPage_ = 0;
+    institutionSelected_ = -1;
+    institutionMessage_.clear();
     npcMarks_.clear();
     npcRelations_.clear();
     slotFigure_ = -1;
@@ -1804,6 +2051,32 @@ void Game::newRun(int classIdx) {
                 deck_.setCooldown(std::set<std::string>(worldEventMemory_.begin(),
                                                          worldEventMemory_.end()));
             }
+            if (m.contains("families") && m["families"].is_object())
+                for (auto& [family, value] : m["families"].items()) {
+                    FamilyMemory memory;
+                    memory.seen = value.value("seen", 0);
+                    memory.lastDay = value.value("day", 0);
+                    memory.region = value.value("region", -1);
+                    memory.resolved = value.value("resolved", false);
+                    memory.choice = value.value("choice", "");
+                    memory.outcome = value.value("outcome", "");
+                    memory.witness = value.value("witness", "");
+                    if (memory.seen > 0) familyMemories_[family] = memory;
+                    if (memory.resolved) storyEchoes_.insert(family);
+                }
+            if (m.contains("institutions") && m["institutions"].is_object())
+                for (Institution& institution : institutions_) {
+                    if (!m["institutions"].contains(institution.kind)) continue;
+                    const auto& value = m["institutions"][institution.kind];
+                    institution.strength = value.value("strength", institution.strength);
+                    institution.integrity = value.value("integrity", institution.integrity);
+                    institution.bureaucracy = value.value("bureaucracy", institution.bureaucracy);
+                    institution.tension = value.value("tension", institution.tension);
+                    institution.tendency = value.value("tendency", institution.tendency);
+                    institution.active = value.value("active", institution.active);
+                    institution.membership = 0;
+                    institution.standing = 0;
+                }
         }
     }
     if (classIdx == 5 && !pendingLegacy_.empty() && pendingLegacy_.back().blessing)
@@ -2124,17 +2397,21 @@ const Game::Institution* Game::institutionFor(const std::string& kind) const {
 void Game::seedInstitutions() {
     institutions_.clear();
     worldConditions_ = WorldConditions{};
-    static const struct SeedInstitution { const char* kind; const char* name; } seeds[] = {
-        {"union", "The Many-Handed Union"},
-        {"tenant_council", "The Council of Unmovable Chairs"},
-        {"mutual_aid", "The Unlicensed Soup Network"},
-        {"cooperative", "The Cooperative of Shared Tools"},
-        {"revolutionary_committee", "The Committee for Another Attempt"},
-        {"antifascist_coalition", "The Broad Front and Narrow Hallway"},
-        {"pirate_assembly", "The Deckhand Assembly"},
-        {"scientific_commons", "The Public Laboratory of Useful Questions"},
-        {"peace_movement", "The League Against Profitable Funerals"},
-        {"restoration_crew", "The Watershed Repair Brigade"}
+    static const struct SeedInstitution {
+        const char* kind;
+        const char* name;
+        const char* tendency;
+    } seeds[] = {
+        {"union", "The Many-Handed Union", "rank_and_file"},
+        {"tenant_council", "The Council of Unmovable Chairs", "direct_action"},
+        {"mutual_aid", "The Unlicensed Soup Network", "care"},
+        {"cooperative", "The Cooperative of Shared Tools", "democratic"},
+        {"revolutionary_committee", "The Committee for Another Attempt", "anti_authoritarian"},
+        {"antifascist_coalition", "The Broad Front and Narrow Hallway", "broad_front"},
+        {"pirate_assembly", "The Deckhand Assembly", "mutinous"},
+        {"scientific_commons", "The Public Laboratory of Useful Questions", "open_knowledge"},
+        {"peace_movement", "The League Against Profitable Funerals", "demobilization"},
+        {"restoration_crew", "The Watershed Repair Brigade", "ecological"}
     };
     for (int i = 0; i < 10; i++) {
         Institution value;
@@ -2146,6 +2423,7 @@ void Game::seedInstitutions() {
         value.strength = runRng_.range(0, 2);
         value.integrity = runRng_.range(1, 3);
         value.bureaucracy = runRng_.range(0, 1);
+        value.tendency = seeds[i].tendency;
         institutions_.push_back(value);
     }
     worldConditions_.workerPower = runRng_.range(-1, 1);
@@ -2211,11 +2489,27 @@ void Game::updatePoliticalWorld() {
         if (value.strength >= 4 && liveRng_.chance(28)) value.bureaucracy++;
         if (value.integrity >= 3 && value.bureaucracy > 0 && liveRng_.chance(35)) value.bureaucracy--;
         if (value.bureaucracy >= 5) value.integrity--;
+        if (value.bureaucracy >= 3 && liveRng_.chance(45)) value.tension++;
+        if (value.integrity >= 3 && value.tension > 0 && liveRng_.chance(40)) value.tension--;
+        if (value.membership > 0) {
+            if (value.integrity >= 3) value.standing++;
+            if (value.bureaucracy >= 5) value.standing--;
+            value.standing = std::max(-5, std::min(10, value.standing));
+        }
+        if (value.tension >= 5) {
+            value.strength--;
+            value.integrity--;
+            value.tension = 2;
+            addRumor(value.name + " split over who was authorized to prevent a split. Both meetings kept the soup schedule.",
+                     88, value.region);
+        }
         value.strength = std::max(-3, std::min(8, value.strength));
         value.integrity = std::max(-3, std::min(6, value.integrity));
         value.bureaucracy = std::max(0, std::min(6, value.bureaucracy));
+        value.tension = std::max(0, std::min(6, value.tension));
         if (value.strength <= -3 || value.integrity <= -3) {
             value.active = false;
+            value.membership = 0;
             addRumor(value.name + " collapsed. Its filing cabinet has declared continuity government.", 90, value.region);
         }
     }
@@ -2427,6 +2721,91 @@ void Game::queueConsequence(int days, const std::string& eventId,
     value.figure = slotFigure_;
     value.region = currentRegion_;
     consequences_.push_back(value);
+}
+
+void Game::rememberFamilyOutcome(const Choice& choice, int choiceIndex) {
+    if (!current_ || current_->family.empty()) return;
+    FamilyMemory& memory = familyMemories_[current_->family];
+    memory.seen++;
+    memory.lastDay = ch_.day;
+    memory.region = currentRegion_;
+    memory.choice = choiceIndex >= 0 && choiceIndex < (int)choiceTexts_.size()
+        ? choiceTexts_[choiceIndex] : choice.text;
+    memory.outcome = outcome_.text;
+    if (memory.choice.size() > 100) memory.choice.resize(100);
+    if (memory.outcome.size() > 180) memory.outcome.resize(180);
+    if (slotFigure_ >= 0 && slotFigure_ < (int)history_.figures.size())
+        memory.witness = history_.figures[slotFigure_].name;
+    memory.resolved = storyEchoes_.count(current_->family) > 0 ||
+        storyFlags_.count(current_->family + "_resolved") > 0;
+}
+
+void Game::recordPublicResponse(const std::vector<std::string>& effects) {
+    std::vector<std::string> lines;
+    std::set<std::string> seen;
+    auto add = [&](const std::string& text) {
+        if (!text.empty() && seen.insert(text).second && lines.size() < 4)
+            lines.push_back(text);
+    };
+    auto worldName = [](const std::string& field) {
+        if (field == "worker_power") return std::string("Worker power");
+        if (field == "rent_burden") return std::string("Rent burden");
+        if (field == "wealth_concentration") return std::string("Concentrated wealth");
+        if (field == "food_security") return std::string("Food security");
+        if (field == "fascist_influence") return std::string("Fascist influence");
+        if (field == "mutual_aid") return std::string("Mutual aid");
+        std::string out = field;
+        for (char& ch : out) if (ch == '_') ch = ' ';
+        if (!out.empty() && out[0] >= 'a' && out[0] <= 'z') out[0] -= 32;
+        return out;
+    };
+    for (const std::string& effect : effects) {
+        std::istringstream ss(effect);
+        std::string verb, field;
+        int amount = 0;
+        ss >> verb >> field >> amount;
+        if (verb == "world" && amount != 0) {
+            int value = worldConditions_.value(field);
+            add(worldName(field) + (amount > 0 ? " rises to " : " falls to ") +
+                std::to_string(value) + ".");
+        } else if (verb == "institution" && amount != 0) {
+            const Institution* value = institutionFor(field);
+            if (value)
+                add(value->name + (amount > 0 ? " gains strength" : " loses strength") +
+                    " (" + std::to_string(value->strength) + ").");
+        } else if (verb == "region" || verb == "region_flag" ||
+                   verb == "region_spread") {
+            add("Local conditions change, and nearby people notice.");
+        } else if (verb == "schedule") {
+            add("This decision will return after people have had time to organize around it.");
+        } else if (verb == "converge") {
+            add("This campaign now affects prices, rumors, institutions, and ordinary life.");
+        } else if (verb == "join") {
+            const Institution* value = institutionFor(field);
+            if (value) add("You are now a member of " + value->name + ".");
+        } else if (verb == "standing" && amount != 0) {
+            const Institution* value = institutionFor(field);
+            if (value) add("Your standing inside " + value->name +
+                           (amount > 0 ? " improves." : " deteriorates."));
+        }
+    }
+    if (lines.empty()) return;
+    outcome_.text += "\n\nWORLD RESPONSE";
+    std::string notice;
+    for (const std::string& line : lines) {
+        outcome_.text += "\n" + line;
+        if (!notice.empty()) notice += " ";
+        notice += line;
+    }
+    PublicNotice value;
+    value.day = ch_.day;
+    value.region = currentRegion_;
+    value.category = current_ && !current_->family.empty() ?
+        familyLabel(current_->family) : "Public life";
+    value.text = notice;
+    publicNotices_.push_back(value);
+    while (publicNotices_.size() > 64) publicNotices_.erase(publicNotices_.begin());
+    newsLine_ = "PUBLIC RESPONSE: " + notice;
 }
 
 void Game::activateDueConsequence() {
@@ -3021,6 +3400,16 @@ bool Game::presentEvent(const Event* event) {
     deck_.markUsed(event->id);
     currentCtx_ = ctx;
     currentText_ = grammar_.expand(event->text, runRng_, ctx);
+    auto memoryIt = familyMemories_.find(event->family);
+    if (!event->family.empty() && memoryIt != familyMemories_.end() &&
+        memoryIt->second.seen > 0) {
+        std::string previous = memoryIt->second.outcome;
+        size_t cut = previous.find('\n');
+        if (cut != std::string::npos) previous.resize(cut);
+        if (previous.size() > 125) previous = previous.substr(0, 122) + "...";
+        currentText_ = "PREVIOUSLY IN " + familyLabel(event->family) + "\n" +
+            previous + "\n\n" + currentText_;
+    }
     choiceTexts_.clear();
     for (const Choice& choice : event->choices)
         choiceTexts_.push_back(choice.requires_.label() +
@@ -3487,6 +3876,57 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
                     audio_.solidarity();
                 }
             }
+        } else if (verb == "join") {
+            std::string kind;
+            ss >> kind;
+            for (Institution& value : institutions_)
+                if (value.kind == kind && value.active) {
+                    value.membership = std::max(1, value.membership);
+                    value.standing = std::max(1, value.standing + 1);
+                    value.tension = std::max(0, value.tension - 1);
+                    break;
+                }
+        } else if (verb == "leave") {
+            std::string kind;
+            ss >> kind;
+            for (Institution& value : institutions_)
+                if (value.kind == kind) {
+                    value.membership = 0;
+                    value.standing = std::min(0, value.standing);
+                    break;
+                }
+        } else if (verb == "standing") {
+            std::string kind;
+            int amount = 0;
+            ss >> kind >> amount;
+            for (Institution& value : institutions_)
+                if (value.kind == kind) {
+                    value.standing = std::max(-5, std::min(10, value.standing + amount));
+                    if (value.membership > 0 && value.standing >= 7)
+                        value.membership = std::max(value.membership, 3);
+                    else if (value.membership > 0 && value.standing >= 4)
+                        value.membership = std::max(value.membership, 2);
+                    break;
+                }
+        } else if (verb == "role") {
+            std::string kind;
+            int amount = 0;
+            ss >> kind >> amount;
+            for (Institution& value : institutions_)
+                if (value.kind == kind) {
+                    value.membership = std::max(0, std::min(3,
+                        value.membership + amount));
+                    break;
+                }
+        } else if (verb == "tendency") {
+            std::string kind, tendency;
+            ss >> kind >> tendency;
+            for (Institution& value : institutions_)
+                if (value.kind == kind && !tendency.empty()) {
+                    value.tendency = tendency;
+                    value.tension = std::min(6, value.tension + 1);
+                    break;
+                }
         } else if (verb == "story") {
             std::string flag;
             ss >> flag;
@@ -3558,6 +3998,8 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
             ch_.dead = true;
             finishedWell_ = true;
             if (!rest.empty()) ch_.epitaph = rest;
+            endingEpilogue_ = buildEpilogue(true);
+            outcome_.text += "\n\n" + endingEpilogue_;
             // Grand endings open new beginnings (R7 unlocks).
             if (current_) {
                 if (current_->id == "beyond_the_chart") profile_.horizons++;
@@ -3617,6 +4059,8 @@ void Game::chooseOption(int idx) {
     outcome_.text = grammar_.expand(outcome_.text, runRng_, currentCtx_);
     director_.record(*current_, &choice, ch_.day);
     applyEffects(outcome_.effects);
+    rememberFamilyOutcome(choice, idx);
+    recordPublicResponse(outcome_.effects);
     recordTelemetry(idx, currentDirectorScore_, ch_.dead);
     lastEventSerial_[current_->id] = eventSerial_;
     scheduledFigure_ = -1;
@@ -3760,11 +4204,15 @@ void Game::frame(Vector2 mouse, bool pressed) {
         case NETWORK:   drawNetwork(mouse); break;
         case BALANCE:   drawBalance(mouse); break;
         case RUMORS:    drawRumors(mouse); break;
+        case INSTITUTIONS: drawInstitutions(mouse); break;
     }
 }
 
 bool Game::uiButton(Rectangle r, const char* label, Vector2 mouse) {
-    bool hover = CheckCollisionPointRec(mouse, r);
+    // The visible pixel border stays compact, while the touch target extends
+    // slightly beyond it. This helps phones and tablets without crowding the UI.
+    Rectangle hit{r.x - 2.0f, r.y - 2.0f, r.width + 4.0f, r.height + 4.0f};
+    bool hover = CheckCollisionPointRec(mouse, hit);
     DrawRectangleRec(r, hover ? PAL_ROW : Color{31, 27, 46, 255});
     DrawRectangleLinesEx(r, profile_.highContrast ? 2 : 1,
                          profile_.highContrast ? PAL_INK : PAL_DARK);
@@ -3812,7 +4260,8 @@ int Game::optionRows(const std::vector<std::string>& rows,
         std::vector<std::string> lines = rowLines(label);
         int rowH = (int)lines.size() > 1 ? 24 : 13;
         Rectangle r = {4, (float)(y - 1), kW - 8, (float)(rowH - 1)};
-        bool hover = enabled[i] && CheckCollisionPointRec(mouse, r);
+        Rectangle hit{r.x - 2.0f, r.y - 2.0f, r.width + 4.0f, r.height + 4.0f};
+        bool hover = enabled[i] && CheckCollisionPointRec(mouse, hit);
         if (hover) DrawRectangleRec(r, PAL_ROW);
         Color c = enabled[i] ? (hover ? PAL_GOLD : PAL_INK) : PAL_DARK;
         DrawText(lines[0].c_str(), 8, y, 10, c);
@@ -3830,7 +4279,7 @@ int Game::optionRows(const std::vector<std::string>& rows,
 // once follow is off, the ^ / v buttons page through at the reader's pace.
 bool Game::drawScrollText(const std::vector<std::string>& lines, int x, int yTop,
                           int maxY, Color color, Vector2 mouse, bool follow) {
-    const int fontSize = profile_.largeText ? 12 : 10;
+    const int fontSize = readerFont();
     const int lineH = fontSize + 1;
     int rowsFit = (maxY - yTop) / lineH;
     if (rowsFit < 1) rowsFit = 1;
@@ -3891,7 +4340,7 @@ void Game::drawTitle(Vector2 mouse) {
     }
     const char* title = "RANDOM ROGUE";
     DrawText(title, (kW - MeasureText(title, 20)) / 2, 38, 20, PAL_GOLD);
-    DrawText("v18", 4, kH - 10, 10, PAL_DARK); // release stamp for bug reports
+    DrawText("v19", 4, kH - 10, 10, PAL_DARK); // release stamp for bug reports
     if (!dataError_.empty()) {
         DrawTextWrapped(dataError_, 20, 90, kW - 40, PAL_RED);
         return;
@@ -3974,6 +4423,7 @@ void Game::drawTitle(Vector2 mouse) {
     }
     if (uiButton({242, 139, 72, 18}, "OPTIONS", mouse)) {
         audio_.blip();
+        optionsPage_ = 0;
         screen_ = OPTIONS;
         return;
     }
@@ -4136,74 +4586,107 @@ void Game::drawIntro(Vector2 mouse) {
 
 // Settings: small, persistent, and out of the way (R7).
 void Game::drawOptions(Vector2 mouse) {
-    const char* head = "OPTIONS";
-    DrawText(head, (kW - MeasureText(head, 10)) / 2, 24, 10, PAL_GOLD);
+    std::string head = "OPTIONS " + std::to_string(optionsPage_ + 1) + "/2";
+    DrawText(head.c_str(), (kW - MeasureText(head.c_str(), 10)) / 2, 24, 10, PAL_GOLD);
     static const char* kSpeeds[4] = {"slow", "normal", "fast", "instant"};
     static const char* kVols[3] = {"quiet", "medium", "loud"};
-    std::string r1 = std::string("Text speed: ") + kSpeeds[profile_.textSpeed % 4];
-    std::string r2 = std::string("Volume: ") + kVols[profile_.volume % 3];
-    std::string r3 = std::string("Music: ") + (profile_.musicOff ? "off" : "on");
-    std::string r4 = std::string("Screen motion: ") +
-                     (profile_.reducedMotion ? "reduced" : "full");
-    if (uiButton({8, 44, 148, 18}, r1.c_str(), mouse)) {
-        profile_.textSpeed = (profile_.textSpeed + 1) % 4;
-        SaveProfile(profile_);
-    }
-    if (uiButton({164, 44, 148, 18}, r2.c_str(), mouse)) {
-        profile_.volume = (profile_.volume + 1) % 3;
-        SetMasterVolume(0.35f + 0.3f * profile_.volume);
-        SaveProfile(profile_);
-        audio_.coin(); // hear the new level immediately
-    }
-    if (uiButton({8, 66, 148, 18}, r3.c_str(), mouse)) {
-        profile_.musicOff = !profile_.musicOff;
-        if (profile_.musicOff != audio_.musicMuted()) audio_.toggleMusic();
-        SaveProfile(profile_);
-    }
-    if (uiButton({164, 66, 148, 18}, r4.c_str(), mouse)) {
-        profile_.reducedMotion = !profile_.reducedMotion;
-        shake_ = 0.0f;
-        SaveProfile(profile_);
-    }
-    std::string privacy = std::string("Anonymous tuning: ") +
-                          (profile_.analyticsOff ? "off" : "on");
-    std::string reading = std::string("Reader text: ") +
-                          (profile_.largeText ? "large" : "standard");
-    std::string contrast = std::string("Contrast: ") +
-                           (profile_.highContrast ? "high" : "standard");
-    if (uiButton({8, 88, 148, 18}, reading.c_str(), mouse)) {
-        profile_.largeText = !profile_.largeText;
-        SaveProfile(profile_);
-    }
-    if (uiButton({164, 88, 148, 18}, contrast.c_str(), mouse)) {
-        profile_.highContrast = !profile_.highContrast;
-        SaveProfile(profile_);
-    }
-    if (uiButton({8, 110, 148, 18}, privacy.c_str(), mouse)) {
-        profile_.analyticsOff = !profile_.analyticsOff;
+    if (optionsPage_ == 0) {
+        static const char* kReader[3] = {"standard", "large", "extra large"};
+        std::string speed = std::string("Text speed: ") + kSpeeds[profile_.textSpeed % 4];
+        std::string volume = std::string("Volume: ") + kVols[profile_.volume % 3];
+        std::string music = std::string("Music: ") + (profile_.musicOff ? "off" : "on");
+        std::string sfx = std::string("Sound effects: ") + (profile_.sfxOff ? "off" : "on");
+        std::string motion = std::string("Screen motion: ") +
+                             (profile_.reducedMotion ? "reduced" : "full");
+        std::string reading = std::string("Reader text: ") +
+                              kReader[profile_.readerSize % 3];
+        std::string contrast = std::string("Contrast: ") +
+                               (profile_.highContrast ? "high" : "standard");
+        if (uiButton({8, 44, 148, 18}, speed.c_str(), mouse)) {
+            profile_.textSpeed = (profile_.textSpeed + 1) % 4;
+            SaveProfile(profile_);
+        }
+        if (uiButton({164, 44, 148, 18}, volume.c_str(), mouse)) {
+            profile_.volume = (profile_.volume + 1) % 3;
+            SetMasterVolume(0.35f + 0.3f * profile_.volume);
+            SaveProfile(profile_);
+            audio_.coin();
+        }
+        if (uiButton({8, 66, 148, 18}, music.c_str(), mouse)) {
+            profile_.musicOff = !profile_.musicOff;
+            if (profile_.musicOff != audio_.musicMuted()) audio_.toggleMusic();
+            SaveProfile(profile_);
+        }
+        if (uiButton({164, 66, 148, 18}, sfx.c_str(), mouse)) {
+            profile_.sfxOff = !profile_.sfxOff;
+            audio_.setSfxMuted(profile_.sfxOff);
+            SaveProfile(profile_);
+        }
+        if (uiButton({8, 88, 148, 18}, motion.c_str(), mouse)) {
+            profile_.reducedMotion = !profile_.reducedMotion;
+            shake_ = 0.0f;
+            SaveProfile(profile_);
+        }
+        if (uiButton({164, 88, 148, 18}, reading.c_str(), mouse)) {
+            profile_.readerSize = (profile_.readerSize + 1) % 3;
+            profile_.largeText = profile_.readerSize > 0;
+            textScroll_ = 0;
+            SaveProfile(profile_);
+        }
+        if (uiButton({8, 110, 148, 18}, contrast.c_str(), mouse)) {
+            profile_.highContrast = !profile_.highContrast;
+            SaveProfile(profile_);
+        }
 #if defined(__EMSCRIPTEN__)
-        if (profile_.analyticsOff) rr_clear_telemetry();
+        if (uiButton({8, 132, 148, 18}, "EXPORT SAVE", mouse)) {
+            saveRun();
+            rr_export_save();
+            return;
+        }
+        if (uiButton({164, 132, 148, 18}, "IMPORT SAVE", mouse)) {
+            rr_import_save();
+            return;
+        }
+#else
+        DrawText("Desktop saves are stored beside the game.", 18, 136, 10, PAL_DIM);
 #endif
-        SaveProfile(profile_);
+    } else {
+        std::string privacy = std::string("Anonymous tuning: ") +
+                              (profile_.analyticsOff ? "off" : "on");
+        if (uiButton({8, 44, 148, 18}, privacy.c_str(), mouse)) {
+            profile_.analyticsOff = !profile_.analyticsOff;
+#if defined(__EMSCRIPTEN__)
+            if (profile_.analyticsOff) rr_clear_telemetry();
+#endif
+            SaveProfile(profile_);
+        }
+        if (uiButton({164, 44, 148, 18}, "DIRECTOR DIAGNOSTICS", mouse)) {
+            returnScreen_ = OPTIONS;
+            textScroll_ = 0;
+            screen_ = DIRECTOR;
+            return;
+        }
+        if (uiButton({8, 66, 148, 18}, "BALANCE DASHBOARD", mouse)) {
+            balanceRequested_ = false;
+            balanceJson_.clear();
+            textScroll_ = 0;
+            screen_ = BALANCE;
+            return;
+        }
+        if (uiButton({164, 66, 148, 18}, "REPLAY THE HOW-TO", mouse)) {
+            screen_ = TITLE;
+            introPage_ = 0;
+            return;
+        }
+        DrawTextWrapped("Autosave runs after every resolved choice and whenever the browser "
+                        "moves into the background. Touch targets extend beyond their borders "
+                        "for phones and tablets.",
+                        12, 98, kW - 24, PAL_DIM, 150);
     }
-    if (uiButton({164, 110, 148, 18}, "DIRECTOR DIAGNOSTICS", mouse)) {
-        returnScreen_ = OPTIONS;
-        textScroll_ = 0;
-        screen_ = DIRECTOR;
-        return;
-    }
-    if (uiButton({8, 132, 148, 18}, "BALANCE DASHBOARD", mouse)) {
-        balanceRequested_ = false;
-        balanceJson_.clear();
-        textScroll_ = 0;
-        screen_ = BALANCE;
-        return;
-    }
-    if (uiButton({164, 132, 148, 18}, "REPLAY THE HOW-TO", mouse)) {
-        screen_ = TITLE;
-        introPage_ = 0;
-        return;
-    }
+    if (optionsPage_ > 0 && uiButton({4, (float)(kH - 18), 48, 14}, "< PREV", mouse))
+        optionsPage_--;
+    if (optionsPage_ < 1 && uiButton({56, (float)(kH - 18), 48, 14}, "MORE >", mouse))
+        optionsPage_++;
     if (uiButton({(float)(kW - 52), (float)(kH - 18), 48, 14}, "BACK", mouse) ||
         IsKeyPressed(KEY_TAB) || IsKeyPressed(KEY_ESCAPE))
         screen_ = TITLE;
@@ -4438,7 +4921,7 @@ void Game::drawEvent(Vector2 mouse) {
     int textBottom = compLine_.empty() ? choicesTop : choicesTop - 13;
     // The reader: long cards scroll instead of clipping (R9b). While the
     // typewriter runs it follows the newest line; afterwards ^ / v page it.
-    int readerSize = profile_.largeText ? 12 : 10;
+    int readerSize = readerFont();
     std::vector<std::string> lines =
         WrapLines(currentText_.substr(0, (size_t)reveal_), kW - 24, readerSize);
     drawScrollText(lines, 8, 22, textBottom, PAL_INK, mouse, !done);
@@ -4475,7 +4958,7 @@ void Game::drawOutcome(Vector2 mouse) {
     if (!fx.empty()) body += "\n" + fx;
     if (blessingSpent_)
         body += "\nThe blessing spends itself. You live. Somewhere, a ledger updates.";
-    int readerSize = profile_.largeText ? 12 : 10;
+    int readerSize = readerFont();
     bool scrolled = drawScrollText(WrapLines(body, kW - 24, readerSize), 8, y, kH - 18,
                                    PAL_INK, mouse, false);
 
@@ -4788,13 +5271,24 @@ void Game::drawJournal(Vector2 mouse) {
             ", legitimacy " + std::to_string(worldConditions_.legitimacy) +
             ", mutual aid " + std::to_string(worldConditions_.mutualAid) + ".\n\n";
 
+    text += "NEAREST HORIZON\n" + endingGuidance() + "\n\n";
+
     text += "LIVING INSTITUTIONS\n";
     for (const Institution& value : institutions_) {
         text += value.name + ": ";
         if (!value.active) text += "collapsed, but not forgotten";
-        else text += "strength " + std::to_string(value.strength) +
-                     ", integrity " + std::to_string(value.integrity) +
-                     ", bureaucracy " + std::to_string(value.bureaucracy);
+        else {
+            text += "strength " + std::to_string(value.strength) +
+                    ", integrity " + std::to_string(value.integrity) +
+                    ", bureaucracy " + std::to_string(value.bureaucracy) +
+                    ", tension " + std::to_string(value.tension) +
+                    ", tendency " + familyLabel(value.tendency);
+            if (value.membership > 0) {
+                static const char* roles[] = {"outsider", "member", "delegate", "organizer"};
+                text += ". You are a " + std::string(roles[value.membership]) +
+                        " with standing " + std::to_string(value.standing);
+            }
+        }
         text += ".\n";
     }
     text += "\n";
@@ -4807,11 +5301,12 @@ void Game::drawJournal(Vector2 mouse) {
     if (!scheduledNextId_.empty()) text += "Now: an old decision has caught up.\n";
 
     std::set<std::string> activeFamilies = activeStoryFamilies();
+    for (const auto& [family, memory] : familyMemories_)
+        if (!memory.resolved) activeFamilies.insert(family);
     text += "\nACTIVE STORY THREADS\n";
     if (activeFamilies.empty()) text += "No long thread currently has hold of your sleeve.\n";
     for (const std::string& family : activeFamilies) {
-        std::string label = family;
-        std::replace(label.begin(), label.end(), '_', ' ');
+        std::string label = familyLabel(family);
         int beats = 0;
         int nearest = 9999;
         for (const PendingConsequence& value : consequences_) {
@@ -4828,6 +5323,13 @@ void Game::drawJournal(Vector2 mouse) {
                 (totalBeats == 1 ? "" : "s") +
                 (nearest < 9999 ? ", stirring in about " + std::to_string(nearest) +
                                    " day" + (nearest == 1 ? "" : "s") : "") + ".\n";
+        auto memory = familyMemories_.find(family);
+        if (memory != familyMemories_.end()) {
+            text += "  Seen " + std::to_string(memory->second.seen) + " times";
+            if (!memory->second.witness.empty())
+                text += "; " + memory->second.witness + " remembers";
+            text += ". Previous choice: " + memory->second.choice + ".\n";
+        }
     }
 
     if (!storyEchoes_.empty()) {
@@ -4838,6 +5340,13 @@ void Game::drawJournal(Vector2 mouse) {
             text += label + " now affects ordinary people, prices, rumors, and roads.\n";
         }
     }
+
+    text += "\nPUBLIC RECORD\n";
+    if (publicNotices_.empty()) text += "Nothing has been posted where the public can argue with it.\n";
+    int noticeStart = std::max(0, (int)publicNotices_.size() - 10);
+    for (int i = (int)publicNotices_.size() - 1; i >= noticeStart; i--)
+        text += "Day " + std::to_string(publicNotices_[i].day) + " [" +
+                publicNotices_[i].category + "]: " + publicNotices_[i].text + "\n";
 
     text += "\nPEOPLE WHO REMEMBER YOU\n";
     int shown = 0;
@@ -4866,24 +5375,31 @@ void Game::drawJournal(Vector2 mouse) {
     }
     if (!tiesShown) text += "You have not learned enough to draw the lines yet.\n";
 
-    int readerSize = profile_.largeText ? 12 : 10;
+    int readerSize = readerFont();
     drawScrollText(WrapLines(text, kW - 24, readerSize), 8, 20, kH - 20,
                    PAL_INK, mouse, false);
-    if (mystery_.active && uiButton({4, (float)(kH - 20), 58, 16}, "CASE", mouse)) {
+    if (mystery_.active && uiButton({4, (float)(kH - 20), 46, 16}, "CASE", mouse)) {
         textScroll_ = 0;
         screen_ = INVESTIGATION;
         return;
     }
-    if (uiButton({66, (float)(kH - 20), 64, 16}, "PEOPLE", mouse)) {
+    if (uiButton({54, (float)(kH - 20), 58, 16}, "PEOPLE", mouse)) {
         networkPage_ = 0;
         networkSelected_ = -1;
         screen_ = NETWORK;
         return;
     }
-    if (uiButton({134, (float)(kH - 20), 64, 16}, "RUMORS", mouse)) {
+    if (uiButton({116, (float)(kH - 20), 58, 16}, "RUMORS", mouse)) {
         rumorPage_ = 0;
         rumorDetail_ = -1;
         screen_ = RUMORS;
+        return;
+    }
+    if (uiButton({178, (float)(kH - 20), 82, 16}, "INSTITUTIONS", mouse)) {
+        institutionPage_ = 0;
+        institutionSelected_ = -1;
+        institutionMessage_.clear();
+        screen_ = INSTITUTIONS;
         return;
     }
     if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
@@ -4935,7 +5451,7 @@ void Game::drawInvestigation(Vector2 mouse) {
         if (mystery_.tried)
             text += mystery_.correctVerdict ? "\nThe verdict held." :
                     "\nThe verdict failed. An appeal can reopen the record.";
-        int readerSize = profile_.largeText ? 12 : 10;
+        int readerSize = readerFont();
         drawScrollText(WrapLines(text, kW - 24, readerSize), 8, 34, kH - 42,
                        PAL_INK, mouse, false);
 
@@ -5005,7 +5521,7 @@ void Game::drawNetwork(Vector2 mouse) {
             links++;
         }
         if (!links) text += "No lines have been drawn yet.\n";
-        int readerSize = profile_.largeText ? 12 : 10;
+        int readerSize = readerFont();
         drawScrollText(WrapLines(text, kW - 24, readerSize), 8, 36, kH - 20,
                        PAL_INK, mouse, false);
         if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "LIST", mouse) ||
@@ -5067,7 +5583,7 @@ void Game::drawRumors(Vector2 mouse) {
         }
         if (!value.foreshadowEvent.empty())
             text += "\nThis rumor sounds less like gossip than a warning.";
-        int readerSize = profile_.largeText ? 12 : 10;
+        int readerSize = readerFont();
         drawScrollText(WrapLines(text, kW - 24, readerSize), 8, 36, kH - 42,
                        PAL_INK, mouse, false);
 
@@ -5137,6 +5653,129 @@ void Game::drawRumors(Vector2 mouse) {
         IsKeyPressed(KEY_ESCAPE)) screen_ = JOURNAL;
 }
 
+void Game::drawInstitutions(Vector2 mouse) {
+    drawTopBar();
+    DrawText("LIVING INSTITUTIONS", 8, 20, 10, PAL_GOLD);
+    if (institutionSelected_ >= 0 &&
+        institutionSelected_ < (int)institutions_.size()) {
+        Institution& value = institutions_[institutionSelected_];
+        static const char* roles[] = {"outsider", "member", "delegate", "organizer"};
+        std::string text = value.name + "\n\n";
+        text += value.active ? "Active" : "Collapsed";
+        text += ". Strength " + std::to_string(value.strength) +
+                ", integrity " + std::to_string(value.integrity) +
+                ", bureaucracy " + std::to_string(value.bureaucracy) +
+                ", internal tension " + std::to_string(value.tension) + ".\n";
+        text += "Current tendency: " + familyLabel(value.tendency) + ".\n";
+        text += "Your role: " + std::string(roles[value.membership]) +
+                ", standing " + std::to_string(value.standing) + ".\n\n";
+        if (value.bureaucracy >= 4)
+            text += "Procedure is beginning to protect itself from the people it serves.\n";
+        if (value.tension >= 4)
+            text += "A split is close. Everyone insists the other meeting started it.\n";
+        if (!institutionMessage_.empty()) text += "\n" + institutionMessage_;
+        drawScrollText(WrapLines(text, kW - 24, readerFont()), 8, 36, 138,
+                       PAL_INK, mouse, false);
+
+        if (value.active && value.membership == 0 &&
+            uiButton({4, 141, 74, 16}, "JOIN", mouse)) {
+            value.membership = 1;
+            value.standing = 1;
+            value.tension = std::max(0, value.tension - 1);
+            institutionMessage_ = "You join. The welcome packet contains a rota, a grievance, and useful addresses.";
+            newsLine_ = ch_.name.conlang + " joined " + value.name + ".";
+            PublicNotice notice{ch_.day, currentRegion_, value.name,
+                                "A new member joined and was immediately asked to stack chairs."};
+            publicNotices_.push_back(notice);
+            audio_.solidarity();
+            saveRun();
+            return;
+        }
+        if (value.active && value.membership > 0) {
+            if (ch_.money >= 4 && uiButton({4, 141, 74, 16}, "WORK 4G", mouse)) {
+                ch_.money -= 4;
+                value.strength = std::min(8, value.strength + 1);
+                value.standing = std::min(10, value.standing + 1);
+                value.integrity = std::min(6, value.integrity + (value.bureaucracy >= 4 ? 1 : 0));
+                institutionMessage_ = "You fund food, ink, transport, and no commemorative plaque.";
+                saveRun();
+                return;
+            }
+            if (uiButton({82, 141, 74, 16}, "CHALLENGE", mouse)) {
+                int die = runRng_.d(20);
+                int total = die + Character::mod(ch_.stats[STAT_WIS]);
+                int dc = 10 + value.bureaucracy;
+                if (total >= dc) {
+                    value.bureaucracy = std::max(0, value.bureaucracy - 1);
+                    value.integrity = std::min(6, value.integrity + 1);
+                    value.standing = std::min(10, value.standing + 1);
+                    institutionMessage_ = "The challenge passes. A permanent subcommittee is abolished before it can object.";
+                    audio_.solidarity();
+                } else {
+                    value.tension = std::min(6, value.tension + 1);
+                    value.standing = std::max(-5, value.standing - 1);
+                    institutionMessage_ = "The challenge fails " + std::to_string(total) +
+                        " vs " + std::to_string(dc) + ". Procedure wins this meeting.";
+                    audio_.thud();
+                }
+                saveRun();
+                return;
+            }
+            bool officeReady = value.standing >= 4 && value.membership < 3;
+            if (officeReady && uiButton({160, 141, 74, 16}, "SEEK OFFICE", mouse)) {
+                value.membership++;
+                value.tension = std::min(6, value.tension + 1);
+                value.bureaucracy = std::min(6, value.bureaucracy + 1);
+                institutionMessage_ = "You accept office and discover that accountability has a calendar.";
+                newsLine_ = ch_.name.conlang + " took responsibility inside " + value.name + ".";
+                saveRun();
+                return;
+            }
+            if (uiButton({238, 141, 74, 16}, "LEAVE", mouse)) {
+                value.membership = 0;
+                value.standing = 0;
+                institutionMessage_ = "You leave. The cause does not become wrong merely because the meeting was.";
+                saveRun();
+                return;
+            }
+        }
+        if (uiButton({4, (float)(kH - 20), 60, 16}, "LIST", mouse) ||
+            IsKeyPressed(KEY_ESCAPE)) {
+            institutionSelected_ = -1;
+            institutionMessage_.clear();
+            textScroll_ = 0;
+        }
+        return;
+    }
+
+    const int perPage = 5;
+    int pages = std::max(1, ((int)institutions_.size() + perPage - 1) / perPage);
+    institutionPage_ = std::max(0, std::min(pages - 1, institutionPage_));
+    for (int row = 0; row < perPage; row++) {
+        int index = institutionPage_ * perPage + row;
+        if (index >= (int)institutions_.size()) break;
+        const Institution& value = institutions_[index];
+        std::string label = value.membership > 0 ? "[MEMBER] " : "";
+        label += value.name + "  S" + std::to_string(value.strength);
+        if (!value.active) label += " [COLLAPSED]";
+        while (!label.empty() && MeasureText(label.c_str(), 10) > 296) label.pop_back();
+        if (uiButton({8, (float)(42 + row * 22), 304, 18}, label.c_str(), mouse)) {
+            institutionSelected_ = index;
+            institutionMessage_.clear();
+            textScroll_ = 0;
+            return;
+        }
+    }
+    if (institutionPage_ > 0 &&
+        uiButton({4, (float)(kH - 20), 48, 16}, "< PREV", mouse))
+        institutionPage_--;
+    if (institutionPage_ + 1 < pages &&
+        uiButton({56, (float)(kH - 20), 48, 16}, "NEXT >", mouse))
+        institutionPage_++;
+    if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
+        IsKeyPressed(KEY_ESCAPE)) screen_ = JOURNAL;
+}
+
 void Game::drawDirector(Vector2 mouse) {
     DrawText("STORY DIRECTOR", 8, 6, 10, PAL_GOLD);
     std::string text = "This screen explains card selection only. It never reveals hidden outcomes or changes a roll.\n\n";
@@ -5162,7 +5801,7 @@ void Game::drawDirector(Vector2 mouse) {
     text += "\n\nRUN CARDS " + std::to_string(eventSerial_) +
             "  UNIQUE " + std::to_string(lastEventSerial_.size()) +
             "  PENDING CONSEQUENCES " + std::to_string(consequences_.size());
-    int readerSize = profile_.largeText ? 12 : 10;
+    int readerSize = readerFont();
     drawScrollText(WrapLines(text, kW - 24, readerSize), 8, 22, kH - 20,
                    PAL_INK, mouse, false);
     if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
@@ -5235,7 +5874,7 @@ void Game::drawBalance(Vector2 mouse) {
     text += "Global counters are available in the browser build.\n";
 #endif
     text += "\nThis screen contains aggregate card IDs and counters only. It has no names, seeds, free text, or individual runs.";
-    int readerSize = profile_.largeText ? 12 : 10;
+    int readerSize = readerFont();
     drawScrollText(WrapLines(text, kW - 24, readerSize), 8, 22, kH - 20,
                    PAL_INK, mouse, false);
     if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
@@ -5248,7 +5887,7 @@ void Game::drawBalance(Vector2 mouse) {
 void Game::drawInfo(Vector2 mouse) {
     drawTopBar();
     // Books, contracts, and long excerpts scroll instead of clipping (R9b).
-    int readerSize = profile_.largeText ? 12 : 10;
+    int readerSize = readerFont();
     bool scrolled = drawScrollText(WrapLines(infoText_, kW - 24, readerSize), 8, 22, kH - 18,
                                    PAL_INK, mouse, false);
     const char* prompt = "[Enter]";
@@ -5682,6 +6321,7 @@ void Game::drawReplay(Vector2 mouse) {
 }
 
 void Game::drawDeath(Vector2 mouse) {
+    if (endingEpilogue_.empty()) endingEpilogue_ = buildEpilogue(finishedWell_);
     const char* title = finishedWell_ ? "A LIFE, COMPLETED" : "YOU DIED";
     DrawText(title, (kW - MeasureText(title, 20)) / 2, 30, 20,
              finishedWell_ ? PAL_GOLD : PAL_RED);
@@ -5701,6 +6341,13 @@ void Game::drawDeath(Vector2 mouse) {
     // A PNG of this screen, exported by main.cpp after the frame renders.
     if (uiButton({4, (float)(kH - 44), 96, 18}, "SAVE CARD", mouse)) {
         cardRequested_ = true;
+        return;
+    }
+    if (uiButton({104, (float)(kH - 44), 104, 18}, "READ LEGACY", mouse)) {
+        infoText_ = "WHAT THIS LIFE LEFT BEHIND\n\n" + endingEpilogue_ +
+            "\n\n" + endingGuidance();
+        textScroll_ = 0;
+        screen_ = INFO;
         return;
     }
     int y = DrawTextWrapped(ch_.epitaph, 30, 74, kW - 60, PAL_GOLD);
@@ -5730,6 +6377,11 @@ void Game::drawDeath(Vector2 mouse) {
             rec.deathSite = siteName_;
             rec.days = ch_.day;
             rec.blessing = heirBlessing_;
+            rec.movementLegacy = endingEpilogue_;
+            for (const std::string& family : storyEchoes_) {
+                if (rec.causes.size() >= 6) break;
+                rec.causes.push_back(familyLabel(family));
+            }
             for (auto& item : ch_.pack) {
                 if (rec.relics.size() >= 2) break;
                 if (item.artifactId >= 0 || item.type == "weapon" || item.type == "armor")
@@ -5750,6 +6402,21 @@ void Game::drawDeath(Vector2 mouse) {
                     {"respect", rel.respect}, {"debt", rel.debt},
                     {"affection", rel.affection}, {"grudge", rel.grudge},
                     {"knowledge", rel.knowledge}, {"lastSeen", rel.lastSeen}};
+            nlohmann::json families = nlohmann::json::object();
+            for (const auto& [family, memory] : familyMemories_)
+                families[family] = {{"seen", memory.seen}, {"day", memory.lastDay},
+                                    {"region", memory.region}, {"resolved", memory.resolved},
+                                    {"choice", memory.choice}, {"outcome", memory.outcome},
+                                    {"witness", memory.witness}};
+            nlohmann::json institutionMemory = nlohmann::json::object();
+            for (const Institution& institution : institutions_)
+                institutionMemory[institution.kind] = {
+                    {"strength", institution.strength},
+                    {"integrity", institution.integrity},
+                    {"bureaucracy", institution.bureaucracy},
+                    {"tension", institution.tension},
+                    {"tendency", institution.tendency},
+                    {"active", institution.active}};
             // Preserve order, not merely membership. Cards answered in this
             // life become the newest part of the world's cooldown window.
             std::vector<std::pair<int, std::string>> answered;
@@ -5768,7 +6435,9 @@ void Game::drawDeath(Vector2 mouse) {
                                         worldEventMemory_.end() - 240);
             SaveMarks(masterSeed_, nlohmann::json{{"marks", marks},
                                                    {"relations", relations},
-                                                   {"events", worldEventMemory_}}.dump());
+                                                   {"events", worldEventMemory_},
+                                                   {"families", families},
+                                                   {"institutions", institutionMemory}}.dump());
             clearRun();
 #if defined(__EMSCRIPTEN__)
             // Shared world? Your epitaph joins the fallen.
