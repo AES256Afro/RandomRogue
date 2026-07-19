@@ -1,0 +1,25 @@
+{
+  "schema": "rr.chronicle.v1",
+  "event_id": "wide:evt:daily:20653:institution:45",
+  "event_type": "wide_world.institution_changed",
+  "source": "wide_world",
+  "world_key": "daily:20653",
+  "occurred_at": "2026-07-19T18:33:00.000Z",
+  "subject": {
+    "kind": "institution",
+    "id": "wide:institution:20653:teeth_mine_union",
+    "name": "Municipal Teeth Miners Local 17"
+  },
+  "place": {
+    "region_id": "wide:region:17",
+    "name": "The Municipal Teeth Mine"
+  },
+  "tags": ["labor", "union"],
+  "effects": { "worker_power": 2, "rent_burden": -1 },
+  "payload": {
+    "institution_id": "wide:institution:20653:teeth_mine_union",
+    "name": "Municipal Teeth Miners Local 17",
+    "summary": "The local won elected safety stewards and immediately discovered that democracy requires several chairs."
+  },
+  "visibility": "public"
+}

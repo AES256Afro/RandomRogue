@@ -1,0 +1,20 @@
+{
+  "schema": "rr.chronicle.v1",
+  "event_id": "wide:evt:daily:20653:ending:44",
+  "event_type": "wide_world.ending",
+  "source": "wide_world",
+  "world_key": "daily:20653",
+  "occurred_at": "2026-07-19T18:32:00.000Z",
+  "subject": {
+    "kind": "character",
+    "id": "wide:character:daily:20653:42",
+    "name": "Kazak Urdim"
+  },
+  "tags": ["solidarity", "unfinished"],
+  "effects": { "solidarity": 2 },
+  "payload": {
+    "title": "A victory with work left in it",
+    "text": "The council survived its first winter. Nobody called this the end, which was how people knew it might last."
+  },
+  "visibility": "public"
+}

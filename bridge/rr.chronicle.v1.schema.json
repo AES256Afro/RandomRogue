@@ -61,6 +61,53 @@
     },
     "visibility": { "enum": ["public", "private", "moderated"] }
   },
+  "allOf": [
+    {
+      "if": { "properties": { "event_type": { "const": "wide_world.death" } } },
+      "then": {
+        "properties": {
+          "subject": { "allOf": [{ "$ref": "#/$defs/subject" }, { "properties": { "kind": { "const": "character" } } }] },
+          "payload": { "$ref": "#/$defs/deathPayload" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "event_type": { "enum": ["wide_world.deed", "wide_world.ending"] } } },
+      "then": {
+        "properties": {
+          "subject": { "allOf": [{ "$ref": "#/$defs/subject" }, { "properties": { "kind": { "const": "character" } } }] },
+          "payload": { "$ref": "#/$defs/rumorPayload" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "event_type": { "const": "wide_world.institution_changed" } } },
+      "then": {
+        "properties": {
+          "subject": { "allOf": [{ "$ref": "#/$defs/subject" }, { "properties": { "kind": { "const": "institution" } } }] },
+          "payload": { "$ref": "#/$defs/institutionPayload" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "event_type": { "const": "wide_world.region_changed" } } },
+      "then": {
+        "properties": {
+          "subject": { "allOf": [{ "$ref": "#/$defs/subject" }, { "properties": { "kind": { "const": "region" } } }] },
+          "payload": { "$ref": "#/$defs/regionPayload" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "event_type": { "const": "wide_world.artifact_legacy" } } },
+      "then": {
+        "properties": {
+          "subject": { "allOf": [{ "$ref": "#/$defs/subject" }, { "properties": { "kind": { "const": "artifact" } } }] },
+          "payload": { "$ref": "#/$defs/artifactPayload" }
+        }
+      }
+    }
+  ],
   "$defs": {
     "subject": {
       "type": "object",
@@ -79,6 +126,56 @@
         "region_id": { "type": "string", "pattern": "^(wide|mud):region:[A-Za-z0-9:_-]{1,100}$" },
         "site_id": { "type": "string", "pattern": "^(wide|mud):site:[A-Za-z0-9:_-]{1,100}$" },
         "name": { "type": "string", "maxLength": 80 }
+      }
+    },
+    "deathPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "meaning": { "type": "string", "maxLength": 60 },
+        "epitaph": { "type": "string", "maxLength": 160 },
+        "cause": { "type": "string", "maxLength": 160 },
+        "days": { "type": "integer", "minimum": 0, "maximum": 9999 }
+      }
+    },
+    "rumorPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": {
+        "title": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "text": { "type": "string", "minLength": 2, "maxLength": 280 }
+      }
+    },
+    "institutionPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["institution_id", "name", "summary"],
+      "properties": {
+        "institution_id": { "type": "string", "pattern": "^wide:institution:[A-Za-z0-9:_-]{1,100}$" },
+        "name": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "summary": { "type": "string", "minLength": 2, "maxLength": 280 }
+      }
+    },
+    "regionPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["region_id", "name", "notice"],
+      "properties": {
+        "region_id": { "type": "string", "pattern": "^wide:region:[A-Za-z0-9:_-]{1,100}$" },
+        "name": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "notice": { "type": "string", "minLength": 2, "maxLength": 280 }
+      }
+    },
+    "artifactPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "name", "description", "provenance"],
+      "properties": {
+        "artifact_id": { "type": "string", "pattern": "^wide:artifact:[A-Za-z0-9:_-]{1,100}$" },
+        "name": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "description": { "type": "string", "minLength": 2, "maxLength": 280 },
+        "provenance": { "type": "string", "minLength": 2, "maxLength": 280 }
       }
     }
   }

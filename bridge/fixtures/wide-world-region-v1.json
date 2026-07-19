@@ -1,0 +1,25 @@
+{
+  "schema": "rr.chronicle.v1",
+  "event_id": "wide:evt:daily:20653:region:46",
+  "event_type": "wide_world.region_changed",
+  "source": "wide_world",
+  "world_key": "daily:20653",
+  "occurred_at": "2026-07-19T18:34:00.000Z",
+  "subject": {
+    "kind": "region",
+    "id": "wide:region:17",
+    "name": "The Municipal Teeth Mine"
+  },
+  "place": {
+    "region_id": "wide:region:17",
+    "name": "The Municipal Teeth Mine"
+  },
+  "tags": ["labor", "public_safety"],
+  "effects": { "danger": -2, "solidarity": 1 },
+  "payload": {
+    "region_id": "wide:region:17",
+    "name": "The Municipal Teeth Mine",
+    "notice": "The east shaft is safer, publicly owned, and still shaped like a molar for reasons nobody can budget away."
+  },
+  "visibility": "public"
+}

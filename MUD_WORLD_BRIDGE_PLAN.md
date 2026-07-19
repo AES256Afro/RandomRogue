@@ -2,7 +2,7 @@
 
 Status: Living handoff document
 
-Single-player baseline: Release 19, commit `e788474`
+Single-player baseline: Release 19, commit `cbd3890`
 
 Last updated: 2026-07-19
 Owners: Random Rogue project and Random Rogue MUD project
@@ -16,9 +16,11 @@ Owners: Random Rogue project and Random Rogue MUD project
   canonical event storage, MUD imported-event storage, atomic death projection,
   duplicate protection, source links, HTTP inspection, and admin inspection are
   implemented and acceptance-tested.
-- Phase M2: next. Refactor the compatibility route onto the common application
-  service and add projector interfaces for rumors, institutions, regions, and
-  artifact echoes.
+- Phase M2: complete. Canonical and compatibility death ingestion now share one
+  application service. Typed, rebuildable projectors exist for ghosts, rumors,
+  institutions, regions, and artifact echoes, with player and admin views.
+- Phase M3: next. Add signed Worker delivery, the transactional outbox, bounded
+  retries, dead letters, and broader one-way event delivery.
 
 ## 1. Purpose
 
@@ -57,8 +59,7 @@ The current live bridge is intentionally narrow.
 - Single-player institution changes do not yet change MUD factions.
 - Artifacts do not yet move safely between games.
 - MUD actions do not yet return consequences to the single-player Chronicle.
-- There is no shared canonical region, faction, person, or artifact identifier
-  contract between the projects.
+- The stable identifier contract exists, but broad signed delivery is not live.
 
 The website must continue to label these as planned until acceptance tests pass.
 
@@ -235,7 +236,7 @@ Acceptance:
 - Replaying the same fixture 100 times creates one projection.
 - Every imported ghost can identify its source event.
 
-### Phase M2: MUD domain restructure
+### Phase M2: MUD domain restructure [COMPLETE]
 
 Goal: Separate game rules from transport and presentation.
 
@@ -428,8 +429,8 @@ Recommended first projections:
 Compatibility note:
 
 The existing `/api/legacy/death` payload does not include event ID, world key,
-movement legacy, causes, institution membership, or relic provenance. Preserve
-it through Phase M2, then adapt it internally to `rr.chronicle.v1`.
+movement legacy, causes, institution membership, or relic provenance. M2 now
+adapts it internally to `rr.chronicle.v1` while preserving its public shape.
 
 ## 13. Hard stopping point and handoff package
 
@@ -446,8 +447,8 @@ This plan is ready to hand to the MUD project when the following package exists:
 - One end-to-end test proving a single-player event appears in the MUD exactly
   once and remains inspectable
 
-The first practical handoff target is the end of Phase M1. The first public
-feature handoff target is the end of Phase M3.
+The practical M2 handoff is complete. The first broad public feature handoff
+target remains the end of Phase M3.
 
 ## 14. Change log
 
@@ -464,3 +465,9 @@ feature handoff target is the end of Phase M3.
   entity IDs, D1 source-event storage, MUD idempotency ledger, atomic ghost
   projector, public source inspection, and admin inspection.
 - Verified 100 deliveries of one fixture produce one source event and one ghost.
+- Completed M2 with a shared ingestion service, typed projector registry,
+  rebuildable rumor, institution, region, and artifact views, player Chronicle
+  digest, admin rebuild tooling, and six cross-repository fixtures.
+- Added stale-state protection so delayed older events remain auditable without
+  replacing newer institution, region, or artifact projections.
+- Kept non-death HTTP delivery closed until the signed Phase M3 transport.

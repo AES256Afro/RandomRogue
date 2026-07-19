@@ -1,0 +1,24 @@
+{
+  "schema": "rr.chronicle.v1",
+  "event_id": "wide:evt:daily:20653:deed:43",
+  "event_type": "wide_world.deed",
+  "source": "wide_world",
+  "world_key": "daily:20653",
+  "occurred_at": "2026-07-19T18:31:00.000Z",
+  "subject": {
+    "kind": "character",
+    "id": "wide:character:daily:20653:42",
+    "name": "Kazak Urdim"
+  },
+  "place": {
+    "region_id": "wide:region:17",
+    "name": "The Municipal Teeth Mine"
+  },
+  "tags": ["labor", "solidarity"],
+  "effects": { "worker_power": 2 },
+  "payload": {
+    "title": "The railing became public property",
+    "text": "Kazak helped the miners replace a privatized safety railing with one everyone was allowed to use."
+  },
+  "visibility": "public"
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "rr.chronicle.v1",
+  "event_id": "wide:evt:daily:20653:artifact:47",
+  "event_type": "wide_world.artifact_legacy",
+  "source": "wide_world",
+  "world_key": "daily:20653",
+  "occurred_at": "2026-07-19T18:35:00.000Z",
+  "subject": {
+    "kind": "artifact",
+    "id": "wide:artifact:20653:public_railing",
+    "name": "The Public Railing"
+  },
+  "place": {
+    "region_id": "wide:region:17",
+    "name": "The Municipal Teeth Mine"
+  },
+  "tags": ["artifact", "solidarity"],
+  "effects": {},
+  "payload": {
+    "artifact_id": "wide:artifact:20653:public_railing",
+    "name": "The Public Railing",
+    "description": "A section of iron railing polished by many hands and no admission fee.",
+    "provenance": "Built by Local 17 after the old railing charged by the grip. This is a read-only echo, not transferable custody."
+  },
+  "visibility": "public"
+}
