@@ -75,7 +75,7 @@ int main(int argc, char** argv) {
         for (auto& event : part) events.push_back(event);
     }
 
-    std::map<std::string, int> locations, tags, voiceCadence, approaches, families;
+    std::map<std::string, int> locations, tags, voiceCadence, approaches, families, fingerprints;
     std::map<std::string, int> primaryDecks, primaryThemes;
     std::map<std::string, std::vector<std::string>> openings, structures;
     int gated = 0, slotted = 0, delayed = 0, relationship = 0;
@@ -106,6 +106,8 @@ int main(int argc, char** argv) {
         if (!primaryTheme.empty()) primaryThemes[primaryTheme]++;
         std::string family = event.value("family", "");
         if (!family.empty()) families[family]++;
+        for (auto& value : event.value("fingerprints", json::array()))
+            if (value.is_string()) fingerprints[value.get<std::string>()]++;
         if (event.contains("when")) gated++;
         if (event.contains("slots")) slotted++;
         openings[opening(event.value("text", ""))].push_back(id);
@@ -126,6 +128,10 @@ int main(int argc, char** argv) {
                 remastered, fullyThemed, (int)events.size());
     std::printf("connections: %d gated, %d slotted, %d delayed choices, %d relationship choices\n",
                 gated, slotted, delayed, relationship);
+    int eightBeatFamilies = 0;
+    for (const auto& pair : families) if (pair.second == 8) eightBeatFamilies++;
+    std::printf("living politics: %d eight-beat families, %d structural fingerprints\n",
+                eightBeatFamilies, (int)fingerprints.size());
     std::printf("location coverage:");
     for (auto& pair : locations) std::printf(" %s=%d", pair.first.c_str(), pair.second);
     std::printf("\nsemantic coverage:");

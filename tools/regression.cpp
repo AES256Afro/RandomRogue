@@ -166,11 +166,14 @@ int main(int argc, char** argv) {
     EventDeck narrativeDeck;
     narrativeDeck.loadJsonText(
         "[{\"id\":\"remaster\",\"primary\":\"city\",\"theme\":\"labor\","
-        "\"locations\":[\"city\"],\"tags\":[\"voice_3\"],\"choices\":[{\"text\":\"a\","
+        "\"locations\":[\"city\"],\"tags\":[\"voice_3\"],"
+        "\"fingerprints\":[\"opening_petition_1\"],\"choices\":[{\"text\":\"a\","
         "\"approach\":\"solidarity\",\"outcomes\":[{\"text\":\"a\"}]}]}]");
     const Event* remaster = narrativeDeck.find("remaster");
     ok &= expect(remaster && remaster->primary == "city" && remaster->theme == "labor",
                  "event loading must preserve primary deck and political theme");
+    ok &= expect(remaster && remaster->fingerprints.size() == 1,
+                 "event loading must preserve structural fingerprints");
     if (remaster) {
         std::vector<std::string> narrativeTags = StoryDirector::tagsFor(*remaster);
         ok &= expect(std::find(narrativeTags.begin(), narrativeTags.end(), "labor") !=
@@ -191,6 +194,22 @@ int main(int argc, char** argv) {
     ok &= expect(voiceDirector.score(voiceA, StoryContext{}) <
                      voiceDirector.score(voiceB, StoryContext{}),
                  "recent remaster cadences must cool below a fresh prose cadence");
+
+    StoryDirector fingerprintDirector;
+    Event shapeA = unrelated;
+    shapeA.id = "shape_a";
+    shapeA.family = "shape_family_a";
+    shapeA.theme = "labor";
+    shapeA.fingerprints = {"opening_petition_1", "shape_collective_reform_exit"};
+    Event shapeB = unrelated;
+    shapeB.id = "shape_b";
+    shapeB.family = "shape_family_b";
+    shapeB.theme = "science";
+    shapeB.fingerprints = {"opening_crisis_4", "shape_rescue_negotiate_exploit"};
+    fingerprintDirector.record(shapeA, nullptr, 1);
+    ok &= expect(fingerprintDirector.score(shapeA, StoryContext{}) <
+                     fingerprintDirector.score(shapeB, StoryContext{}),
+                 "recent dramatic machinery must cool below a fresh structure");
 
     static const std::set<std::string> required = {
         "plains", "coast", "forest", "mountains", "swamp", "desert"

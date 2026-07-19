@@ -158,6 +158,25 @@ Chronicle, changes relationships, and gives future people more to work with.
 - distant federations attempting post-scarcity ethics and occasionally
   discovering that a procurement form has survived capitalism.
 
+## Living Politics
+
+Release 18 makes politics part of the simulation rather than a label on a
+choice. Ten world conditions track worker power, rent burden, concentrated
+wealth, pollution, militarization, food security, fascist influence,
+solidarity, legitimacy, and mutual aid. A decision may improve one while
+damaging another. No meter is a morality score.
+
+Ten institutions can organize, compromise, bureaucratize, collapse, and be
+rebuilt. They are unions, tenant councils, mutual-aid networks, cooperatives,
+revolutionary committees, anti-fascist coalitions, pirate assemblies,
+scientific commons, peace movements, and restoration crews. Institutions are
+made of people and contradictions. They are never magic upgrades.
+
+Connected families use eight beats: petition, assembly, retaliation,
+coalition, crisis, compromise, reversal, and legacy. Every route advances the
+story, but it changes who has power when the next beat arrives. Seven endings
+read the accumulated world instead of rewarding one heroic answer.
+
 ## End-state principle
 
 No ending proves history is finished. A successful commune can decay. A failed

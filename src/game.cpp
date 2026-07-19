@@ -225,7 +225,7 @@ bool Game::init() {
     if (deck_.size() == 0) dataError_ = "content missing: assets/data/events/";
     if (items_.size() == 0) dataError_ = "content missing: assets/data/items.json";
     // Scramble the clock so fresh visitors don't all see near-identical
-    // 78xxxxxxx seeds — every digit should feel rolled (R9).
+    // 78xxxxxxx seeds  -  every digit should feel rolled (R9).
     nextSeed_ = ((uint64_t)time(nullptr) * 6364136223846793005ULL +
                  1442695040888963407ULL) % 1000000000ULL;
     audio_.init();
@@ -353,6 +353,41 @@ std::string Game::RegionState::description() const {
     return out;
 }
 
+int Game::WorldConditions::value(const std::string& name) const {
+    if (name == "worker_power") return workerPower;
+    if (name == "rent_burden") return rentBurden;
+    if (name == "wealth_concentration") return wealthConcentration;
+    if (name == "pollution") return pollution;
+    if (name == "militarization") return militarization;
+    if (name == "food_security") return foodSecurity;
+    if (name == "fascist_influence") return fascistInfluence;
+    if (name == "solidarity") return solidarity;
+    if (name == "legitimacy") return legitimacy;
+    if (name == "mutual_aid") return mutualAid;
+    return 0;
+}
+
+int* Game::WorldConditions::field(const std::string& name) {
+    if (name == "worker_power") return &workerPower;
+    if (name == "rent_burden") return &rentBurden;
+    if (name == "wealth_concentration") return &wealthConcentration;
+    if (name == "pollution") return &pollution;
+    if (name == "militarization") return &militarization;
+    if (name == "food_security") return &foodSecurity;
+    if (name == "fascist_influence") return &fascistInfluence;
+    if (name == "solidarity") return &solidarity;
+    if (name == "legitimacy") return &legitimacy;
+    if (name == "mutual_aid") return &mutualAid;
+    return nullptr;
+}
+
+void Game::WorldConditions::clamp() {
+    int* values[] = {&workerPower, &rentBurden, &wealthConcentration, &pollution,
+                     &militarization, &foodSecurity, &fascistInfluence,
+                     &solidarity, &legitimacy, &mutualAid};
+    for (int* value : values) *value = std::max(-10, std::min(10, *value));
+}
+
 Game::NpcRelation& Game::relation(int figure) {
     NpcRelation& value = npcRelations_[figure];
     value.lastSeen = ch_.day;
@@ -411,6 +446,12 @@ StoryContext Game::storyContext(const std::string& location) const {
         ctx.pollution = state.pollution >= 2;
         ctx.scarcity = state.supply <= -2 || state.rent >= 3;
     }
+    ctx.inequality = worldConditions_.wealthConcentration >= 3 ||
+                     worldConditions_.rentBurden >= 3;
+    ctx.authoritarian = worldConditions_.fascistInfluence >= 3;
+    ctx.militarized = worldConditions_.militarization >= 3;
+    for (const Institution& value : institutions_)
+        if (value.active && value.strength >= 3) ctx.institutions = true;
     return ctx;
 }
 
@@ -657,7 +698,7 @@ void Game::saveRun() {
         sites.push_back({{"name", s.name}, {"type", s.type}, {"deck", s.deck},
                          {"region", s.region}});
     nlohmann::json j = {
-        {"schema", 6},
+        {"schema", 7},
         {"seed", masterSeed_}, {"gen", pendingLegacy_.size()},
         {"name", ch_.name.conlang}, {"meaning", ch_.name.meaning},
         {"stats", std::vector<int>(ch_.stats, ch_.stats + STAT_COUNT)},
@@ -758,6 +799,27 @@ void Game::saveRun() {
                                {"flags", std::vector<std::string>(state.flags.begin(),
                                                                   state.flags.end())}});
     j["regionState"] = regionState;
+    j["worldConditions"] = {
+        {"worker_power", worldConditions_.workerPower},
+        {"rent_burden", worldConditions_.rentBurden},
+        {"wealth_concentration", worldConditions_.wealthConcentration},
+        {"pollution", worldConditions_.pollution},
+        {"militarization", worldConditions_.militarization},
+        {"food_security", worldConditions_.foodSecurity},
+        {"fascist_influence", worldConditions_.fascistInfluence},
+        {"solidarity", worldConditions_.solidarity},
+        {"legitimacy", worldConditions_.legitimacy},
+        {"mutual_aid", worldConditions_.mutualAid}};
+    nlohmann::json institutionState = nlohmann::json::array();
+    for (const Institution& value : institutions_)
+        institutionState.push_back({{"id", value.id}, {"name", value.name},
+                                    {"kind", value.kind}, {"region", value.region},
+                                    {"strength", value.strength},
+                                    {"integrity", value.integrity},
+                                    {"bureaucracy", value.bureaucracy},
+                                    {"active", value.active}});
+    j["institutions"] = institutionState;
+    j["storyFlags"] = std::vector<std::string>(storyFlags_.begin(), storyFlags_.end());
     j["mystery"] = {{"active", mystery_.active}, {"solved", mystery_.solved},
                      {"tried", mystery_.tried}, {"correct", mystery_.correctVerdict},
                      {"appealed", mystery_.appealed},
@@ -1079,6 +1141,38 @@ bool Game::loadRun() {
         if (regionStates_.size() != world_.regions.size())
             regionStates_.resize(world_.regions.size());
     }
+    if (j.contains("worldConditions") && j["worldConditions"].is_object()) {
+        const auto& value = j["worldConditions"];
+        worldConditions_.workerPower = value.value("worker_power", 0);
+        worldConditions_.rentBurden = value.value("rent_burden", 0);
+        worldConditions_.wealthConcentration = value.value("wealth_concentration", 0);
+        worldConditions_.pollution = value.value("pollution", 0);
+        worldConditions_.militarization = value.value("militarization", 0);
+        worldConditions_.foodSecurity = value.value("food_security", 0);
+        worldConditions_.fascistInfluence = value.value("fascist_influence", 0);
+        worldConditions_.solidarity = value.value("solidarity", 0);
+        worldConditions_.legitimacy = value.value("legitimacy", 0);
+        worldConditions_.mutualAid = value.value("mutual_aid", 0);
+        worldConditions_.clamp();
+    }
+    if (j.contains("institutions") && j["institutions"].is_array()) {
+        institutions_.clear();
+        for (const auto& value : j["institutions"]) {
+            Institution institution;
+            institution.id = value.value("id", "");
+            institution.name = value.value("name", "");
+            institution.kind = value.value("kind", "");
+            institution.region = value.value("region", -1);
+            institution.strength = value.value("strength", 1);
+            institution.integrity = value.value("integrity", 2);
+            institution.bureaucracy = value.value("bureaucracy", 0);
+            institution.active = value.value("active", true);
+            if (!institution.kind.empty()) institutions_.push_back(institution);
+        }
+    }
+    storyFlags_.clear();
+    for (const std::string& flag : j.value("storyFlags", std::vector<std::string>{}))
+        storyFlags_.insert(flag);
     if (j.contains("mystery") && j["mystery"].is_object()) {
         auto& value = j["mystery"];
         mystery_.active = value.value("active", false);
@@ -1346,6 +1440,24 @@ bool Game::evalCond(const std::string& cond) const {
         return tie && (b.empty() || tie->kind == b);
     }
     if (a == "echo") return storyEchoes_.count(b) > 0;
+    if (a == "story") return storyFlags_.count(b) > 0;
+    if (a == "!story") return storyFlags_.count(b) == 0;
+    if (a == "world" || a == "institution") {
+        std::string valueText;
+        ss >> valueText;
+        int lhs = 0;
+        if (a == "world") lhs = worldConditions_.value(b);
+        else {
+            const Institution* value = institutionFor(b);
+            lhs = value ? value->strength : -3;
+        }
+        int rhs = atoi(valueText.c_str());
+        if (c == ">") return lhs > rhs;
+        if (c == "<") return lhs < rhs;
+        if (c == ">=") return lhs >= rhs;
+        if (c == "<=") return lhs <= rhs;
+        return lhs == rhs;
+    }
     if (a == "region") {
         return currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size() &&
                regionStates_[currentRegion_].flags.count(b) > 0;
@@ -1529,7 +1641,7 @@ void Game::newRun(int classIdx) {
     // World age: every life this world has taken sharpens it (R7 ratchet).
     worldGen_ = (int)pendingLegacy_.size();
     if (worldGen_ > 9) worldGen_ = 9;
-    // Each generation is its own person living its own days — keyed by how
+    // Each generation is its own person living its own days  -  keyed by how
     // many came before, so a shared seed still means the same first life for
     // everyone, but your second life never replays your first.
     Rng langRng(masterSeed_ + pendingLegacy_.size() * 131071ULL, STREAM_LANG);
@@ -1643,6 +1755,8 @@ void Game::newRun(int classIdx) {
     landfalls_ = 0;
     settledThisRun_ = false;
     regionStates_.assign(world_.regions.size(), RegionState{});
+    storyFlags_.clear();
+    seedInstitutions();
     generateMystery();
     generateSocialWeb();
     seedLivingPolitics();
@@ -1991,6 +2105,123 @@ void Game::addRumor(const std::string& text, int truth, int region, int figure,
     while (rumors_.size() > 48) rumors_.erase(rumors_.begin());
 }
 
+Game::Institution* Game::institutionFor(const std::string& kind) {
+    Institution* best = nullptr;
+    for (Institution& value : institutions_)
+        if (value.active && value.kind == kind &&
+            (!best || value.strength > best->strength)) best = &value;
+    return best;
+}
+
+const Game::Institution* Game::institutionFor(const std::string& kind) const {
+    const Institution* best = nullptr;
+    for (const Institution& value : institutions_)
+        if (value.active && value.kind == kind &&
+            (!best || value.strength > best->strength)) best = &value;
+    return best;
+}
+
+void Game::seedInstitutions() {
+    institutions_.clear();
+    worldConditions_ = WorldConditions{};
+    static const struct SeedInstitution { const char* kind; const char* name; } seeds[] = {
+        {"union", "The Many-Handed Union"},
+        {"tenant_council", "The Council of Unmovable Chairs"},
+        {"mutual_aid", "The Unlicensed Soup Network"},
+        {"cooperative", "The Cooperative of Shared Tools"},
+        {"revolutionary_committee", "The Committee for Another Attempt"},
+        {"antifascist_coalition", "The Broad Front and Narrow Hallway"},
+        {"pirate_assembly", "The Deckhand Assembly"},
+        {"scientific_commons", "The Public Laboratory of Useful Questions"},
+        {"peace_movement", "The League Against Profitable Funerals"},
+        {"restoration_crew", "The Watershed Repair Brigade"}
+    };
+    for (int i = 0; i < 10; i++) {
+        Institution value;
+        value.id = seeds[i].kind;
+        value.kind = seeds[i].kind;
+        value.name = seeds[i].name;
+        value.region = world_.regions.empty() ? -1 :
+            runRng_.range(0, (int)world_.regions.size() - 1);
+        value.strength = runRng_.range(0, 2);
+        value.integrity = runRng_.range(1, 3);
+        value.bureaucracy = runRng_.range(0, 1);
+        institutions_.push_back(value);
+    }
+    worldConditions_.workerPower = runRng_.range(-1, 1);
+    worldConditions_.rentBurden = runRng_.range(-1, 2);
+    worldConditions_.wealthConcentration = runRng_.range(0, 2);
+    worldConditions_.pollution = runRng_.range(-1, 2);
+    worldConditions_.militarization = runRng_.range(-1, 1);
+    worldConditions_.foodSecurity = runRng_.range(-1, 1);
+    worldConditions_.fascistInfluence = runRng_.range(-1, 1);
+    worldConditions_.solidarity = runRng_.range(-1, 1);
+    worldConditions_.legitimacy = runRng_.range(-1, 1);
+    worldConditions_.mutualAid = runRng_.range(-1, 1);
+}
+
+void Game::updatePoliticalWorld() {
+    if (ch_.day % 7 != 0 || regionStates_.empty()) return;
+    int rent = 0, dirty = 0, supply = 0, solidarity = 0, unrest = 0;
+    for (const RegionState& state : regionStates_) {
+        rent += state.rent;
+        dirty += state.pollution;
+        supply += state.supply;
+        solidarity += state.solidarity;
+        unrest += state.unrest;
+    }
+    int count = (int)regionStates_.size();
+    auto signAverage = [count](int total) {
+        if (total >= count * 2) return 1;
+        if (total <= -count * 2) return -1;
+        return 0;
+    };
+    worldConditions_.rentBurden += signAverage(rent);
+    worldConditions_.pollution += signAverage(dirty);
+    worldConditions_.foodSecurity += signAverage(supply);
+    worldConditions_.solidarity += signAverage(solidarity);
+    worldConditions_.workerPower += signAverage(solidarity) -
+        (worldConditions_.fascistInfluence >= 5 ? 1 : 0);
+    worldConditions_.wealthConcentration += signAverage(rent) -
+        (worldConditions_.workerPower >= 4 ? 1 : 0);
+    worldConditions_.mutualAid += signAverage(supply + solidarity);
+    worldConditions_.militarization += history_.liveWars.empty() ?
+        (worldConditions_.militarization > 0 ? -1 : 0) : 1;
+    if (worldConditions_.militarization >= 4 && unrest >= count)
+        worldConditions_.fascistInfluence++;
+    if (worldConditions_.solidarity >= 4 || worldConditions_.workerPower >= 5)
+        worldConditions_.fascistInfluence--;
+    worldConditions_.legitimacy += signAverage(supply - rent);
+
+    for (Institution& value : institutions_) {
+        if (!value.active) continue;
+        int support = 0;
+        if (value.kind == "union") support = worldConditions_.workerPower;
+        else if (value.kind == "tenant_council") support = -worldConditions_.rentBurden;
+        else if (value.kind == "mutual_aid") support = worldConditions_.mutualAid;
+        else if (value.kind == "cooperative") support = worldConditions_.solidarity - worldConditions_.wealthConcentration;
+        else if (value.kind == "revolutionary_committee") support = worldConditions_.solidarity + worldConditions_.workerPower - worldConditions_.fascistInfluence;
+        else if (value.kind == "antifascist_coalition") support = worldConditions_.solidarity - worldConditions_.fascistInfluence;
+        else if (value.kind == "pirate_assembly") support = -worldConditions_.militarization;
+        else if (value.kind == "scientific_commons") support = -worldConditions_.wealthConcentration;
+        else if (value.kind == "peace_movement") support = -worldConditions_.militarization;
+        else if (value.kind == "restoration_crew") support = -worldConditions_.pollution;
+        if (support >= 4 && liveRng_.chance(55)) value.strength++;
+        if (support <= -4 && liveRng_.chance(45)) value.strength--;
+        if (value.strength >= 4 && liveRng_.chance(28)) value.bureaucracy++;
+        if (value.integrity >= 3 && value.bureaucracy > 0 && liveRng_.chance(35)) value.bureaucracy--;
+        if (value.bureaucracy >= 5) value.integrity--;
+        value.strength = std::max(-3, std::min(8, value.strength));
+        value.integrity = std::max(-3, std::min(6, value.integrity));
+        value.bureaucracy = std::max(0, std::min(6, value.bureaucracy));
+        if (value.strength <= -3 || value.integrity <= -3) {
+            value.active = false;
+            addRumor(value.name + " collapsed. Its filing cabinet has declared continuity government.", 90, value.region);
+        }
+    }
+    worldConditions_.clamp();
+}
+
 void Game::seedLivingPolitics() {
     rumors_.clear();
     verifiedRumors_.clear();
@@ -2080,6 +2311,31 @@ void Game::applyAgenda(Agenda& agenda) {
         state.flags.insert("evictions");
         report = who + " converted occupied homes into vacant investment opportunities.";
     }
+    if (agenda.kind == "organize") {
+        worldConditions_.workerPower++;
+        worldConditions_.solidarity++;
+    } else if (agenda.kind == "mutual_aid") {
+        worldConditions_.mutualAid++;
+        worldConditions_.foodSecurity++;
+    } else if (agenda.kind == "expose") {
+        worldConditions_.pollution--;
+        worldConditions_.legitimacy++;
+    } else if (agenda.kind == "liberate") {
+        worldConditions_.rentBurden--;
+        worldConditions_.wealthConcentration--;
+    } else if (agenda.kind == "profiteer") {
+        worldConditions_.wealthConcentration++;
+        worldConditions_.foodSecurity--;
+    } else if (agenda.kind == "pollute") {
+        worldConditions_.pollution++;
+    } else if (agenda.kind == "militarize") {
+        worldConditions_.militarization++;
+        worldConditions_.fascistInfluence++;
+    } else if (agenda.kind == "displace") {
+        worldConditions_.rentBurden++;
+        worldConditions_.wealthConcentration++;
+    }
+    worldConditions_.clamp();
     state.prosperity = std::max(-5, std::min(5, state.prosperity));
     state.danger = std::max(-5, std::min(5, state.danger));
     state.unrest = std::max(-5, std::min(5, state.unrest));
@@ -2490,6 +2746,7 @@ void Game::dailyTick() {
     else if (roll <= 25) weather_ = "raining";
     updateRegionState();
     advanceRumorsAndAgendas();
+    updatePoliticalWorld();
     if (ch_.day % 7 == 0 && currentRegion_ >= 0 &&
         currentRegion_ < (int)regionStates_.size() &&
         regionStates_[currentRegion_].unrest >= 3) {
@@ -3195,6 +3452,49 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
                 newsLine_ = mystery_.title + " is solved. " + mystery_.secret;
                 audio_.fanfare();
             }
+        } else if (verb == "world") {
+            std::string field;
+            int amount = 0;
+            ss >> field >> amount;
+            int* value = worldConditions_.field(field);
+            if (value) {
+                *value += amount;
+                worldConditions_.clamp();
+            }
+        } else if (verb == "institution") {
+            std::string kind;
+            int amount = 0;
+            ss >> kind >> amount;
+            Institution* target = nullptr;
+            for (Institution& value : institutions_)
+                if (value.kind == kind) { target = &value; break; }
+            if (target) {
+                int before = target->strength;
+                target->strength = std::max(-3, std::min(8, target->strength + amount));
+                if (amount > 0 && !target->active) {
+                    target->active = true;
+                    target->integrity = std::max(0, target->integrity);
+                }
+                if (before < 4 && target->strength >= 4) {
+                    newsLine_ = target->name + " has become a durable public force.";
+                    ChronEntry entry;
+                    entry.id = (int)history_.chron.size();
+                    entry.year = history_.presentYear;
+                    entry.type = "region_shift";
+                    entry.extra = newsLine_;
+                    history_.chron.push_back(entry);
+                    collectiveVictories_++;
+                    audio_.solidarity();
+                }
+            }
+        } else if (verb == "story") {
+            std::string flag;
+            ss >> flag;
+            if (!flag.empty() && flag[0] == '-') storyFlags_.erase(flag.substr(1));
+            else {
+                if (!flag.empty() && flag[0] == '+') flag.erase(0, 1);
+                if (!flag.empty()) storyFlags_.insert(flag);
+            }
         } else if (verb == "region") {
             std::string field;
             int amount = 0;
@@ -3250,7 +3550,7 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
             ch_.dead = true;
             if (!rest.empty()) ch_.epitaph = rest;
         } else if (verb == "finish") {
-            // A life completed on its own terms — ascension, retirement.
+            // A life completed on its own terms  -  ascension, retirement.
             // The run ends; the Chronicle takes you in ALIVE.
             std::string rest;
             std::getline(ss, rest);
@@ -3286,7 +3586,7 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
         blessingSpent_ = true;
     }
     // A miracle: if a god favors you enough, they spend it all to keep you
-    // standing — once per life, never for the willingly finished (R5).
+    // standing  -  once per life, never for the willingly finished (R5).
     if (ch_.dead && !finishedWell_ && !miracleUsed_) {
         int best = -1, bestFavor = 4; // threshold: 5+ favor
         for (auto& [gi, f] : favor_)
@@ -3591,7 +3891,7 @@ void Game::drawTitle(Vector2 mouse) {
     }
     const char* title = "RANDOM ROGUE";
     DrawText(title, (kW - MeasureText(title, 20)) / 2, 38, 20, PAL_GOLD);
-    DrawText("v17", 4, kH - 10, 10, PAL_DARK); // release stamp for bug reports
+    DrawText("v18", 4, kH - 10, 10, PAL_DARK); // release stamp for bug reports
     if (!dataError_.empty()) {
         DrawTextWrapped(dataError_, 20, 90, kW - 40, PAL_RED);
         return;
@@ -3938,7 +4238,7 @@ void Game::drawClassPick(Vector2 mouse) {
     if (pick >= 0) {
         audio_.blip();
         pendingClass_ = pick;
-        // Roll three ambitions to choose from — deterministic per world+generation.
+        // Roll three ambitions to choose from  -  deterministic per world+generation.
         Rng ambRng(nextSeed_ ^ (pendingLegacy_.size() * 8191ULL), 99);
         ambitionChoices_.clear();
         while ((int)ambitionChoices_.size() < 3) {
@@ -4476,6 +4776,29 @@ void Game::drawJournal(Vector2 mouse) {
                 ", solidarity " + std::to_string(state.solidarity) + ".\n\n";
     }
 
+    text += "WORLD CONDITIONS  (-10 to +10)\n";
+    text += "Worker power " + std::to_string(worldConditions_.workerPower) +
+            ", rent burden " + std::to_string(worldConditions_.rentBurden) +
+            ", concentrated wealth " + std::to_string(worldConditions_.wealthConcentration) + ".\n";
+    text += "Pollution " + std::to_string(worldConditions_.pollution) +
+            ", militarization " + std::to_string(worldConditions_.militarization) +
+            ", food security " + std::to_string(worldConditions_.foodSecurity) + ".\n";
+    text += "Fascist influence " + std::to_string(worldConditions_.fascistInfluence) +
+            ", solidarity " + std::to_string(worldConditions_.solidarity) +
+            ", legitimacy " + std::to_string(worldConditions_.legitimacy) +
+            ", mutual aid " + std::to_string(worldConditions_.mutualAid) + ".\n\n";
+
+    text += "LIVING INSTITUTIONS\n";
+    for (const Institution& value : institutions_) {
+        text += value.name + ": ";
+        if (!value.active) text += "collapsed, but not forgotten";
+        else text += "strength " + std::to_string(value.strength) +
+                     ", integrity " + std::to_string(value.integrity) +
+                     ", bureaucracy " + std::to_string(value.bureaucracy);
+        text += ".\n";
+    }
+    text += "\n";
+
     text += "CHOICES WAITING TO RETURN\n";
     if (consequences_.empty() && scheduledNextId_.empty()) text += "None that admit it.\n";
     for (const PendingConsequence& value : consequences_)
@@ -4936,7 +5259,7 @@ void Game::drawInfo(Vector2 mouse) {
     }
 }
 
-// The world as a ring of named places — fog over the unvisited (R3).
+// The world as a ring of named places  -  fog over the unvisited (R3).
 void Game::drawWorldMap(Vector2 mouse) {
     drawTopBar();
     std::string head = "The world of " + world_.name.conlang;

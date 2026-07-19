@@ -35,6 +35,22 @@ Hand-authored `primary`, `theme`, and choice approaches remain authoritative
 for Release 16 and later files. Foundational cards with an especially specific
 premise are pinned in the script's `exactThemes` table.
 
+Release 18 completes the thousand-card production map with 59 connected
+families and seven ideological endings. The generator reads the existing deck,
+fills the remaining location and theme quotas, and writes 479 deterministic
+cards. It is idempotent:
+
+```powershell
+node tools/generate_r18.mjs assets
+```
+
+Each generated family has petition, assembly, retaliation, coalition, crisis,
+compromise, reversal, and legacy beats. `story` flags gate their order and
+`schedule` returns old choices after time. `world`, `institution`, and `region`
+effects alter three different scales of history. Structural fingerprints tell
+the Story Director when two different cards use the same opening, joke engine,
+social role, or choice geometry.
+
 ## Required pass
 
 1. Give every choice a different political or personal strategy.

@@ -90,6 +90,31 @@ private:
         std::set<std::string> flags;
         std::string description() const;
     };
+    struct WorldConditions {
+        int workerPower = 0;
+        int rentBurden = 0;
+        int wealthConcentration = 0;
+        int pollution = 0;
+        int militarization = 0;
+        int foodSecurity = 0;
+        int fascistInfluence = 0;
+        int solidarity = 0;
+        int legitimacy = 0;
+        int mutualAid = 0;
+        int value(const std::string& field) const;
+        int* field(const std::string& name);
+        void clamp();
+    };
+    struct Institution {
+        std::string id;
+        std::string name;
+        std::string kind;
+        int region = -1;
+        int strength = 1;
+        int integrity = 2;
+        int bureaucracy = 0;
+        bool active = true;
+    };
     struct Rumor {
         int id = 0;
         std::string text;
@@ -169,6 +194,10 @@ private:
     void resolveStaleConsequences();
     void convergeStory(const std::string& family);
     void seedLivingPolitics();
+    void seedInstitutions();
+    void updatePoliticalWorld();
+    Institution* institutionFor(const std::string& kind);
+    const Institution* institutionFor(const std::string& kind) const;
     void advanceRumorsAndAgendas();
     void addRumor(const std::string& text, int truth, int region,
                   int figure = -1, bool planted = false,
@@ -286,6 +315,9 @@ private:
     int scheduledFigure_ = -1;
     int scheduledRegion_ = -1;
     std::vector<RegionState> regionStates_;
+    WorldConditions worldConditions_;
+    std::vector<Institution> institutions_;
+    std::set<std::string> storyFlags_;
     std::vector<Rumor> rumors_;
     std::set<int> verifiedRumors_;
     std::vector<Agenda> agendas_;

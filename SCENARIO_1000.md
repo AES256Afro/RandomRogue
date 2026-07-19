@@ -5,10 +5,10 @@ It is not a promise that one premise will be copied into several biomes. Every
 id must have its own opening, conflict, choice structure, outcomes, and reason
 to exist in the Chronicle.
 
-The current deck contains 521 cards. All of them have a primary theme and deck,
-and 351 foundation cards have completed the Release 17 narrative remaster. New
-releases fill this matrix until the validator reports 1,000 playable ids.
-Scenario count is only one defense
+The current deck contains exactly 1,000 cards. All of them have a primary theme
+and deck, 351 foundation cards completed the Release 17 narrative remaster, and
+Release 18 added 59 connected eight-beat families plus seven ideological
+endings. Scenario count is only one defense
 against repetition. The engine also deals without replacement for an entire
 life, cools repeated themes, and preserves seen ids in saves.
 
@@ -19,26 +19,25 @@ locations when the premise genuinely travels.
 
 | Primary deck | Target | Narrative work |
 | --- | ---: | --- |
-| city | 150 | housing, councils, clinics, courts, factories, finance |
-| tavern | 130 | labor gossip, travelers, recruiters, scams, relationships |
-| road | 120 | borders, migration, logistics, war, itinerant institutions |
-| forest | 90 | commons, extraction, rangers, ecology, hidden communities |
-| dungeon | 90 | buried ownership, prisons, ruins, monsters, stolen history |
-| cave | 70 | mines, geology, shelter, deep labor, nonhuman life |
-| swamp | 65 | poisoned water, memory, adaptation, wetland communities |
-| mountains | 65 | mines, isolation, observatories, borders, clean power |
-| coast | 70 | ports, fisheries, erosion, refugees, maritime trade |
-| sea | 60 | crews, piracy, naval war, migration, free ships |
-| crash | 35 | post-scarcity relics, automation, cosmic bureaucracy |
-| dungeon finale | 35 | irreversible decisions and institutional reckonings |
-| locationless consequence | 20 | delayed arc beats that find the player anywhere |
+| city | 148 | housing, councils, clinics, courts, factories, finance |
+| tavern | 128 | labor gossip, travelers, recruiters, scams, relationships |
+| road | 118 | borders, migration, logistics, war, itinerant institutions |
+| forest | 88 | commons, extraction, rangers, ecology, hidden communities |
+| dungeon | 88 | buried ownership, prisons, ruins, monsters, stolen history |
+| cave | 68 | mines, geology, shelter, deep labor, nonhuman life |
+| swamp | 63 | poisoned water, memory, adaptation, wetland communities |
+| mountains | 63 | mines, isolation, observatories, borders, clean power |
+| coast | 68 | ports, fisheries, erosion, refugees, maritime trade |
+| sea | 58 | crews, piracy, naval war, migration, free ships |
+| crash | 34 | post-scarcity relics, automation, cosmic bureaucracy |
+| dungeon finale | 33 | irreversible decisions and institutional reckonings |
+| locationless consequence | 43 | delayed arc beats that find the player anywhere |
 | **Total** | **1,000** | |
 
 ## Twenty political and human themes
 
-Each theme owns 50 scenarios. Those 50 are split across ten venue bands and
-five dramatic lenses. The full Cartesian product is the 1,000-scenario
-backlog: 20 themes x 10 venue bands x 5 lenses.
+Themes hold roughly 50 scenarios each. Ecology has 55 because the foundation
+deck already exceeded its quota. Five themes hold 49. All others hold 50.
 
 1. Workplace democracy and ownership
 2. Housing, landlords, eviction, and land
@@ -112,15 +111,16 @@ Every one of the 1,000 entries must satisfy all of these rules:
 
 ## Arc architecture
 
-Two hundred of the 1,000 scenarios form 50 four-beat arcs:
+Release 18 contains 59 eight-beat families:
 
-1. Contact introduces a person, contradiction, or institution.
-2. Pressure reveals who profits and asks for a commitment.
-3. Consequence returns after time and reflects the earlier choice.
-4. Reckoning changes the region or Chronicle without pretending history ends.
-
-Another 200 are two-beat echoes. The remaining 600 are standalone cards with
-enough persistent effects to become ingredients for later stories.
+1. Petition introduces a material contradiction.
+2. Assembly organizes a response.
+3. Retaliation shows how power protects itself.
+4. Coalition forces disagreement among allies.
+5. Crisis turns theory into immediate need.
+6. Compromise offers relief at a structural price.
+7. Reversal exposes profit, betrayal, or concealed history.
+8. Legacy changes institutions, world conditions, and the Chronicle.
 
 No arc repeats an id. Recurring situations use a new beat with changed facts.
 
@@ -131,17 +131,14 @@ No arc repeats an id. Recurring situations use a new beat with changed facts.
 | Foundation | 381 | Existing world, relationship, mystery, naval, and political cards |
 | Wave A | 501 | Labor, housing, care, anti-fascism, and repetition repair |
 | Narrative remaster | 521 | Reframe every legacy card and establish twenty tone anchors |
-| Wave B | 625 | War refusal, refuge, borders, testimony, and propaganda |
-| Wave C | 750 | Ecology, food, land, pollution, and public infrastructure |
-| Wave D | 875 | Debt, automation, post-scarcity, science, and cosmic bureaucracy |
-| Wave E | 1,000 | Revolution, legacy, kindness, arc reckonings, and quota repair |
+| Living Politics | 1,000 | Persistent world conditions, institutions, 59 families, and seven endings |
 
 ## Automated gates
 
 - An exact event id may appear at most once per life.
 - Save and continue preserve the complete seen-id set.
 - Every primary deck meets its quota at 1,000.
-- Every one of the 20 themes reaches 50 tagged scenarios.
+- Every theme meets its declared production quota.
 - No seven-word opening is duplicated.
 - Choice structures, effects, and approaches are checked for suspicious clones.
 - Monte Carlo play must reach at least 95 percent of standalone cards and every
@@ -150,10 +147,9 @@ No arc repeats an id. Recurring situations use a new beat with changed facts.
 
 ## Naming convention
 
-New ids use `r16_<theme>_<venue>_<lens>_<number>`. For example:
+Release 18 family ids use `r18_<family>_<beat>`. For example:
 
-`r16_housing_civic_backlash_01`
+`r18_tenant_tower_retaliation`
 
-The id is production metadata, not player-facing prose. Arc beats append
-`_contact`, `_pressure`, `_consequence`, or `_reckoning` and each remains a
-separate id.
+The id is production metadata, not player-facing prose. Each beat remains a
+separate id and can appear only once during a life.

@@ -26,6 +26,10 @@ struct StoryContext {
     bool solidarity = false;
     bool pollution = false;
     bool scarcity = false;
+    bool inequality = false;
+    bool authoritarian = false;
+    bool militarized = false;
+    bool institutions = false;
     std::set<std::string> activeFamilies;
     bool arcBeatDue = false;
 };

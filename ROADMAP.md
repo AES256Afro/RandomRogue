@@ -1,7 +1,7 @@
-# Random Rogue 2.0 — "The Chronicle Absorbs You"
+# Random Rogue 2.0  -  "The Chronicle Absorbs You"
 
 The massive update. Goal: complete randomness with a rich source to pull
-from, nigh-endless play, and the core promise — **a player should never feel
+from, nigh-endless play, and the core promise  -  **a player should never feel
 like they know how to respond to X.**
 
 ## 0. The Design Law (read this before anything else)
@@ -9,14 +9,14 @@ like they know how to respond to X.**
 Memorization dies when the same card can resolve differently for reasons the
 player can sense but not fully compute. Three multipliers, in priority order:
 
-1. **Context** — outcomes gated on hidden world state. The goblin toll
+1. **Context**  -  outcomes gated on hidden world state. The goblin toll
    collector waves you through free if his faction likes you, doubles the
    toll during a war, and flees if you carry the artifact that killed his
    grandfather. Same card, different world = different answer.
-2. **Consequence** — choices leave marks (traits, reputation, NPC memory,
+2. **Consequence**  -  choices leave marks (traits, reputation, NPC memory,
    chronicle entries) that alter *future* cards. The optimal answer to X
    depends on what you did about W.
-3. **Volume** — 10x content so the surface area is too big to grind.
+3. **Volume**  -  10x content so the surface area is too big to grind.
 
 Volume without the first two just delays the spreadsheet. All three together
 make the spreadsheet impossible.
@@ -31,7 +31,7 @@ simulation ticks forward: wars break out mid-run, cities get sacked while
 you're three regions away (you hear it as *news*, then see refugees on the
 roads, then find the ruins), plagues spread region to region, artifacts get
 stolen from dungeons you were saving for later, beasts migrate, prices move.
-- Runtime chronicle entries are tagged `live` — taverns rumor about *this
+- Runtime chronicle entries are tagged `live`  -  taverns rumor about *this
   week*, not just ancient history.
 - Decks re-weight by current events: war zones spawn deserters, checkpoints,
   and profiteers; plague regions spawn quarantines and quack doctors.
@@ -40,12 +40,12 @@ stolen from dungeons you were saving for later, beasts migrate, prices move.
 
 ### 1.2 Legacy: your dead characters enter the Chronicle ★ centerpiece
 The world persists across runs (per seed). When you die:
-- Your character becomes a **historical figure** — epitaph, deeds, death
+- Your character becomes a **historical figure**  -  epitaph, deeds, death
   entry, all of it written into the Chronicle.
 - Your next character is born into the *same world, years later*. The world
   simulates the gap. You can hear tavern rumors about your own previous
   death. A bard sings the ballad. Badly.
-- Items you carried scatter to sites as recoverable relics — your old sword,
+- Items you carried scatter to sites as recoverable relics  -  your old sword,
   quirk intact, waiting in a dungeon with YOUR name in its provenance.
 - Descendants: opt to be an heir of a previous character (stat echoes, a
   family grudge, one heirloom).
@@ -53,7 +53,7 @@ The world persists across runs (per seed). When you die:
   thick with your own ghosts.
 
 ### 1.3 Traits & afflictions (the player-side state machine)
-The character accumulates **tags** — cursed, famous, wanted, glowing,
+The character accumulates **tags**  -  cursed, famous, wanted, glowing,
 lycanthropy-adjacent, banned-from-taverns, blessed-by-a-forgotten-god,
 owes-the-scooter-gang. Tags:
 - gate choices (`requires: {trait: wanted}`), gate outcomes, spawn dedicated
@@ -74,12 +74,12 @@ Hirelings, strays, and volunteers: a mercenary with a trait, a talking
 badger, a disgraced accountant, one (1) very loyal mimic. They add check
 bonuses, interject in events (their trait picks the interjection), can be
 targeted by outcomes (kidnapped, poisoned, unionized), and can betray or die
-— entering the Chronicle when they do.
+ -  entering the Chronicle when they do.
 
 ### 1.6 Contracts & ambitions (generated quests)
 Multi-step goals generated from the Chronicle: retrieve artifact X resting
 at Y for faction Z; escort a descendant to their grandparent's ruin; hunt
-the beast that ate a named hero; deliver a sealed letter (DO NOT READ — a
+the beast that ate a named hero; deliver a sealed letter (DO NOT READ  -  a
 trait if you do). Also **ambitions**: run-long win conditions chosen at
 birth (die rich, slay a named beast, get a monument built about you, own a
 spaceship) that give runs a shape without ending the sandbox.
@@ -98,7 +98,7 @@ expanded into a full storyline. Gods remember. Gods take notes.
 ### 1.9 Vehicles & the travel layer
 Vehicles become real: scooter/wagon/buggy/truck each add travel options,
 their own event pools, breakdowns, upgrades, and passengers. Endgame: buy,
-repair, and fuel a crashed **spaceship** across many steps — leaving the
+repair, and fuel a crashed **spaceship** across many steps  -  leaving the
 planet is a legitimate run-ending achievement (the chronicle records the
 world's reaction).
 
@@ -109,7 +109,7 @@ weirdest events. Spyglass/scooter/rope gate deeper access.
 
 ### 1.11 NPC memory
 Named NPCs (vendors, legends, descendants) remember your last interaction
-per world — the vendor you robbed prices accordingly forever; the legend you
+per world  -  the vendor you robbed prices accordingly forever; the legend you
 beat at arm wrestling introduces you to rooms. Cheap to store, enormous felt
 consequence.
 
@@ -146,11 +146,11 @@ The validator enforces the checklist.
 
 ### 2.2 Deep history: 1,000 years in eras
 - **Eras** with distinct flavor: Founding, the Long Peace, the Sundering
-  (extra wars), the Sky-Fall Century (debris rate ×10 — this is where the
+  (extra wars), the Sky-Fall Century (debris rate ×10  -  this is where the
   sci-fi flood happened), the Present. Era tags color names, prose, and
   which ruins hold what tech.
 - **Dynasties & institutions**: factions rise, split (schism events), merge,
-  and *die* — a dead faction's crest on an item means something different.
+  and *die*  -  a dead faction's crest on an item means something different.
 - Chronicle scale: ~20–40k entries. Engine work: prune boring threads,
   index by entity for O(1) slot queries, and keep worldgen under ~4s in
   browser (budgeted, measured, CI-gated).
@@ -170,20 +170,20 @@ The validator enforces the checklist.
 
 ## 3. Nigh-Endless Play
 
-1. **Persistent worlds** (1.2) — the run ends; the world doesn't.
-2. **Living world** (1.1) — the world changes faster than you can learn it.
+1. **Persistent worlds** (1.2)  -  the run ends; the world doesn't.
+2. **Living world** (1.1)  -  the world changes faster than you can learn it.
 3. **World size scaling**: regions 10–14 → 30–60; travel becomes regional
    (near sites cheap, far sites cost days/supplies/vehicle) so the map
    unfolds over many runs.
 4. **Deck exhaustion resistance**: per-visit pools draw from
    skeleton × parameters, so even a repeated skeleton arrives re-cast.
-5. **Save mid-run** (native file / localStorage) — long runs survive.
+5. **Save mid-run** (native file / localStorage)  -  long runs survive.
 6. **Difficulty ratchet**: the world escalates with world-age, not player
-   level — old worlds are dangerous *and* rich, and that's the appeal.
+   level  -  old worlds are dangerous *and* rich, and that's the appeal.
 7. **Daily world**: everyone plays the same date-seed; your death epitaph is
    shareable against everyone else's (local stats now; leaderboard later).
 8. **Ambitions** (1.6) give arcs; retirement is a victory (your character
-   enters the Chronicle *alive* — innkeeper, legend, cult leader emeritus).
+   enters the Chronicle *alive*  -  innkeeper, legend, cult leader emeritus).
 
 ---
 
@@ -191,20 +191,20 @@ The validator enforces the checklist.
 
 | Phase | Contents | Why first |
 |---|---|---|
-| **P1 — The Engine of Doubt** | Conditional outcomes (`when`), traits/afflictions, NPC memory, event file split + manifest, validator v2 | Everything else hangs off these hooks |
-| **P2+P3 — The Unbroken Chronicle** | Living World and Legacy merged: ONE timeline with two tick rates — daily while playing (wars, plagues, news, prices), yearly between runs. Dead PCs become figures inside the same sim, processed by the same rules: books written about them, their relics stolen and relocated, their killer beasts gaining fame, monuments raised. Persistent worlds, heirs, save/load. | One machine, two clocks; the retention engine |
-| **P4 — 10x Content Blitz I** | 1,000-yr eras + new history types, 5 cultures, item/quirk generation families, +100 event skeletons | Feeds on P1 hooks |
-| **P5 — Company & Purpose** | Companions, contracts, ambitions, deep encounters | Depth |
-| **P6 — The Wide World** | 30–60 regions, regional travel, vehicles-for-real, exploration chains, religion | Breadth |
-| **P7 — 10x Content Blitz II** | remaining skeletons to 250+, prose to 200 keys, epitaphs to 120, Monte-Carlo balance pass | Saturation |
-| **P8 — Endgames & Ship** | Spaceship arc, retirement, daily world, mod folder support, itch/site update | The bow on top |
+| **P1  -  The Engine of Doubt** | Conditional outcomes (`when`), traits/afflictions, NPC memory, event file split + manifest, validator v2 | Everything else hangs off these hooks |
+| **P2+P3  -  The Unbroken Chronicle** | Living World and Legacy merged: ONE timeline with two tick rates  -  daily while playing (wars, plagues, news, prices), yearly between runs. Dead PCs become figures inside the same sim, processed by the same rules: books written about them, their relics stolen and relocated, their killer beasts gaining fame, monuments raised. Persistent worlds, heirs, save/load. | One machine, two clocks; the retention engine |
+| **P4  -  10x Content Blitz I** | 1,000-yr eras + new history types, 5 cultures, item/quirk generation families, +100 event skeletons | Feeds on P1 hooks |
+| **P5  -  Company & Purpose** | Companions, contracts, ambitions, deep encounters | Depth |
+| **P6  -  The Wide World** | 30–60 regions, regional travel, vehicles-for-real, exploration chains, religion | Breadth |
+| **P7  -  10x Content Blitz II** | remaining skeletons to 250+, prose to 200 keys, epitaphs to 120, Monte-Carlo balance pass | Saturation |
+| **P8  -  Endgames & Ship** | Spaceship arc, retirement, daily world, mod folder support, itch/site update | The bow on top |
 
 Rough shape: P1–P3 are mostly engine (the anti-memorization machinery);
 P4–P7 are mostly authoring; content lands continuously after P1 since every
 skeleton written to the new checklist works immediately.
 
 ## 5. Budget Reality Check
-- 100 MB is unreachable for text — and that's good. 250 skeletons + 200
+- 100 MB is unreachable for text  -  and that's good. 250 skeletons + 200
   grammar keys ≈ 2–4 MB. The wasm stays ~1 MB. Ship size stays trivial;
   the *possibility space* is what grows 10x–100x.
 - The real budget is authoring hours. The parameterization + validator +
@@ -542,3 +542,29 @@ The audit's design program, executed:
 - **Machine-enforced direction** - every one of 521 cards must declare a valid
   primary deck and theme, carry that theme as a semantic tag, use non-empty
   choice approaches, and pass the project's no-em-dash authoring rule.
+
+---
+
+## Release 18 - Living Politics
+
+- **The complete thousand-card deck** - 479 new scenarios bring the playable
+  total to exactly 1,000. Fifty-nine political story families each contain
+  eight connected beats, followed by seven world-state endings.
+- **Ten world conditions** - worker power, rent burden, concentrated wealth,
+  pollution, militarization, food security, fascist influence, solidarity,
+  legitimacy, and mutual aid change through choices and autonomous history.
+- **Institutions live and fail** - unions, tenant councils, mutual-aid
+  networks, cooperatives, revolutionary committees, anti-fascist coalitions,
+  pirate assemblies, scientific commons, peace movements, and restoration
+  crews gain strength, acquire bureaucracy, lose integrity, collapse, and can
+  be rebuilt.
+- **Consequences form families** - petition, assembly, retaliation, coalition,
+  crisis, compromise, reversal, and legacy beats return after time through the
+  delayed-consequence engine. Every route advances the story while changing
+  who holds power.
+- **Structural repetition defense** - opening shapes, joke engines, social
+  roles, choice geometry, themes, families, and exact ids all have independent
+  cooldown pressure.
+- **Ideological endings** - the final choices read accumulated material history
+  instead of awarding a single moral answer. Victories remain unfinished and
+  failures can still leave tools for another attempt.

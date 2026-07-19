@@ -56,14 +56,16 @@ to read, the game is working. Native and WASM dumps are byte-identical for
 the same seed. That is load-bearing; see the determinism note in
 src/language.cpp before touching RNG call sites.
 
-The playable deck currently contains 521 authored scenarios. Every card has a
-primary political theme and material consequences. The 351 legacy cards have
-been remastered around labor, housing, anti-fascism, anti-war resistance,
-survival, ecology, public care, freedom, failed revolution, and stubborn
-kindness. Exact event ids
-deal without replacement for an entire life, saves preserve that seen set, and
-each world carries a 240-card cooldown across generations. `SCENARIO_1000.md`
-and `assets/data/scenario_targets.json` define and measure the path to 1,000.
+The playable deck contains 1,000 scenarios. Every card has a primary political
+theme and material consequences. The 351 legacy cards have been remastered
+around labor, housing, anti-fascism, anti-war resistance, survival, ecology,
+public care, freedom, failed revolution, and stubborn kindness. Release 18 adds
+59 connected eight-beat families, seven ideological endings, ten world
+conditions, and ten institutions that can grow, bureaucratize, collapse, or be
+rebuilt. Exact event ids deal without replacement for an entire life. Saves
+preserve that seen set, and each world carries a 240-card cooldown across
+generations. `tools/generate_r18.mjs`, `SCENARIO_1000.md`, and
+`assets/data/scenario_targets.json` define and verify the thousand-card recipe.
 
 ## Hosting (random-rogue.com)
 

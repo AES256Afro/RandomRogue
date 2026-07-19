@@ -55,6 +55,10 @@ struct Event {
     int weight = 10;
     std::vector<std::string> tags; // semantic ingredients used by the director
     std::string family;            // structural cooldown group
+    // Opening shape, joke engine, social role, and choice geometry. These are
+    // cooled independently by the Story Director so different cards built
+    // from the same dramatic machinery do not arrive back to back.
+    std::vector<std::string> fingerprints;
     std::string text;
     std::vector<Choice> choices;
     // Chronicle slot queries: name -> query ("chronicle_random",
@@ -77,7 +81,7 @@ public:
     using EventScore = std::function<int(const Event&)>;
     void loadJsonText(const char* jsonText);
     // Draws a weighted random unused event for a location. Does NOT mark it
-    // used — call markUsed once the event is actually shown; gated or
+    // used  -  call markUsed once the event is actually shown; gated or
     // slot-failed draws go back in the pool so they don't silently drain it
     // and cause early repeats (R9). `exclude` skips ids already tried this
     // deal so the retry loop can't spin on the same ineligible card.
@@ -96,7 +100,7 @@ public:
     size_t size() const { return events_.size(); }
 
     // Picks the outcome; item passives feed the check modifier. Outcomes
-    // whose `when` conditions pass OVERRIDE the default pool — special
+    // whose `when` conditions pass OVERRIDE the default pool  -  special
     // cases beat generic ones, which is what makes cards situational.
     static ResolvedOutcome resolve(const Choice& choice, const Character& c, Rng& rng,
                                    const CondEval& cond);

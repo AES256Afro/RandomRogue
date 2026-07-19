@@ -1,6 +1,6 @@
 // Monte-Carlo playtest bot (ROADMAP P7): plays thousands of headless runs
 // with a random-choice policy and reports what the dice actually do to
-// players — survival curves, economy, deadliest events, unreachable content.
+// players  -  survival curves, economy, deadliest events, unreachable content.
 // Balance by data, not vibes. Usage: playtest [runs] [assets_dir]
 #include <algorithm>
 #include <cstdio>
@@ -37,11 +37,14 @@ struct BotState {
     bool appealed = false;
     bool mysterySolved = false;
     std::set<std::string> echoes;
+    std::set<std::string> storyFlags;
+    std::map<std::string, int> world;
+    std::map<std::string, int> institutions;
     int rumors = 2, collective = 0;
     std::vector<std::pair<int, std::string>> scheduled;
 };
 
-// A pared-down mirror of Game::evalCond — world conditions get coin flips.
+// A pared-down mirror of Game::evalCond  -  world conditions get coin flips.
 static bool botCond(BotState& s, const std::string& cond) {
     std::istringstream ss(cond);
     std::string a, b, cc;
@@ -79,6 +82,19 @@ static bool botCond(BotState& s, const std::string& cond) {
     if (a == "region") return s.rng.chance(22);
     if (a == "neighbor") return s.rng.chance(22);
     if (a == "echo") return s.echoes.count(b) > 0;
+    if (a == "story") return s.storyFlags.count(b) > 0;
+    if (a == "!story") return s.storyFlags.count(b) == 0;
+    if (a == "world" || a == "institution") {
+        std::string valueText;
+        ss >> valueText;
+        int lhs = a == "world" ? s.world[b] : s.institutions[b];
+        int rhs = atoi(valueText.c_str());
+        if (cc == ">") return lhs > rhs;
+        if (cc == "<") return lhs < rhs;
+        if (cc == ">=") return lhs >= rhs;
+        if (cc == "<=") return lhs <= rhs;
+        return lhs == rhs;
+    }
     auto cmp = [&](int lhs) {
         int rhs = atoi(cc.c_str());
         if (b == ">") return lhs > rhs;
@@ -308,6 +324,22 @@ int main(int argc, char** argv) {
                         else if (verb == "converge") {
                             std::string family; fs >> family;
                             if (!family.empty()) s.echoes.insert(family);
+                        }
+                        else if (verb == "world") {
+                            std::string field; int v = 0; fs >> field >> v;
+                            s.world[field] = std::max(-10, std::min(10, s.world[field] + v));
+                        }
+                        else if (verb == "institution") {
+                            std::string kind; int v = 0; fs >> kind >> v;
+                            s.institutions[kind] = std::max(-3, std::min(8, s.institutions[kind] + v));
+                        }
+                        else if (verb == "story") {
+                            std::string flag; fs >> flag;
+                            if (!flag.empty() && flag[0] == '-') s.storyFlags.erase(flag.substr(1));
+                            else {
+                                if (!flag.empty() && flag[0] == '+') flag.erase(0, 1);
+                                if (!flag.empty()) s.storyFlags.insert(flag);
+                            }
                         }
                         else if (verb == "die") { s.c.dead = true; }
                         else if (verb == "finish") { s.c.dead = true; s.finishedWell = true; finishEvents[ev->id]++; }

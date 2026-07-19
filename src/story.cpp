@@ -47,6 +47,8 @@ void StoryDirector::reset() {
 std::vector<std::string> StoryDirector::tagsFor(const Event& event) {
     std::set<std::string> unique(event.tags.begin(), event.tags.end());
     if (!event.theme.empty()) unique.insert(event.theme);
+    for (const std::string& fingerprint : event.fingerprints)
+        if (!fingerprint.empty()) unique.insert("fp:" + fingerprint);
     for (const std::string& location : event.locations) unique.insert(location);
 
     for (const auto& slot : event.slots) {
@@ -92,6 +94,10 @@ std::vector<std::string> StoryDirector::tagsFor(const Event& event) {
                     unique.insert("rumor");
                 if (fx.rfind("agenda ", 0) == 0 || fx.rfind("collective ", 0) == 0)
                     unique.insert("politics");
+                if (fx.rfind("world ", 0) == 0 || fx.rfind("story ", 0) == 0)
+                    unique.insert("living_world");
+                if (fx.rfind("institution ", 0) == 0)
+                    unique.insert("institution");
             }
         }
     };
@@ -130,12 +136,19 @@ int StoryDirector::score(const Event& event, const StoryContext& ctx) const {
     int familyHeat = recentCount(recentFamilies_, family, 8);
     if (familyHeat > 0) result = result * (familyHeat >= 2 ? 35 : 62) / 100;
 
+    // A different card about the same concern can still feel like a repeat.
+    // Cool the primary theme as a unit before considering contextual boosts.
+    int themeHeat = event.theme.empty() ? 0 : recentCount(recentTags_, event.theme, 10);
+    if (themeHeat > 0) result = result * (themeHeat >= 2 ? 48 : 68) / 100;
+
     const std::vector<std::string> tags = tagsFor(event);
     int heat = 0;
     int novelty = 0;
     for (const std::string& tag : tags) {
         if (isLocationTag(tag)) continue;
         heat += recentCount(recentTags_, tag, 14);
+        if (tag.rfind("fp:", 0) == 0 && recentCount(recentTags_, tag, 18) > 0)
+            result -= 24;
         auto count = tagCounts_.find(tag);
         if (count == tagCounts_.end()) novelty += 16;
         else if (count->second <= 2) novelty += 7;
@@ -152,6 +165,11 @@ int StoryDirector::score(const Event& event, const StoryContext& ctx) const {
         if ((tag == "labor" || tag == "solidarity") && ctx.solidarity) result += 30;
         if (tag == "ecology" && ctx.pollution) result += 38;
         if ((tag == "rent" || tag == "economy") && ctx.scarcity) result += 32;
+        if ((tag == "capital" || tag == "housing") && ctx.inequality) result += 38;
+        if ((tag == "antifascist" || tag == "state_power" || tag == "propaganda") &&
+            ctx.authoritarian) result += 42;
+        if (tag == "antiwar" && ctx.militarized) result += 40;
+        if (tag == "institution" && ctx.institutions) result += 26;
     }
     result += std::min(45, novelty);
     result -= std::min(55, heat * 7);
@@ -212,6 +230,10 @@ std::vector<std::string> StoryDirector::explain(const Event& event,
     add("solidarity", ctx.solidarity);
     add("ecology", ctx.pollution);
     add("rent", ctx.scarcity);
+    add("capital", ctx.inequality);
+    add("antifascist", ctx.authoritarian);
+    add("antiwar", ctx.militarized);
+    add("institution", ctx.institutions);
     if (!any) reasons += " neutral";
     lines.push_back(reasons);
 

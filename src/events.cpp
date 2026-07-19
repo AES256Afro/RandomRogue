@@ -93,6 +93,8 @@ void EventDeck::loadJsonText(const char* jsonText) {
         ev.family = e.value("family", "");
         ev.text = e.value("text", "");
         if (e.contains("tags")) ev.tags = parseStringArray(e["tags"]);
+        if (e.contains("fingerprints"))
+            ev.fingerprints = parseStringArray(e["fingerprints"]);
         if (e.contains("locations") && e["locations"].is_array())
             for (auto& l : e["locations"])
                 if (l.is_string()) ev.locations.push_back(l.get<std::string>());

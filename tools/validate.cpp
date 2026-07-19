@@ -4,6 +4,7 @@
 // Usage: validate [assets_dir]
 #include <cstdio>
 #include <fstream>
+#include <map>
 #include <set>
 #include <sstream>
 #include <string>
@@ -33,7 +34,8 @@ static const std::set<std::string> kVerbs = {
     "schedule", "npc_rel", "npc_know", "clue", "mystery_clue", "mystery_solve",
     "region", "region_flag", "region_spread", "network", "network_rel",
     "evidence", "doubt", "mystery_accuse", "mystery_trial", "converge",
-    "rumor", "foreshadow", "agenda", "nemesis", "collective"};
+    "rumor", "foreshadow", "agenda", "nemesis", "collective",
+    "world", "institution", "story"};
 static const std::set<std::string> kSlotQueries = {
     "chronicle_random", "chronicle_news", "artifact_here", "figure_alive",
     "figure_dead", "god", "beast_here", "stranger_here", "ghost_here",
@@ -65,7 +67,7 @@ static bool validWhen(const std::string& w) {
         a == "social_known" || a == "mystery_appealed" || a == "nemesis") return true;
     static const std::set<std::string> named = {"trait", "!trait", "has", "!has", "npc",
                                                 "season", "region", "neighbor", "network",
-                                                "echo", "agenda"};
+                                                "echo", "agenda", "story", "!story"};
     static const std::set<std::string> cmp = {"rep", "money", "credits", "hp", "day",
                                               "contracts", "clues", "evidence", "doubt",
                                               "rumors", "collective", "solidarity",
@@ -86,6 +88,20 @@ static bool validWhen(const std::string& w) {
             "trust", "fear", "respect", "debt", "affection", "grudge", "knowledge"
         };
         return fields.count(b) && ops.count(c) && !d.empty();
+    }
+    if (a == "world" || a == "institution") {
+        std::string d;
+        ss >> d;
+        static const std::set<std::string> worldFields = {
+            "worker_power", "rent_burden", "wealth_concentration", "pollution",
+            "militarization", "food_security", "fascist_influence", "solidarity",
+            "legitimacy", "mutual_aid"};
+        static const std::set<std::string> institutionKinds = {
+            "union", "tenant_council", "mutual_aid", "cooperative",
+            "revolutionary_committee", "antifascist_coalition", "pirate_assembly",
+            "scientific_commons", "peace_movement", "restoration_crew"};
+        bool known = a == "world" ? worldFields.count(b) : institutionKinds.count(b);
+        return known && ops.count(c) && !d.empty();
     }
     return false;
 }
@@ -144,6 +160,8 @@ int main(int argc, char** argv) {
     for (auto& [k, v] : prose.items()) grammarKeys.insert(k);
 
     std::set<std::string> eventIds, gotoTargets, scheduledTargets, remasterCodas;
+    std::map<std::string, int> r18Families;
+    int r18Cards = 0;
     for (auto& e : events) {
         std::string id = e.value("id", "");
         if (!eventIds.insert(id).second) fail(id, "duplicate event id");
@@ -202,6 +220,21 @@ int main(int argc, char** argv) {
                     "prosperity", "danger", "unrest", "pressure", "supply",
                     "rent", "pollution", "solidarity"};
                 if (!fields.count(a)) fail(id, "unknown regional field: " + a);
+            }
+            if (verb == "world") {
+                static const std::set<std::string> fields = {
+                    "worker_power", "rent_burden", "wealth_concentration",
+                    "pollution", "militarization", "food_security",
+                    "fascist_influence", "solidarity", "legitimacy", "mutual_aid"};
+                if (!fields.count(a)) fail(id, "unknown world field: " + a);
+            }
+            if (verb == "institution") {
+                static const std::set<std::string> kinds = {
+                    "union", "tenant_council", "mutual_aid", "cooperative",
+                    "revolutionary_committee", "antifascist_coalition",
+                    "pirate_assembly", "scientific_commons", "peace_movement",
+                    "restoration_crew"};
+                if (!kinds.count(a)) fail(id, "unknown institution: " + a);
             }
         }
     };
@@ -274,6 +307,17 @@ int main(int argc, char** argv) {
             if (!tagged) fail(id, "primary theme is missing from semantic tags");
         }
         if (e.contains("tags") && !e["tags"].is_array()) fail(id, "tags must be an array");
+        if (e.contains("fingerprints") && !e["fingerprints"].is_array())
+            fail(id, "fingerprints must be an array");
+        if (id.rfind("r18_", 0) == 0) {
+            r18Cards++;
+            if (!e.contains("fingerprints") || !e["fingerprints"].is_array() ||
+                e["fingerprints"].size() < 4)
+                fail(id, "Release 18 cards need four structural fingerprints");
+            std::string family = e.value("family", "");
+            if (family.empty()) fail(id, "Release 18 card is missing a family");
+            else if (family != "r18_ideological_endings") r18Families[family]++;
+        }
         if (e.contains("slots"))
             for (auto& [name, q] : e["slots"].items()) {
                 slots.insert(name);
@@ -338,6 +382,13 @@ int main(int argc, char** argv) {
         if (!eventIds.count(target)) fail("goto", "target event does not exist: " + target);
     for (auto& target : scheduledTargets)
         if (!eventIds.count(target)) fail("schedule", "target event does not exist: " + target);
+    if ((int)events.size() != scenarioTargets.value("total", 1000))
+        fail("scenario_targets.json", "authored event total does not match the production target");
+    if (r18Cards != 479) fail("Release 18", "expected 479 new cards, found " + std::to_string(r18Cards));
+    if (r18Families.size() != 59)
+        fail("Release 18", "expected 59 connected families, found " + std::to_string(r18Families.size()));
+    for (const auto& [family, count] : r18Families)
+        if (count != 8) fail(family, "connected family needs 8 beats, found " + std::to_string(count));
 
     std::set<std::string> recipeIds;
     for (auto& recipe : itemRecipes) {
