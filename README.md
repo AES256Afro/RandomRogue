@@ -6,7 +6,7 @@ and every rumor, book, artifact, and item quirk ties back to that history.
 Regions have political economies. Named people pursue agendas. Solidarity,
 rent, supply, pollution, and power continue moving without the player.
 
-- **Design docs:** [PLAN.md](PLAN.md) - [WORLDGEN.md](WORLDGEN.md) - [NARRATIVE.md](NARRATIVE.md) - [SCENARIO_1000.md](SCENARIO_1000.md)
+- **Design docs:** [PLAN.md](PLAN.md) - [WORLDGEN.md](WORLDGEN.md) - [NARRATIVE.md](NARRATIVE.md) - [SCENARIO_1000.md](SCENARIO_1000.md) - [MUD world bridge](MUD_WORLD_BRIDGE_PLAN.md)
 - **Content guide:** [AUTHORING.md](AUTHORING.md)
 - **Targets:** Windows, Linux, macOS, Browser (desktop + iPad)
 

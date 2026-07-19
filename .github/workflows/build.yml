@@ -74,6 +74,8 @@ jobs:
         run: emcmake cmake -B build-web -DCMAKE_BUILD_TYPE=Release -DPLATFORM=Web
       - name: Build
         run: cmake --build build-web
+      - name: Homepage contract
+        run: node tools/check_site.mjs site/index.html
       - name: Service worker syntax
         run: node --check site/play/sw.js
       - name: Exact native versus WASM determinism
