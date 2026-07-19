@@ -142,7 +142,11 @@ const Event* EventDeck::draw(Rng& rng, const std::string& location,
         std::vector<const Event*> pool;
         int total = 0;
         for (auto& e : events_) {
+            // Current-life cards are always excluded. Older-life cards begin
+            // on cooldown, but the second pass can use one if a location has
+            // no genuinely fresh material left.
             if (used_.count(e.id)) continue;
+            if (pass == 0 && cooldown_.count(e.id)) continue;
             if (exclude && exclude->count(e.id)) continue;
             for (auto& l : e.locations) {
                 if (l == location) {
@@ -154,23 +158,7 @@ const Event* EventDeck::draw(Rng& rng, const std::string& location,
                 }
             }
         }
-        if (pool.empty()) {
-            // Exhausted this location's pool: recycle only its events.
-            std::set<std::string> keep;
-            for (auto& id : used_) {
-                bool isHere = false;
-                for (auto& e : events_)
-                    if (e.id == id)
-                        for (auto& l : e.locations)
-                            if (l == location) isHere = true;
-                if (!isHere) keep.insert(id);
-            }
-            // If recycling frees nothing new (everything eligible was
-            // already tried this deal), give up rather than loop.
-            if (keep.size() == used_.size()) return nullptr;
-            used_ = keep;
-            continue;
-        }
+        if (pool.empty()) continue;
         int roll = rng.range(1, total > 0 ? total : 1);
         for (auto* e : pool) {
             int multiplier = score ? score(*e) : 100;

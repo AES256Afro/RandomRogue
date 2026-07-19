@@ -63,6 +63,8 @@ static std::string structure(const json& event) {
 
 int main(int argc, char** argv) {
     std::string assets = argc > 1 ? argv[1] : "assets";
+    json targets = json::parse(readFile(assets + "/data/scenario_targets.json"),
+                               nullptr, false);
     json manifest = json::parse(readFile(assets + "/data/events/manifest.json"), nullptr, false);
     if (manifest.is_discarded() || !manifest.contains("files")) return 1;
     std::vector<json> events;
@@ -74,14 +76,29 @@ int main(int argc, char** argv) {
     }
 
     std::map<std::string, int> locations, tags, approaches, families;
+    std::map<std::string, int> primaryDecks, primaryThemes;
     std::map<std::string, std::vector<std::string>> openings, structures;
     int gated = 0, slotted = 0, delayed = 0, relationship = 0;
     for (auto& event : events) {
         std::string id = event.value("id", "");
+        std::string primary = event.value("primary", "");
+        if (primary.empty()) {
+            json eventLocations = event.value("locations", json::array());
+            primary = eventLocations.empty() ? "special"
+                                             : eventLocations.front().get<std::string>();
+        }
+        primaryDecks[primary]++;
         for (auto& location : event.value("locations", json::array()))
             locations[location.get<std::string>()]++;
-        for (auto& tag : event.value("tags", json::array()))
-            tags[tag.get<std::string>()]++;
+        std::string primaryTheme = event.value("theme", "");
+        for (auto& tag : event.value("tags", json::array())) {
+            std::string tagName = tag.get<std::string>();
+            tags[tagName]++;
+            if (primaryTheme.empty() && !targets.is_discarded() &&
+                targets.contains("themes") && targets["themes"].contains(tagName))
+                primaryTheme = tagName;
+        }
+        if (!primaryTheme.empty()) primaryThemes[primaryTheme]++;
         std::string family = event.value("family", "");
         if (!family.empty()) families[family]++;
         if (event.contains("when")) gated++;
@@ -107,6 +124,24 @@ int main(int argc, char** argv) {
     std::printf("\nsemantic coverage:");
     for (auto& pair : tags) std::printf(" %s=%d", pair.first.c_str(), pair.second);
     std::printf("\n");
+
+    if (!targets.is_discarded() && targets.is_object()) {
+        int targetTotal = targets.value("total", 1000);
+        std::printf("thousand plan: %d/%d authored, %d remaining\n",
+                    (int)events.size(), targetTotal,
+                    std::max(0, targetTotal - (int)events.size()));
+        std::printf("primary deck gaps:");
+        for (auto& [name, wanted] : targets["decks"].items()) {
+            int have = primaryDecks[name];
+            std::printf(" %s=%d", name.c_str(), std::max(0, wanted.get<int>() - have));
+        }
+        std::printf("\nprimary theme gaps:");
+        for (auto& [name, wanted] : targets["themes"].items()) {
+            int have = primaryThemes[name];
+            std::printf(" %s=%d", name.c_str(), std::max(0, wanted.get<int>() - have));
+        }
+        std::printf("\n");
+    }
 
     int repeatedOpenings = 0;
     for (auto& pair : openings)

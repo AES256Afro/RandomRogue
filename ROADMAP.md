@@ -495,3 +495,25 @@ The audit's design program, executed:
 - **Access and atmosphere** - controller navigation, political audio stingers,
   a four-card onboarding sequence, and a refreshed presentation site explain
   the deeper world without changing the muted-by-default music policy.
+
+---
+
+## Release 16 - The Deck Remembers
+
+- **Hard no-repeat dealing** - location decks never recycle during a life.
+  Scheduled consequences and explicit story chains now pass through the same
+  seen-card gate as ordinary draws.
+- **World-scale cooldown** - each seed remembers its last 240 answered cards
+  across generations. Death no longer immediately reshuffles the same tavern,
+  road, or dungeon material back to the front.
+- **A tested invariant** - regression tests exhaust a location and prove it
+  stays exhausted. The 3,000-life playtest fails if an exact id appears twice
+  in one life.
+- **Wave A content** - 120 new scenarios add six cards for each of twenty
+  political and human themes. The playable deck grows from 381 to 501.
+- **The thousand-scenario matrix** - `SCENARIO_1000.md` defines exact location,
+  theme, venue, dramatic-lens, arc, and quality budgets for 1,000 authored ids.
+  A machine-readable target file makes the analyzer print every remaining gap.
+- **Presentation update** - the homepage describes the no-repeat guarantee,
+  the larger deck, and the public content plan without claiming unfinished
+  cards are already playable.

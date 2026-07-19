@@ -138,7 +138,7 @@ private:
     void dealEvent();
     bool resolveSlots(const Event& e, Grammar::Ctx& ctx);
     StoryContext storyContext(const std::string& location) const;
-    bool presentEvent(const Event* event, bool markUsed = true);
+    bool presentEvent(const Event* event);
     void chooseOption(int idx);
     void applyEffects(const std::vector<std::string>& effects);
     void continueAfterOutcome();
@@ -297,6 +297,9 @@ private:
     std::map<std::string, int> storyEchoRegions_;
     int eventSerial_ = 0;
     std::map<std::string, int> lastEventSerial_;
+    // Recent cards from earlier lives in this seed. They begin a new life on
+    // cooldown so a death does not immediately reshuffle familiar material.
+    std::vector<std::string> worldEventMemory_;
     int currentDirectorScore_ = 100;
 
     // inventory / info

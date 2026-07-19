@@ -1,0 +1,307 @@
+[
+  {
+    "id": "r16_antifascist_civic_need_01", "primary": "city", "theme": "antifascist", "locations": ["city"], "weight": 14,
+    "tags": ["antifascist", "solidarity", "danger"], "family": "organized_defense",
+    "text": "A uniformed league marks six shop doors with white paint while the watch records the vandalism as enthusiastic cartography.",
+    "choices": [
+      {"text": "Guard the street with its residents", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Every marked door stays open. The league discovers a neighborhood is harder to terrorize after it learns everyone's name.", "effects": ["region danger -2", "region solidarity +2", "collective +1"]}]},
+      {"text": "Ask the watch to intervene", "approach": "law", "outcomes": [{"weight": 1, "text": "The watch removes the paint and leaves the painters' address book untouched.", "effects": ["region unrest -1", "region danger +1"]}]},
+      {"text": "Mark the league sponsor's mansion", "approach": "truth", "outcomes": [{"weight": 1, "text": "By morning everyone knows who bought the paint, uniforms, and official silence.", "effects": ["region unrest +1", "region solidarity +1", "rumor 100 A wealthy merchant funded the uniformed league."]}]}
+    ]
+  },
+  {
+    "id": "r16_antifascist_social_organized_01", "primary": "tavern", "theme": "antifascist", "locations": ["tavern"], "weight": 13,
+    "tags": ["antifascist", "propaganda", "solidarity"], "family": "organized_defense",
+    "text": "League recruiters reserve the back room for a meeting called Traditional Soup. The soup contains no tradition, only names and patrol routes.",
+    "choices": [
+      {"text": "Warn every person on their list", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Doors lock, escorts form, and the patrol finds nobody isolated enough to frighten.", "effects": ["region danger -1", "region solidarity +2", "collective +1"]}]},
+      {"text": "Steal the patrol routes", "approach": "wit", "outcomes": [{"weight": 1, "text": "The league spends the night surrounding a laundry cart wearing a heroic blanket.", "effects": ["region danger -1", "money +5", "stat int +1"]}]},
+      {"text": "Sell them a better route", "approach": "greed", "outcomes": [{"weight": 1, "text": "They pay in clean coins and dirty certainty. Someone else will pay the difference.", "effects": ["money +22", "region danger +2", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_antifascist_transit_backlash_01", "primary": "road", "theme": "antifascist", "locations": ["road"], "weight": 13,
+    "tags": ["antifascist", "propaganda", "travel"], "family": "organized_defense",
+    "text": "A marching column distributes maps where every poor district is labeled disorder and every wealthy estate is labeled civilization.",
+    "choices": [
+      {"text": "Replace the maps with ownership records", "approach": "truth", "outcomes": [{"weight": 1, "text": "The column learns disorder has landlords, creditors, and a mailing address.", "effects": ["region solidarity +1", "region unrest +1", "rumor 95 The league's donors own the districts it calls disorder."]}]},
+      {"text": "Block the pass with wagons", "approach": "solidarity", "check": {"stat": "con", "dc": 13}, "success": [{"weight": 1, "text": "Travelers hold the line until the column discovers marching requires a road people consent to share.", "effects": ["region danger -2", "region solidarity +2", "collective +1"]}], "fail": [{"weight": 1, "text": "The blockade breaks. Its witnesses scatter with names, dates, and no intention of forgetting.", "effects": ["hp -5", "region danger +1", "region solidarity +1"]}]},
+      {"text": "Take a map and avoid notice", "approach": "caution", "outcomes": [{"weight": 1, "text": "You pass safely. The map marks your silence as open terrain.", "effects": ["region danger +1", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_antifascist_wild_legacy_01", "primary": "forest", "theme": "antifascist", "locations": ["forest"], "weight": 12,
+    "tags": ["antifascist", "history", "solidarity"], "family": "organized_defense",
+    "text": "Hidden beneath a ranger station is an archive of people once smuggled past an older uniformed league. Several rescuers later became respectable officials who denied everything.",
+    "choices": [
+      {"text": "Give the archive to survivors", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Families decide what becomes public. Gratitude and accusation occupy the same careful page.", "effects": ["region solidarity +2", "collective +1", "rumor 90 Survivors control the hidden rescue archive."]}]},
+      {"text": "Publish every heroic name", "approach": "truth", "outcomes": [{"weight": 1, "text": "The heroes receive statues. The survivors lose addresses they still needed hidden.", "effects": ["region unrest +1", "region danger +1"]}]},
+      {"text": "Sell embarrassing pages to officials", "approach": "greed", "outcomes": [{"weight": 1, "text": "Respectability pays promptly when its memory is threatened.", "effects": ["money +25", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_antifascist_high_compromise_01", "primary": "mountains", "theme": "antifascist", "locations": ["mountains"], "weight": 11,
+    "tags": ["antifascist", "danger", "refugees"], "family": "organized_defense",
+    "text": "Mountain guides can lead a hunted family across the pass tonight, but doing so will expose the only safe route used by dozens more.",
+    "choices": [
+      {"text": "Move everyone and abandon the route", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The crossing takes all night. By dawn the trail is empty, the camp is ash, and everyone is alive.", "effects": ["hp -3", "region pressure +2", "region solidarity +2", "collective +1"]}]},
+      {"text": "Save this family quietly", "approach": "mercy", "outcomes": [{"weight": 1, "text": "They cross. The route survives for now, carrying the weight of those still waiting.", "effects": ["region solidarity +1", "region danger +1"]}]},
+      {"text": "Refuse the risk", "approach": "caution", "outcomes": [{"weight": 1, "text": "The route remains secret. So does what happens to the family below.", "effects": ["region danger -1", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_antifascist_buried_reckoning_01", "primary": "dungeon_finale", "theme": "antifascist", "locations": ["dungeon_finale"], "weight": 10,
+    "tags": ["antifascist", "history", "danger", "consequence"], "family": "organized_defense",
+    "text": "The league's founder lies preserved beneath the city, surrounded by donor ledgers and a machine waiting to broadcast his voice into every public square.",
+    "choices": [
+      {"text": "Destroy the machine and publish the ledgers", "approach": "truth", "outcomes": [{"weight": 1, "text": "The dead voice stays dead. The living money finally has names.", "effects": ["region danger -2", "region solidarity +2", "collective +1", "loot fine"]}]},
+      {"text": "Reprogram it to confess", "approach": "wit", "check": {"stat": "int", "dc": 14}, "success": [{"weight": 1, "text": "Every square hears the founder thank bankers, landlords, and frightened officials by name.", "effects": ["region unrest +2", "region danger -1", "rumor 100 The league founder named the elites who funded him."]}], "fail": [{"weight": 1, "text": "The machine calls your interference proof of conspiracy and acquires a regrettable audience.", "effects": ["region danger +2", "trait +wanted"]}]},
+      {"text": "Sell the ledgers to the donors", "approach": "greed", "outcomes": [{"weight": 1, "text": "They purchase their own signatures and finance another silence.", "effects": ["money +35", "region danger +2", "region solidarity -2"]}]}
+    ]
+  },
+
+  {
+    "id": "r16_antiwar_civic_need_01", "primary": "city", "theme": "antiwar", "locations": ["city"], "weight": 13,
+    "tags": ["antiwar", "war", "care"], "family": "refuse_the_war",
+    "text": "A veterans' hospital has more medals than bandages. The procurement office says honor was cheaper in bulk.",
+    "choices": [
+      {"text": "Turn the parade budget into medicine", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The parade is canceled. Nobody in the ward misses being thanked by a horse.", "effects": ["region supply +2", "region danger -1", "region solidarity +1", "collective +1"]}]},
+      {"text": "Sell the medals for bandages", "approach": "wit", "outcomes": [{"weight": 1, "text": "Collectors pay more for untouched heroism than the state paid for damaged bodies.", "effects": ["money +8", "region supply +1"]}]},
+      {"text": "Fund one decorated ward", "approach": "mercy", "outcomes": [{"weight": 1, "text": "A few veterans receive care beneath a plaque naming the donor instead of the war.", "effects": ["money -8", "hp +2", "region unrest -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_antiwar_social_organized_01", "primary": "tavern", "theme": "antiwar", "locations": ["tavern"], "weight": 13,
+    "tags": ["antiwar", "war", "labor"], "family": "refuse_the_war",
+    "text": "Munitions workers meet after closing. They can stop the shell line tomorrow, but the factory is the town's only wage and the front is already hungry for ammunition.",
+    "choices": [
+      {"text": "Back the strike and build a relief kitchen", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The shell line stops. Soup begins. The town learns survival and obedience were never the same job.", "effects": ["region supply -1", "region solidarity +3", "region_flag +mutual_aid", "collective +1"]}]},
+      {"text": "Slow production without announcing it", "approach": "caution", "outcomes": [{"weight": 1, "text": "Fewer shells leave. Workers keep wages and acquire the exhausted secrecy of partial refusal.", "effects": ["region danger -1", "region solidarity +1"]}]},
+      {"text": "Report the meeting", "approach": "greed", "outcomes": [{"weight": 1, "text": "The bounty buys dinner. The factory buys locks. The front receives everything on schedule.", "effects": ["money +22", "region danger +2", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_antiwar_transit_backlash_01", "primary": "road", "theme": "antiwar", "locations": ["road"], "weight": 14,
+    "tags": ["antiwar", "war", "refugees"], "family": "refuse_the_war",
+    "text": "A conscription wagon blocks the road, collecting farmhands while their harvest rots behind them and officers call both losses necessary.",
+    "choices": [
+      {"text": "Break the recruits out", "approach": "force", "check": {"stat": "str", "dc": 13}, "success": [{"weight": 1, "text": "The wagon leaves empty. The fields gain hands and the army gains a story it cannot arrest.", "effects": ["region supply +2", "region danger +1", "region solidarity +2", "trait +wanted"]}], "fail": [{"weight": 1, "text": "Several escape while you become the wagon's least cooperative passenger.", "effects": ["hp -5", "region solidarity +1", "trait +wanted"]}]},
+      {"text": "Forge medical exemptions", "approach": "wit", "outcomes": [{"weight": 1, "text": "An entire village develops a rare allergy to imperial borders.", "effects": ["money -5", "region supply +1", "stat int +1"]}]},
+      {"text": "Let the wagon pass", "approach": "caution", "outcomes": [{"weight": 1, "text": "The road clears. The fields remain full of food nobody is there to gather.", "effects": ["region supply -2", "region unrest +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_antiwar_wild_legacy_01", "primary": "forest", "theme": "antiwar", "locations": ["forest"], "weight": 12,
+    "tags": ["antiwar", "history", "war"], "family": "refuse_the_war",
+    "text": "Trees have grown through an abandoned battlefield, lifting rusted swords above the soil like questions nobody in uniform answered.",
+    "choices": [
+      {"text": "Build a memorial naming civilians", "approach": "truth", "outcomes": [{"weight": 1, "text": "The monument lists cooks, children, porters, prisoners, and villages described in dispatches only as terrain.", "effects": ["region solidarity +1", "rumor 90 The forest memorial names the civilians erased from the war record."]}]},
+      {"text": "Melt the weapons into farm tools", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Steel returns to the soil with a less ambitious job.", "effects": ["region supply +1", "region danger -1", "collective +1", "loot common"]}]},
+      {"text": "Sell relics to collectors", "approach": "greed", "outcomes": [{"weight": 1, "text": "The cleanest sword fetches the best price. Its rust was apparently too historical.", "effects": ["money +20", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_antiwar_water_compromise_01", "primary": "sea", "theme": "antiwar", "locations": ["sea"], "weight": 12,
+    "tags": ["antiwar", "sea", "war"], "family": "refuse_the_war",
+    "text": "Two warships order your vessel to identify the enemy. Each captain points at the other and neither notices the fishing boats between them.",
+    "choices": [
+      {"text": "Evacuate the fishing boats", "approach": "mercy", "outcomes": [{"weight": 1, "text": "The civilians escape while both navies accuse you of depriving them of strategic scenery.", "effects": ["hp -2", "region solidarity +2", "collective +1"]}]},
+      {"text": "Signal that both fleets surrendered", "approach": "wit", "check": {"stat": "cha", "dc": 13}, "success": [{"weight": 1, "text": "Confused officers begin exchanging prisoners before anyone corrects the grammar.", "effects": ["region danger -2", "stat cha +1"]}], "fail": [{"weight": 1, "text": "Both fleets agree you are the enemy, achieving the day's only diplomatic breakthrough.", "effects": ["hp -5", "region danger +1"]}]},
+      {"text": "Sell coordinates to both", "approach": "greed", "outcomes": [{"weight": 1, "text": "The coordinates are accurate. Your conscience requests a less precise profession.", "effects": ["money +28", "region danger +2", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_antiwar_buried_reckoning_01", "primary": "dungeon_finale", "theme": "antiwar", "locations": ["dungeon_finale"], "weight": 10,
+    "tags": ["antiwar", "war", "consequence"], "family": "refuse_the_war",
+    "text": "The buried command engine can end the war by destroying every army, including conscripts, medics, prisoners, and the villages where soldiers sleep.",
+    "choices": [
+      {"text": "Destroy the engine", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The war continues without an easy apocalypse. People remain responsible for stopping it themselves.", "effects": ["region danger -1", "region solidarity +1", "collective +1", "loot fine"]}]},
+      {"text": "Target only the generals' command network", "approach": "wit", "check": {"stat": "int", "dc": 14}, "success": [{"weight": 1, "text": "Orders vanish. Soldiers discover the front cannot explain why it exists without distant voices.", "effects": ["region danger -2", "region unrest +2", "rumor 95 Both armies have lost their command network."]}], "fail": [{"weight": 1, "text": "The engine mistakes rank for hat height and removes several innocent helmets explosively.", "effects": ["hp -5", "region danger +1"]}]},
+      {"text": "Fire it for the highest bidder", "approach": "greed", "outcomes": [{"weight": 1, "text": "One army disappears. The buyer immediately discovers an appetite for the word next.", "effects": ["money +40", "region danger +3", "region solidarity -3"]}]}
+    ]
+  },
+
+  {
+    "id": "r16_genocide_civic_need_01", "primary": "city", "theme": "anti_genocide", "locations": ["city"], "weight": 13,
+    "tags": ["anti_genocide", "refugees", "care"], "family": "survival_and_testimony",
+    "text": "A schoolhouse shelters families whose language has been outlawed across the border. Officials offer safety if the children accept new names.",
+    "choices": [
+      {"text": "Register the school under its own language", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Lessons continue. Every spoken name becomes both ordinary and defiant.", "effects": ["region solidarity +2", "region pressure +1", "region_flag +refugee_quarter", "collective +1"]}]},
+      {"text": "Accept false names for immediate safety", "approach": "caution", "outcomes": [{"weight": 1, "text": "The children remain alive and learn to carry two names, one for documents and one for home.", "effects": ["region danger -1", "region solidarity -1"]}]},
+      {"text": "Move the families beyond city records", "approach": "mercy", "outcomes": [{"weight": 1, "text": "They disappear from official danger and from every public claim to belonging.", "effects": ["money -6", "region pressure -1", "region solidarity +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_genocide_social_testimony_01", "primary": "tavern", "theme": "anti_genocide", "locations": ["tavern"], "weight": 12,
+    "tags": ["anti_genocide", "history", "propaganda"], "family": "survival_and_testimony",
+    "slots": {"witness": "figure_alive"},
+    "text": "{witness} asks the room to record names from a destroyed village. A merchant objects that testimony may harm regional confidence.",
+    "choices": [
+      {"text": "Write every name into the Chronicle", "approach": "truth", "outcomes": [{"weight": 1, "text": "The list outlasts the merchant's confidence and the officials who preferred a smaller number.", "effects": ["npc_rel trust +2", "region solidarity +1", "rumor 100 A survivor has named the people erased from a destroyed village.", "collective +1"]}]},
+      {"text": "Record only what can be verified", "approach": "caution", "outcomes": [{"weight": 1, "text": "The careful list is defensible and incomplete. Missing names remain missing for reasons accuracy cannot repair.", "effects": ["npc_rel trust +1", "stat int +1"]}]},
+      {"text": "Ask for a more convenient evening", "approach": "cowardice", "outcomes": [{"weight": 1, "text": "The room returns to dinner. {witness} returns to being the only archive present.", "effects": ["npc_rel grudge +2", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_genocide_transit_backlash_01", "primary": "road", "theme": "anti_genocide", "locations": ["road"], "weight": 14,
+    "tags": ["anti_genocide", "refugees", "danger"], "family": "survival_and_testimony",
+    "text": "A deportation convoy carries families toward a border post whose return orders use the phrase final processing without defining it.",
+    "choices": [
+      {"text": "Disable the convoy and open the wagons", "approach": "force", "check": {"stat": "dex", "dc": 13}, "success": [{"weight": 1, "text": "The locks break. Families scatter toward prepared shelters while guards discover paperwork cannot pursue in every direction.", "effects": ["region pressure +2", "region solidarity +2", "trait +wanted", "collective +1"]}], "fail": [{"weight": 1, "text": "One wagon opens before the guards stop you. Its passengers carry the route to the others.", "effects": ["hp -6", "region solidarity +1", "trait +wanted"]}]},
+      {"text": "Forge a quarantine order", "approach": "wit", "outcomes": [{"weight": 1, "text": "The convoy turns around because officials fear illness more reliably than atrocity.", "effects": ["region pressure +1", "stat int +1"]}]},
+      {"text": "Document the convoy from hiding", "approach": "truth", "outcomes": [{"weight": 1, "text": "You preserve proof. The convoy continues, making evidence feel necessary and unbearable.", "effects": ["rumor 100 A deportation convoy was sent toward a documented killing site.", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_genocide_wild_legacy_01", "primary": "swamp", "theme": "anti_genocide", "locations": ["swamp"], "weight": 12,
+    "tags": ["anti_genocide", "history", "land"], "family": "survival_and_testimony",
+    "text": "Wetland reeds grow through a buried archive of confiscated family records. The occupying government called the people vanished and kept receipts for their houses.",
+    "choices": [
+      {"text": "Return records to surviving families", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Ownership, kinship, and grief return in bundles tied with wet string.", "effects": ["region solidarity +2", "region rent -1", "collective +1"]}]},
+      {"text": "Preserve copies in a public archive", "approach": "truth", "outcomes": [{"weight": 1, "text": "Denial becomes harder, though never embarrassed enough to disappear.", "effects": ["rumor 100 Confiscation records prove the vanished families were systematically dispossessed.", "stat wis +1"]}]},
+      {"text": "Sell property claims to investors", "approach": "greed", "outcomes": [{"weight": 1, "text": "The theft changes handwriting and continues.", "effects": ["money +30", "region rent +2", "region solidarity -3"]}]}
+    ]
+  },
+  {
+    "id": "r16_genocide_high_compromise_01", "primary": "mountains", "theme": "anti_genocide", "locations": ["mountains"], "weight": 11,
+    "tags": ["anti_genocide", "refugees", "danger"], "family": "survival_and_testimony",
+    "text": "A monastery can hide fifty refugees through winter. Two hundred are climbing toward it and the grain store cannot be argued into becoming larger.",
+    "choices": [
+      {"text": "Open the doors and ration together", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Hunger enters with everyone else. Nobody is selected for danger by a full stomach.", "effects": ["region supply -2", "region solidarity +3", "hp -2", "collective +1"]}]},
+      {"text": "Admit children and caregivers first", "approach": "mercy", "outcomes": [{"weight": 1, "text": "The choice saves many and divides families according to a logic nobody calls just.", "effects": ["region supply -1", "region solidarity +1", "region unrest +1"]}]},
+      {"text": "Lead the rest toward another pass", "approach": "courage", "check": {"stat": "wis", "dc": 13}, "success": [{"weight": 1, "text": "The second route holds. Two shelters survive because one person refused the arithmetic offered.", "effects": ["hp -3", "region pressure +2", "region solidarity +2"]}], "fail": [{"weight": 1, "text": "The storm takes the trail. Survivors reach the monastery carrying fewer hands than they began with.", "effects": ["hp -6", "region unrest +2"]}]}
+    ]
+  },
+  {
+    "id": "r16_genocide_buried_reckoning_01", "primary": "dungeon_finale", "theme": "anti_genocide", "locations": ["dungeon_finale"], "weight": 9,
+    "tags": ["anti_genocide", "history", "consequence"], "family": "survival_and_testimony",
+    "text": "The sealed ministry vault contains orders, transport lists, and signed reports proving the extermination campaign was planned. Outside, survivors wait to decide what justice can still mean.",
+    "choices": [
+      {"text": "Give the archive to the survivors' assembly", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Those targeted control the evidence and the terms of its release. History stops being custody held by the state that made it.", "effects": ["region solidarity +3", "collective +1", "rumor 100 Survivors now hold the ministry archive proving the extermination campaign."]}]},
+      {"text": "Publish everything immediately", "approach": "truth", "outcomes": [{"weight": 1, "text": "The proof spreads beyond seizure. Private names, hiding places, and unfinished grief spread with it.", "effects": ["region unrest +2", "region solidarity +1"]}]},
+      {"text": "Trade the archive for safe passage", "approach": "caution", "outcomes": [{"weight": 1, "text": "Some officials flee, some survivors live, and the bargain joins the archive as another fact nobody can make clean.", "effects": ["money +12", "region danger -1", "region solidarity -1"]}]}
+    ]
+  },
+
+  {
+    "id": "r16_colonial_civic_need_01", "primary": "city", "theme": "colonialism", "locations": ["city"], "weight": 13,
+    "tags": ["colonialism", "land", "history"], "family": "stolen_ground",
+    "text": "The museum displays ceremonial masks beside a plaque thanking the expedition that took them during a fire the expedition started.",
+    "choices": [
+      {"text": "Return them to their community", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The empty cases remain with new plaques explaining why emptiness is more honest than possession.", "effects": ["region solidarity +2", "collective +1"]}]},
+      {"text": "Demand shared custody", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "The museum offers weekends and retains the word custody, which reveals the entire problem efficiently.", "effects": ["region unrest -1", "region solidarity -1"]}]},
+      {"text": "Steal one mask for sale", "approach": "greed", "outcomes": [{"weight": 1, "text": "You repeat the expedition at a smaller scale and with worse handwriting.", "effects": ["money +24", "trait +marked", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_colonial_social_testimony_01", "primary": "tavern", "theme": "colonialism", "locations": ["tavern"], "weight": 12,
+    "tags": ["colonialism", "history", "propaganda"], "family": "stolen_ground",
+    "text": "A retired governor tells a charming story about discovering a valley whose residents served him dinner on the first night.",
+    "choices": [
+      {"text": "Ask who cooked the dinner and owned the valley", "approach": "truth", "outcomes": [{"weight": 1, "text": "The charming story develops people, names, taxes, troops, and an ending the governor had misplaced.", "effects": ["region solidarity +1", "rumor 90 The governor's discovery story concealed an occupied community."]}]},
+      {"text": "Let the room enjoy the story", "approach": "caution", "outcomes": [{"weight": 1, "text": "Applause preserves the valley exactly as he remembers it: empty except for servants.", "effects": ["region solidarity -1"]}]},
+      {"text": "Sell signed copies of his memoir", "approach": "greed", "outcomes": [{"weight": 1, "text": "Nostalgia moves briskly when the people excluded from it cannot afford a table.", "effects": ["money +18", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_colonial_transit_backlash_01", "primary": "road", "theme": "colonialism", "locations": ["road"], "weight": 13,
+    "tags": ["colonialism", "land", "danger"], "family": "stolen_ground",
+    "text": "A new border cuts a grazing route in half. Soldiers demand passports from herders whose grandparents named every spring on both sides.",
+    "choices": [
+      {"text": "Escort the herds through together", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The crossing becomes too large to arrest and too ordinary to describe as invasion.", "effects": ["region supply +1", "region solidarity +2", "region unrest +1", "collective +1"]}]},
+      {"text": "Negotiate seasonal permits", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "The route survives as a privilege renewed by people who invented its interruption.", "effects": ["region supply +1", "region unrest -1"]}]},
+      {"text": "Map an unguarded detour", "approach": "wit", "outcomes": [{"weight": 1, "text": "The herds cross farther uphill. The border learns geography has not signed the agreement.", "effects": ["hp -2", "stat wis +1", "region solidarity +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_colonial_wild_organized_01", "primary": "forest", "theme": "colonialism", "locations": ["forest"], "weight": 13,
+    "tags": ["colonialism", "land", "ecology"], "family": "stolen_ground",
+    "text": "A crown survey labels the forest vacant because its residents rotate fields, share paths, and failed to build a palace visible from the surveyor's horse.",
+    "choices": [
+      {"text": "Destroy the survey markers", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The map loses its confidence. The forest keeps every path the paper ignored.", "effects": ["region_flag +commons", "region solidarity +2", "collective +1"]}]},
+      {"text": "Document how the land is used", "approach": "truth", "outcomes": [{"weight": 1, "text": "The residents produce a map of food, graves, stories, water, and obligations no crown ledger can price.", "effects": ["stat int +1", "region solidarity +1"]}]},
+      {"text": "Claim an empty parcel first", "approach": "greed", "outcomes": [{"weight": 1, "text": "Your empty parcel contains a garden, a shrine, and several people unimpressed by paperwork.", "effects": ["money +16", "region unrest +2", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_colonial_shore_legacy_01", "primary": "coast", "theme": "colonialism", "locations": ["coast"], "weight": 12,
+    "tags": ["colonialism", "history", "sea"], "family": "stolen_ground",
+    "text": "An old fort has become a hotel whose luxury rooms were once cells. Descendants of prisoners are hired to perform cheerful sieges for guests.",
+    "choices": [
+      {"text": "Turn the fort into a public memorial", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The cells keep their doors open. Visitors pay nothing and leave with fewer comfortable verbs.", "effects": ["region solidarity +2", "region rent -1", "collective +1"]}]},
+      {"text": "Improve wages for performers", "approach": "mercy", "outcomes": [{"weight": 1, "text": "The work becomes less exploitative without becoming less strange.", "effects": ["money -6", "region solidarity +1"]}]},
+      {"text": "Book the governor's suite", "approach": "greed", "outcomes": [{"weight": 1, "text": "The pillow menu includes denial, nostalgia, and a smaller denial for children.", "effects": ["money -15", "hp +2", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_colonial_buried_reckoning_01", "primary": "dungeon", "theme": "colonialism", "locations": ["dungeon"], "weight": 11,
+    "tags": ["colonialism", "history", "artifact"], "family": "stolen_ground",
+    "text": "The conqueror's vault contains treaty stones broken after signing. Each fragment still repeats the promises made before the land was taken.",
+    "choices": [
+      {"text": "Return the stones to the signatories' heirs", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The fragments become evidence, memorial, and a demand that outlived every official seal.", "effects": ["region solidarity +2", "collective +1", "loot fine"]}]},
+      {"text": "Reassemble them for the royal court", "approach": "law", "outcomes": [{"weight": 1, "text": "The court recognizes the treaty as historically important and currently inconvenient.", "effects": ["rep +5", "region unrest +1"]}]},
+      {"text": "Sell fragments as royal antiques", "approach": "greed", "outcomes": [{"weight": 1, "text": "Collectors display broken promises behind excellent glass.", "effects": ["money +32", "region solidarity -2"]}]}
+    ]
+  },
+
+  {
+    "id": "r16_state_civic_need_01", "primary": "city", "theme": "state_power", "locations": ["city"], "weight": 13,
+    "tags": ["state_power", "policing", "care"], "family": "coercive_order",
+    "text": "The city installs armored guards outside the public clinic to prevent desperate people from entering desperately.",
+    "choices": [
+      {"text": "Replace guards with neighborhood medics", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The line gets shorter because people receive care instead of instructions about where not to stand.", "effects": ["region danger -2", "region solidarity +2", "region_flag +public_clinic", "collective +1"]}]},
+      {"text": "Negotiate gentler guard rules", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "The shields gain padded edges. The locked door remains impressively humane.", "effects": ["region unrest -1", "region danger +1"]}]},
+      {"text": "Sell queue permits", "approach": "greed", "outcomes": [{"weight": 1, "text": "Order improves for anyone whose illness has disposable income.", "effects": ["money +20", "region rent +1", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_state_social_organized_01", "primary": "tavern", "theme": "state_power", "locations": ["tavern"], "weight": 12,
+    "tags": ["state_power", "policing", "solidarity"], "family": "coercive_order",
+    "text": "Off-duty watch officers occupy half the tavern and demand free drinks as compensation for protecting it from the people already inside.",
+    "choices": [
+      {"text": "Back the staff's refusal", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Every mug disappears behind the bar. Authority discovers thirst has no badge exemption.", "effects": ["region solidarity +2", "region unrest +1", "collective +1"]}]},
+      {"text": "Buy one round to keep peace", "approach": "caution", "outcomes": [{"weight": 1, "text": "Peace lasts exactly one round and sends you the bill.", "effects": ["money -10", "region unrest -1", "region solidarity -1"]}]},
+      {"text": "Record every threat", "approach": "truth", "outcomes": [{"weight": 1, "text": "The officers become polite after learning memory has witnesses.", "effects": ["region danger -1", "rumor 90 Tavern staff documented watch extortion."]}]}
+    ]
+  },
+  {
+    "id": "r16_state_transit_backlash_01", "primary": "road", "theme": "state_power", "locations": ["road"], "weight": 13,
+    "tags": ["state_power", "surveillance", "travel"], "family": "coercive_order",
+    "text": "A checkpoint records every traveler's destination, employer, relatives, reading habits, and opinion of checkpoints.",
+    "choices": [
+      {"text": "Jam the registry with invented citizens", "approach": "wit", "outcomes": [{"weight": 1, "text": "Ten thousand imaginary cousins overwhelm the archive and all report suspicious interest in privacy.", "effects": ["region danger -1", "stat int +1", "region unrest +1"]}]},
+      {"text": "Organize travelers to refuse together", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The line stops moving until the questions do. Collective delay defeats individual suspicion.", "effects": ["region solidarity +2", "region supply -1", "collective +1"]}]},
+      {"text": "Answer everything honestly", "approach": "caution", "outcomes": [{"weight": 1, "text": "You pass and receive a receipt proving the state now knows where to find your honesty.", "effects": ["trait +marked", "region danger +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_state_wild_legacy_01", "primary": "swamp", "theme": "state_power", "locations": ["swamp"], "weight": 12,
+    "tags": ["state_power", "history", "policing"], "family": "coercive_order",
+    "text": "A sunken prison ledger lists people held without charge until the swamp reclaimed the walls and released everyone through structural criticism.",
+    "choices": [
+      {"text": "Return the names to their families", "approach": "truth", "outcomes": [{"weight": 1, "text": "Absence gains dates, signatures, and officials who can no longer call it rumor.", "effects": ["region solidarity +1", "rumor 100 The prison ledger proves people were held without charge."]}]},
+      {"text": "Build a memorial from the cell doors", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Every open door bears a name. The memorial cannot be entered without passing through release.", "effects": ["region solidarity +2", "collective +1"]}]},
+      {"text": "Sell the ledger back to the ministry", "approach": "greed", "outcomes": [{"weight": 1, "text": "The ministry pays to restore uncertainty.", "effects": ["money +26", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_state_high_compromise_01", "primary": "mountains", "theme": "state_power", "locations": ["mountains"], "weight": 11,
+    "tags": ["state_power", "border", "care"], "family": "coercive_order",
+    "text": "The border garrison offers medicine to an isolated village if residents report every stranger who crosses the pass.",
+    "choices": [
+      {"text": "Build an independent medicine route", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Supplies arrive by goat, rope, and people who understand care should not recruit informants.", "effects": ["money -8", "region supply +1", "region solidarity +2", "collective +1"]}]},
+      {"text": "Accept and report only harmless strangers", "approach": "caution", "outcomes": [{"weight": 1, "text": "The village gets medicine and learns to manufacture harmlessness on forms.", "effects": ["region supply +1", "region danger +1"]}]},
+      {"text": "Take the medicine and report nobody", "approach": "wit", "outcomes": [{"weight": 1, "text": "The first shipment arrives. The second consists entirely of questions.", "effects": ["hp +2", "trait +marked", "region solidarity +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_state_buried_reckoning_01", "primary": "dungeon", "theme": "state_power", "locations": ["dungeon"], "weight": 10,
+    "tags": ["state_power", "surveillance", "future"], "family": "coercive_order",
+    "text": "A buried census engine can predict dissent by measuring hunger, rent, friendship, and how often a person looks at a guard without gratitude.",
+    "choices": [
+      {"text": "Destroy the engine and publish its criteria", "approach": "truth", "outcomes": [{"weight": 1, "text": "The machine dies. Everyone learns the state had renamed suffering as evidence against sufferers.", "effects": ["region danger -2", "region solidarity +2", "collective +1", "loot fine"]}]},
+      {"text": "Use it to warn targeted people", "approach": "mercy", "outcomes": [{"weight": 1, "text": "Many escape. The machine remains, and every warning depends on someone continuing to control it.", "effects": ["region danger -1", "region solidarity +1", "stat int +1"]}]},
+      {"text": "Sell predictions to the ministry", "approach": "greed", "outcomes": [{"weight": 1, "text": "Your accuracy improves as your neighbors disappear.", "effects": ["money +35", "region danger +3", "region solidarity -3", "nemesis"]}]}
+    ]
+  }
+]

@@ -83,8 +83,11 @@ public:
                       const std::set<std::string>* exclude = nullptr,
                       const EventScore& score = EventScore{});
     void markUsed(const std::string& id) { used_.insert(id); }
+    bool wasUsed(const std::string& id) const { return used_.count(id) != 0; }
     const Event* find(const std::string& id) const;
     void resetUsed() { used_.clear(); }
+    void resetCooldown() { cooldown_.clear(); }
+    void setCooldown(const std::set<std::string>& ids) { cooldown_ = ids; }
     // Save/restore: seen cards must survive CONTINUE or they repeat (R9d).
     const std::set<std::string>& used() const { return used_; }
     void setUsed(const std::set<std::string>& u) { used_ = u; }
@@ -99,4 +102,5 @@ public:
 private:
     std::vector<Event> events_;
     std::set<std::string> used_;
+    std::set<std::string> cooldown_;
 };

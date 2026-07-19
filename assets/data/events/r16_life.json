@@ -1,0 +1,307 @@
+[
+  {
+    "id": "r16_ecology_civic_need_01", "primary": "city", "theme": "ecology", "locations": ["city"], "weight": 14,
+    "tags": ["ecology", "pollution", "care"], "family": "breathable_future",
+    "text": "A coal guild offers free masks to children living beneath its smokestacks. Each mask bears the slogan CLEAN AIR STARTS WITH PERSONAL RESPONSIBILITY.",
+    "choices": [
+      {"text": "Shut the stacks and pay workers to convert them", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Smoke stops. Workers rebuild the furnaces for clean heat and discover transition is easier when nobody is discarded.", "effects": ["region pollution -3", "region prosperity +1", "region solidarity +2", "region_flag +clean_power", "collective +1"]}]},
+      {"text": "Distribute the masks", "approach": "mercy", "outcomes": [{"weight": 1, "text": "Children breathe a little easier while the guild prints another success report above the smoke.", "effects": ["hp +2", "region pollution +1"]}]},
+      {"text": "Accept the guild's clean-air grant", "approach": "greed", "outcomes": [{"weight": 1, "text": "Your report concludes that soot is mostly a matter of perspective and wind direction.", "effects": ["money +25", "region pollution +2", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_ecology_social_organized_01", "primary": "tavern", "theme": "ecology", "locations": ["tavern"], "weight": 12,
+    "tags": ["ecology", "pollution", "labor"], "family": "breathable_future",
+    "text": "Refinery workers bring a jar of black rain to the tavern. Management calls it locally sourced weather and has applied for a tourism award.",
+    "choices": [
+      {"text": "Help workers publish exposure records", "approach": "truth", "outcomes": [{"weight": 1, "text": "The illness dates align perfectly with production bonuses. Management objects to the chart's hostile tone.", "effects": ["region pollution -1", "region solidarity +2", "rumor 100 Refinery records link worker illness to production targets.", "collective +1"]}]},
+      {"text": "Bottle the rain as a novelty", "approach": "greed", "outcomes": [{"weight": 1, "text": "Collectors buy authentic industrial atmosphere in childproof jars.", "effects": ["money +20", "region pollution +1"]}]},
+      {"text": "Ask for safer shifts", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "Management offers shorter exposure to the same poison and calls it wellness.", "effects": ["region danger -1", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_ecology_transit_backlash_01", "primary": "road", "theme": "ecology", "locations": ["road"], "weight": 13,
+    "tags": ["ecology", "pollution", "travel"], "family": "breathable_future",
+    "text": "A freight company diverts a toxic convoy through poor villages because the rich road has decorative hedges that might lose confidence.",
+    "choices": [
+      {"text": "Block the convoy with every village", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The wagons stop. Drivers join after reading what their manifests politely call residue.", "effects": ["region pollution -2", "region solidarity +2", "region supply -1", "collective +1"]}]},
+      {"text": "Redirect it to the company estate", "approach": "wit", "outcomes": [{"weight": 1, "text": "The owners discover environmental urgency when the first barrel approaches their roses.", "effects": ["region pollution -1", "region unrest +1", "stat int +1"]}]},
+      {"text": "Take payment to guide it quietly", "approach": "greed", "outcomes": [{"weight": 1, "text": "The convoy passes at night. The wells remember in daylight.", "effects": ["money +24", "region pollution +2", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_ecology_wild_need_01", "primary": "swamp", "theme": "ecology", "locations": ["swamp"], "weight": 13,
+    "tags": ["ecology", "pollution", "food"], "family": "breathable_future",
+    "text": "The marsh fish float belly-up beside a factory pipe. An inspector says the fish cannot testify because they lack standing and several organs.",
+    "choices": [
+      {"text": "Seal the pipe with the fishing families", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Discharge stops. The factory pauses while the marsh begins the slower work of forgiving chemistry.", "effects": ["region pollution -3", "region supply -1", "region solidarity +2", "collective +1"]}]},
+      {"text": "Preserve samples for court", "approach": "law", "outcomes": [{"weight": 1, "text": "The jars gain standing before the families do, but the poison finally has an exhibit number.", "effects": ["region pollution -1", "stat int +1", "rumor 95 Factory waste killed the marsh fish."]}]},
+      {"text": "Sell the fish as pre-cooked", "approach": "greed", "outcomes": [{"weight": 1, "text": "The first customer glows with consumer engagement.", "effects": ["money +18", "hp -3", "region pollution +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_ecology_high_organized_01", "primary": "mountains", "theme": "ecology", "locations": ["mountains"], "weight": 12,
+    "tags": ["ecology", "clean_power", "labor"], "family": "breathable_future",
+    "text": "Villagers build wind wheels along the ridge. The coal baron claims ownership of moving air because his smoke has occupied it longest.",
+    "choices": [
+      {"text": "Connect the wheels as a public grid", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The valley lights without smoke. The baron's claim blows east and is not returned.", "effects": ["region pollution -2", "region supply +1", "region solidarity +2", "region_flag +clean_power", "collective +1"]}]},
+      {"text": "License one wheel to the baron", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "He permits clean air in exchange for naming rights to the breeze.", "effects": ["money +8", "region pollution -1", "region rent +1"]}]},
+      {"text": "Patent wind before he can", "approach": "greed", "outcomes": [{"weight": 1, "text": "You become legal owner of gusts and immediate enemy of hats.", "effects": ["money +22", "region rent +1", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_ecology_shore_legacy_01", "primary": "coast", "theme": "ecology", "locations": ["coast"], "weight": 12,
+    "tags": ["ecology", "climate", "history"], "family": "breathable_future",
+    "text": "An old seawall protects the wealthy quarter by redirecting every storm surge into a fishing neighborhood omitted from the engineer's map.",
+    "choices": [
+      {"text": "Redesign protection with both neighborhoods", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "New barriers bend around homes instead of income. The sea remains difficult but less class-conscious.", "effects": ["money -8", "region danger -2", "region solidarity +2", "collective +1"]}]},
+      {"text": "Open the wall during the next storm", "approach": "force", "outcomes": [{"weight": 1, "text": "Water reaches the mansions. Political attention arrives moments later in waterproof boots.", "effects": ["region unrest +2", "region danger +1", "region rent -1"]}]},
+      {"text": "Reinforce the existing wall", "approach": "caution", "outcomes": [{"weight": 1, "text": "The wealthy quarter stays dry. Downshore families receive a stronger apology.", "effects": ["money +12", "region danger +2", "region solidarity -2"]}]}
+    ]
+  },
+
+  {
+    "id": "r16_care_civic_need_01", "primary": "city", "theme": "care", "locations": ["city"], "weight": 14,
+    "tags": ["care", "health", "labor"], "family": "care_is_infrastructure",
+    "text": "Hospital orderlies have worked three days without sleep. The director recommends resilience training delivered by a pillow merchant.",
+    "choices": [
+      {"text": "Close admissions until shifts are safe", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The city scrambles, hires more staff, and discovers exhausted care was never cheap, only unpaid.", "effects": ["region danger -2", "region prosperity -1", "region solidarity +2", "collective +1"]}]},
+      {"text": "Work a shift beside them", "approach": "mercy", "outcomes": [{"weight": 1, "text": "You help for one night. The system gratefully consumes your kindness and remains hungry.", "effects": ["hp -3", "region solidarity +1"]}]},
+      {"text": "Sell the resilience pillows", "approach": "greed", "outcomes": [{"weight": 1, "text": "The pillows say REST EFFICIENTLY and arrive during a twelve-hour emergency.", "effects": ["money +20", "region danger +1", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_care_social_organized_01", "primary": "tavern", "theme": "care", "locations": ["tavern"], "weight": 13,
+    "tags": ["care", "disability", "solidarity"], "family": "care_is_infrastructure",
+    "text": "Disabled patrons are building a ramp while the owner explains the historic stairs are central to the building's authentic exclusion.",
+    "choices": [
+      {"text": "Finish the ramp with them", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The entrance becomes usable. History survives the terrifying addition of more people.", "effects": ["money -5", "region solidarity +2", "region prosperity +1", "collective +1"]}]},
+      {"text": "Offer to carry people inside", "approach": "mercy", "outcomes": [{"weight": 1, "text": "A few enter by depending on your back. The stairs retain all their political power.", "effects": ["hp -2", "region solidarity -1"]}]},
+      {"text": "Charge admission to the new ramp", "approach": "greed", "outcomes": [{"weight": 1, "text": "Access becomes available in convenient premium increments.", "effects": ["money +16", "region rent +1", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_care_transit_compromise_01", "primary": "road", "theme": "care", "locations": ["road"], "weight": 12,
+    "tags": ["care", "health", "travel"], "family": "care_is_infrastructure",
+    "text": "A medicine caravan can reach a plague village or a wealthy estate whose owner funded the shipment and has developed a mild decorative cough.",
+    "choices": [
+      {"text": "Send everything to the village", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Hundreds recover. The estate owner survives the indignity of ordinary tea.", "effects": ["region danger -2", "region solidarity +2", "region supply -1", "collective +1"]}]},
+      {"text": "Split the shipment", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "The village saves many. The estate receives enough medicine to feel singularly valued.", "effects": ["region danger -1", "money +8"]}]},
+      {"text": "Honor the owner's contract", "approach": "law", "outcomes": [{"weight": 1, "text": "One cough improves. The contract performs exactly as written and morally much worse.", "effects": ["money +24", "region danger +2", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_care_wild_legacy_01", "primary": "forest", "theme": "care", "locations": ["forest"], "weight": 12,
+    "tags": ["care", "grief", "history"], "family": "care_is_infrastructure",
+    "slots": {"dead": "figure_dead"},
+    "text": "A roadside shrine to {dead} has become an informal grief clinic. Travelers leave food, stories, and advice nobody had the courage to give while alive.",
+    "choices": [
+      {"text": "Stay and listen without fixing anyone", "approach": "kindness", "outcomes": [{"weight": 1, "text": "Nothing is solved. Several people leave less alone, which was the work available.", "effects": ["hp +2", "region solidarity +2", "npc_rel trust +1"]}]},
+      {"text": "Organize a permanent rest shelter", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The shrine gains a roof, a kettle, and a schedule maintained by people who once arrived as strangers.", "effects": ["money -6", "region_flag +mutual_aid", "region solidarity +2", "collective +1"]}]},
+      {"text": "Sell memorial charms", "approach": "greed", "outcomes": [{"weight": 1, "text": "Grief proves marketable when carved small enough to wear.", "effects": ["money +16", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_care_buried_backlash_01", "primary": "dungeon", "theme": "care", "locations": ["dungeon"], "weight": 11,
+    "tags": ["care", "health", "capital"], "family": "care_is_infrastructure",
+    "text": "An underground clinic heals any wound, then transfers the pain to an indebted stranger selected by an ancient credit score.",
+    "choices": [
+      {"text": "Break the transfer engine", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The clinic becomes slower, ordinary, and no longer powered by invisible suffering.", "effects": ["region solidarity +2", "region danger -1", "collective +1", "loot fine"]}]},
+      {"text": "Use it once", "approach": "caution", "outcomes": [{"weight": 1, "text": "Your wounds close. Somewhere, a person with bad paperwork falls to their knees.", "effects": ["hp +6", "region solidarity -2"]}]},
+      {"text": "Redirect pain to the clinic's owners", "approach": "force", "outcomes": [{"weight": 1, "text": "The machine calls this unauthorized empathy and begins smoking thoughtfully.", "effects": ["hp +3", "region unrest +1", "stat int +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_care_shore_reckoning_01", "primary": "coast", "theme": "care", "locations": ["coast"], "weight": 12,
+    "tags": ["care", "disability", "solidarity"], "family": "care_is_infrastructure",
+    "text": "A storm destroys the only ferry accessible to passengers who cannot climb. The port authority proposes a memorial plaque at the top of forty new stairs.",
+    "choices": [
+      {"text": "Build an accessible public ferry", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The new deck welcomes wheels, canes, carts, tired bodies, and cargo nobody has to become heroic to move.", "effects": ["money -10", "region prosperity +1", "region solidarity +2", "collective +1"]}]},
+      {"text": "Repair the old ferry cheaply", "approach": "caution", "outcomes": [{"weight": 1, "text": "Service returns for most people, which the authority rounds up to everyone.", "effects": ["region prosperity +1", "region solidarity -1"]}]},
+      {"text": "Open a premium carrying service", "approach": "greed", "outcomes": [{"weight": 1, "text": "Access becomes a luxury performed on someone else's shoulders.", "effects": ["money +22", "region rent +1", "region solidarity -2"]}]}
+    ]
+  },
+
+  {
+    "id": "r16_food_civic_need_01", "primary": "city", "theme": "food", "locations": ["city"], "weight": 14,
+    "tags": ["food", "solidarity", "economy"], "family": "common_table",
+    "text": "A warehouse holds grain until prices rise while the queue outside grows quieter. The owner calls this patience with excellent margins.",
+    "choices": [
+      {"text": "Open the warehouse with the queue", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Sacks become meals before they can become investments. Hunger loses a very profitable afternoon.", "effects": ["region supply +3", "region solidarity +2", "region unrest +1", "collective +1"]}]},
+      {"text": "Buy enough for the children", "approach": "mercy", "outcomes": [{"weight": 1, "text": "Children eat today. The owner's patience becomes more valuable tomorrow.", "effects": ["money -10", "region supply +1", "region rent +1"]}]},
+      {"text": "Invest in the shortage", "approach": "greed", "outcomes": [{"weight": 1, "text": "Your coins multiply because meals do not.", "effects": ["money +28", "region supply -2", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_food_social_organized_01", "primary": "tavern", "theme": "food", "locations": ["tavern"], "weight": 13,
+    "tags": ["food", "solidarity", "care"], "family": "common_table",
+    "text": "The cook has been stretching one stew across three unemployed streets. The tavern owner notices the missing profit before noticing the full bowls.",
+    "choices": [
+      {"text": "Turn the kitchen into a mutual-aid table", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Guests bring vegetables, labor, recipes, and the radical discovery that a kitchen can have more than one owner.", "effects": ["region supply +2", "region solidarity +2", "region_flag +mutual_aid", "collective +1"]}]},
+      {"text": "Pay the cook's missing bill", "approach": "mercy", "outcomes": [{"weight": 1, "text": "The stew continues another week. Your purse becomes the temporary institution.", "effects": ["money -12", "region supply +1"]}]},
+      {"text": "Market the stew as poverty cuisine", "approach": "greed", "outcomes": [{"weight": 1, "text": "Rich diners pay extra for authenticity and leave before washing bowls.", "effects": ["money +22", "region rent +1", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_food_transit_compromise_01", "primary": "road", "theme": "food", "locations": ["road"], "weight": 12,
+    "tags": ["food", "travel", "war"], "family": "common_table",
+    "text": "A grain convoy is ordered to an army depot while drought villages along the road grind bark into flour.",
+    "choices": [
+      {"text": "Distribute the grain village by village", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The convoy reaches the depot empty and the road reaches winter alive.", "effects": ["region supply +3", "region solidarity +2", "trait +wanted", "collective +1"]}]},
+      {"text": "Divert one wagon", "approach": "mercy", "outcomes": [{"weight": 1, "text": "One village eats. The others watch the army receive the arithmetic.", "effects": ["region supply +1", "region solidarity -1"]}]},
+      {"text": "Deliver it for the military bonus", "approach": "greed", "outcomes": [{"weight": 1, "text": "The depot fills. The villages become a strategic absence on next year's map.", "effects": ["money +26", "region supply -2", "region danger +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_food_wild_legacy_01", "primary": "forest", "theme": "food", "locations": ["forest"], "weight": 12,
+    "tags": ["food", "commons", "history"], "family": "common_table",
+    "text": "An abandoned orchard still bears fruit because generations of travelers pruned it without owning it. A duke arrives with a deed and no ladder.",
+    "choices": [
+      {"text": "Declare the orchard a commons", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Every basket takes fruit and leaves seed, pruning, or labor. The deed becomes a pie liner.", "effects": ["region supply +2", "region solidarity +2", "region_flag +commons", "collective +1"]}]},
+      {"text": "Negotiate public picking days", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "People may eat on Tuesdays after signing gratitude forms.", "effects": ["region supply +1", "region rent +1"]}]},
+      {"text": "Sell the duke your ladder", "approach": "greed", "outcomes": [{"weight": 1, "text": "He gains fruit, you gain gold, and the orchard gains a fence by Thursday.", "effects": ["money +18", "region supply -1", "region rent +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_food_buried_backlash_01", "primary": "cave", "theme": "food", "locations": ["cave"], "weight": 11,
+    "tags": ["food", "labor", "absurd"], "family": "common_table",
+    "text": "Mushroom farmers beneath the city are charged sunlight tax despite receiving no sunlight and having filed several complaints with the sun.",
+    "choices": [
+      {"text": "Organize the growers to refuse payment", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The city cannot seize a crop it cannot distinguish from the walls.", "effects": ["region supply +2", "region solidarity +2", "collective +1"]}]},
+      {"text": "Prove darkness is tax-exempt", "approach": "law", "outcomes": [{"weight": 1, "text": "The court exempts darkness but introduces a modest shadow assessment.", "effects": ["region supply +1", "stat int +1"]}]},
+      {"text": "Collect tax on behalf of the sun", "approach": "greed", "outcomes": [{"weight": 1, "text": "The sun remains unaware of its revenue stream. You do not correct it.", "effects": ["money +20", "region supply -1", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_food_shore_reckoning_01", "primary": "coast", "theme": "food", "locations": ["coast"], "weight": 12,
+    "tags": ["food", "ecology", "sea"], "family": "common_table",
+    "text": "The last spawning inlet can feed the coast for generations or fill one export fleet before the fish understand what happened.",
+    "choices": [
+      {"text": "Place the inlet under fisher stewardship", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The fleet waits, the fish return, and restraint becomes a form of abundance nobody can warehouse.", "effects": ["region supply +2", "region pollution -1", "region solidarity +2", "region_flag +commons", "collective +1"]}]},
+      {"text": "Allow a limited harvest", "approach": "caution", "outcomes": [{"weight": 1, "text": "The quota holds this year. Every merchant begins lobbying the meaning of limited.", "effects": ["money +10", "region supply +1"]}]},
+      {"text": "Sell the inlet to exporters", "approach": "greed", "outcomes": [{"weight": 1, "text": "Gold arrives immediately. The next generation of fish does not.", "effects": ["money +32", "region supply -3", "region pollution +1"]}]}
+    ]
+  },
+
+  {
+    "id": "r16_science_civic_need_01", "primary": "city", "theme": "science", "locations": ["city"], "weight": 13,
+    "tags": ["science", "education", "commons"], "family": "knowledge_for_everyone",
+    "text": "The academy locks its star charts behind a tuition gate while dockworkers navigate by scraps copied during cleaning shifts.",
+    "choices": [
+      {"text": "Open the observatory to the city", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Sailors, children, cooks, and scholars redraw the sky with more practical constellations.", "effects": ["region prosperity +1", "region solidarity +2", "region_flag +commons", "collective +1"]}]},
+      {"text": "Fund one worker scholarship", "approach": "mercy", "outcomes": [{"weight": 1, "text": "One navigator enters. The locked gate receives a flattering biography about opportunity.", "effects": ["money -10", "stat int +1"]}]},
+      {"text": "Sell copied charts", "approach": "greed", "outcomes": [{"weight": 1, "text": "Knowledge escapes with a price attached and immediately starts undercutting itself.", "effects": ["money +18", "region prosperity +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_science_social_organized_01", "primary": "tavern", "theme": "science", "locations": ["tavern"], "weight": 12,
+    "tags": ["science", "labor", "truth"], "family": "knowledge_for_everyone",
+    "text": "Laboratory assistants meet over bad cider after their director patented a cure they discovered and thanked them collectively as miscellaneous support.",
+    "choices": [
+      {"text": "Publish the formula without ownership", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Clinics copy it before lawyers finish waking. Credit spreads almost as fast as treatment.", "effects": ["region danger -1", "region solidarity +2", "region_flag +public_clinic", "collective +1"]}]},
+      {"text": "Demand names on the patent", "approach": "law", "outcomes": [{"weight": 1, "text": "The assistants become co-owners of a cure poor patients still cannot buy.", "effects": ["money +8", "region solidarity +1"]}]},
+      {"text": "Sell advance copies to investors", "approach": "greed", "outcomes": [{"weight": 1, "text": "The cure becomes valuable enough to delay releasing it.", "effects": ["money +25", "region danger +1", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_science_transit_compromise_01", "primary": "road", "theme": "science", "locations": ["road"], "weight": 12,
+    "tags": ["science", "education", "travel"], "family": "knowledge_for_everyone",
+    "text": "A traveling school owns twelve books, one tired wagon, and a license valid everywhere except places containing children.",
+    "choices": [
+      {"text": "Join the school and ignore the license", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Lessons appear in barns, camps, kitchens, and the margins of wanted notices.", "effects": ["stat int +1", "region solidarity +2", "trait +wanted", "collective +1"]}]},
+      {"text": "Secure a legal town permit", "approach": "law", "outcomes": [{"weight": 1, "text": "One town learns officially. The wagon waits outside every other border.", "effects": ["money -6", "region prosperity +1"]}]},
+      {"text": "Buy the rarest book", "approach": "greed", "outcomes": [{"weight": 1, "text": "Your shelf improves as the school's curriculum develops a precise rectangular hole.", "effects": ["money -12", "stat int +1", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_science_wild_legacy_01", "primary": "forest", "theme": "science", "locations": ["forest"], "weight": 11,
+    "tags": ["science", "ecology", "history"], "family": "knowledge_for_everyone",
+    "text": "A generations-long field notebook records how villagers restored a dying forest. The academy rejected it because several authors were grandmothers without departments.",
+    "choices": [
+      {"text": "Credit every contributor and copy it freely", "approach": "truth", "outcomes": [{"weight": 1, "text": "The method spreads with names attached. Expertise grows roots outside the academy walls.", "effects": ["region pollution -1", "region prosperity +1", "region solidarity +2", "collective +1"]}]},
+      {"text": "Submit it under your own name", "approach": "greed", "outcomes": [{"weight": 1, "text": "The academy applauds your original discovery of people it never asked.", "effects": ["money +20", "stat int +1", "region solidarity -2"]}]},
+      {"text": "Keep it local to prevent misuse", "approach": "caution", "outcomes": [{"weight": 1, "text": "The forest heals here. Elsewhere, people begin the same mistakes without the notebook.", "effects": ["region pollution -2", "region solidarity +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_science_high_organized_01", "primary": "mountains", "theme": "science", "locations": ["mountains"], "weight": 12,
+    "tags": ["science", "discovery", "future"], "family": "knowledge_for_everyone",
+    "text": "The summit observatory detects a wandering world. Its owners want to name it after a donor who believes orbit is a luxury tax.",
+    "choices": [
+      {"text": "Let the observatory staff choose together", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "They name it Common Light, because everyone saw it and nobody put it there.", "effects": ["stat wis +1", "region solidarity +2", "collective +1"]}]},
+      {"text": "Take the donor's naming grant", "approach": "greed", "outcomes": [{"weight": 1, "text": "The planet receives a surname and the telescope receives a much-needed roof.", "effects": ["money +20", "region prosperity +1", "region solidarity -1"]}]},
+      {"text": "Name it after the first cleaner to notice", "approach": "truth", "outcomes": [{"weight": 1, "text": "The cleaner becomes immortal in astronomy and still has a shift tomorrow.", "effects": ["region solidarity +1", "stat int +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_science_future_reckoning_01", "primary": "crash", "theme": "science", "locations": ["crash"], "weight": 11,
+    "tags": ["science", "future", "post_scarcity"], "family": "knowledge_for_everyone",
+    "text": "The wreck's library contains cures, clean engines, and farming methods for a thousand worlds. Its license permits use only by the vanished species that wrote it.",
+    "choices": [
+      {"text": "Release the library to everyone", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Knowledge crosses species, borders, and several furious legal warnings.", "effects": ["credits +12", "region prosperity +2", "region solidarity +2", "collective +1"]}]},
+      {"text": "Release only the medical archive", "approach": "mercy", "outcomes": [{"weight": 1, "text": "Clinics change overnight. Clean engines remain behind a rule enforced by nobody alive.", "effects": ["hp +3", "region_flag +public_clinic"]}]},
+      {"text": "Sell exclusive access", "approach": "greed", "outcomes": [{"weight": 1, "text": "Humanity reaches the future through a turnstile you happen to own.", "effects": ["credits +35", "region rent +2", "region solidarity -3"]}]}
+    ]
+  },
+
+  {
+    "id": "r16_postscarcity_civic_need_01", "primary": "city", "theme": "post_scarcity", "locations": ["city"], "weight": 12,
+    "tags": ["post_scarcity", "food", "future"], "family": "manufactured_scarcity",
+    "text": "A recovered fabricator can make unlimited bread. The city council installs a coin slot to protect bakers from the dangerous possibility of nobody being hungry.",
+    "choices": [
+      {"text": "Place it under baker and eater control", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Bakers make better things than repetitive loaves. Everyone eats while craft survives the death of desperation.", "effects": ["region supply +3", "region solidarity +2", "region_flag +commons", "collective +1"]}]},
+      {"text": "Keep prices low but nonzero", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "Nobody starves today. The coin slot becomes a small institution with large ambitions.", "effects": ["region supply +2", "region rent +1"]}]},
+      {"text": "Buy the bread license", "approach": "greed", "outcomes": [{"weight": 1, "text": "Infinity becomes scarce by appointment.", "effects": ["money +30", "region supply -1", "region rent +2"]}]}
+    ]
+  },
+  {
+    "id": "r16_postscarcity_social_organized_01", "primary": "tavern", "theme": "post_scarcity", "locations": ["tavern"], "weight": 11,
+    "tags": ["post_scarcity", "labor", "future"], "family": "manufactured_scarcity",
+    "text": "A future machine can clean every mug instantly. The tavern staff ask who owns the hours it gives back and why the owner is already selling them.",
+    "choices": [
+      {"text": "Shorten every shift at full pay", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Workers go home early. Productivity survives without consuming the time it created.", "effects": ["region prosperity +1", "region solidarity +2", "collective +1"]}]},
+      {"text": "Expand service with the saved time", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "More customers drink. Staff discover efficiency means carrying different mugs at the same speed.", "effects": ["money +8", "region prosperity +1", "region solidarity -1"]}]},
+      {"text": "Dismiss the washing staff", "approach": "greed", "outcomes": [{"weight": 1, "text": "Costs fall. The machine works flawlessly under the gaze of everyone it made poor.", "effects": ["money +22", "region unrest +2", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_postscarcity_transit_backlash_01", "primary": "road", "theme": "post_scarcity", "locations": ["road"], "weight": 11,
+    "tags": ["post_scarcity", "travel", "capital"], "family": "manufactured_scarcity",
+    "text": "A self-repairing road has no maintenance cost. The toll company raises prices to compensate for losing excuses.",
+    "choices": [
+      {"text": "Remove the tollhouse permanently", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Travel becomes free. The road continues repairing itself without executive supervision.", "effects": ["region rent -2", "region supply +2", "region solidarity +1", "collective +1"]}]},
+      {"text": "Negotiate a public-use discount", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "Most travelers pay less. The company keeps ownership of something that needs nothing from it.", "effects": ["region rent -1", "region supply +1"]}]},
+      {"text": "Purchase the toll franchise", "approach": "greed", "outcomes": [{"weight": 1, "text": "You earn money while the road performs all known labor.", "effects": ["money +26", "region rent +2", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_postscarcity_water_compromise_01", "primary": "sea", "theme": "post_scarcity", "locations": ["sea"], "weight": 11,
+    "tags": ["post_scarcity", "sea", "future"], "family": "manufactured_scarcity",
+    "text": "A floating machine turns seawater into fresh water forever. Three captains immediately draw property lines around the horizon.",
+    "choices": [
+      {"text": "Anchor it as an open harbor commons", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Every vessel fills its tanks. The horizon declines to sign the captains' deeds.", "effects": ["region supply +3", "region solidarity +2", "region_flag +commons", "collective +1"]}]},
+      {"text": "Guarantee emergency water only", "approach": "mercy", "outcomes": [{"weight": 1, "text": "Nobody dies of thirst. Ordinary thirst becomes a profitable category.", "effects": ["region supply +1", "region rent +1"]}]},
+      {"text": "Claim a bottling license", "approach": "greed", "outcomes": [{"weight": 1, "text": "You sell ocean in smaller containers with a picture of freedom on each label.", "effects": ["money +28", "region rent +2", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_postscarcity_buried_legacy_01", "primary": "dungeon", "theme": "post_scarcity", "locations": ["dungeon"], "weight": 10,
+    "tags": ["post_scarcity", "history", "future"], "family": "manufactured_scarcity",
+    "text": "An ancient city solved hunger, housing, and medicine before collapsing over who could charge admission to the machines that solved them.",
+    "choices": [
+      {"text": "Study the collapse before activating anything", "approach": "curiosity", "outcomes": [{"weight": 1, "text": "The ruins explain that abundance without shared power merely gives gatekeepers larger gates.", "effects": ["stat wis +1", "region solidarity +1", "loot common"]}]},
+      {"text": "Activate the machines as public property", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Food and medicine emerge beside warning plaques written by the last hungry billionaires.", "effects": ["region supply +2", "region prosperity +1", "region solidarity +2", "collective +1"]}]},
+      {"text": "Reactivate the admission system", "approach": "greed", "outcomes": [{"weight": 1, "text": "The ruins welcome you as interim executive and ask whether collapse should resume quarterly.", "effects": ["money +32", "region rent +2", "trait +cursed"]}]}
+    ]
+  },
+  {
+    "id": "r16_postscarcity_future_reckoning_01", "primary": "crash", "theme": "post_scarcity", "locations": ["crash"], "weight": 10,
+    "tags": ["post_scarcity", "future", "freedom"], "family": "manufactured_scarcity",
+    "text": "The ship's final program offers perfect abundance if one administrator receives permanent authority to define reasonable need.",
+    "choices": [
+      {"text": "Distribute control among every user", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The program becomes slower, noisier, accountable, and unable to quietly redefine a person as unreasonable.", "effects": ["credits +10", "region solidarity +3", "collective +1"]}]},
+      {"text": "Accept temporary administration", "approach": "caution", "outcomes": [{"weight": 1, "text": "Everything is provided efficiently. Temporary becomes a setting nobody remembers the password to change.", "effects": ["credits +20", "region prosperity +2", "region solidarity -2"]}]},
+      {"text": "Destroy it rather than risk hierarchy", "approach": "force", "outcomes": [{"weight": 1, "text": "Nobody rules the machine. Nobody eats from it either. Freedom survives as a difficult empty room.", "effects": ["region solidarity +1", "region supply -2", "stat wis +1"]}]}
+    ]
+  }
+]

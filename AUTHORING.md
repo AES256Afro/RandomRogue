@@ -16,6 +16,11 @@ build/windows/scaffold.exe r15_example tavern labor
 Arguments are event id, location deck, and story family. Redirect the output or
 copy the object into an event file listed by `assets/data/events/manifest.json`.
 
+Release 16 scenarios also declare `primary` and `theme`. `primary` is the one
+deck charged against the 1,000-card location quota even when the event can
+appear in several places. `theme` is one of the twenty keys in
+`assets/data/scenario_targets.json`. The analyzer reports every remaining gap.
+
 ## Required pass
 
 1. Give every choice a different political or personal strategy.
@@ -26,6 +31,8 @@ copy the object into an event file listed by `assets/data/events/manifest.json`.
    worthwhile without becoming a magic button.
 5. Keep jokes original. Borrow comic structures, never recognizable lines.
 6. Do not use an em dash.
+7. A recurring arc beat must receive a new event id. Exact ids are once per
+   life, including scheduled consequences and explicit `goto` chains.
 
 Run these gates before committing:
 

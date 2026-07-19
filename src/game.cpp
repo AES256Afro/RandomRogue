@@ -1607,6 +1607,7 @@ void Game::newRun(int classIdx) {
             break;
     }
     deck_.resetUsed();
+    deck_.resetCooldown();
     director_.reset();
     pendingArtifact_ = -1;
     pendingShop_ = false;
@@ -1647,6 +1648,7 @@ void Game::newRun(int classIdx) {
     seedLivingPolitics();
     eventSerial_ = 0;
     lastEventSerial_.clear();
+    worldEventMemory_.clear();
     currentDirectorScore_ = 100;
     // Class kits that touch post-reset state land here (R7).
     if (classIdx == 7 && !history_.gods.empty())
@@ -1678,6 +1680,16 @@ void Game::newRun(int classIdx) {
                     rel.lastSeen = value.value("lastSeen", 0);
                     npcRelations_[atoi(fig.c_str())] = rel;
                 }
+            if (m.contains("events") && m["events"].is_array()) {
+                for (const auto& id : m["events"])
+                    if (id.is_string() && deck_.find(id.get<std::string>()))
+                        worldEventMemory_.push_back(id.get<std::string>());
+                if (worldEventMemory_.size() > 240)
+                    worldEventMemory_.erase(worldEventMemory_.begin(),
+                                            worldEventMemory_.end() - 240);
+                deck_.setCooldown(std::set<std::string>(worldEventMemory_.begin(),
+                                                         worldEventMemory_.end()));
+            }
         }
     }
     if (classIdx == 5 && !pendingLegacy_.empty() && pendingLegacy_.back().blessing)
@@ -2729,8 +2741,11 @@ bool Game::resolveSlots(const Event& e, Grammar::Ctx& ctx) {
     return true;
 }
 
-bool Game::presentEvent(const Event* event, bool markUsed) {
+bool Game::presentEvent(const Event* event) {
     if (!event) return false;
+    // Exact cards are once per life, including scheduled and chained beats.
+    // An arc that needs another beat must use another authored event id.
+    if (deck_.wasUsed(event->id)) return false;
     current_ = event;
     Grammar::Ctx ctx = {{"site", siteName_}, {"world", world_.name.conlang}};
     pendingArtifact_ = -1;
@@ -2746,7 +2761,7 @@ bool Game::presentEvent(const Event* event, bool markUsed) {
     eventSerial_++;
     currentDirectorScore_ = director_.score(*event, storyContext(deckTag_));
 
-    if (markUsed) deck_.markUsed(event->id);
+    deck_.markUsed(event->id);
     currentCtx_ = ctx;
     currentText_ = grammar_.expand(event->text, runRng_, ctx);
     choiceTexts_.clear();
@@ -2773,7 +2788,7 @@ void Game::dealEvent() {
     if (!scheduledNextId_.empty()) {
         const Event* scheduled = deck_.find(scheduledNextId_);
         scheduledNextId_.clear();
-        if (presentEvent(scheduled, false)) return;
+        if (presentEvent(scheduled)) return;
         scheduledFigure_ = -1;
         scheduledRegion_ = -1;
     }
@@ -3365,23 +3380,7 @@ void Game::continueAfterOutcome() {
     if (!forcedNextId_.empty()) {
         const Event* next = deck_.find(forcedNextId_);
         forcedNextId_.clear();
-        if (next) {
-            current_ = next;
-            Grammar::Ctx ctx = {{"site", siteName_}, {"world", world_.name.conlang}};
-            pendingArtifact_ = -1;
-            if (resolveSlots(*next, ctx)) {
-                currentCtx_ = ctx;
-                currentText_ = grammar_.expand(next->text, runRng_, ctx);
-                choiceTexts_.clear();
-                for (auto& c : next->choices)
-                    choiceTexts_.push_back(c.requires_.label() +
-                                           grammar_.expand(c.text, runRng_, ctx));
-                reveal_ = 0.0f;
-        textScroll_ = 0;
-                screen_ = EVENT;
-                return;
-            }
-        }
+        if (presentEvent(next)) return;
     }
     eventsLeftHere_--;
     if (eventsLeftHere_ > 0) dealEvent();
@@ -3592,7 +3591,7 @@ void Game::drawTitle(Vector2 mouse) {
     }
     const char* title = "RANDOM ROGUE";
     DrawText(title, (kW - MeasureText(title, 20)) / 2, 38, 20, PAL_GOLD);
-    DrawText("v15", 4, kH - 10, 10, PAL_DARK); // release stamp for bug reports
+    DrawText("v16", 4, kH - 10, 10, PAL_DARK); // release stamp for bug reports
     if (!dataError_.empty()) {
         DrawTextWrapped(dataError_, 20, 90, kW - 40, PAL_RED);
         return;
@@ -5428,8 +5427,25 @@ void Game::drawDeath(Vector2 mouse) {
                     {"respect", rel.respect}, {"debt", rel.debt},
                     {"affection", rel.affection}, {"grudge", rel.grudge},
                     {"knowledge", rel.knowledge}, {"lastSeen", rel.lastSeen}};
+            // Preserve order, not merely membership. Cards answered in this
+            // life become the newest part of the world's cooldown window.
+            std::vector<std::pair<int, std::string>> answered;
+            for (const auto& [id, serial] : lastEventSerial_)
+                answered.push_back({serial, id});
+            std::sort(answered.begin(), answered.end());
+            for (const auto& [serial, id] : answered) {
+                (void)serial;
+                worldEventMemory_.erase(
+                    std::remove(worldEventMemory_.begin(), worldEventMemory_.end(), id),
+                    worldEventMemory_.end());
+                worldEventMemory_.push_back(id);
+            }
+            if (worldEventMemory_.size() > 240)
+                worldEventMemory_.erase(worldEventMemory_.begin(),
+                                        worldEventMemory_.end() - 240);
             SaveMarks(masterSeed_, nlohmann::json{{"marks", marks},
-                                                   {"relations", relations}}.dump());
+                                                   {"relations", relations},
+                                                   {"events", worldEventMemory_}}.dump());
             clearRun();
 #if defined(__EMSCRIPTEN__)
             // Shared world? Your epitaph joins the fallen.

@@ -1,0 +1,40 @@
+{
+  "total": 1000,
+  "decks": {
+    "city": 150,
+    "tavern": 130,
+    "road": 120,
+    "forest": 90,
+    "dungeon": 90,
+    "cave": 70,
+    "swamp": 65,
+    "mountains": 65,
+    "coast": 70,
+    "sea": 60,
+    "crash": 35,
+    "dungeon_finale": 35,
+    "special": 20
+  },
+  "themes": {
+    "labor": 50,
+    "housing": 50,
+    "antifascist": 50,
+    "antiwar": 50,
+    "anti_genocide": 50,
+    "ecology": 50,
+    "care": 50,
+    "food": 50,
+    "colonialism": 50,
+    "capital": 50,
+    "post_scarcity": 50,
+    "liberalism": 50,
+    "state_power": 50,
+    "union": 50,
+    "revolution": 50,
+    "freedom": 50,
+    "science": 50,
+    "faith": 50,
+    "propaganda": 50,
+    "kindness": 50
+  }
+}

@@ -129,6 +129,39 @@ int main(int argc, char** argv) {
     ok &= expect(directed && directed->id == "b",
                  "the event deck must honor director eligibility scores");
 
+    EventDeck noRepeatDeck;
+    noRepeatDeck.loadJsonText(
+        "[{\"id\":\"first\",\"locations\":[\"tavern\"],\"choices\":[{\"text\":\"a\","
+        "\"outcomes\":[{\"text\":\"a\"}]}]},"
+        "{\"id\":\"second\",\"locations\":[\"tavern\"],\"choices\":[{\"text\":\"b\","
+        "\"outcomes\":[{\"text\":\"b\"}]}]}]");
+    Rng noRepeatRng(56, 78);
+    const Event* firstDraw = noRepeatDeck.draw(noRepeatRng, "tavern");
+    ok &= expect(firstDraw != nullptr, "a fresh location must deal a card");
+    if (firstDraw) noRepeatDeck.markUsed(firstDraw->id);
+    const Event* secondDraw = noRepeatDeck.draw(noRepeatRng, "tavern");
+    ok &= expect(secondDraw && firstDraw && secondDraw->id != firstDraw->id,
+                 "a location must choose unseen material while any remains");
+    if (secondDraw) noRepeatDeck.markUsed(secondDraw->id);
+    ok &= expect(noRepeatDeck.draw(noRepeatRng, "tavern") == nullptr,
+                 "an exhausted location must not recycle cards during one life");
+
+    EventDeck worldCooldownDeck;
+    worldCooldownDeck.loadJsonText(
+        "[{\"id\":\"old\",\"locations\":[\"cave\"],\"choices\":[{\"text\":\"a\","
+        "\"outcomes\":[{\"text\":\"a\"}]}]},"
+        "{\"id\":\"fresh\",\"locations\":[\"cave\"],\"choices\":[{\"text\":\"b\","
+        "\"outcomes\":[{\"text\":\"b\"}]}]}]");
+    worldCooldownDeck.setCooldown({"old"});
+    Rng cooldownRng(90, 12);
+    const Event* freshDraw = worldCooldownDeck.draw(cooldownRng, "cave");
+    ok &= expect(freshDraw && freshDraw->id == "fresh",
+                 "world memory must prefer a card not seen by an earlier life");
+    if (freshDraw) worldCooldownDeck.markUsed(freshDraw->id);
+    const Event* relaxedDraw = worldCooldownDeck.draw(cooldownRng, "cave");
+    ok &= expect(relaxedDraw && relaxedDraw->id == "old",
+                 "world memory may relax rather than empty an old location");
+
     static const std::set<std::string> required = {
         "plains", "coast", "forest", "mountains", "swamp", "desert"
     };

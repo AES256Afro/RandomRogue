@@ -6,7 +6,7 @@ and every rumor, book, artifact, and item quirk ties back to that history.
 Regions have political economies. Named people pursue agendas. Solidarity,
 rent, supply, pollution, and power continue moving without the player.
 
-- **Design docs:** [PLAN.md](PLAN.md) - [WORLDGEN.md](WORLDGEN.md) - [NARRATIVE.md](NARRATIVE.md)
+- **Design docs:** [PLAN.md](PLAN.md) - [WORLDGEN.md](WORLDGEN.md) - [NARRATIVE.md](NARRATIVE.md) - [SCENARIO_1000.md](SCENARIO_1000.md)
 - **Content guide:** [AUTHORING.md](AUTHORING.md)
 - **Targets:** Windows, Linux, macOS, Browser (desktop + iPad)
 
@@ -55,6 +55,11 @@ Prints a world's full simulated history as readable text. If the dump is fun
 to read, the game is working. Native and WASM dumps are byte-identical for
 the same seed. That is load-bearing; see the determinism note in
 src/language.cpp before touching RNG call sites.
+
+The playable deck currently contains 501 authored scenarios. Exact event ids
+deal without replacement for an entire life, saves preserve that seen set, and
+each world carries a 240-card cooldown across generations. `SCENARIO_1000.md`
+and `assets/data/scenario_targets.json` define and measure the path to 1,000.
 
 ## Hosting (random-rogue.com)
 

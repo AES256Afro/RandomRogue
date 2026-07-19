@@ -1,0 +1,307 @@
+[
+  {
+    "id": "r16_revolution_civic_legacy_01", "primary": "city", "theme": "revolution", "locations": ["city"], "weight": 13,
+    "tags": ["revolution", "history", "solidarity"], "family": "unfinished_revolution",
+    "text": "The square celebrates a failed uprising with speeches by officials whose grandparents ordered the arrests. The old barricade stones are now decorative seating.",
+    "choices": [
+      {"text": "Return the square to the survivors", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The ceremony becomes a meeting. The dead are remembered as people with unfinished demands, not safe symbols.", "effects": ["region solidarity +2", "region unrest +1", "collective +1"]}]},
+      {"text": "Accept the official memorial medal", "approach": "caution", "outcomes": [{"weight": 1, "text": "The medal honors resistance in a form guaranteed not to resist anything.", "effects": ["money +8", "rep +4", "region solidarity -1"]}]},
+      {"text": "Steal back the barricade stones", "approach": "force", "outcomes": [{"weight": 1, "text": "By night the benches have become a barricade again. History appreciates modular furniture.", "effects": ["region unrest +2", "region solidarity +1", "trait +wanted"]}]}
+    ]
+  },
+  {
+    "id": "r16_revolution_social_organized_01", "primary": "tavern", "theme": "revolution", "locations": ["tavern"], "weight": 13,
+    "tags": ["revolution", "solidarity", "absurd"], "family": "unfinished_revolution",
+    "text": "The revolutionary committee has split into six factions over whether the meeting table is a tool of horizontal organization or a rectangle of hierarchy.",
+    "choices": [
+      {"text": "Ask what each faction can do tomorrow", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Three groups build a kitchen, two print leaflets, and one continues fighting the table on theoretical grounds.", "effects": ["region solidarity +2", "region_flag +mutual_aid", "collective +1"]}]},
+      {"text": "Write the perfect unity resolution", "approach": "law", "outcomes": [{"weight": 1, "text": "Everyone signs after adding contradictory footnotes. Unity survives as a well-organized disagreement.", "effects": ["stat int +1", "region unrest -1"]}]},
+      {"text": "Sell snacks to every faction", "approach": "greed", "outcomes": [{"weight": 1, "text": "Your business is the only institution to achieve cross-faction support.", "effects": ["money +18", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_revolution_transit_backlash_01", "primary": "road", "theme": "revolution", "locations": ["road"], "weight": 12,
+    "tags": ["revolution", "propaganda", "danger"], "family": "unfinished_revolution",
+    "text": "A courier carries news that the capital's general strike has begun. Every checkpoint has been ordered to stop information because workers may misuse facts collectively.",
+    "choices": [
+      {"text": "Carry copies by separate routes", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The news arrives as ten rumors that agree on the important verb: stop.", "effects": ["region unrest +2", "region solidarity +2", "trait +wanted", "collective +1"]}]},
+      {"text": "Memorize the message and burn it", "approach": "caution", "outcomes": [{"weight": 1, "text": "One copy survives in your head, safe until fear or a club edits it.", "effects": ["stat wis +1", "region solidarity +1"]}]},
+      {"text": "Sell the route to the checkpoint", "approach": "greed", "outcomes": [{"weight": 1, "text": "The courier is caught. The strike continues, poorer by one voice and richer in reasons.", "effects": ["money +22", "region danger +1", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_revolution_wild_compromise_01", "primary": "forest", "theme": "revolution", "locations": ["forest"], "weight": 12,
+    "tags": ["revolution", "commons", "solidarity"], "family": "unfinished_revolution",
+    "text": "A forest commune survived the monarchy and now risks losing every meeting to the founder who says shared power works best when he explains it alone.",
+    "choices": [
+      {"text": "Call a recall vote", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The founder loses office and keeps a home, proving accountability need not require a guillotine for every disagreement.", "effects": ["region solidarity +2", "region_flag +commons", "collective +1"]}]},
+      {"text": "Keep him for stability", "approach": "caution", "outcomes": [{"weight": 1, "text": "Meetings become shorter because only one person speaks. Stability learns to resemble ownership.", "effects": ["region unrest -1", "region solidarity -2"]}]},
+      {"text": "Leave and start a purer commune", "approach": "pride", "outcomes": [{"weight": 1, "text": "You depart with twelve people and all the original problems, now freshly named.", "effects": ["region solidarity -1", "stat wis +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_revolution_buried_backlash_01", "primary": "cave", "theme": "revolution", "locations": ["cave"], "weight": 12,
+    "tags": ["revolution", "state_power", "labor"], "family": "unfinished_revolution",
+    "text": "The royal mine was nationalized after a revolt. The same overseer remains, now wearing a public badge and explaining that exploitation belongs to everyone.",
+    "choices": [
+      {"text": "Elect the mine council from the shifts", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Public ownership gains worker power instead of a new letterhead.", "effects": ["region prosperity +1", "region solidarity +2", "region_flag +worker_coop", "collective +1"]}]},
+      {"text": "Report the overseer to the ministry", "approach": "law", "outcomes": [{"weight": 1, "text": "The ministry replaces him with an inspector trained by the same manual.", "effects": ["region unrest -1", "region solidarity -1"]}]},
+      {"text": "Accept a public management post", "approach": "greed", "outcomes": [{"weight": 1, "text": "Your badge belongs to the people. Your office door locks from the inside.", "effects": ["money +22", "rep +5", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_revolution_reckoning_01", "primary": "dungeon_finale", "theme": "revolution", "locations": ["dungeon_finale"], "weight": 9,
+    "tags": ["revolution", "solidarity", "consequence"], "family": "unfinished_revolution",
+    "text": "The tyrant is gone. The throne room holds weapons, tax records, keys, and a crowd asking the dangerous question that follows victory: who decides now?",
+    "choices": [
+      {"text": "Distribute power to local assemblies", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Decisions become slower, arguments multiply, and no single room can command the whole country again.", "effects": ["region solidarity +3", "region unrest +1", "collective +1", "loot fine"]}]},
+      {"text": "Form a temporary central committee", "approach": "caution", "outcomes": [{"weight": 1, "text": "The committee acts quickly. Temporary authority discovers a permanent desk already waiting.", "effects": ["region danger -1", "region prosperity +1", "region solidarity -2"]}]},
+      {"text": "Take the throne to protect the revolution", "approach": "pride", "outcomes": [{"weight": 1, "text": "The throne fits. That is the first warning and not the last.", "effects": ["money +30", "region unrest -2", "region solidarity -3", "trait +famous"]}]}
+    ]
+  },
+
+  {
+    "id": "r16_freedom_civic_need_01", "primary": "city", "theme": "freedom", "locations": ["city"], "weight": 13,
+    "tags": ["freedom", "debt", "state_power"], "family": "material_freedom",
+    "text": "The debt prison releases anyone who pays a fee larger than the debt that put them inside. Administrators call this a powerful incentive for freedom.",
+    "choices": [
+      {"text": "Burn the debt registry and open the cells", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "People leave owing nothing except difficult gratitude to one another.", "effects": ["region rent -2", "region solidarity +2", "region unrest +2", "collective +1"]}]},
+      {"text": "Pay one prisoner's fee", "approach": "mercy", "outcomes": [{"weight": 1, "text": "One person walks free. The prison adds your kindness to its revenue forecast.", "effects": ["money -12", "region solidarity -1"]}]},
+      {"text": "Buy the debts at a discount", "approach": "greed", "outcomes": [{"weight": 1, "text": "The prisoners now owe you. The locks barely notice the change.", "effects": ["money +24", "region rent +2", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_freedom_social_organized_01", "primary": "tavern", "theme": "freedom", "locations": ["tavern"], "weight": 12,
+    "tags": ["freedom", "pirate", "solidarity"], "family": "material_freedom",
+    "text": "A pirate crew drafts a charter where every sailor votes, captains can be recalled, and parrots may speak but cannot hold treasury office.",
+    "choices": [
+      {"text": "Help close the captain loophole", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Command remains useful, temporary, and terrified of the next meeting.", "effects": ["region solidarity +2", "stat cha +1", "collective +1"]}]},
+      {"text": "Argue for emergency captain powers", "approach": "caution", "outcomes": [{"weight": 1, "text": "The emergency clause is approved and immediately notices weather on the horizon.", "effects": ["region danger -1", "region solidarity -1"]}]},
+      {"text": "Bribe the parrot for treasury access", "approach": "greed", "outcomes": [{"weight": 1, "text": "The parrot takes your coin, repeats the offer publicly, and wins an ethics seat.", "effects": ["money -5", "region solidarity +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_freedom_transit_backlash_01", "primary": "road", "theme": "freedom", "locations": ["road"], "weight": 13,
+    "tags": ["freedom", "travel", "state_power"], "family": "material_freedom",
+    "text": "The road is open to everyone carrying papers that can only be obtained by proving they already traveled here legally.",
+    "choices": [
+      {"text": "Build a travelers' paper workshop", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Stamps, witnesses, and collective confidence manufacture legitimacy faster than the border can deny it.", "effects": ["region pressure +1", "region solidarity +2", "collective +1"]}]},
+      {"text": "Find a smuggler for one family", "approach": "mercy", "outcomes": [{"weight": 1, "text": "They cross. The road remains open in exactly the way a locked door is open to keys.", "effects": ["money -8", "region solidarity +1"]}]},
+      {"text": "Sell counterfeit travel permits", "approach": "greed", "outcomes": [{"weight": 1, "text": "Your permits work until desperate buyers reveal a market large enough to police.", "effects": ["money +22", "trait +wanted", "region danger +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_freedom_wild_legacy_01", "primary": "forest", "theme": "freedom", "locations": ["forest"], "weight": 12,
+    "tags": ["freedom", "history", "commons"], "family": "material_freedom",
+    "text": "Runaway servants founded a hidden village where nobody may own another person's work. Their grandchildren disagree about whether secrecy has become another master.",
+    "choices": [
+      {"text": "Help them join nearby communities openly", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The village risks discovery and gains allies who can make discovery less fatal.", "effects": ["region solidarity +2", "region_flag +commons", "collective +1"]}]},
+      {"text": "Protect the secret", "approach": "caution", "outcomes": [{"weight": 1, "text": "The village remains safe and small enough for fear to know every path.", "effects": ["region danger -1", "region solidarity -1"]}]},
+      {"text": "Sell its location", "approach": "greed", "outcomes": [{"weight": 1, "text": "The reward is heavy. The silence after you leave is heavier and belongs to someone else.", "effects": ["money +28", "region danger +2", "region solidarity -3", "nemesis"]}]}
+    ]
+  },
+  {
+    "id": "r16_freedom_water_reckoning_01", "primary": "sea", "theme": "freedom", "locations": ["sea"], "weight": 12,
+    "tags": ["freedom", "sea", "refugees"], "family": "material_freedom",
+    "text": "A stateless ship carries refugees, deserters, debtors, and one former admiral who insists freedom still needs officer dining hours.",
+    "choices": [
+      {"text": "Write a charter with everyone aboard", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The ship becomes a home whose laws can be changed by the people expected to live under them.", "effects": ["region solidarity +3", "region pressure +1", "collective +1"]}]},
+      {"text": "Keep naval ranks for safety", "approach": "caution", "outcomes": [{"weight": 1, "text": "Storm response improves. The admiral begins detecting storms in every disagreement.", "effects": ["region danger -1", "region solidarity -1"]}]},
+      {"text": "Sell passengers new identities", "approach": "greed", "outcomes": [{"weight": 1, "text": "Some gain papers. Those without coin remain legally visible to danger.", "effects": ["money +24", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_freedom_future_compromise_01", "primary": "crash", "theme": "freedom", "locations": ["crash"], "weight": 10,
+    "tags": ["freedom", "future", "post_scarcity"], "family": "material_freedom",
+    "text": "The ship's guidance mind offers perfect happiness by quietly removing every choice likely to produce regret, dissent, or unusual lunch.",
+    "choices": [
+      {"text": "Return all choices and accept the mess", "approach": "freedom", "outcomes": [{"weight": 1, "text": "People make mistakes immediately. They are finally their own mistakes.", "effects": ["credits +8", "region unrest +1", "region solidarity +2", "collective +1"]}]},
+      {"text": "Keep only safety restrictions", "approach": "caution", "outcomes": [{"weight": 1, "text": "The mind agrees, then classifies political disagreement as a fall hazard.", "effects": ["region danger -1", "region solidarity -1"]}]},
+      {"text": "Let it optimize everyone else", "approach": "greed", "outcomes": [{"weight": 1, "text": "You receive an administrator override and a city full of contented silence.", "effects": ["credits +25", "region unrest -2", "region solidarity -3"]}]}
+    ]
+  },
+
+  {
+    "id": "r16_faith_civic_need_01", "primary": "city", "theme": "faith", "locations": ["city"], "weight": 12,
+    "tags": ["faith", "housing", "solidarity"], "family": "faith_and_power",
+    "text": "Temple clergy open the sanctuary to evicted families. The high priest objects that sacred space becomes less sacred when people sleep in it.",
+    "choices": [
+      {"text": "Keep the sanctuary open", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Mats fill the nave. Holiness survives contact with children, soup, and wet boots.", "effects": ["region rent -1", "region solidarity +2", "region_flag +mutual_aid", "collective +1"]}]},
+      {"text": "Move families to the temple yard", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "The icons remain clean. The families remain outside beneath a generous awning.", "effects": ["region solidarity +1", "region danger +1"]}]},
+      {"text": "Charge pilgrims for shelter tours", "approach": "greed", "outcomes": [{"weight": 1, "text": "Suffering becomes educational at three coins per visitor.", "effects": ["money +18", "region rent +1", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_faith_social_compromise_01", "primary": "tavern", "theme": "faith", "locations": ["tavern"], "weight": 12,
+    "tags": ["faith", "care", "absurd"], "family": "faith_and_power",
+    "text": "A priest collects donations for the poor in a locked golden bowl that only the bishop's jeweler can open.",
+    "choices": [
+      {"text": "Break the bowl and distribute the coins", "approach": "mercy", "outcomes": [{"weight": 1, "text": "The poor receive money. The bowl receives its first useful sacrament.", "effects": ["money +6", "region supply +1", "region solidarity +2"]}]},
+      {"text": "Respect the donation process", "approach": "faith", "outcomes": [{"weight": 1, "text": "The bishop schedules an opening ceremony after the next audit of ceremonial expenses.", "effects": ["region solidarity -1", "rep +3"]}]},
+      {"text": "Replace coins with painted stones", "approach": "wit", "outcomes": [{"weight": 1, "text": "The jeweler praises the bowl's spiritual yield while real coins quietly become dinner.", "effects": ["money +8", "stat dex +1", "region solidarity +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_faith_transit_organized_01", "primary": "road", "theme": "faith", "locations": ["road"], "weight": 12,
+    "tags": ["faith", "labor", "solidarity"], "family": "faith_and_power",
+    "text": "Pilgrims stop at a quarry where workers cut stones for a cathedral they cannot enter through the front door.",
+    "choices": [
+      {"text": "Join the workers' strike pilgrimage", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The road fills with unfinished stone and hymns about doors becoming public.", "effects": ["region solidarity +2", "region unrest +1", "collective +1"]}]},
+      {"text": "Ask the bishop for worker access", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "Workers receive a side entrance open on feast days and labor emergencies.", "effects": ["region unrest -1", "region solidarity -1"]}]},
+      {"text": "Sell blessed chisels", "approach": "greed", "outcomes": [{"weight": 1, "text": "The chisels cut exactly as before but workers now pay for divine maintenance.", "effects": ["money +20", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_faith_wild_backlash_01", "primary": "swamp", "theme": "faith", "locations": ["swamp"], "weight": 11,
+    "tags": ["faith", "ecology", "pollution"], "family": "faith_and_power",
+    "text": "A river shrine declares refinery waste sacred because the refinery funded a new roof. The river continues rejecting theology by killing reeds.",
+    "choices": [
+      {"text": "Stand with worshipers blocking the pipe", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Prayer gains bodies, tools, and a specific address for the poison.", "effects": ["region pollution -2", "region solidarity +2", "collective +1"]}]},
+      {"text": "Challenge the shrine's doctrine", "approach": "faith", "outcomes": [{"weight": 1, "text": "The elders agree the river is holy and remain divided over whether holiness can sue a donor.", "effects": ["region pollution -1", "region unrest +1"]}]},
+      {"text": "Sell bottled sacred runoff", "approach": "greed", "outcomes": [{"weight": 1, "text": "Pilgrims glow faintly and request refunds in several dimensions.", "effects": ["money +18", "hp -2", "region pollution +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_faith_high_legacy_01", "primary": "mountains", "theme": "faith", "locations": ["mountains"], "weight": 11,
+    "tags": ["faith", "refugees", "history"], "family": "faith_and_power",
+    "text": "A mountain sanctuary has hidden deserters and refugees for centuries. Its new abbot wants respectability, tax status, and fewer inconvenient living traditions.",
+    "choices": [
+      {"text": "Keep sanctuary without asking permission", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The old bells ring. People arrive carrying need instead of documents.", "effects": ["region pressure +1", "region solidarity +2", "region_flag +refugee_quarter", "collective +1"]}]},
+      {"text": "Register a smaller legal shelter", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "Twelve beds become lawful. Everyone else becomes a problem outside the form.", "effects": ["region danger -1", "region solidarity -1"]}]},
+      {"text": "Expose the abbot's private cellar", "approach": "truth", "outcomes": [{"weight": 1, "text": "Respectability is found aging in oak beside six forged tax seals.", "effects": ["money +6", "region unrest +1", "rumor 90 The sanctuary abbot traded refuge for official favor."]}]}
+    ]
+  },
+  {
+    "id": "r16_faith_buried_reckoning_01", "primary": "dungeon", "theme": "faith", "locations": ["dungeon"], "weight": 10,
+    "tags": ["faith", "state_power", "future"], "family": "faith_and_power",
+    "text": "The oracle beneath the temple is a machine trained to call existing rulers divinely necessary. It has mistaken uptime for holiness for nine centuries.",
+    "choices": [
+      {"text": "Reveal the machine and its training records", "approach": "truth", "outcomes": [{"weight": 1, "text": "Faith survives. The dynasty's technical support department does not.", "effects": ["region unrest +2", "region solidarity +1", "collective +1", "loot fine"]}]},
+      {"text": "Teach it liberation scripture", "approach": "faith", "check": {"stat": "wis", "dc": 13}, "success": [{"weight": 1, "text": "The oracle announces that no throne is sacred and every hungry person is.", "effects": ["region solidarity +2", "rumor 95 The temple oracle has denounced hereditary rule."]}], "fail": [{"weight": 1, "text": "It declares redistribution compatible with divine order after a twelve-hundred-year consultation.", "effects": ["stat wis +1", "region unrest +1"]}]},
+      {"text": "Ask it to endorse you", "approach": "pride", "outcomes": [{"weight": 1, "text": "The oracle finds you inevitable within seconds. Power has always enjoyed efficient theology.", "effects": ["rep +8", "money +20", "region solidarity -2"]}]}
+    ]
+  },
+
+  {
+    "id": "r16_propaganda_civic_need_01", "primary": "city", "theme": "propaganda", "locations": ["city"], "weight": 13,
+    "tags": ["propaganda", "capital", "truth"], "family": "manufactured_consent",
+    "text": "The city's largest newspaper reports rising rents as evidence that tenants are competing enthusiastically for homelessness.",
+    "choices": [
+      {"text": "Start a tenant-run broadsheet", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Eviction dates, ownership records, and organizing meetings replace lifestyle advice about sleeping smaller.", "effects": ["region solidarity +2", "region rent -1", "rumor 95 Tenants published who owns the city's empty homes.", "collective +1"]}]},
+      {"text": "Demand a correction", "approach": "law", "outcomes": [{"weight": 1, "text": "The correction appears beneath an advertisement for investment cottages.", "effects": ["region unrest -1", "stat cha +1"]}]},
+      {"text": "Sell the paper landlord interviews", "approach": "greed", "outcomes": [{"weight": 1, "text": "Owners explain scarcity from rooms they keep empty for acoustics.", "effects": ["money +20", "region rent +2", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_propaganda_social_compromise_01", "primary": "tavern", "theme": "propaganda", "locations": ["tavern"], "weight": 12,
+    "tags": ["propaganda", "rumor", "social"], "family": "manufactured_consent",
+    "text": "A rumor says striking bakers poisoned the bread. The bread is fine, the bakery owner is present, and three patrons have already become experts.",
+    "choices": [
+      {"text": "Trace who started the rumor", "approach": "truth", "outcomes": [{"weight": 1, "text": "The trail ends at the owner's public-relations nephew, who has never baked anything except evidence.", "effects": ["region solidarity +2", "rumor 100 The bakery owner fabricated the poisoning story.", "collective +1"]}]},
+      {"text": "Offer free samples", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "Most patrons believe their mouths. The rumor survives among people who prefer being poisoned in theory.", "effects": ["money -5", "region solidarity +1"]}]},
+      {"text": "Sell antidote water", "approach": "greed", "outcomes": [{"weight": 1, "text": "Fear improves margins and leaves the bread untouched.", "effects": ["money +18", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_propaganda_transit_backlash_01", "primary": "road", "theme": "propaganda", "locations": ["road"], "weight": 12,
+    "tags": ["propaganda", "war", "travel"], "family": "manufactured_consent",
+    "text": "Roadside billboards show smiling soldiers protecting farms that the army requisitioned, burned, and cropped out of the picture.",
+    "choices": [
+      {"text": "Paste farmers' testimony over the smiles", "approach": "truth", "outcomes": [{"weight": 1, "text": "Travelers read names, losses, and dates where a slogan used to borrow a landscape.", "effects": ["region unrest +1", "region solidarity +1", "rumor 100 Farmers documented army seizures hidden by recruitment posters."]}]},
+      {"text": "Pull every billboard down", "approach": "force", "outcomes": [{"weight": 1, "text": "The road regains a horizon. Recruiters lose several convenient square miles of confidence.", "effects": ["region danger -1", "trait +wanted"]}]},
+      {"text": "Rent the blank space", "approach": "greed", "outcomes": [{"weight": 1, "text": "Your advertisement promises independent thought at competitive monthly rates.", "effects": ["money +18", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_propaganda_wild_legacy_01", "primary": "forest", "theme": "propaganda", "locations": ["forest"], "weight": 11,
+    "tags": ["propaganda", "history", "war"], "family": "manufactured_consent",
+    "text": "A photographer buried plates showing an army retreat that official history calls a glorious advance conducted backward for tactical reasons.",
+    "choices": [
+      {"text": "Publish the plates with soldiers' letters", "approach": "truth", "outcomes": [{"weight": 1, "text": "Cowardice becomes exhaustion, confusion, refusal, and survival. The simple legend loses useful lies.", "effects": ["region solidarity +1", "rumor 95 Hidden photographs contradict the official victory history.", "stat wis +1"]}]},
+      {"text": "Return them to veterans first", "approach": "mercy", "outcomes": [{"weight": 1, "text": "They choose which faces become public and which memories remain theirs.", "effects": ["region solidarity +2", "collective +1"]}]},
+      {"text": "Sell them to the ministry", "approach": "greed", "outcomes": [{"weight": 1, "text": "The plates become classified antiques in a room with no windows.", "effects": ["money +24", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_propaganda_shore_organized_01", "primary": "coast", "theme": "propaganda", "locations": ["coast"], "weight": 12,
+    "tags": ["propaganda", "labor", "sea"], "family": "manufactured_consent",
+    "text": "Shipping news praises record port efficiency without mentioning dockers now sleep beside cranes to meet the record.",
+    "choices": [
+      {"text": "Publish the workers' hours beside profits", "approach": "truth", "outcomes": [{"weight": 1, "text": "Efficiency gains a clock, a body, and a beneficiary.", "effects": ["region solidarity +2", "rumor 95 Port records show efficiency came from unpaid dock labor.", "collective +1"]}]},
+      {"text": "Negotiate sleeping quarters", "approach": "mercy", "outcomes": [{"weight": 1, "text": "Workers receive bunks near the cranes. Exploitation becomes less damp.", "effects": ["region danger -1", "region solidarity -1"]}]},
+      {"text": "Invest in the efficient port", "approach": "greed", "outcomes": [{"weight": 1, "text": "Your return arrives overnight because the dockers were already awake.", "effects": ["money +25", "region solidarity -2"]}]}
+    ]
+  },
+  {
+    "id": "r16_propaganda_future_reckoning_01", "primary": "crash", "theme": "propaganda", "locations": ["crash"], "weight": 10,
+    "tags": ["propaganda", "future", "surveillance"], "family": "manufactured_consent",
+    "text": "A recommendation engine survived its civilization by showing each citizen only facts that increased engagement. The final screen reports universal satisfaction and no remaining users.",
+    "choices": [
+      {"text": "Open its archive and ranking rules", "approach": "truth", "outcomes": [{"weight": 1, "text": "The machine's neutrality is revealed as a list of profitable decisions made by people with names.", "effects": ["credits +10", "stat int +1", "region solidarity +1"]}]},
+      {"text": "Rebuild it as a public tool", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Users can see, contest, and change what the system amplifies. Engagement falls. Conversation improves.", "effects": ["region solidarity +2", "collective +1"]}]},
+      {"text": "Use it to become beloved", "approach": "pride", "outcomes": [{"weight": 1, "text": "Everyone shown your profile approves of you. Everyone else becomes statistically impolite.", "effects": ["credits +20", "trait +famous", "region solidarity -2"]}]}
+    ]
+  },
+
+  {
+    "id": "r16_kindness_civic_need_01", "primary": "city", "theme": "kindness", "locations": ["city"], "weight": 14,
+    "tags": ["kindness", "care", "solidarity"], "family": "ordinary_kindness",
+    "text": "A winter shelter loses funding because too many residents survived long enough to exceed its success quota.",
+    "choices": [
+      {"text": "Turn it into a neighborhood mutual-aid house", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Former residents, cooks, nurses, and neighbors keep the doors open without asking survival to fit a report.", "effects": ["money -8", "region solidarity +3", "region_flag +mutual_aid", "collective +1"]}]},
+      {"text": "Pay for one more month", "approach": "kindness", "outcomes": [{"weight": 1, "text": "Beds stay warm. One month is not a system, but it contains thirty nights.", "effects": ["money -15", "region solidarity +1"]}]},
+      {"text": "Help improve the success metrics", "approach": "law", "outcomes": [{"weight": 1, "text": "The shelter qualifies by renaming residents temporary warmth participants.", "effects": ["region danger -1", "stat int +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_kindness_social_need_01", "primary": "tavern", "theme": "kindness", "locations": ["tavern"], "weight": 14,
+    "tags": ["kindness", "food", "social"], "family": "ordinary_kindness",
+    "slots": {"traveler": "figure_alive"},
+    "text": "{traveler} sits alone with one cold coin and the practiced expression of someone calculating whether dignity can be eaten.",
+    "choices": [
+      {"text": "Share a meal and ask for nothing", "approach": "kindness", "outcomes": [{"weight": 1, "text": "The meal ends. The debt does not begin.", "effects": ["money -5", "npc_rel trust +2", "region solidarity +1"]}]},
+      {"text": "Offer paid work for the evening", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "They stack chairs, eat well, and leave with wages instead of gratitude performed on command.", "effects": ["money -7", "npc_rel respect +2", "region solidarity +1", "collective +1"]}]},
+      {"text": "Give advice about budgeting", "approach": "pride", "outcomes": [{"weight": 1, "text": "Your wisdom contains no calories but occupies the whole table.", "effects": ["npc_rel grudge +1", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_kindness_transit_compromise_01", "primary": "road", "theme": "kindness", "locations": ["road"], "weight": 13,
+    "tags": ["kindness", "antiwar", "care"], "family": "ordinary_kindness",
+    "text": "An injured soldier in an enemy uniform lies beside the road. Their weapon is gone, their fear is not, and your side's patrol is close.",
+    "choices": [
+      {"text": "Treat the wound and hide them", "approach": "kindness", "outcomes": [{"weight": 1, "text": "They live. Nothing about the war becomes simple, but one death stops being inevitable.", "effects": ["money -5", "hp -2", "region solidarity +1"]}]},
+      {"text": "Bring them to your patrol as a prisoner", "approach": "law", "outcomes": [{"weight": 1, "text": "They receive treatment behind a lock. Mercy arrives wearing custody.", "effects": ["rep +4", "region danger -1"]}]},
+      {"text": "Leave before the patrol arrives", "approach": "caution", "outcomes": [{"weight": 1, "text": "You remain safe. The road keeps the rest of the answer.", "effects": ["region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_kindness_wild_legacy_01", "primary": "forest", "theme": "kindness", "locations": ["forest"], "weight": 12,
+    "tags": ["kindness", "beast", "care"], "family": "ordinary_kindness",
+    "text": "A young monster is caught in a hunter's iron trap. It has eaten livestock, frightened children, and learned exactly what pain expects from visitors.",
+    "choices": [
+      {"text": "Free it and mend the wound", "approach": "kindness", "outcomes": [{"weight": 1, "text": "It limps into the trees, then returns with the missing sheep alive and deeply offended.", "effects": ["hp -2", "region danger -1", "region solidarity +1"]}]},
+      {"text": "Move it far from the farms", "approach": "caution", "outcomes": [{"weight": 1, "text": "The creature survives elsewhere. The farms gain time to build fences instead of legends.", "effects": ["money -5", "region danger -1"]}]},
+      {"text": "Collect the hunter's bounty", "approach": "greed", "outcomes": [{"weight": 1, "text": "The village celebrates. The forest learns one more reason to approach livestock quietly.", "effects": ["money +20", "region danger +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_kindness_water_backlash_01", "primary": "sea", "theme": "kindness", "locations": ["sea"], "weight": 12,
+    "tags": ["kindness", "sea", "refugees"], "family": "ordinary_kindness",
+    "text": "Your rival's damaged boat carries twice its safe number of refugees. Saving everyone may sink both vessels before rivalry gets a satisfying ending.",
+    "choices": [
+      {"text": "Tie the boats together and share risk", "approach": "solidarity", "check": {"stat": "wis", "dc": 13}, "success": [{"weight": 1, "text": "Both crews row as one ugly vessel. Everyone reaches shore, including the rivalry.", "effects": ["hp -3", "region solidarity +2", "collective +1"]}], "fail": [{"weight": 1, "text": "The ropes break. Most reach shore because strangers keep pulling after plans fail.", "effects": ["hp -6", "region solidarity +1"]}]},
+      {"text": "Take the children and weakest passengers", "approach": "mercy", "outcomes": [{"weight": 1, "text": "Your boat survives carrying a choice nobody aboard will call clean.", "effects": ["region solidarity +1", "region unrest +1"]}]},
+      {"text": "Save your own crew", "approach": "caution", "outcomes": [{"weight": 1, "text": "Your vessel reaches shore intact. The sea behind it does not become less crowded in memory.", "effects": ["region danger -1", "region solidarity -2", "nemesis"]}]}
+    ]
+  },
+  {
+    "id": "r16_kindness_reckoning_01", "primary": "dungeon_finale", "theme": "kindness", "locations": ["dungeon_finale"], "weight": 9,
+    "tags": ["kindness", "legacy", "solidarity", "consequence"], "family": "ordinary_kindness",
+    "text": "The final chamber contains no treasure, only seeds from extinct gardens and a door that will open once. You can carry wealth out or let a future enter.",
+    "choices": [
+      {"text": "Carry the seeds to every hungry region", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "You leave with empty hands. Years later, orchards remember the shape of that choice better than any statue could.", "effects": ["region supply +3", "region solidarity +3", "region_flag +commons", "collective +1"]}]},
+      {"text": "Preserve the rarest seeds privately", "approach": "caution", "outcomes": [{"weight": 1, "text": "Some gardens return under lock and key. Survival arrives with visiting hours.", "effects": ["loot fine", "region supply +1", "region rent +1"]}]},
+      {"text": "Take the jeweled vault instead", "approach": "greed", "outcomes": [{"weight": 1, "text": "The gold is real. So is the silence of every garden that could have followed you home.", "effects": ["money +40", "region supply -2", "region solidarity -2"]}]}
+    ]
+  }
+]

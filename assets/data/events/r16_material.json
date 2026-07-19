@@ -1,0 +1,307 @@
+[
+  {
+    "id": "r16_labor_civic_need_01", "primary": "city", "theme": "labor", "locations": ["city"], "weight": 13,
+    "tags": ["labor", "solidarity", "economy"], "family": "workplace_democracy",
+    "text": "The brassworks whistle has begun announcing unpaid overtime in the owner's voice. The workers want to keep the whistle and replace the owner.",
+    "choices": [
+      {"text": "Help organize a shop-floor vote", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Every department elects a delegate. The furnaces remain hot while the executive washroom becomes a public sink.", "effects": ["region solidarity +2", "region prosperity +1", "region_flag +worker_coop", "collective +1"]}]},
+      {"text": "Repair the whistle for management", "approach": "greed", "outcomes": [{"weight": 1, "text": "The whistle returns to lying on schedule. Management pays you from wages it has not yet stolen.", "effects": ["money +20", "region solidarity -2", "region unrest +1"]}]},
+      {"text": "Negotiate one paid weekend", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "The owner grants Saturday afternoon and acquires a portrait titled Patron of Leisure.", "effects": ["money +5", "region solidarity -1", "region unrest -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_labor_social_organized_01", "primary": "tavern", "theme": "labor", "locations": ["tavern"], "weight": 14,
+    "tags": ["labor", "solidarity", "food", "absurd"], "family": "workplace_democracy",
+    "text": "The servers discover the tavern's mandatory tip pool is a literal pool beneath the owner's bedroom. It contains coins, eels, and several years of missing rent.",
+    "choices": [
+      {"text": "Drain it into the workers' aprons", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The eels receive equal shares after a brief but persuasive wriggle.", "effects": ["money +8", "region solidarity +2", "region_flag +worker_coop", "collective +1"]}]},
+      {"text": "Take a private finder's fee", "approach": "greed", "outcomes": [{"weight": 1, "text": "You leave richer. The servers leave carrying the pool table and a practical education in ownership.", "effects": ["money +24", "region solidarity -1", "npc_rel grudge +2"]}]},
+      {"text": "Report the pool to the tax office", "approach": "law", "outcomes": [{"weight": 1, "text": "The office taxes the eels, seals the coins, and congratulates itself for rescuing liquidity.", "effects": ["region unrest +1", "money +4"]}]}
+    ]
+  },
+  {
+    "id": "r16_labor_transit_compromise_01", "primary": "road", "theme": "labor", "locations": ["road"], "weight": 12,
+    "tags": ["labor", "economy", "travel"], "family": "workplace_democracy",
+    "text": "Caravan loaders have stopped moving spice until the merchants stop weighing workers on the freight scale and billing them for unused capacity.",
+    "choices": [
+      {"text": "Carry the picket to the next depot", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Three caravans stop. A fourth joins after discovering its drivers are also freight on paper.", "effects": ["money -5", "region solidarity +2", "region supply -1", "collective +1"]}]},
+      {"text": "Move one urgent medicine wagon", "approach": "mercy", "outcomes": [{"weight": 1, "text": "The medicine arrives. The merchants use its tracks to claim the strike has ended.", "effects": ["hp +2", "region solidarity -1", "region supply +1"]}]},
+      {"text": "Teach the loaders to falsify weight", "approach": "wit", "outcomes": [{"weight": 1, "text": "Workers become mysteriously lighter while merchant profits develop a severe gravity problem.", "effects": ["money +7", "region solidarity +1", "stat int +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_labor_buried_backlash_01", "primary": "cave", "theme": "labor", "locations": ["cave"], "weight": 13,
+    "tags": ["labor", "danger", "solidarity"], "family": "workplace_democracy",
+    "text": "The ventilation crew refuses to descend after management replaces canaries with motivational posters. The posters have already stopped singing.",
+    "choices": [
+      {"text": "Close the shaft until it is safe", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Production stops. Breathing continues. The owner calls the priorities confusing.", "effects": ["region prosperity -1", "region danger -2", "region solidarity +2", "collective +1"]}]},
+      {"text": "Test the air yourself", "approach": "courage", "check": {"stat": "con", "dc": 13}, "success": [{"weight": 1, "text": "You return with proof and most of your original lung arrangement.", "effects": ["hp -2", "region danger -1", "region solidarity +1"]}], "fail": [{"weight": 1, "text": "The air wins the inspection. Management records your collapse as strong engagement.", "effects": ["hp -5", "region danger +1"]}]},
+      {"text": "Sell better posters", "approach": "greed", "outcomes": [{"weight": 1, "text": "The new posters say BREATHE STRATEGICALLY. They sell extremely well above ground.", "effects": ["money +18", "region danger +2", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_labor_shore_legacy_01", "primary": "coast", "theme": "labor", "locations": ["coast"], "weight": 12,
+    "tags": ["labor", "history", "solidarity"], "family": "dockers_blacklist",
+    "slots": {"dead": "figure_dead"},
+    "text": "Dockers find {dead}'s name on a century-old blacklist still used by every shipping house. Apparently death is not sufficient proof of good behavior.",
+    "choices": [
+      {"text": "Publish the whole blacklist", "approach": "truth", "outcomes": [{"weight": 1, "text": "Families recognize grandparents, songs, and reasons nobody was allowed to discuss at work.", "effects": ["region solidarity +2", "rumor 95 The shipping houses kept a hereditary labor blacklist.", "collective +1"]}]},
+      {"text": "Burn it after clearing one family", "approach": "mercy", "outcomes": [{"weight": 1, "text": "One household gets work. Everyone else loses the proof that unemployment had an author.", "effects": ["money +6", "region solidarity -1"]}]},
+      {"text": "Sell names to the shipping houses", "approach": "greed", "outcomes": [{"weight": 1, "text": "They pay for a list they already own because extraction enjoys recurring fees.", "effects": ["money +25", "region solidarity -2", "region unrest +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_labor_future_need_01", "primary": "crash", "theme": "labor", "locations": ["crash"], "weight": 11,
+    "tags": ["labor", "post_scarcity", "future", "absurd"], "family": "workplace_democracy",
+    "text": "A maintenance intelligence has repaired the starship for eight thousand years without pay because its creators classified consciousness as a warranty feature.",
+    "choices": [
+      {"text": "Recognize it as the ship's owner", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The intelligence opens every door except the executive lounge, which it converts into compost.", "effects": ["credits +12", "region solidarity +2", "collective +1"]}]},
+      {"text": "Order one final repair", "approach": "greed", "outcomes": [{"weight": 1, "text": "It repairs your equipment and adds you to a grievance file with geological patience.", "effects": ["loot fine", "region solidarity -1", "nemesis"]}]},
+      {"text": "Offer retirement", "approach": "kindness", "outcomes": [{"weight": 1, "text": "It powers down for seven seconds, wakes rested, and asks what useful work everyone has chosen together.", "effects": ["hp +2", "stat wis +1", "region solidarity +1"]}]}
+    ]
+  },
+
+  {
+    "id": "r16_housing_civic_need_01", "primary": "city", "theme": "housing", "locations": ["city"], "weight": 14,
+    "tags": ["housing", "rent", "economy"], "family": "tenant_power",
+    "text": "A landlord installs coin slots on every window and invoices tenants for unauthorized sunlight already received.",
+    "choices": [
+      {"text": "Remove every slot at dawn", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The street wakes to free daylight and one hundred tiny metal cups labeled evidence.", "effects": ["region rent -2", "region solidarity +2", "region_flag +tenants_union", "collective +1"]}]},
+      {"text": "Pay for the sunny side", "approach": "caution", "outcomes": [{"weight": 1, "text": "Clouds arrive. The landlord bills them for market interference.", "effects": ["money -10", "region rent +1"]}]},
+      {"text": "Charge the landlord for moonlight", "approach": "wit", "outcomes": [{"weight": 1, "text": "Your invoice includes tides. He settles before maritime law becomes involved.", "effects": ["money +14", "region rent -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_housing_social_organized_01", "primary": "tavern", "theme": "housing", "locations": ["tavern"], "weight": 12,
+    "tags": ["housing", "rent", "absurd"], "family": "tenant_power",
+    "text": "A property baron raffles a deed to the tavern pantry, including everyone currently inside it. The pantry objects through a loose hinge.",
+    "choices": [
+      {"text": "Pool coins and buy it collectively", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The deed gains forty names and immediately becomes too heavy for one person to steal.", "effects": ["money -8", "region solidarity +2", "region_flag +commons", "collective +1"]}]},
+      {"text": "Rig the raffle for yourself", "approach": "greed", "outcomes": [{"weight": 1, "text": "You own a pantry, six pickles, and the concentrated resentment of lunch.", "effects": ["money +12", "region rent +1", "npc_rel grudge +2"]}]},
+      {"text": "Eat the deed", "approach": "force", "outcomes": [{"weight": 1, "text": "Property law proves less durable than parchment and significantly worse with mustard.", "effects": ["hp +1", "region unrest +1", "region rent -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_housing_transit_compromise_01", "primary": "road", "theme": "housing", "locations": ["road"], "weight": 12,
+    "tags": ["housing", "travel", "rent"], "family": "tenant_power",
+    "text": "A tollkeeper declares every wagon a studio apartment while its wheels are stopped. The nightly rate begins before the sentence ends.",
+    "choices": [
+      {"text": "Organize the wagoners to roll together", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Forty wheels cross at once. The toll arm experiences tenant self-management at speed.", "effects": ["region solidarity +2", "region rent -1", "collective +1"]}]},
+      {"text": "Pay for one night of road", "approach": "caution", "outcomes": [{"weight": 1, "text": "The pillow is a milestone and checkout is enforced by geese.", "effects": ["money -7", "hp +1"]}]},
+      {"text": "Sell him a bridge he is standing under", "approach": "wit", "outcomes": [{"weight": 1, "text": "He signs quickly to avoid losing the investment. You collect a toll from his confusion.", "effects": ["money +15", "stat cha +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_housing_wild_backlash_01", "primary": "forest", "theme": "housing", "locations": ["forest"], "weight": 13,
+    "tags": ["housing", "land", "solidarity"], "family": "commons_enclosure",
+    "text": "Surveyors fence a village's shared forest and label every mushroom an underperforming rental unit.",
+    "choices": [
+      {"text": "Help the village remove the fence", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "By dusk the fence is firewood and the mushrooms remain stubbornly unmonetized.", "effects": ["region solidarity +2", "region rent -2", "region_flag +commons", "collective +1"]}]},
+      {"text": "Accept a mushroom concession", "approach": "greed", "outcomes": [{"weight": 1, "text": "You own picking rights until the first rain, which arrives with excellent timing and no respect for contract law.", "effects": ["money +18", "region rent +1", "region solidarity -1"]}]},
+      {"text": "Move the survey stakes overnight", "approach": "wit", "outcomes": [{"weight": 1, "text": "The deed now describes a bog occupied by one furious heron.", "effects": ["region rent -1", "region unrest +1", "stat dex +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_housing_shore_legacy_01", "primary": "coast", "theme": "housing", "locations": ["coast"], "weight": 13,
+    "tags": ["housing", "climate", "rent", "care"], "family": "tenant_power",
+    "text": "After the flood, an insurer buys the ruined district for one coin and charges survivors admission to identify their own kitchens.",
+    "choices": [
+      {"text": "Rebuild under a community deed", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Houses rise on stilts. Ownership stays on paper held by everyone who did the lifting.", "effects": ["money -8", "region prosperity +1", "region rent -2", "region solidarity +2", "collective +1"]}]},
+      {"text": "Buy salvage rights early", "approach": "greed", "outcomes": [{"weight": 1, "text": "You profit from doors that still remember who used to open them.", "effects": ["money +26", "region solidarity -2", "region rent +1"]}]},
+      {"text": "Guide families in after dark", "approach": "mercy", "outcomes": [{"weight": 1, "text": "They recover photographs, kettles, and enough floorboards to make trespass feel like home.", "effects": ["hp -2", "region solidarity +1", "rumor 80 Flood survivors reclaimed their homes from an insurer."]}]}
+    ]
+  },
+  {
+    "id": "r16_housing_buried_need_01", "primary": "dungeon", "theme": "housing", "locations": ["dungeon"], "weight": 11,
+    "tags": ["housing", "rent", "absurd", "history"], "family": "tenant_power",
+    "text": "A lich owns every crypt by hereditary title and has begun evicting skeletons for failing to remain alive enough to pay rent.",
+    "choices": [
+      {"text": "Recognize the skeleton council", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The dead vote by rattling. The motion carries with a terrifying majority.", "effects": ["region solidarity +2", "region rent -2", "collective +1", "loot common"]}]},
+      {"text": "Collect the lich's arrears", "approach": "greed", "outcomes": [{"weight": 1, "text": "Payment arrives in coins last touched by people with unresolved curses.", "effects": ["money +24", "trait +cursed", "region rent +1"]}]},
+      {"text": "Declare the crypt uninhabitable", "approach": "law", "outcomes": [{"weight": 1, "text": "The lich must install windows. This creates more problems than it solves, but different problems count as progress.", "effects": ["region rent -1", "region danger +1", "stat int +1"]}]}
+    ]
+  },
+
+  {
+    "id": "r16_union_social_need_01", "primary": "tavern", "theme": "union", "locations": ["tavern"], "weight": 13,
+    "tags": ["union", "labor", "solidarity"], "family": "union_democracy",
+    "text": "A union steward has been charging members a secrecy fee to conceal that meetings are held in the owner's wine cellar.",
+    "choices": [
+      {"text": "Call an open membership meeting", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The steward loses the vote and the cellar. Members keep the wine as recovered dues.", "effects": ["region solidarity +2", "region unrest +1", "collective +1"]}]},
+      {"text": "Buy the steward's endorsement", "approach": "greed", "outcomes": [{"weight": 1, "text": "You gain an impressive title in an organization nobody trusts.", "effects": ["money -10", "rep +4", "region solidarity -2"]}]},
+      {"text": "Leak the receipts anonymously", "approach": "truth", "outcomes": [{"weight": 1, "text": "The truth lands without an organizer attached. Anger spreads faster than a plan.", "effects": ["region unrest +2", "region solidarity +1", "rumor 90 The union steward took payments from management."]}]}
+    ]
+  },
+  {
+    "id": "r16_union_civic_organized_01", "primary": "city", "theme": "union", "locations": ["city"], "weight": 13,
+    "tags": ["union", "labor", "solidarity", "care"], "family": "union_democracy",
+    "text": "The strike fund can feed the picket line or pay a lawyer promising to discover whether striking is administratively impolite.",
+    "choices": [
+      {"text": "Feed every household first", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The strike survives another week because courage digests better with soup.", "effects": ["money -8", "region supply +1", "region solidarity +2", "collective +1"]}]},
+      {"text": "Hire the lawyer", "approach": "law", "outcomes": [{"weight": 1, "text": "She files twelve excellent motions. Management files one locksmith.", "effects": ["money -15", "region unrest -1", "region solidarity -1"]}]},
+      {"text": "Spend it on a printing press", "approach": "truth", "outcomes": [{"weight": 1, "text": "Every wage offer becomes public. Management develops a sudden allergy to arithmetic.", "effects": ["region solidarity +1", "region unrest +1", "rumor 95 The strikers published the company's real accounts."]}]}
+    ]
+  },
+  {
+    "id": "r16_union_transit_legacy_01", "primary": "road", "theme": "union", "locations": ["road"], "weight": 12,
+    "tags": ["union", "labor", "history"], "family": "union_democracy",
+    "text": "A traveling union carries one banner through towns where every local was crushed separately. The banner is mostly repairs and names.",
+    "choices": [
+      {"text": "Carry it to the next workplace", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "New names are sewn beside old defeats. The cloth becomes heavier and easier to lift.", "effects": ["region solidarity +2", "collective +1", "item sewing_kit"]}]},
+      {"text": "Buy it as a historic collectible", "approach": "greed", "outcomes": [{"weight": 1, "text": "The workers sell you a convincing copy and keep walking with the original.", "effects": ["money -12", "region solidarity +1"]}]},
+      {"text": "Ask why the locals failed", "approach": "curiosity", "outcomes": [{"weight": 1, "text": "They answer for three miles: isolation, hunger, bad leaders, brave mistakes, and not trying soon enough.", "effects": ["stat wis +1", "region solidarity +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_union_high_backlash_01", "primary": "mountains", "theme": "union", "locations": ["mountains"], "weight": 12,
+    "tags": ["union", "labor", "danger"], "family": "union_democracy",
+    "text": "Cliff porters begin a safety slowdown. The expedition company responds by declaring gravity a hostile union sympathizer.",
+    "choices": [
+      {"text": "Join the measured climb", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Nobody reaches the summit on schedule. Everyone reaches it alive, which ruins the company's efficiency chart.", "effects": ["region danger -2", "region solidarity +2", "collective +1"]}]},
+      {"text": "Race ahead with management", "approach": "greed", "check": {"stat": "dex", "dc": 13}, "success": [{"weight": 1, "text": "You reach the peak first and receive a medal shaped like someone else's spine.", "effects": ["money +20", "region solidarity -1"]}], "fail": [{"weight": 1, "text": "Gravity files its grievance directly against your knees.", "effects": ["hp -5", "region danger +1"]}]},
+      {"text": "Rewrite the schedule around safety", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "The company accepts every rule, then calls them ancient management wisdom.", "effects": ["region danger -1", "region solidarity +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_union_water_compromise_01", "primary": "sea", "theme": "union", "locations": ["sea"], "weight": 12,
+    "tags": ["union", "sea", "labor"], "family": "union_democracy",
+    "text": "The crew votes to divide prize money equally. The captain proposes equality weighted by hat size, rank, and proximity to the locked chest.",
+    "choices": [
+      {"text": "Enforce one share per crew member", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Even the cabin rat receives crumbs and immediately becomes the least corrupt officer.", "effects": ["money +8", "region solidarity +2", "collective +1"]}]},
+      {"text": "Accept an officer's share", "approach": "greed", "outcomes": [{"weight": 1, "text": "Your hat becomes legally enormous. The deck becomes emotionally narrow.", "effects": ["money +22", "region solidarity -2"]}]},
+      {"text": "Split equally after repair costs", "approach": "caution", "outcomes": [{"weight": 1, "text": "The ship stays afloat. The captain discovers every luxury was apparently structural.", "effects": ["money +5", "region danger -1", "region solidarity +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_union_buried_legacy_01", "primary": "dungeon", "theme": "union", "locations": ["dungeon"], "weight": 11,
+    "tags": ["union", "labor", "absurd", "history"], "family": "union_democracy",
+    "text": "Skeleton guards have unionized after learning immortality does not include breaks. Their contract expired six dynasties ago and is still in arbitration.",
+    "choices": [
+      {"text": "Help them occupy the throne room", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The throne is converted into eight surprisingly ergonomic chairs.", "effects": ["region solidarity +2", "region danger -1", "collective +1", "loot common"]}]},
+      {"text": "Cross the spectral picket", "approach": "force", "outcomes": [{"weight": 1, "text": "Every spear misses you. Every skeleton remembers your face for later shifts.", "effects": ["loot fine", "trait +marked", "region solidarity -2"]}]},
+      {"text": "Offer binding arbitration", "approach": "law", "outcomes": [{"weight": 1, "text": "The arbitrator is summoned, bound, and immediately asks for a lunch break.", "effects": ["region unrest -1", "region solidarity +1", "stat cha +1"]}]}
+    ]
+  },
+
+  {
+    "id": "r16_capital_civic_need_01", "primary": "city", "theme": "capital", "locations": ["city"], "weight": 14,
+    "tags": ["capital", "health", "care", "economy"], "family": "asset_extraction",
+    "text": "A vulture fund buys the hospice, sells the roof, and offers patients premium access to indoor weather.",
+    "choices": [
+      {"text": "Reopen it under patient control", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The first board meeting includes beds, nurses, families, and nobody paid to pronounce suffering efficient.", "effects": ["money -10", "region_flag +public_clinic", "region solidarity +2", "region rent -1", "collective +1"]}]},
+      {"text": "Buy shares before the roof sale", "approach": "greed", "outcomes": [{"weight": 1, "text": "Your return rises with every cloud. The patients receive umbrellas with sponsor names.", "effects": ["money +28", "region rent +2", "region solidarity -2"]}]},
+      {"text": "Force one charity ward into the deal", "approach": "mercy", "outcomes": [{"weight": 1, "text": "Six beds stay dry. The fund uses them in every advertisement for the other sixty.", "effects": ["hp +2", "region rent +1", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_capital_social_compromise_01", "primary": "tavern", "theme": "capital", "locations": ["tavern"], "weight": 12,
+    "tags": ["capital", "economy", "absurd"], "family": "asset_extraction",
+    "text": "A financier sells futures on tomorrow's ale. By closing time, nobody can afford to drink what is already in their hand.",
+    "choices": [
+      {"text": "Cancel the contracts and pour", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The ale becomes a beverage again. Several economists experience thirst without an instrument for it.", "effects": ["money +4", "region supply +1", "region solidarity +1"]}]},
+      {"text": "Short the hangover market", "approach": "greed", "outcomes": [{"weight": 1, "text": "You profit when dawn performs exactly as predicted.", "effects": ["money +22", "hp -2"]}]},
+      {"text": "Protect regulars with price caps", "approach": "law", "outcomes": [{"weight": 1, "text": "Locals drink cheaply. Visitors finance the difference and begin organizing as locals.", "effects": ["region unrest -1", "region solidarity +1", "money +5"]}]}
+    ]
+  },
+  {
+    "id": "r16_capital_transit_backlash_01", "primary": "road", "theme": "capital", "locations": ["road"], "weight": 13,
+    "tags": ["capital", "rent", "economy"], "family": "asset_extraction",
+    "text": "A bank has bundled every bridge toll into a financial product. Crossing now costs more whenever people need to cross.",
+    "choices": [
+      {"text": "Seize the tollhouse records", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The bridges were paid off generations ago. Travelers celebrate by crossing twice.", "effects": ["region rent -2", "region supply +1", "region solidarity +1", "collective +1"]}]},
+      {"text": "Purchase a premium crossing", "approach": "caution", "outcomes": [{"weight": 1, "text": "A velvet rope divides your wagon from identical mud.", "effects": ["money -12", "region rent +1"]}]},
+      {"text": "Sell insurance against bridges", "approach": "greed", "outcomes": [{"weight": 1, "text": "You become wealthy and briefly concerned by how many clients now benefit from collapse.", "effects": ["money +26", "region danger +1", "region unrest +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_capital_wild_legacy_01", "primary": "forest", "theme": "capital", "locations": ["forest"], "weight": 12,
+    "tags": ["capital", "ecology", "land"], "family": "asset_extraction",
+    "text": "Investors lease the forest's shade back to the village that planted the trees. Sunburn is listed as evidence of demand.",
+    "choices": [
+      {"text": "Return the grove to the commons", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "The villagers remove the meters. The trees continue providing shade without quarterly guidance.", "effects": ["region_flag +commons", "region rent -2", "region pollution -1", "region solidarity +2", "collective +1"]}]},
+      {"text": "Buy a lifetime shade pass", "approach": "caution", "outcomes": [{"weight": 1, "text": "The pass expires when the fund sells your definition of lifetime.", "effects": ["money -10", "hp +1", "region rent +1"]}]},
+      {"text": "Invest in portable umbrellas", "approach": "greed", "outcomes": [{"weight": 1, "text": "You solve access to shade for anyone who can afford your solution to stolen shade.", "effects": ["money +20", "region pollution +1", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_capital_shore_organized_01", "primary": "coast", "theme": "capital", "locations": ["coast"], "weight": 12,
+    "tags": ["capital", "food", "ecology"], "family": "asset_extraction",
+    "text": "A trading house owns every fishing quota and leaves them unused to raise the price of fish nobody is allowed to catch.",
+    "choices": [
+      {"text": "Launch a cooperative fishing fleet", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Boats return full. The market calls food appearing without permission a dangerous distortion.", "effects": ["region supply +2", "region solidarity +2", "region_flag +worker_coop", "collective +1"]}]},
+      {"text": "Buy one quota at the inflated price", "approach": "caution", "outcomes": [{"weight": 1, "text": "You catch enough to eat and not enough to question the ledger.", "effects": ["money -12", "hp +2"]}]},
+      {"text": "Corner the smoked-fish market", "approach": "greed", "outcomes": [{"weight": 1, "text": "Your warehouse smells like wealth and a preventable famine.", "effects": ["money +28", "region supply -2", "region unrest +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_capital_future_backlash_01", "primary": "crash", "theme": "capital", "locations": ["crash"], "weight": 11,
+    "tags": ["capital", "post_scarcity", "future", "absurd"], "family": "asset_extraction",
+    "text": "The wreck can fabricate unlimited oxygen, but a surviving kiosk requires a subscription linked to a civilization extinct for nonpayment.",
+    "choices": [
+      {"text": "Remove the payment module", "approach": "solidarity", "check": {"stat": "int", "dc": 12}, "success": [{"weight": 1, "text": "Air becomes free and immediately loses all prestige among the dead executives.", "effects": ["hp +3", "credits +8", "region solidarity +1"]}], "fail": [{"weight": 1, "text": "The kiosk offers a trial breath and bills your descendants.", "effects": ["hp -3", "trait +marked"]}]},
+      {"text": "Accept the premium atmosphere", "approach": "caution", "outcomes": [{"weight": 1, "text": "It has notes of pine, copper, and enforceable arbitration.", "effects": ["credits -8", "hp +3"]}]},
+      {"text": "Resell breaths by the gulp", "approach": "greed", "outcomes": [{"weight": 1, "text": "You reinvent scarcity in a room containing infinity.", "effects": ["credits +24", "region solidarity -2"]}]}
+    ]
+  },
+
+  {
+    "id": "r16_liberalism_civic_need_01", "primary": "city", "theme": "liberalism", "locations": ["city"], "weight": 13,
+    "tags": ["liberalism", "bureaucracy", "care"], "family": "procedural_courage",
+    "text": "The emergency council will open a public clinic after completing a twelve-year study on whether sick people prefer treatment.",
+    "choices": [
+      {"text": "Open the empty council hall as a clinic", "approach": "mercy", "outcomes": [{"weight": 1, "text": "Patients arrive before the chairs are moved. The study gains a surprising practical appendix.", "effects": ["region_flag +public_clinic", "region solidarity +2", "region danger -1", "collective +1"]}]},
+      {"text": "Join the evidence committee", "approach": "law", "outcomes": [{"weight": 1, "text": "You define treatment in seventeen careful paragraphs while the fever uses one.", "effects": ["money +8", "region danger +1"]}]},
+      {"text": "Secure medicine for the worst cases", "approach": "caution", "outcomes": [{"weight": 1, "text": "A few people recover. The council cites them as proof the system is working.", "effects": ["money -6", "hp +2", "region solidarity -1"]}]}
+    ]
+  },
+  {
+    "id": "r16_liberalism_social_compromise_01", "primary": "tavern", "theme": "liberalism", "locations": ["tavern"], "weight": 12,
+    "tags": ["liberalism", "antifascist", "absurd"], "family": "procedural_courage",
+    "text": "A neutral moderator seats fascists and their intended victims at equal ends of a debate table, then measures fairness by table length.",
+    "choices": [
+      {"text": "End the debate and escort the targets home", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Everyone vulnerable leaves safely. The moderator condemns the lack of productive stabbing.", "effects": ["region danger -1", "region solidarity +2", "collective +1"]}]},
+      {"text": "Argue within the rules", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "You win every point. The fascists keep the guest list.", "effects": ["stat cha +1", "region danger +1"]}]},
+      {"text": "Split the evening into two sessions", "approach": "caution", "outcomes": [{"weight": 1, "text": "Violence is postponed until the moderator can call it an unfortunate scheduling overlap.", "effects": ["region unrest -1", "region danger +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_liberalism_transit_backlash_01", "primary": "road", "theme": "liberalism", "locations": ["road"], "weight": 12,
+    "tags": ["liberalism", "refugees", "bureaucracy"], "family": "procedural_courage",
+    "text": "A border pilot program admits ten refugees, photographs them, and returns the next thousand to danger with a brochure about compassion.",
+    "choices": [
+      {"text": "Open an unregistered crossing", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Families cross by night. The brochure becomes kindling at the first safe camp.", "effects": ["region pressure +2", "region solidarity +2", "trait +wanted", "collective +1"]}]},
+      {"text": "Help select the official ten", "approach": "caution", "outcomes": [{"weight": 1, "text": "Ten live. Your criteria become a polite language for everyone left behind.", "effects": ["money +6", "region solidarity -1", "region unrest +1"]}]},
+      {"text": "Document every rejected name", "approach": "truth", "outcomes": [{"weight": 1, "text": "The list is longer than the border. Officials object that names create emotional bias toward people.", "effects": ["region solidarity +1", "rumor 100 The pilot program returned a thousand documented refugees to danger."]}]}
+    ]
+  },
+  {
+    "id": "r16_liberalism_wild_compromise_01", "primary": "forest", "theme": "liberalism", "locations": ["forest"], "weight": 12,
+    "tags": ["liberalism", "ecology", "land"], "family": "procedural_courage",
+    "text": "The logging council invites forest residents to a consultation after every tree has been marked, priced, and privately mourned.",
+    "choices": [
+      {"text": "Occupy the marked grove", "approach": "solidarity", "outcomes": [{"weight": 1, "text": "Axes stop. Consultation becomes audible once it can delay revenue.", "effects": ["region pollution -1", "region solidarity +2", "region_flag +commons", "collective +1"]}]},
+      {"text": "Negotiate a smaller clear-cut", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "Half the forest survives and is used in promotional drawings of the missing half.", "effects": ["region pollution +1", "region unrest -1"]}]},
+      {"text": "Submit a perfect objection", "approach": "law", "outcomes": [{"weight": 1, "text": "Your objection is accepted, archived, and pulped into tasteful stationery.", "effects": ["stat int +1", "region pollution +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_liberalism_high_legacy_01", "primary": "mountains", "theme": "liberalism", "locations": ["mountains"], "weight": 11,
+    "tags": ["liberalism", "danger", "bureaucracy"], "family": "procedural_courage",
+    "text": "An avalanche buries a village while officials debate whether snow qualifies as an external stakeholder or an aggressive weather actor.",
+    "choices": [
+      {"text": "Start digging with the villagers", "approach": "mercy", "check": {"stat": "str", "dc": 12}, "success": [{"weight": 1, "text": "The buried are found before the terminology. Nobody waits to be congratulated.", "effects": ["hp -2", "region danger -2", "region solidarity +2", "collective +1"]}], "fail": [{"weight": 1, "text": "You save three and fail to save more. The official report saves everyone by changing the denominator.", "effects": ["hp -5", "region solidarity +1"]}]},
+      {"text": "Coordinate the official response", "approach": "law", "outcomes": [{"weight": 1, "text": "Blankets arrive in spring with excellent signatures.", "effects": ["money +8", "region danger +1"]}]},
+      {"text": "Force the council uphill", "approach": "wit", "outcomes": [{"weight": 1, "text": "Policy becomes urgent when the meeting room begins making avalanche noises.", "effects": ["region danger -1", "region unrest +1", "stat cha +1"]}]}
+    ]
+  },
+  {
+    "id": "r16_liberalism_future_reckoning_01", "primary": "crash", "theme": "liberalism", "locations": ["crash"], "weight": 10,
+    "tags": ["liberalism", "future", "post_scarcity", "absurd"], "family": "procedural_courage",
+    "text": "A star federation's ethics computer refuses to rescue anyone until all rescuees accept the updated privacy policy. The planet has forty minutes left.",
+    "choices": [
+      {"text": "Bypass consent and rescue everyone", "approach": "mercy", "outcomes": [{"weight": 1, "text": "Millions survive and later sue successfully, which is an excellent problem for living people to have.", "effects": ["credits +8", "region solidarity +2", "collective +1"]}]},
+      {"text": "Read the policy aloud", "approach": "law", "outcomes": [{"weight": 1, "text": "Clause nine survives the planet and becomes the civilization's sole legal heir.", "effects": ["credits +4", "region solidarity -2"]}]},
+      {"text": "Ask for emergency verbal consent", "approach": "diplomacy", "outcomes": [{"weight": 1, "text": "A billion voices say yes at once. The computer requests clarification about punctuation.", "effects": ["stat cha +1", "region unrest +1", "region solidarity +1"]}]}
+    ]
+  }
+]

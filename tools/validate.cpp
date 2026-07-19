@@ -99,6 +99,8 @@ int main(int argc, char** argv) {
     json quirks = json::parse(readFile(assets + "/data/quirks.json"), nullptr, false);
     json traits = json::parse(readFile(assets + "/data/traits.json"), nullptr, false);
     json itemRecipes = json::parse(readFile(assets + "/data/recipes/items.json"), nullptr, false);
+    json scenarioTargets = json::parse(readFile(assets + "/data/scenario_targets.json"),
+                                       nullptr, false);
     if (items.is_discarded()) fail("items.json", "does not parse");
     if (prose.is_discarded()) fail("prose.json", "does not parse");
     if (lang.is_discarded()) fail("language.json", "does not parse");
@@ -106,6 +108,9 @@ int main(int argc, char** argv) {
     if (traits.is_discarded()) fail("traits.json", "does not parse");
     if (itemRecipes.is_discarded() || !itemRecipes.is_array())
         fail("recipes/items.json", "does not parse as an array");
+    if (scenarioTargets.is_discarded() || !scenarioTargets.is_object() ||
+        !scenarioTargets.contains("decks") || !scenarioTargets.contains("themes"))
+        fail("scenario_targets.json", "does not define deck and theme targets");
 
     // Events assemble from the manifest's per-deck files.
     json manifest = json::parse(readFile(assets + "/data/events/manifest.json"), nullptr, false);
@@ -242,6 +247,21 @@ int main(int argc, char** argv) {
     for (auto& e : events) {
         std::string id = e.value("id", "");
         std::set<std::string> slots;
+        if (e.contains("primary")) {
+            std::string primary = e.value("primary", "");
+            if (!scenarioTargets["decks"].contains(primary))
+                fail(id, "unknown primary deck: " + primary);
+            bool listed = primary == "special";
+            for (auto& location : e.value("locations", json::array()))
+                if (location.is_string() && location.get<std::string>() == primary)
+                    listed = true;
+            if (!listed) fail(id, "primary deck is not listed in locations: " + primary);
+        }
+        if (e.contains("theme")) {
+            std::string theme = e.value("theme", "");
+            if (!scenarioTargets["themes"].contains(theme))
+                fail(id, "unknown primary theme: " + theme);
+        }
         if (e.contains("tags") && !e["tags"].is_array()) fail(id, "tags must be an array");
         if (e.contains("slots"))
             for (auto& [name, q] : e["slots"].items()) {

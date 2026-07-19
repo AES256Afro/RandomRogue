@@ -153,6 +153,7 @@ int main(int argc, char** argv) {
     std::map<std::string, int> finishEvents;
     std::vector<int> deathDays;
     int finished = 0;
+    int exactRepeats = 0;
     long long goldAtEnd = 0;
     int dieBefore5 = 0;
 
@@ -169,6 +170,7 @@ int main(int argc, char** argv) {
         s.c.pack.push_back(items.make("rations", s.rng));
         s.c.pack.push_back(items.make(s.rng.chance(50) ? "rusty_sword" : "club", s.rng));
         deck.resetUsed();
+        std::set<std::string> shownThisLife;
 
         while (!s.c.dead && s.c.day < 60) {
             // travel
@@ -208,7 +210,8 @@ int main(int argc, char** argv) {
                 const Event* ev = nullptr;
                 for (int i = 0; i < (int)s.scheduled.size(); i++) {
                     if (s.scheduled[i].first <= s.c.day) {
-                        ev = deck.find(s.scheduled[i].second);
+                        const Event* candidate = deck.find(s.scheduled[i].second);
+                        if (candidate && !deck.wasUsed(candidate->id)) ev = candidate;
                         s.scheduled.erase(s.scheduled.begin() + i);
                         break;
                     }
@@ -232,6 +235,11 @@ int main(int argc, char** argv) {
 
                 // follow goto chains up to 5 hops
                 for (int hop = 0; hop < 5 && ev && !s.c.dead; hop++) {
+                    if (!shownThisLife.insert(ev->id).second) {
+                        exactRepeats++;
+                        break;
+                    }
+                    deck.markUsed(ev->id);
                     seenEvents[ev->id]++;
                     std::vector<int> eligible;
                     for (int ci = 0; ci < (int)ev->choices.size(); ci++)
@@ -312,6 +320,10 @@ int main(int argc, char** argv) {
                     }
                     if (s.c.dead && !s.finishedWell) killerEvents[ev->id]++;
                     ev = gotoId.empty() ? nullptr : deck.find(gotoId);
+                    if (ev && deck.wasUsed(ev->id)) {
+                        exactRepeats++;
+                        ev = nullptr;
+                    }
                 }
             }
         }
@@ -327,6 +339,7 @@ int main(int argc, char** argv) {
            (int)(100.0 * std::count(deathDays.begin(), deathDays.end(), 60) / runs));
     printf("completed lives (ascended/retired): %.1f%%\n", 100.0 * finished / runs);
     printf("avg gold at end: %lld\n", goldAtEnd / runs);
+    printf("exact card repeats inside one life: %d\n", exactRepeats);
 
     std::vector<std::pair<int, std::string>> killers;
     for (auto& [id, n] : killerEvents) killers.push_back({n, id});
@@ -364,5 +377,9 @@ int main(int argc, char** argv) {
         }
     if (!unreached) printf("       (none - every event fired at least once)\n");
     printf("\nevents seen: %d/%d\n", (int)seenEvents.size(), (int)allIds.size());
+    if (exactRepeats != 0) {
+        std::fprintf(stderr, "playtest failed: exact scenario ids repeated inside a life\n");
+        return 1;
+    }
     return 0;
 }
