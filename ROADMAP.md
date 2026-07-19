@@ -417,3 +417,25 @@ The audit's design program, executed:
 - **Worker hardening** - per-IP hourly write budgets (D1 ratelimit
   table, deployed) and control-character sanitization on all
   player-supplied strings before storage or MUD forwarding.
+
+---
+
+## Release 13 - Every Problem Has Neighbors
+
+- **Six connected stories** - thirty new cards form five-stage arcs about a
+  crooked inheritance, plague refugees, contagious trade, a false saint, a
+  guild schism, and a town that walks away from its taxes.
+- **NPC social webs** - living figures have deterministic family, rivalry,
+  employment, mentorship, debt, and confidant ties. Events can strengthen or
+  damage those links, and known ties appear in the Story Ledger.
+- **Regional chain reactions** - danger, unrest, plague, and prosperity cross
+  region borders each week. Refugees, trade booms, and spillover pressure can
+  emerge without the player standing in the affected region.
+- **Investigations with risk** - generated mysteries now track evidence,
+  doubt, suspects, accusations, trials, and verdict accuracy. A convincing
+  accusation can still name the wrong person.
+- **Director diagnostics** - F8 or Options opens a readable explanation of the
+  current card's score, family cooldown, context bonuses, and underused tags.
+- **Private balance tuning** - optional browser telemetry is aggregated at
+  ingestion in Cloudflare D1. It stores no name, seed, free text, address, or
+  individual play record, and can be switched off in Options.

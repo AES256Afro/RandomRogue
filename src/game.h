@@ -37,7 +37,7 @@ public:
 private:
     enum Screen { TITLE, CLASSPICK, AMBITION, TRAVEL, EVENT, OUTCOME, DEATH,
                   INVENTORY, INFO, VENDOR, WORLDMAP, CHRONICLE, SAGA, REPLAY,
-                  OPTIONS, CRAFT, JOURNAL };
+                  OPTIONS, CRAFT, JOURNAL, DIRECTOR };
 
     // A hired sword, a talking badger, a disgraced accountant (P5).
     struct Companion {
@@ -71,6 +71,11 @@ private:
         int affection = 0, grudge = 0, knowledge = 0;
         int lastSeen = 0;
     };
+    struct SocialTie {
+        int a = -1, b = -1;
+        int affinity = 0;
+        std::string kind;
+    };
     struct PendingConsequence {
         std::string eventId, source, summary;
         int dueDay = 0;
@@ -79,13 +84,14 @@ private:
     };
     struct RegionState {
         int prosperity = 0, danger = 0, unrest = 0;
+        int pressure = 0;
         std::set<std::string> flags;
         std::string description() const;
     };
     struct Mystery {
-        bool active = false, solved = false;
-        int culprit = -1, victim = -1, site = -1, artifact = -1;
-        int clues = 0;
+        bool active = false, solved = false, tried = false, correctVerdict = false;
+        int culprit = -1, victim = -1, site = -1, artifact = -1, decoy = -1;
+        int clues = 0, evidence = 0, doubt = 0, accused = -1;
         std::string title, secret, publicStory;
     };
 
@@ -137,12 +143,15 @@ private:
     void offerContract();
     void checkPurposes(); // ambition + contract completion
     void generateMystery();
+    void generateSocialWeb();
     void updateRegionState();
     void queueConsequence(int days, const std::string& eventId,
                           const std::string& summary);
     void activateDueConsequence();
     NpcRelation& relation(int figure);
     const NpcRelation* relationIfKnown(int figure) const;
+    const SocialTie* socialTieFor(int figure) const;
+    void recordTelemetry(int choice, int score, bool runEnd = false);
     void drawEvent(Vector2 mouse);
     void drawOutcome(Vector2 mouse);
     void drawDeath(Vector2 mouse);
@@ -157,6 +166,7 @@ private:
     void drawOptions(Vector2 mouse);
     void drawCraft(Vector2 mouse);
     void drawJournal(Vector2 mouse);
+    void drawDirector(Vector2 mouse);
     bool craftRecipe(const ItemRecipe& recipe);
     void drawIntro(Vector2 mouse); // first-run how-to cards (R7)
     // Shared worlds (R7): daily and weekly seeds and their board keys.
@@ -232,6 +242,9 @@ private:
     // Per-run NPC memory: chronicle figure index -> marks ("robbed", ...)
     std::map<int, std::set<std::string>> npcMarks_;
     std::map<int, NpcRelation> npcRelations_;
+    std::vector<SocialTie> socialTies_;
+    int slotSocialOther_ = -1;
+    int slotSuspect_ = -1;
     std::map<std::string, std::string> traitNames_; // id -> display name
     bool pendingShop_ = false;    // "shop" effect fired this outcome
     std::string forcedNextId_;    // "goto <id>" effect: chain to this event
@@ -241,6 +254,9 @@ private:
     int scheduledRegion_ = -1;
     std::vector<RegionState> regionStates_;
     Mystery mystery_;
+    int eventSerial_ = 0;
+    std::map<std::string, int> lastEventSerial_;
+    int currentDirectorScore_ = 100;
 
     // inventory / info
     Screen returnScreen_ = TRAVEL;

@@ -32,7 +32,10 @@ struct BotState {
     int foodEaten = 0;
     int contracts = 0; // completed contracts (career ladder)
     int clues = 0;
+    int evidence = 0, doubt = 0;
+    bool accused = false, tried = false, correctVerdict = false;
     bool mysterySolved = false;
+    std::vector<std::pair<int, std::string>> scheduled;
 };
 
 // A pared-down mirror of Game::evalCond — world conditions get coin flips.
@@ -62,9 +65,14 @@ static bool botCond(BotState& s, const std::string& cond) {
     if (a == "season") return s.rng.chance(25);
     if (a == "npc") return false;
     if (a == "npc_rel") return s.rng.chance(45);
+    if (a == "social_known" || a == "network") return s.rng.chance(65);
     if (a == "mystery_active") return !s.mysterySolved;
     if (a == "mystery_solved") return s.mysterySolved;
+    if (a == "mystery_tried") return s.tried;
+    if (a == "verdict_correct") return s.correctVerdict;
+    if (a == "accused") return s.accused;
     if (a == "region") return s.rng.chance(22);
+    if (a == "neighbor") return s.rng.chance(22);
     auto cmp = [&](int lhs) {
         int rhs = atoi(cc.c_str());
         if (b == ">") return lhs > rhs;
@@ -76,6 +84,8 @@ static bool botCond(BotState& s, const std::string& cond) {
     if (a == "rep") return cmp(0);
     if (a == "contracts") return cmp(s.contracts);
     if (a == "clues") return cmp(s.clues);
+    if (a == "evidence") return cmp(s.evidence);
+    if (a == "doubt") return cmp(s.doubt);
     if (a == "money") return cmp(s.c.money);
     if (a == "credits") return cmp(s.c.credits);
     if (a == "hp") return cmp(s.c.hp);
@@ -186,7 +196,14 @@ int main(int argc, char** argv) {
                 // a tried-set + attempt cap replaces the old auto-marking.
                 std::set<std::string> tried;
                 const Event* ev = nullptr;
-                for (int attempt = 0; attempt < 12; attempt++) {
+                for (int i = 0; i < (int)s.scheduled.size(); i++) {
+                    if (s.scheduled[i].first <= s.c.day) {
+                        ev = deck.find(s.scheduled[i].second);
+                        s.scheduled.erase(s.scheduled.begin() + i);
+                        break;
+                    }
+                }
+                for (int attempt = 0; !ev && attempt < 12; attempt++) {
                     ev = deck.draw(s.rng, useTag, &tried);
                     if (!ev && useTag != tag) { useTag = tag; continue; }
                     if (!ev && tag == "crash") { useTag = "dungeon"; continue; }
@@ -237,6 +254,12 @@ int main(int argc, char** argv) {
                         else if (verb == "loot") { std::string t; fs >> t; if ((int)s.c.pack.size() < s.c.capacity()) s.c.pack.push_back(items.loot(s.rng, t)); }
                         else if (verb == "removeitem") { std::string id; fs >> id; s.c.removeItem(id); }
                         else if (verb == "goto") { fs >> gotoId; }
+                        else if (verb == "schedule") {
+                            int days = 1; std::string target;
+                            fs >> days >> target;
+                            if (!target.empty())
+                                s.scheduled.push_back({s.c.day + std::max(1, days), target});
+                        }
                         // Taken contracts complete about half the time in
                         // real play; approximate the career ladder.
                         else if (verb == "contract") { if (s.rng.chance(50)) s.contracts++; }
@@ -244,6 +267,14 @@ int main(int argc, char** argv) {
                             int v = 1; fs >> v; s.clues = std::min(3, s.clues + v);
                         }
                         else if (verb == "mystery_solve") { s.mysterySolved = true; }
+                        else if (verb == "evidence") { int v = 0; fs >> v; s.evidence = std::max(0, s.evidence + v); }
+                        else if (verb == "doubt") { int v = 0; fs >> v; s.doubt = std::max(0, s.doubt + v); }
+                        else if (verb == "mystery_accuse") { s.accused = true; }
+                        else if (verb == "mystery_trial") {
+                            s.tried = true;
+                            s.correctVerdict = s.accused && s.evidence >= 2 && s.evidence > s.doubt;
+                            s.mysterySolved = s.correctVerdict;
+                        }
                         else if (verb == "die") { s.c.dead = true; }
                         else if (verb == "finish") { s.c.dead = true; s.finishedWell = true; finishEvents[ev->id]++; }
                     }

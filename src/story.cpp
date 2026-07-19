@@ -166,6 +166,47 @@ int StoryDirector::score(const Event& event, const StoryContext& ctx) const {
     return result;
 }
 
+std::vector<std::string> StoryDirector::explain(const Event& event,
+                                                const StoryContext& ctx) const {
+    std::vector<std::string> lines;
+    const std::string family = familyFor(event);
+    const std::vector<std::string> tags = tagsFor(event);
+    lines.push_back("CARD " + event.id + "  SCORE " +
+                    std::to_string(score(event, ctx)) + "%");
+    lines.push_back("FAMILY " + family + "  RECENT " +
+                    std::to_string(recentCount(recentFamilies_, family, 8)));
+    std::string tagLine = "TAGS";
+    for (const std::string& tag : tags) tagLine += " " + tag;
+    lines.push_back(tagLine);
+
+    std::string reasons = "CONTEXT";
+    bool any = false;
+    auto add = [&](const std::string& tag, bool active) {
+        if (active && std::find(tags.begin(), tags.end(), tag) != tags.end()) {
+            reasons += " +" + tag;
+            any = true;
+        }
+    };
+    add("relationship", ctx.knownNpc);
+    add("quest", ctx.quest);
+    add("artifact", ctx.artifact);
+    add("war", ctx.war);
+    add("plague", ctx.plague);
+    add("weather", ctx.weather != "clear");
+    add("mystery", ctx.mystery);
+    add("companion", ctx.companion);
+    if (!any) reasons += " neutral";
+    lines.push_back(reasons);
+
+    int heat = 0;
+    for (const std::string& tag : tags)
+        if (!isLocationTag(tag)) heat += recentCount(recentTags_, tag, 14);
+    lines.push_back("COOLDOWN HEAT " + std::to_string(heat) +
+                    "  EXACT RECENT " +
+                    std::to_string(recentCount(recentIds_, event.id, 20)));
+    return lines;
+}
+
 void StoryDirector::record(const Event& event, const Choice* choice, int day) {
     (void)day;
     pushBounded(recentIds_, event.id, 20);

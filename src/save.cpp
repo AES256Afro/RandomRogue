@@ -28,6 +28,7 @@ std::string Profile::toJson() const {
               {"volume", volume},
               {"musicOff", musicOff},
               {"reducedMotion", reducedMotion},
+              {"analyticsOff", analyticsOff},
               {"seenIntro", seenIntro}};
     return j.dump();
 }
@@ -52,6 +53,7 @@ Profile Profile::fromJson(const std::string& text) {
     p.volume = j.value("volume", 2);
     p.musicOff = j.value("musicOff", true);
     p.reducedMotion = j.value("reducedMotion", false);
+    p.analyticsOff = j.value("analyticsOff", false);
     p.seenIntro = j.value("seenIntro", false);
     return p;
 }

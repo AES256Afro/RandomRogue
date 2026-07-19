@@ -193,6 +193,41 @@ export default {
       return new Response(JSON.stringify({ boards: rs.results || [], deadliest_sites: sites.results || [] }),
         { headers: Object.assign({ "content-type": "application/json" }, CORS) });
     }
+    // Privacy-safe balance telemetry. The Worker immediately aggregates each
+    // batch. No player name, seed, free text, address, or individual row is
+    // stored. Players can disable this from the game options.
+    if (p === "__telemetry" && req.method === "POST") {
+      let body;
+      try { body = await readJson(req); }
+      catch (e) { return new Response("bad", { status: 400, headers: CORS }); }
+      const incoming = Array.isArray(body.events) ? body.events.slice(0, 32) : [];
+      const statements = [];
+      for (const value of incoming) {
+        if (!value || value.v !== 1) continue;
+        const event = String(value.event || "").replace(/[^a-zA-Z0-9_:-]/g, "").slice(0, 64);
+        const deck = String(value.deck || "unknown").replace(/[^a-zA-Z0-9_:-]/g, "").slice(0, 24);
+        const choice = Math.max(-1, Math.min(8, parseInt(value.choice) || 0));
+        const day = Math.max(0, Math.min(999, parseInt(value.day) || 0));
+        const dayBand = Math.floor(day / 10) * 10;
+        const score = Math.max(0, Math.min(300, parseInt(value.score) || 0));
+        const gap = Math.max(0, Math.min(999, parseInt(value.gap) || 0));
+        const end = value.end ? 1 : 0;
+        if (!event) continue;
+        statements.push(env.DB.prepare(
+          "INSERT INTO telemetry_rollup (event,choice,deck,day_band,n,score_total,gap_total,run_ends) VALUES (?,?,?,?,1,?,?,?) " +
+          "ON CONFLICT(event,choice,deck,day_band) DO UPDATE SET n=n+1,score_total=score_total+excluded.score_total,gap_total=gap_total+excluded.gap_total,run_ends=run_ends+excluded.run_ends"
+        ).bind(event, choice, deck, dayBand, score, gap, end));
+      }
+      if (statements.length) await env.DB.batch(statements);
+      return new Response("ok", { headers: CORS });
+    }
+    if (p === "__telemetry_stats") {
+      const rs = await env.DB.prepare(
+        "SELECT event, choice, deck, SUM(n) AS n, ROUND(1.0*SUM(score_total)/SUM(n),1) AS avg_score, ROUND(1.0*SUM(gap_total)/SUM(n),1) AS avg_gap, SUM(run_ends) AS run_ends FROM telemetry_rollup GROUP BY event,choice,deck ORDER BY n DESC LIMIT 250"
+      ).all();
+      return new Response(JSON.stringify(rs.results || []),
+        { headers: Object.assign({ "content-type": "application/json" }, CORS) });
+    }
     if (p === "") p = "index.html";
     if (p === "play" || p === "play/") p = "play/index.html";
     const type = FILES[p];

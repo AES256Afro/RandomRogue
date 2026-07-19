@@ -30,6 +30,8 @@ public:
     // Returns a percentage multiplier. 100 is the authored weight, 25 is a
     // strong cooldown, and values above 100 reward relevance or novelty.
     int score(const Event& event, const StoryContext& ctx) const;
+    std::vector<std::string> explain(const Event& event,
+                                     const StoryContext& ctx) const;
     void record(const Event& event, const Choice* choice, int day);
 
     static std::vector<std::string> tagsFor(const Event& event);

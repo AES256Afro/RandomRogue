@@ -24,6 +24,7 @@ struct Profile {
     int volume = 2;
     bool musicOff = true;
     bool reducedMotion = false;
+    bool analyticsOff = false;
     bool seenIntro = false;
 
     std::string toJson() const;
