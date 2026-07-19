@@ -21,6 +21,20 @@ deck charged against the 1,000-card location quota even when the event can
 appear in several places. `theme` is one of the twenty keys in
 `assets/data/scenario_targets.json`. The analyzer reports every remaining gap.
 
+Release 17 remasters the foundation deck. `tools/remaster_legacy.mjs` assigns
+the old cards a theme and primary deck, preserves the original hook, appends a
+short material coda, infers missing choice approaches, and gives otherwise
+isolated outcomes a small regional consequence. The tool is idempotent and
+may be rerun after legacy editing:
+
+```powershell
+node tools/remaster_legacy.mjs assets
+```
+
+Hand-authored `primary`, `theme`, and choice approaches remain authoritative
+for Release 16 and later files. Foundational cards with an especially specific
+premise are pinned in the script's `exactThemes` table.
+
 ## Required pass
 
 1. Give every choice a different political or personal strategy.
@@ -33,6 +47,10 @@ appear in several places. `theme` is one of the twenty keys in
 6. Do not use an em dash.
 7. A recurring arc beat must receive a new event id. Exact ids are once per
    life, including scheduled consequences and explicit `goto` chains.
+8. Absurdist humor targets power, vanity, rules, and bad tools. People facing
+   oppression or extermination are never the punchline.
+9. Monsters and nonhuman minds have personhood unless a specific story
+   establishes otherwise. Their bodies are not an automatic license to kill.
 
 Run these gates before committing:
 

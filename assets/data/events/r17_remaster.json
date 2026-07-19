@@ -1,0 +1,1512 @@
+[
+  {
+    "id": "r17_shift_bell_trial",
+    "primary": "city",
+    "theme": "state_power",
+    "locations": [
+      "city"
+    ],
+    "weight": 14,
+    "tags": [
+      "absurd",
+      "institution",
+      "state_power",
+      "political"
+    ],
+    "family": "r17_workplace_democracy",
+    "text": "The brassworks shift bell is suing the workers for making it ring during a strike. The bell is represented by the owner's barrister, who keeps asking the court to recognize his client as management.",
+    "choices": [
+      {
+        "text": "Help the workers elect a new schedule",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "Every shift elects a timekeeper. The bell is retained as an employee, denied supervisory authority, and given Tuesdays off for polishing.",
+            "effects": [
+              "region solidarity +2",
+              "region_flag +worker_coop",
+              "collective +1",
+              "rep +4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Cross-examine the bell",
+        "approach": "wit",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 1,
+            "text": "You establish that the bell has never entered the factory, touched a hammer, or experienced time. The workers win on standing and excellent heckling.",
+            "effects": [
+              "region solidarity +1",
+              "stat int +1",
+              "rep +3"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 1,
+            "text": "The barrister rings his client whenever you object. The judge mistakes volume for precedent.",
+            "effects": [
+              "region pressure +1",
+              "stat int -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Accept management's quiet settlement",
+        "approach": "pragmatic",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The workers receive one paid holiday. The bell receives a corner office and begins scheduling mandatory silence.",
+            "effects": [
+              "money +15",
+              "region solidarity -1",
+              "region pressure +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_ornamental_tenants",
+    "primary": "city",
+    "theme": "housing",
+    "locations": [
+      "city"
+    ],
+    "weight": 13,
+    "tags": [
+      "absurd",
+      "housing",
+      "political"
+    ],
+    "family": "r17_tenant_power",
+    "text": "An absentee count has reclassified the tenants of Crooked Court as ornamental houseplants. Rent now includes a sunlight surcharge, a watering fee, and a ban on unauthorized photosynthesis.",
+    "choices": [
+      {
+        "text": "Organize the entire building as a greenhouse",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The tenants register one enormous cooperative fern. The count cannot evict it without admitting plants deserve hearings, which would ruin his garden business.",
+            "effects": [
+              "region rent -2",
+              "region solidarity +2",
+              "region_flag +tenant_union",
+              "collective +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Prune the count's ownership records",
+        "approach": "wit",
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 1,
+            "text": "By morning the deed lists every tenant as a root. The registry clerk approves it because the botanical seal is lovely.",
+            "effects": [
+              "region rent -1",
+              "region solidarity +1",
+              "stat dex +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 1,
+            "text": "You are caught with the shears and billed for administrative topiary.",
+            "effects": [
+              "money -8",
+              "region pressure +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Pay one family's surcharge",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "One family stays this month. The count cites your payment as proof that the system contains generosity.",
+            "effects": [
+              "money -10",
+              "region rent +1",
+              "region solidarity +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_parade_of_order",
+    "primary": "road",
+    "theme": "antifascist",
+    "locations": [
+      "road",
+      "city"
+    ],
+    "weight": 12,
+    "tags": [
+      "danger",
+      "antifascist",
+      "political"
+    ],
+    "family": "r17_resist_hierarchy",
+    "text": "The League of Extremely Natural Hierarchy has a permit to march through the market. Its uniforms were paid for by the granary owners, whose names appear nowhere except every invoice.",
+    "choices": [
+      {
+        "text": "Build a broad blockade with the market workers",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "Dockers, bakers, clerks, liberals with nervous signs, and three grandmothers hold the street. The league discovers that history can be stopped by people who disagree about nearly everything else.",
+            "effects": [
+              "region solidarity +3",
+              "region unrest +1",
+              "region_flag +antifascist_front",
+              "collective +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Redirect the parade into the manure festival",
+        "approach": "wit",
+        "check": {
+          "stat": "cha",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 1,
+            "text": "The league salutes six decorated carts before realizing the decorations are agricultural. Recruitment suffers. The cabbages remain politically neutral.",
+            "effects": [
+              "region pressure -1",
+              "region solidarity +1",
+              "rep +5"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 1,
+            "text": "The league notices the detour. You escape under a ceremonial turnip while the guards arrest the map.",
+            "effects": [
+              "hp -3",
+              "trait +wanted",
+              "region unrest +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Expose the granary owners behind the uniforms",
+        "approach": "inquiry",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The invoices circulate by supper. Respectable sponsors resign from organizations they insist they never joined.",
+            "effects": [
+              "rumor 95 The granary owners financed the hierarchy league.",
+              "region solidarity +1",
+              "region pressure -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_tabletop_armistice",
+    "primary": "tavern",
+    "theme": "food",
+    "locations": [
+      "tavern"
+    ],
+    "weight": 13,
+    "tags": [
+      "absurd",
+      "food",
+      "political"
+    ],
+    "family": "r17_war_refusal",
+    "text": "Two generals occupy opposite ends of a tavern table and refuse to surrender the salt. Between them, conscripted servers move mugs through a disputed neutral zone marked in gravy.",
+    "choices": [
+      {
+        "text": "Organize the soldiers and servers to fraternize",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The rank and file share the salt, then the bread, then several opinions about going home. Both generals declare a tactical shortage of troops.",
+            "effects": [
+              "region solidarity +2",
+              "region unrest +1",
+              "region_flag +deserter_route",
+              "collective +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Steal both sets of battle orders",
+        "approach": "wit",
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 1,
+            "text": "Tomorrow's offensive is delayed because each army receives instructions to seize the dessert cart.",
+            "effects": [
+              "region danger -2",
+              "stat dex +1",
+              "rep +3"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 1,
+            "text": "You steal the wine list. It is still the most humane document on the table.",
+            "effects": [
+              "money -3",
+              "region danger +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Negotiate peace for the salt cellar only",
+        "approach": "diplomacy",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The salt is demilitarized. The villages remain scheduled for dawn, but everyone praises the achievable scope.",
+            "effects": [
+              "region danger -1",
+              "region pressure +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_registry_of_names",
+    "primary": "road",
+    "theme": "liberalism",
+    "locations": [
+      "road",
+      "coast"
+    ],
+    "weight": 11,
+    "tags": [
+      "history",
+      "liberalism",
+      "political"
+    ],
+    "family": "r17_survival_testimony",
+    "text": "Survivors reach the border carrying a handwritten registry of everyone from their valley. The clerk says the names cannot be entered because official ink for that valley was discontinued when officials decided the valley was empty.",
+    "choices": [
+      {
+        "text": "Copy every name into the public archive",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "Scribes work through the night. The state can still deny the crime, but now it must deny each person individually and in triplicate.",
+            "effects": [
+              "region solidarity +2",
+              "rumor 100 The valley survivors placed every stolen name in the public archive.",
+              "collective +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Guide the families around the checkpoint",
+        "approach": "mercy",
+        "check": {
+          "stat": "wis",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 1,
+            "text": "Everyone crosses by an old shepherd path. The registry arrives folded inside a child's coat.",
+            "effects": [
+              "region solidarity +1",
+              "region pressure -1",
+              "rep +6"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 1,
+            "text": "The patrol finds the path. You buy enough time for most families, and not enough time to pretend most means all.",
+            "effects": [
+              "hp -5",
+              "trait +wanted",
+              "region pressure +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Force the clerk to read the registry aloud",
+        "approach": "defiance",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The queue listens until sunset. Procedure does not become justice, but it can no longer claim ignorance.",
+            "effects": [
+              "region unrest +1",
+              "region solidarity +1",
+              "stat cha +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_private_weather",
+    "primary": "mountains",
+    "theme": "kindness",
+    "locations": [
+      "mountains",
+      "city"
+    ],
+    "weight": 13,
+    "tags": [
+      "pollution",
+      "kindness",
+      "political"
+    ],
+    "family": "r17_clean_air",
+    "text": "A refinery has begun selling weather forecasts for the smoke cloud it produces. Premium subscribers learn which streets will cough tomorrow. Everyone else is advised to enjoy the mystery.",
+    "choices": [
+      {
+        "text": "Help residents shut the smokestacks",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The furnaces cool. Workers keep the maintenance lights on and begin converting the yard to clean power before the owner returns from someplace with better air.",
+            "effects": [
+              "region pollution -3",
+              "region solidarity +2",
+              "region_flag +clean_power",
+              "collective +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Publish the forecast for free",
+        "approach": "inquiry",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 1,
+            "text": "The subscription collapses. So does the fiction that uncertainty, rather than poison, was the problem.",
+            "effects": [
+              "region pollution -1",
+              "region solidarity +1",
+              "stat int +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 1,
+            "text": "You transpose east and west. The refinery cites your mistake as peer review of smoke.",
+            "effects": [
+              "region pollution +1",
+              "rep -2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Buy tomorrow's cleanest route",
+        "approach": "caution",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "You breathe easier for one day. The forecast calls your purchase consumer-led environmentalism.",
+            "effects": [
+              "money -6",
+              "hp +2",
+              "region pollution +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_patients_picket",
+    "primary": "city",
+    "theme": "union",
+    "locations": [
+      "city"
+    ],
+    "weight": 13,
+    "tags": [
+      "union",
+      "political"
+    ],
+    "family": "r17_public_care",
+    "text": "The clinic staff are striking for medicine, sleep, and enough chairs. The patients join the line because the clinic owner has repossessed the waiting room while several people were still waiting in it.",
+    "choices": [
+      {
+        "text": "Turn the picket into a street clinic",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "Nurses treat patients, patients guard the supplies, and neighbors bring chairs. The owner calls this theft of a business model.",
+            "effects": [
+              "hp +5",
+              "region solidarity +2",
+              "region_flag +public_clinic",
+              "collective +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Buy the clinic one emergency supply crate",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The crate saves lives this week. The owner adds Emergency Generosity to next month's bill.",
+            "effects": [
+              "money -12",
+              "hp +4",
+              "region pressure +1",
+              "region solidarity +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Steal the owner's chair collection",
+        "approach": "wit",
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 1,
+            "text": "The waiting room becomes magnificent. One velvet chair is diagnosed with moral emptiness and placed near a window.",
+            "effects": [
+              "region solidarity +1",
+              "rep +4",
+              "stat dex +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 1,
+            "text": "A chair catches you. It has wheels and the instincts of a guard dog.",
+            "effects": [
+              "hp -3",
+              "trait +wanted"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_bread_futures_dragon",
+    "primary": "city",
+    "theme": "food",
+    "locations": [
+      "city",
+      "tavern"
+    ],
+    "weight": 13,
+    "tags": [
+      "absurd",
+      "food",
+      "political"
+    ],
+    "family": "r17_food_commons",
+    "text": "A dragon has cornered the bread-futures market. It owns no bread, only contracts promising bread later, and sleeps on them because paper is cooler than gold and less likely to attract heroes.",
+    "choices": [
+      {
+        "text": "Open the granaries with the bakers",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "Bread reaches the streets. The dragon's contracts become napkins, which is their first practical use.",
+            "effects": [
+              "region supply +3",
+              "region solidarity +2",
+              "region_flag +food_commons",
+              "collective +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Convince the dragon to eat its portfolio",
+        "approach": "wit",
+        "check": {
+          "stat": "cha",
+          "dc": 14
+        },
+        "success": [
+          {
+            "weight": 1,
+            "text": "You describe the contracts as artisanal fiber. The dragon consumes a controlling interest and develops excellent regularity.",
+            "effects": [
+              "region supply +2",
+              "stat cha +1",
+              "rep +4"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 1,
+            "text": "The dragon recognizes financial advice and charges a consultation fee.",
+            "effects": [
+              "money -10",
+              "region supply -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Buy one profitable loaf contract",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "Your paper loaf appreciates beautifully while an actual bakery closes within smelling distance.",
+            "effects": [
+              "money +18",
+              "region supply -2",
+              "region solidarity -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_walking_museum_door",
+    "primary": "city",
+    "theme": "science",
+    "locations": [
+      "city",
+      "road",
+      "dungeon"
+    ],
+    "weight": 12,
+    "tags": [
+      "history",
+      "science",
+      "political"
+    ],
+    "family": "r17_return_stolen_history",
+    "text": "The museum's prized ceremonial door has unhinged itself and started walking home. The curator follows with a net, shouting that the door cannot leave because it represents universal heritage.",
+    "choices": [
+      {
+        "text": "Escort the door back to its community",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The door arrives to a crowd that remembers the frame. It opens onto a house the museum catalog described as extinct.",
+            "effects": [
+              "region solidarity +2",
+              "rumor 95 The museum door walked home and found its family.",
+              "collective +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Make the curator prove ownership to the door",
+        "approach": "wit",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 1,
+            "text": "The deed says acquired during a period of educational smoke. The door slams once, conclusively.",
+            "effects": [
+              "region pressure -1",
+              "stat int +1",
+              "rep +4"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 1,
+            "text": "The curator produces twelve forms and one portrait of himself near the door. Procedure becomes briefly impassable.",
+            "effects": [
+              "region pressure +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sell tickets to the escape",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The crowd cheers the door and pays you. The museum trademarks Walking Home before sunset.",
+            "effects": [
+              "money +16",
+              "region solidarity -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_cooperative_funeral",
+    "primary": "tavern",
+    "theme": "care",
+    "locations": [
+      "tavern",
+      "city"
+    ],
+    "weight": 13,
+    "tags": [
+      "care",
+      "political"
+    ],
+    "family": "r17_vulture_finance",
+    "text": "Vulture financiers attend the funeral of a failed cooperative carrying appraisal hooks. They plan to buy the ovens, sell the recipes, and lease the workers their own aprons.",
+    "choices": [
+      {
+        "text": "Help the workers buy everything for one coin",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "Every financier bids against an empty chair while the workers purchase the lot under the category sentimental debris.",
+            "effects": [
+              "money -1",
+              "region solidarity +2",
+              "region_flag +worker_coop",
+              "collective +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Auction the financiers' own contracts",
+        "approach": "wit",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 1,
+            "text": "Their agreements allow transfer of distressed assets. You establish that the financiers are visibly distressed.",
+            "effects": [
+              "money +8",
+              "region solidarity +1",
+              "stat int +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 1,
+            "text": "The fine print bites. Literally. One contract has teeth and a preferred creditor.",
+            "effects": [
+              "hp -3",
+              "money -5"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Take a private fee to value the ovens low",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "You are paid well. The ovens are sold cheaply to a holding company that owns the person who paid you.",
+            "effects": [
+              "money +22",
+              "region solidarity -2",
+              "region pressure +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_soup_meter",
+    "primary": "crash",
+    "theme": "post_scarcity",
+    "locations": [
+      "crash",
+      "city"
+    ],
+    "weight": 13,
+    "tags": [
+      "absurd",
+      "post_scarcity",
+      "political"
+    ],
+    "family": "r17_abundance",
+    "text": "A starship fabricator can make unlimited soup. A merchant has attached a meter that charges for heat, bowl depth, aroma, and exposure to the concept of soup.",
+    "choices": [
+      {
+        "text": "Remove the meter and publish the repair manual",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The machine feeds the district. Its first free bowl tastes faintly of tomato and unauthorized possibility.",
+            "effects": [
+              "region supply +3",
+              "region solidarity +2",
+              "region_flag +public_fabricator",
+              "collective +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask the machine who installed scarcity",
+        "approach": "inquiry",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "It displays seventeen centuries of ownership changes and one recurring surname. The merchant develops an urgent appointment elsewhere.",
+            "effects": [
+              "rumor 90 The soup meter's owners have been selling artificial scarcity for centuries.",
+              "stat int +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Buy exclusive rights to the smell",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "You become wealthy whenever somebody nearby remembers lunch. The hungry are offered nose plugs on credit.",
+            "effects": [
+              "money +24",
+              "region supply -2",
+              "region solidarity -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_semicolon_emergency",
+    "primary": "city",
+    "theme": "liberalism",
+    "locations": [
+      "city"
+    ],
+    "weight": 13,
+    "tags": [
+      "absurd",
+      "liberalism",
+      "political"
+    ],
+    "family": "r17_procedure_and_courage",
+    "text": "Floodwater reaches the council chamber while the Emergency Umbrella Subcommittee debates whether its resolution requires a semicolon. The umbrella manufacturers have asked everyone to avoid divisive drainage.",
+    "choices": [
+      {
+        "text": "Open the drains without unanimous consent",
+        "approach": "defiance",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The district drains. The minutes record a grave breach of procedure and, in smaller type, several thousand saved homes.",
+            "effects": [
+              "region danger -2",
+              "region solidarity +1",
+              "region pressure +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Build a majority for immediate action",
+        "approach": "diplomacy",
+        "check": {
+          "stat": "cha",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 1,
+            "text": "Enough cautious members become briefly brave together. The resolution passes with the semicolon abstaining.",
+            "effects": [
+              "region danger -2",
+              "region solidarity +2",
+              "stat cha +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 1,
+            "text": "You win the argument after the water wins the ground floor.",
+            "effects": [
+              "region danger +1",
+              "region pressure +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Accept a pilot drain in the wealthy quarter",
+        "approach": "pragmatic",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The pilot succeeds magnificently by moving the flood to everyone excluded from the pilot.",
+            "effects": [
+              "region prosperity +1",
+              "region danger +1",
+              "region solidarity -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_shadow_assembly",
+    "primary": "city",
+    "theme": "state_power",
+    "locations": [
+      "city"
+    ],
+    "weight": 12,
+    "tags": [
+      "absurd",
+      "state_power",
+      "political"
+    ],
+    "family": "r17_policing",
+    "text": "A guard has arrested a dockworker's shadow for assembling without its body. The dockworker must report to work at noon, when the evidence becomes impossible to conceal.",
+    "choices": [
+      {
+        "text": "Gather everyone's shadows at the jail",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "By sunset the cells contain half the city and none of the people. The guards release the evidence because it refuses meals.",
+            "effects": [
+              "region solidarity +2",
+              "region pressure -1",
+              "collective +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Argue that the shadow lacks legal personhood",
+        "approach": "law",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 1,
+            "text": "The court releases it and immediately taxes it as property. Freedom arrives with an invoice.",
+            "effects": [
+              "region pressure -1",
+              "stat int +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 1,
+            "text": "The judge grants personhood solely for sentencing. The shadow looks darker somehow.",
+            "effects": [
+              "region pressure +1",
+              "rep -2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Bribe the guard at sundown",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The shadow slips away. The guard starts a private detention service for silhouettes.",
+            "effects": [
+              "money -7",
+              "region pressure +1",
+              "region solidarity -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_monster_local",
+    "primary": "dungeon",
+    "theme": "labor",
+    "locations": [
+      "dungeon",
+      "tavern"
+    ],
+    "weight": 13,
+    "tags": [
+      "monster",
+      "absurd",
+      "labor",
+      "political"
+    ],
+    "family": "r17_dungeon_union",
+    "text": "The dungeon monsters have formed Local 404. Their demands include safer lairs, predictable hero hours, and an end to treasure chests impersonating nonunion furniture. A mimic serves as shop steward and several chairs look nervous.",
+    "choices": [
+      {
+        "text": "Recognize the local and bargain honestly",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "Adventuring continues by appointment. Casualties fall, treasure is audited, and mimics receive meal breaks that are also just meals.",
+            "effects": [
+              "region danger -2",
+              "region solidarity +2",
+              "region_flag +monster_union",
+              "collective +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Help write the grievance against heroes",
+        "approach": "inquiry",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The document is persuasive until the gelatinous cube signs across every page at once.",
+            "effects": [
+              "region solidarity +1",
+              "stat int +1",
+              "rep +3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Offer management a replacement monster crew",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The replacement monsters were told this was theater work. They join the line after the first spear trap.",
+            "effects": [
+              "money +17",
+              "region unrest +2",
+              "region solidarity -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_barricade_rehearsal",
+    "primary": "city",
+    "theme": "revolution",
+    "locations": [
+      "city",
+      "road"
+    ],
+    "weight": 12,
+    "tags": [
+      "history",
+      "revolution",
+      "political"
+    ],
+    "family": "r17_try_again",
+    "text": "Veterans rehearse last year's failed uprising as street theater. The cardboard barricade is better organized than the original, and the audience has begun handing the actors real tools.",
+    "choices": [
+      {
+        "text": "Turn the rehearsal into an assembly",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The crowd studies the failure without worshiping it. By dusk there is no revolution, only committees, supply lists, and the frightening beginning of capacity.",
+            "effects": [
+              "region solidarity +3",
+              "region unrest +1",
+              "region_flag +popular_assembly",
+              "collective +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Play the official who changes sides too late",
+        "approach": "wit",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "Your performance receives uneasy laughter from six actual officials. Two stay afterward to ask when their scene begins.",
+            "effects": [
+              "region solidarity +1",
+              "stat cha +1",
+              "rumor 80 The failed uprising returned as a rehearsal for the next attempt."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sell commemorative cobblestones",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The stones sell out. The veterans discover their old barricade is now a premium lifestyle material.",
+            "effects": [
+              "money +20",
+              "region solidarity -1",
+              "region pressure +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_constitution_at_sea",
+    "primary": "sea",
+    "theme": "freedom",
+    "locations": [
+      "sea",
+      "coast"
+    ],
+    "weight": 13,
+    "tags": [
+      "naval",
+      "freedom",
+      "political"
+    ],
+    "family": "r17_free_ship",
+    "text": "A free ship rewrites its constitution during a storm. The captain wants emergency powers, the crew wants emergency soup, and the mainmast has submitted a written objection by falling across the ballot box.",
+    "choices": [
+      {
+        "text": "Give every worker one vote, including the cook",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The cook's storm plan wins by a landslide and a ladle. The ship survives under temporary soup authority, which expires exactly on time.",
+            "effects": [
+              "region solidarity +2",
+              "region_flag +free_ship",
+              "collective +1",
+              "hp +3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Grant the captain power until the mast is upright",
+        "approach": "pragmatic",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The mast rises. The captain argues the emergency continues because the horizon remains suspiciously wet.",
+            "effects": [
+              "region danger -1",
+              "region pressure +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Let the mast cast the deciding vote",
+        "approach": "wit",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "Its position is interpreted as a firm objection to concentrated power and weak rope maintenance.",
+            "effects": [
+              "region solidarity +1",
+              "stat wis +1",
+              "rep +3"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_consent_of_the_cryptid",
+    "primary": "forest",
+    "theme": "colonialism",
+    "locations": [
+      "forest",
+      "swamp"
+    ],
+    "weight": 11,
+    "tags": [
+      "cryptid",
+      "colonialism",
+      "political"
+    ],
+    "family": "r17_humane_exploration",
+    "text": "An impossible six-legged walking hedge steps from the reeds and asks why discovery always means the discoverer owns what was discovered. Behind you, three natural philosophers quietly hide a measuring cage.",
+    "choices": [
+      {
+        "text": "Listen before naming anything",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "It speaks about seasons, fear, and the exhausting human need to put brass labels on neighbors. Then it teaches you where the poisoned water begins.",
+            "effects": [
+              "region pollution -1",
+              "region solidarity +2",
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Publish its account with its consent",
+        "approach": "inquiry",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 1,
+            "text": "The paper lists the hedge as coauthor. Academia objects until it answers every objection in pollen.",
+            "effects": [
+              "region solidarity +1",
+              "stat int +1",
+              "rep +5"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 1,
+            "text": "You accidentally call it a specimen in the introduction. It edits the word into colleague and circles it six times.",
+            "effects": [
+              "stat int -1",
+              "region solidarity +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Help the philosophers close the cage",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The hedge walks through the bars, which were designed by experts in things that do not walk through bars. It remembers you accurately.",
+            "effects": [
+              "money +10",
+              "region solidarity -2",
+              "rep -5"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_demon_and_mother",
+    "primary": "tavern",
+    "theme": "care",
+    "locations": [
+      "tavern",
+      "city"
+    ],
+    "weight": 13,
+    "tags": [
+      "monster",
+      "care",
+      "political"
+    ],
+    "family": "r17_personhood",
+    "text": "A mother has brought soup to the demon her child accidentally summoned. She asks whether it is warm enough, whether the abyss is drafty, and why the summoners have not provided a chair. The demon, eight feet of flame and embarrassment, admits this is the first time anyone asked.",
+    "choices": [
+      {
+        "text": "Seat them both at the workers' table",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The demon learns that personhood includes soup, boundaries, and helping stack chairs. By midnight it is organizing summoned labor against unpaid eternity.",
+            "effects": [
+              "region solidarity +2",
+              "region_flag +summoned_local",
+              "collective +1",
+              "hp +3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Help the demon file a grievance against its summoners",
+        "approach": "law",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 1,
+            "text": "The contract promised terror but omitted travel, meals, and fireproof seating. The demon wins back pay and sends its mother a thank-you card despite having met her once.",
+            "effects": [
+              "money +8",
+              "region solidarity +1",
+              "stat int +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 1,
+            "text": "The court rules infernal beings are equipment. The mother asks whether the judge would say that to its face. The judge schedules reconsideration.",
+            "effects": [
+              "region pressure +1",
+              "rep +2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sell holy water to the frightened patrons",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The demon checks the label and identifies ordinary tap water. Its mother buys one anyway because you look underfed, which is devastating.",
+            "effects": [
+              "money +6",
+              "region solidarity -1",
+              "stat wis -1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_ministry_denial",
+    "primary": "city",
+    "theme": "propaganda",
+    "locations": [
+      "city",
+      "tavern"
+    ],
+    "weight": 13,
+    "tags": [
+      "absurd",
+      "propaganda",
+      "political"
+    ],
+    "family": "r17_manufactured_consent",
+    "text": "The Ministry of Public Reassurance distributes pamphlets denying that the Ministry of Public Reassurance exists. Each pamphlet includes office hours, a donation envelope, and directions to the denial desk.",
+    "choices": [
+      {
+        "text": "Print workers' testimony on the blank backs",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The official lie travels through town carrying unofficial truth. The ministry recalls every pamphlet, thereby confirming its address.",
+            "effects": [
+              "region solidarity +2",
+              "rumor 95 The denial pamphlets carried workers' testimony on the reverse.",
+              "collective +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Visit the denial desk and request proof",
+        "approach": "inquiry",
+        "check": {
+          "stat": "cha",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 1,
+            "text": "The clerk stamps your form MINISTRY ABSENT using the ministry seal. You applaud until the queue understands.",
+            "effects": [
+              "region pressure -1",
+              "stat cha +1",
+              "rep +4"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 1,
+            "text": "You are redirected to an office that denies the denial desk. It has better chairs.",
+            "effects": [
+              "region pressure +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Take the ministry's advertising contract",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "You are paid to increase public awareness of institutional nonexistence. Recognition reaches ninety percent.",
+            "effects": [
+              "money +19",
+              "region solidarity -1",
+              "region pressure +1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r17_unauthorized_bridge",
+    "primary": "road",
+    "theme": "care",
+    "locations": [
+      "road",
+      "forest"
+    ],
+    "weight": 14,
+    "tags": [
+      "mutual_aid",
+      "care",
+      "political"
+    ],
+    "family": "r17_stubborn_kindness",
+    "text": "Villagers repair a washed-out bridge for travelers they will never meet. The toll company orders them to stop performing unauthorized rescue because free passage could create expectations.",
+    "choices": [
+      {
+        "text": "Carry stone with the villagers",
+        "approach": "solidarity",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "The bridge opens at dusk. Nobody earns a profit, hundreds cross safely, and the company records a catastrophic failure of incentives.",
+            "effects": [
+              "region danger -2",
+              "region solidarity +3",
+              "region_flag +free_bridge",
+              "collective +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Buy the company enough time to look away",
+        "approach": "wit",
+        "check": {
+          "stat": "cha",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 1,
+            "text": "You schedule a ribbon-cutting seminar upstream. By the time management returns, the bridge has become a fact.",
+            "effects": [
+              "money -4",
+              "region solidarity +2",
+              "stat cha +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 1,
+            "text": "Management arrives early and confiscates the ribbon. The villagers keep building with less festive materials.",
+            "effects": [
+              "money -4",
+              "region pressure +1",
+              "region solidarity +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Pay the toll for the next ten strangers",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 1,
+            "text": "Ten people cross. The company raises the toll after observing demand. Your kindness mattered, and the trap learned from it.",
+            "effects": [
+              "money -10",
+              "region solidarity +1",
+              "region rent +1"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

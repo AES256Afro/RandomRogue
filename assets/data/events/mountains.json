@@ -1,197 +1,659 @@
 [
   {
     "id": "mountain_rope_bridge",
-    "locations": ["mountains"],
+    "locations": [
+      "mountains"
+    ],
     "weight": 14,
-    "text": "The bridge is two ropes and a rumor of planks, strung across a gorge that the locals call 'the Shortcut' with a completely straight face. The wind plays it like an instrument. On the far side: the trail continues, hours saved. Below: geology, at speed.",
+    "text": "The bridge is two ropes and a rumor of planks, strung across a gorge that the locals call 'the Shortcut' with a completely straight face. The wind plays it like an instrument. On the far side: the trail continues, hours saved. Below: geology, at speed.\n\nPeople remember \"Mountain Rope Bridge\" differently, but the material fact remains: the cage is legal, the escape is necessary, and the locksmith prefers cash.",
     "choices": [
-      { "text": "Cross it", "check": { "stat": "dex", "dc": 12 },
+      {
+        "text": "Cross it",
+        "check": {
+          "stat": "dex",
+          "dc": 12
+        },
         "success": [
-          { "weight": 100, "text": "You cross the way the goatherds do - eyes on the rope, weight low, a conversation with the wind instead of an argument. The far side arrives underfoot like a reward. Hours saved, legend earned, knees honest about the whole thing.", "effects": ["stat dex +1", "hp +1"] }
+          {
+            "weight": 100,
+            "text": "You cross the way the goatherds do - eyes on the rope, weight low, a conversation with the wind instead of an argument. The far side arrives underfoot like a reward. Hours saved, legend earned, knees honest about the whole thing.",
+            "effects": [
+              "stat dex +1",
+              "hp +1"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "A plank - THE plank, probably load-bearing since before you were born - departs. You do not, quite, but the rope tax on your palms and the scream tax on your dignity are both collected in full. You finish the crossing at a crawl.", "effects": ["hp -5"] }
-        ] },
-      { "text": "Secure it first", "requires": { "item": "rope" },
+          {
+            "weight": 100,
+            "text": "A plank - THE plank, probably load-bearing since before you were born - departs. You do not, quite, but the rope tax on your palms and the scream tax on your dignity are both collected in full. You finish the crossing at a crawl.",
+            "effects": [
+              "hp -5"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Secure it first",
+        "requires": {
+          "item": "rope"
+        },
         "outcomes": [
-          { "weight": 100, "text": "Your rope, their bridge, twenty minutes of knots your hands remember from somewhere. You cross like a professional, and you leave the repairs behind: the next traveler will never know whose knots saved them. That's the good kind of anonymous.", "effects": ["removeitem rope", "stat wis +1", "rep +3"] }
-        ] },
-      { "text": "Take the long way around",
+          {
+            "weight": 100,
+            "text": "Your rope, their bridge, twenty minutes of knots your hands remember from somewhere. You cross like a professional, and you leave the repairs behind: the next traveler will never know whose knots saved them. That's the good kind of anonymous.",
+            "effects": [
+              "removeitem rope",
+              "stat wis +1",
+              "rep +3"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Take the long way around",
         "outcomes": [
-          { "weight": 70, "text": "The long way is long. It is also spectacular: a hidden valley, a waterfall with a rainbow standing in it like a doorman, and a raspberry thicket that delays you a further, excellent hour.", "effects": ["hp +3"] },
-          { "weight": 30, "text": "The long way is long, and then it is longer, and then it is scree. You arrive at the far trailhead at dusk, having burned the daylight and most of your patience.", "effects": ["hp -2"] }
-        ] }
-    ]
+          {
+            "weight": 70,
+            "text": "The long way is long. It is also spectacular: a hidden valley, a waterfall with a rainbow standing in it like a doorman, and a raspberry thicket that delays you a further, excellent hour.",
+            "effects": [
+              "hp +3"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "The long way is long, and then it is longer, and then it is scree. You arrive at the far trailhead at dusk, having burned the daylight and most of your patience.",
+            "effects": [
+              "hp -2"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "mountains",
+    "theme": "freedom",
+    "tags": [
+      "freedom",
+      "voice_8"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "mountain_monastery_silence",
-    "locations": ["mountains"],
+    "locations": [
+      "mountains"
+    ],
     "weight": 13,
-    "text": "A monastery grown into the cliff face, reachable by nine hundred steps that someone counted so you don't have to (there's a sign). The order keeps a vow of silence, which makes the monk waving semaphore flags at you from the gate genuinely impressive. The flags spell: 'SOUP?'",
+    "text": "A monastery grown into the cliff face, reachable by nine hundred steps that someone counted so you don't have to (there's a sign). The order keeps a vow of silence, which makes the monk waving semaphore flags at you from the gate genuinely impressive. The flags spell: 'SOUP?'\n\nThe file titled \"Mountain Monastery Silence\" makes the arrangement plain: a local grandmother has invited the haunting to tea and learned it takes three sugars.",
     "choices": [
-      { "text": "Accept the soup",
+      {
+        "text": "Accept the soup",
         "outcomes": [
-          { "weight": 100, "text": "The soup is transcendent. The silence, once you stop fighting it, is better. You eat with forty monks in a hall where the only sound is spoons and wind, and something in your shoulders that's been clenched since the last dungeon lets go entirely.", "effects": ["hp +5", "stat wis +1"] }
-        ] },
-      { "text": "Study in their library", "check": { "stat": "int", "dc": 12 },
+          {
+            "weight": 100,
+            "text": "The soup is transcendent. The silence, once you stop fighting it, is better. You eat with forty monks in a hall where the only sound is spoons and wind, and something in your shoulders that's been clenched since the last dungeon lets go entirely.",
+            "effects": [
+              "hp +5",
+              "stat wis +1"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Study in their library",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
         "success": [
-          { "weight": 100, "text": "The librarian communicates entirely in eyebrow, and their collection of old-tongue primers is the finest in any mountain range. You copy declensions until your hand cramps. The eyebrow, at your departure, is approving.", "effects": ["learn 5", "stat int +1"] }
+          {
+            "weight": 100,
+            "text": "The librarian communicates entirely in eyebrow, and their collection of old-tongue primers is the finest in any mountain range. You copy declensions until your hand cramps. The eyebrow, at your departure, is approving.",
+            "effects": [
+              "learn 5",
+              "stat int +1"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "You knock over exactly one (1) inkwell in the silent scriptorium, and the sound is the loudest thing that has happened here in a decade. Forty monks turn as one. The eyebrow. THE EYEBROW.", "effects": ["learn 1", "rep -2"] }
-        ] },
-      { "text": "Ask, via gestures, what they're all avoiding saying",
+          {
+            "weight": 100,
+            "text": "You knock over exactly one (1) inkwell in the silent scriptorium, and the sound is the loudest thing that has happened here in a decade. Forty monks turn as one. The eyebrow. THE EYEBROW.",
+            "effects": [
+              "learn 1",
+              "rep -2"
+            ]
+          }
+        ],
+        "approach": "inquiry"
+      },
+      {
+        "text": "Ask, via gestures, what they're all avoiding saying",
         "outcomes": [
-          { "weight": 55, "text": "A very old monk takes you to a window and points down at the world - the roads, the wars, the smoke of distant arguments - then puts a finger to his lips. It is the most complete answer you have ever received to anything.", "effects": ["stat wis +2"] },
-          { "weight": 45, "text": "The monks exchange a look that manages, in total silence, to communicate 'this one again.' You are given soup and directions, in that order, with gentle firmness.", "effects": ["hp +2"] }
-        ] }
-    ]
+          {
+            "weight": 55,
+            "text": "A very old monk takes you to a window and points down at the world - the roads, the wars, the smoke of distant arguments - then puts a finger to his lips. It is the most complete answer you have ever received to anything.",
+            "effects": [
+              "stat wis +2"
+            ]
+          },
+          {
+            "weight": 45,
+            "text": "The monks exchange a look that manages, in total silence, to communicate 'this one again.' You are given soup and directions, in that order, with gentle firmness.",
+            "effects": [
+              "hp +2"
+            ]
+          }
+        ],
+        "approach": "caution"
+      }
+    ],
+    "primary": "mountains",
+    "theme": "faith",
+    "tags": [
+      "faith",
+      "voice_0"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "mountain_echo_market",
-    "locations": ["mountains"],
+    "locations": [
+      "mountains"
+    ],
     "weight": 12,
-    "text": "The pass widens into a natural amphitheater where, once a season, the echo traders set up. Their stock: sounds. A dead grandmother's laugh in a corked jar. The exact roar of last year's avalanche. Your own name, called by someone who loved you, going cheap because provenance is hard to verify.",
+    "text": "The pass widens into a natural amphitheater where, once a season, the echo traders set up. Their stock: sounds. A dead grandmother's laugh in a corked jar. The exact roar of last year's avalanche. Your own name, called by someone who loved you, going cheap because provenance is hard to verify.\n\nA plaque may eventually misdescribe \"Mountain Echo Market\". For now, the useful truth is that the instrument is precise, the theory is provisional, and the sponsor wants a slogan.",
     "choices": [
-      { "text": "Buy the avalanche", "requires": { "money": 8 },
+      {
+        "text": "Buy the avalanche",
+        "requires": {
+          "money": 8
+        },
         "outcomes": [
-          { "weight": 100, "text": "The jar is heavier than sound should be. 'One use,' says the trader. 'Point it away from yourself.' You have, you realize, purchased a weapon, a doorbell, and a story, and you're not yet sure which you'll need first.", "effects": ["money -8", "loot fine"] }
-        ] },
-      { "text": "Buy your own name", "requires": { "money": 5 },
+          {
+            "weight": 100,
+            "text": "The jar is heavier than sound should be. 'One use,' says the trader. 'Point it away from yourself.' You have, you realize, purchased a weapon, a doorbell, and a story, and you're not yet sure which you'll need first.",
+            "effects": [
+              "money -8",
+              "loot fine",
+              "region solidarity -1"
+            ]
+          }
+        ],
+        "approach": "greed"
+      },
+      {
+        "text": "Buy your own name",
+        "requires": {
+          "money": 5
+        },
         "outcomes": [
-          { "weight": 100, "text": "You uncork it that night, alone, on the high trail. It's real. You know the voice. You sit with it for a long time, and in the morning you walk lighter, the way people do when something unfinished finishes.", "effects": ["money -5", "hp +4", "stat wis +1"] }
-        ] },
-      { "text": "Sell them a sound", "check": { "stat": "cha", "dc": 12 },
+          {
+            "weight": 100,
+            "text": "You uncork it that night, alone, on the high trail. It's real. You know the voice. You sit with it for a long time, and in the morning you walk lighter, the way people do when something unfinished finishes.",
+            "effects": [
+              "money -5",
+              "hp +4",
+              "stat wis +1",
+              "region solidarity -1"
+            ]
+          }
+        ],
+        "approach": "greed"
+      },
+      {
+        "text": "Sell them a sound",
+        "check": {
+          "stat": "cha",
+          "dc": 12
+        },
         "success": [
-          { "weight": 100, "text": "You give them your best battle cry - the real one, the one from the worst day. The trader's eyes widen as it goes into the jar. 'Authentic terror-joy,' she whispers. 'Collector's grade.' She pays like it too.", "effects": ["money +11", "stat cha +1"] }
+          {
+            "weight": 100,
+            "text": "You give them your best battle cry - the real one, the one from the worst day. The trader's eyes widen as it goes into the jar. 'Authentic terror-joy,' she whispers. 'Collector's grade.' She pays like it too.",
+            "effects": [
+              "money +11",
+              "stat cha +1",
+              "region solidarity -1"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "Your battle cry, in a jar, played back, sounds like a startled goose. The traders are too professional to laugh. The jars are not: three of them replay it, giggling in dead voices, as you leave.", "effects": ["stat cha -1"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "Your battle cry, in a jar, played back, sounds like a startled goose. The traders are too professional to laugh. The jars are not: three of them replay it, giggling in dead voices, as you leave.",
+            "effects": [
+              "stat cha -1",
+              "region solidarity -1"
+            ]
+          }
+        ],
+        "approach": "greed"
+      }
+    ],
+    "primary": "mountains",
+    "theme": "science",
+    "tags": [
+      "science",
+      "voice_10"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "mountain_cartographer",
-    "locations": ["mountains"],
+    "locations": [
+      "mountains"
+    ],
     "weight": 12,
-    "text": "On the summit ridge, a wind-burned cartographer sketches the world below with frozen fingers and total contentment. Her map is beautiful and wrong: whole regions moved, rivers arguing with themselves. 'Not wrong,' she corrects, before you say it. 'EARLY. The land's still deciding.'",
+    "text": "On the summit ridge, a wind-burned cartographer sketches the world below with frozen fingers and total contentment. Her map is beautiful and wrong: whole regions moved, rivers arguing with themselves. 'Not wrong,' she corrects, before you say it. 'EARLY. The land's still deciding.'\n\nPeople remember \"Mountain Cartographer\" differently, but the material fact remains: a collector calls this preservation because theft sounds unprofessional on a grant request.",
     "choices": [
-      { "text": "Compare notes on where you've walked",
+      {
+        "text": "Compare notes on where you've walked",
         "outcomes": [
-          { "weight": 100, "text": "You trade geography for an hour - your ground-truth for her long view. She corrects two of your assumptions that would have cost you days, and you correct one of hers that would have cost some future traveler a river crossing. Cartography is just gossip about rocks.", "effects": ["stat int +1", "stat wis +1"] }
-        ] },
-      { "text": "Buy a copy of the early map", "requires": { "money": 7 },
+          {
+            "weight": 100,
+            "text": "You trade geography for an hour - your ground-truth for her long view. She corrects two of your assumptions that would have cost you days, and you correct one of hers that would have cost some future traveler a river crossing. Cartography is just gossip about rocks.",
+            "effects": [
+              "stat int +1",
+              "stat wis +1"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Buy a copy of the early map",
+        "requires": {
+          "money": 7
+        },
         "outcomes": [
-          { "weight": 60, "text": "The map is wrong about everything except one thing: a pass nobody else marks, because it isn't there yet in most weathers. In the right week, it will save your life. She circles the right week.", "effects": ["money -7", "stat wis +2"] },
-          { "weight": 40, "text": "The map is a magnificent object and a navigational war crime. You will treasure it, frame it, and never once follow it.", "effects": ["money -7", "stat cha +1"] }
-        ] },
-      { "text": "Ask what she's really looking for", "check": { "stat": "wis", "dc": 13 },
+          {
+            "weight": 60,
+            "text": "The map is wrong about everything except one thing: a pass nobody else marks, because it isn't there yet in most weathers. In the right week, it will save your life. She circles the right week.",
+            "effects": [
+              "money -7",
+              "stat wis +2",
+              "region solidarity -1"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "The map is a magnificent object and a navigational war crime. You will treasure it, frame it, and never once follow it.",
+            "effects": [
+              "money -7",
+              "stat cha +1",
+              "region solidarity -1"
+            ]
+          }
+        ],
+        "approach": "greed"
+      },
+      {
+        "text": "Ask what she's really looking for",
+        "check": {
+          "stat": "wis",
+          "dc": 13
+        },
         "success": [
-          { "weight": 100, "text": "A long silence. Then she taps a blank spot in the middle of her map - the one region she's never managed to draw, because every time she looks at it she forgets what she saw. 'THAT,' she says. You look. You look away. You have already forgotten. You are, both of you, delighted and terrified.", "effects": ["stat wis +1", "stat int +1"] }
+          {
+            "weight": 100,
+            "text": "A long silence. Then she taps a blank spot in the middle of her map - the one region she's never managed to draw, because every time she looks at it she forgets what she saw. 'THAT,' she says. You look. You look away. You have already forgotten. You are, both of you, delighted and terrified.",
+            "effects": [
+              "stat wis +1",
+              "stat int +1"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "'A moment's peace,' she says pointedly, and returns to her inks. Fair.", "effects": [] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "'A moment's peace,' she says pointedly, and returns to her inks. Fair.",
+            "effects": []
+          }
+        ],
+        "approach": "inquiry"
+      }
+    ],
+    "primary": "mountains",
+    "theme": "colonialism",
+    "tags": [
+      "colonialism",
+      "voice_8"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "mountain_avalanche_debt",
-    "locations": ["mountains"],
+    "locations": [
+      "mountains"
+    ],
     "weight": 12,
-    "text": "The slope above the trail is loaded - fresh snow on old crust, the whole mathematics of it wrong. And halfway across the exposure, small and stupid and directly in the runout zone: a pack mule, tangled in its own lead, belonging to nobody in sight.",
+    "text": "The slope above the trail is loaded - fresh snow on old crust, the whole mathematics of it wrong. And halfway across the exposure, small and stupid and directly in the runout zone: a pack mule, tangled in its own lead, belonging to nobody in sight.\n\nThe paperwork around \"Mountain Avalanche Debt\" avoids its central fact: an investor has purchased the problem, removed everything useful, and listed the remainder as growth.",
     "choices": [
-      { "text": "Go get the mule", "check": { "stat": "dex", "dc": 13 },
+      {
+        "text": "Go get the mule",
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
         "success": [
-          { "weight": 100, "text": "You cross the runout like a prayer with footsteps, cut the lead, and walk the mule out on your own held breath. The slope holds. The mule, at the trailhead, presents you with the saddlebags as though this had been the arrangement all along.", "effects": ["money +9", "loot common", "stat dex +1"] }
+          {
+            "weight": 100,
+            "text": "You cross the runout like a prayer with footsteps, cut the lead, and walk the mule out on your own held breath. The slope holds. The mule, at the trailhead, presents you with the saddlebags as though this had been the arrangement all along.",
+            "effects": [
+              "money +9",
+              "loot common",
+              "stat dex +1"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "The slope releases - small, as avalanches go, which is like being bitten by a small whale. You and the mule are excavated by your own adrenaline, snow-packed, alive, and bonded for life. The mule follows you for two days. You do not discuss it.", "effects": ["hp -6", "stat con +1"] }
-        ] },
-      { "text": "Trigger the slide first, from safety", "check": { "stat": "int", "dc": 12 },
+          {
+            "weight": 100,
+            "text": "The slope releases - small, as avalanches go, which is like being bitten by a small whale. You and the mule are excavated by your own adrenaline, snow-packed, alive, and bonded for life. The mule follows you for two days. You do not discuss it.",
+            "effects": [
+              "hp -6",
+              "stat con +1"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Trigger the slide first, from safety",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
         "success": [
-          { "weight": 100, "text": "One well-thrown rock at the crown line, and the slope pays its debt on schedule, safely, while you and the mule watch from the ridge like critics. The trail below is buried; the mule is not; you are a genius and the mule agrees.", "effects": ["stat int +1", "money +6"] }
+          {
+            "weight": 100,
+            "text": "One well-thrown rock at the crown line, and the slope pays its debt on schedule, safely, while you and the mule watch from the ridge like critics. The trail below is buried; the mule is not; you are a genius and the mule agrees.",
+            "effects": [
+              "stat int +1",
+              "money +6"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "Your rock triggers nothing. Your NEXT rock triggers everything, including a personal introduction between your shoulder and a tree. The mule, self-rescued, finds you afterward and stands over you with an expression of profound reevaluation.", "effects": ["hp -5"] }
-        ] },
-      { "text": "The mule knew the risks",
+          {
+            "weight": 100,
+            "text": "Your rock triggers nothing. Your NEXT rock triggers everything, including a personal introduction between your shoulder and a tree. The mule, self-rescued, finds you afterward and stands over you with an expression of profound reevaluation.",
+            "effects": [
+              "hp -5"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "The mule knew the risks",
         "outcomes": [
-          { "weight": 100, "text": "You walk on. The slope, in fact, holds all day - the mule frees itself at dusk and trots past your camp without a glance, radiating judgment. Word of this somehow reaches the next village before you do.", "effects": ["rep -3"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "You walk on. The slope, in fact, holds all day - the mule frees itself at dusk and trots past your camp without a glance, radiating judgment. Word of this somehow reaches the next village before you do.",
+            "effects": [
+              "rep -3"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "mountains",
+    "theme": "capital",
+    "tags": [
+      "capital",
+      "voice_3"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "mountain_giant_stairs",
-    "locations": ["mountains"],
+    "locations": [
+      "mountains"
+    ],
     "weight": 11,
-    "slots": { "rumor": "chronicle_random" },
-    "text": "The trail becomes stairs. Each step is four feet tall, cut for legs the world doesn't make anymore. They climb the mountain's shoulder in a dead-straight line with the confidence of public works, and halfway up, graffiti in letters you could lie down in: \"{rumor}\"",
+    "slots": {
+      "rumor": "chronicle_random"
+    },
+    "text": "The trail becomes stairs. Each step is four feet tall, cut for legs the world doesn't make anymore. They climb the mountain's shoulder in a dead-straight line with the confidence of public works, and halfway up, graffiti in letters you could lie down in: \"{rumor}\"\n\nA plaque may eventually misdescribe \"Mountain Giant Stairs\". For now, the useful truth is that knowledge has advanced faster than the committee responsible for approving knowledge.",
     "choices": [
-      { "text": "Climb them", "check": { "stat": "con", "dc": 12 },
+      {
+        "text": "Climb them",
+        "check": {
+          "stat": "con",
+          "dc": 12
+        },
         "success": [
-          { "weight": 100, "text": "Four feet at a time, two hundred times, and at the top: the landing. A viewpoint built for someone who wanted to look at the whole world at once, and today, for the price of your burning legs, it's yours. In the corner of the landing, small in a giant's pocket-corner: someone's dropped coin purse, giant-sized.", "effects": ["money +13", "stat con +1"] }
+          {
+            "weight": 100,
+            "text": "Four feet at a time, two hundred times, and at the top: the landing. A viewpoint built for someone who wanted to look at the whole world at once, and today, for the price of your burning legs, it's yours. In the corner of the landing, small in a giant's pocket-corner: someone's dropped coin purse, giant-sized.",
+            "effects": [
+              "money +13",
+              "stat con +1"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "Step one hundred and something, your legs unionize. You descend with the specific gait of the humbled and take the switchbacks like everyone else.", "effects": ["hp -3"] }
-        ] },
-      { "text": "Study the stonework", "check": { "stat": "int", "dc": 12 },
+          {
+            "weight": 100,
+            "text": "Step one hundred and something, your legs unionize. You descend with the specific gait of the humbled and take the switchbacks like everyone else.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Study the stonework",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
         "success": [
-          { "weight": 100, "text": "The tool marks are wrong for chisels and right for THUMBNAILS. The joints have no mortar and need none. You take rubbings of the mason's marks - old tongue, giant dialect - and somewhere a scholar's whole career just got made.", "effects": ["learn 3", "money +7"] }
+          {
+            "weight": 100,
+            "text": "The tool marks are wrong for chisels and right for THUMBNAILS. The joints have no mortar and need none. You take rubbings of the mason's marks - old tongue, giant dialect - and somewhere a scholar's whole career just got made.",
+            "effects": [
+              "learn 3",
+              "money +7"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "While you're nose-deep in a joint line, a marmot in the gap - who has clearly done this before - achieves your rations in a single fluid motion. The stonework remains inscrutable. The marmot remains fed.", "effects": ["removeitem rations"] }
-        ] },
-      { "text": "Camp on a step",
+          {
+            "weight": 100,
+            "text": "While you're nose-deep in a joint line, a marmot in the gap - who has clearly done this before - achieves your rations in a single fluid motion. The stonework remains inscrutable. The marmot remains fed.",
+            "effects": [
+              "removeitem rations"
+            ]
+          }
+        ],
+        "approach": "inquiry"
+      },
+      {
+        "text": "Camp on a step",
         "outcomes": [
-          { "weight": 100, "text": "You sleep on stone cut by hands the size of your bedroll, sheltered from the wind by a single stair. All night the mountain hums at a pitch you feel in your teeth - not threatening. More like a lullaby scaled for larger children. You wake enormous-hearted.", "effects": ["hp +4"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "You sleep on stone cut by hands the size of your bedroll, sheltered from the wind by a single stair. All night the mountain hums at a pitch you feel in your teeth - not threatening. More like a lullaby scaled for larger children. You wake enormous-hearted.",
+            "effects": [
+              "hp +4"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "mountains",
+    "theme": "science",
+    "tags": [
+      "science",
+      "voice_10"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "mountain_ice_cache",
-    "locations": ["mountains"],
+    "locations": [
+      "mountains"
+    ],
     "weight": 11,
-    "text": "Blue glacier ice, and in it, a yard deep, a supply cache: crates, a banner gone stiff, the neat sad shape of an expedition that stopped here and became geography. The ice preserves everything, including the question of whether this is salvage or grave-robbing.",
+    "text": "Blue glacier ice, and in it, a yard deep, a supply cache: crates, a banner gone stiff, the neat sad shape of an expedition that stopped here and became geography. The ice preserves everything, including the question of whether this is salvage or grave-robbing.\n\nA plaque may eventually misdescribe \"Mountain Ice Cache\". For now, the useful truth is that an empire left ruins, debts, and a heroic plaque describing only the ruins.",
     "choices": [
-      { "text": "Cut it out carefully", "check": { "stat": "con", "dc": 13 },
+      {
+        "text": "Cut it out carefully",
+        "check": {
+          "stat": "con",
+          "dc": 13
+        },
         "success": [
-          { "weight": 100, "text": "Half a day of chopping, breath like an engine, and the ice gives up its holdings: preserved rations, sound rope, a strongbox with the expedition's pay. You stack a cairn over the rest and carry their banner down to the valley, where someone will still remember the colors.", "effects": ["money +15", "item rations", "rep +4"] }
+          {
+            "weight": 100,
+            "text": "Half a day of chopping, breath like an engine, and the ice gives up its holdings: preserved rations, sound rope, a strongbox with the expedition's pay. You stack a cairn over the rest and carry their banner down to the valley, where someone will still remember the colors.",
+            "effects": [
+              "money +15",
+              "item rations",
+              "rep +4"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "The ice fights back - it has held this cache for a century and has developed opinions. A shelf calves off above you as a formal warning. You retreat with numb hands and the strong sense of having been escorted out.", "effects": ["hp -4"] }
-        ] },
-      { "text": "Take only the banner",
+          {
+            "weight": 100,
+            "text": "The ice fights back - it has held this cache for a century and has developed opinions. A shelf calves off above you as a formal warning. You retreat with numb hands and the strong sense of having been escorted out.",
+            "effects": [
+              "hp -4"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Take only the banner",
         "outcomes": [
-          { "weight": 100, "text": "The colors come free of the ice like the mountain letting out a breath. In the valley, an old woman goes white at the sight of it: her grandfather's company. The reward she presses on you is not large, but the look on her face is wealth.", "effects": ["money +8", "rep +5", "stat wis +1"] }
-        ] },
-      { "text": "Leave the ice its dead",
+          {
+            "weight": 100,
+            "text": "The colors come free of the ice like the mountain letting out a breath. In the valley, an old woman goes white at the sight of it: her grandfather's company. The reward she presses on you is not large, but the look on her face is wealth.",
+            "effects": [
+              "money +8",
+              "rep +5",
+              "stat wis +1"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Leave the ice its dead",
         "outcomes": [
-          { "weight": 100, "text": "Some archives shouldn't be opened just because you have the tools. You note the location for the guild, salute the banner through the blue, and move on. The mountain, which was listening, arranges easy weather for your descent.", "effects": ["trait +blessed", "stat wis +1"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "Some archives shouldn't be opened just because you have the tools. You note the location for the guild, salute the banner through the blue, and move on. The mountain, which was listening, arranges easy weather for your descent.",
+            "effects": [
+              "trait +blessed",
+              "stat wis +1"
+            ]
+          }
+        ],
+        "approach": "caution"
+      }
+    ],
+    "primary": "mountains",
+    "theme": "colonialism",
+    "tags": [
+      "colonialism",
+      "voice_10"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "mountain_thin_air_visions",
-    "locations": ["mountains"],
+    "locations": [
+      "mountains"
+    ],
     "weight": 10,
-    "slots": { "god": "god" },
-    "text": "Above the last trees, the air goes thin and honest. Each breath buys less. And at the cairn marking the pass's high point, the light does something the light shouldn't, and you are - suddenly, undeniably - not alone. The presence introduces itself the way mountains do: by being enormous nearby. It is {god}, or the altitude. Possibly both.",
+    "slots": {
+      "god": "god"
+    },
+    "text": "Above the last trees, the air goes thin and honest. Each breath buys less. And at the cairn marking the pass's high point, the light does something the light shouldn't, and you are - suddenly, undeniably - not alone. The presence introduces itself the way mountains do: by being enormous nearby. It is {god}, or the altitude. Possibly both.\n\nThe file titled \"Mountain Thin Air Visions\" makes the arrangement plain: a local grandmother has invited the haunting to tea and learned it takes three sugars.",
     "choices": [
-      { "text": "Kneel and listen",
+      {
+        "text": "Kneel and listen",
         "outcomes": [
-          { "weight": 100, "text": "What you hear isn't words. It's the mountain's opinion of you, delivered whole: unflattering in places, fair throughout, and ending on something that in a smaller being would be encouragement. You descend feeling audited and approved.", "effects": ["stat wis +2"] }
-        ] },
-      { "text": "Ask for something concrete", "check": { "stat": "cha", "dc": 14 },
+          {
+            "weight": 100,
+            "text": "What you hear isn't words. It's the mountain's opinion of you, delivered whole: unflattering in places, fair throughout, and ending on something that in a smaller being would be encouragement. You descend feeling audited and approved.",
+            "effects": [
+              "stat wis +2",
+              "region solidarity +1"
+            ]
+          }
+        ],
+        "approach": "mercy"
+      },
+      {
+        "text": "Ask for something concrete",
+        "check": {
+          "stat": "cha",
+          "dc": 14
+        },
         "success": [
-          { "weight": 100, "text": "The presence considers your request with tectonic patience - then the cairn shifts, and under the base stone: an offering someone left for exactly this moment, generations ago, on divine layaway. You are the delivery it was waiting for.", "effects": ["loot fine", "stat cha +1"] }
+          {
+            "weight": 100,
+            "text": "The presence considers your request with tectonic patience - then the cairn shifts, and under the base stone: an offering someone left for exactly this moment, generations ago, on divine layaway. You are the delivery it was waiting for.",
+            "effects": [
+              "loot fine",
+              "stat cha +1"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "Asking a mountain for favors, in the thin air, out loud, alone. The presence withdraws with the particular silence of a door being gently closed, and the altitude presents its invoice all at once.", "effects": ["hp -3"] }
-        ] },
-      { "text": "It's the altitude. Descend",
+          {
+            "weight": 100,
+            "text": "Asking a mountain for favors, in the thin air, out loud, alone. The presence withdraws with the particular silence of a door being gently closed, and the altitude presents its invoice all at once.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ],
+        "approach": "inquiry"
+      },
+      {
+        "text": "It's the altitude. Descend",
         "outcomes": [
-          { "weight": 100, "text": "Probably the altitude. Almost certainly. You descend carefully, breathing better with every switchback, and by the trees you've nearly convinced yourself - except that your pack is one apple heavier than it was, and you didn't buy apples.", "effects": ["item bread", "stat con +1"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "Probably the altitude. Almost certainly. You descend carefully, breathing better with every switchback, and by the trees you've nearly convinced yourself - except that your pack is one apple heavier than it was, and you didn't buy apples.",
+            "effects": [
+              "item bread",
+              "stat con +1"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "mountains",
+    "theme": "faith",
+    "tags": [
+      "faith",
+      "voice_0"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   }
 ]

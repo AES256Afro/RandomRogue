@@ -143,7 +143,7 @@ int main(int argc, char** argv) {
     std::set<std::string> grammarKeys;
     for (auto& [k, v] : prose.items()) grammarKeys.insert(k);
 
-    std::set<std::string> eventIds, gotoTargets, scheduledTargets;
+    std::set<std::string> eventIds, gotoTargets, scheduledTargets, remasterCodas;
     for (auto& e : events) {
         std::string id = e.value("id", "");
         if (!eventIds.insert(id).second) fail(id, "duplicate event id");
@@ -224,7 +224,10 @@ int main(int argc, char** argv) {
         if (!arr.is_array() || arr.empty()) { fail(id, "empty outcome list"); return; }
         bool hasDefault = false;
         for (auto& o : arr) {
-            checkTokens(id, o.value("text", ""), slots);
+            std::string outcomeText = o.value("text", "");
+            checkTokens(id, outcomeText, slots);
+            if (outcomeText.find("\xE2\x80\x94") != std::string::npos)
+                fail(id, "em dash is not allowed in outcome text");
             checkEffects(id, o.value("effects", json::array()));
             if (o.contains("when")) {
                 checkWhenList(id, o["when"]);
@@ -247,7 +250,9 @@ int main(int argc, char** argv) {
     for (auto& e : events) {
         std::string id = e.value("id", "");
         std::set<std::string> slots;
-        if (e.contains("primary")) {
+        if (!e.contains("primary")) {
+            fail(id, "missing primary deck");
+        } else {
             std::string primary = e.value("primary", "");
             if (!scenarioTargets["decks"].contains(primary))
                 fail(id, "unknown primary deck: " + primary);
@@ -257,10 +262,16 @@ int main(int argc, char** argv) {
                     listed = true;
             if (!listed) fail(id, "primary deck is not listed in locations: " + primary);
         }
-        if (e.contains("theme")) {
+        if (!e.contains("theme")) {
+            fail(id, "missing primary theme");
+        } else {
             std::string theme = e.value("theme", "");
             if (!scenarioTargets["themes"].contains(theme))
                 fail(id, "unknown primary theme: " + theme);
+            bool tagged = false;
+            for (auto& tag : e.value("tags", json::array()))
+                if (tag.is_string() && tag.get<std::string>() == theme) tagged = true;
+            if (!tagged) fail(id, "primary theme is missing from semantic tags");
         }
         if (e.contains("tags") && !e["tags"].is_array()) fail(id, "tags must be an array");
         if (e.contains("slots"))
@@ -274,15 +285,31 @@ int main(int argc, char** argv) {
                 if (!kDecks.count(l.get<std::string>()))
                     fail(id, "unknown deck tag: " + l.get<std::string>());
         if (e.contains("when")) checkWhenList(id, e["when"]);
-        checkTokens(id, e.value("text", ""), slots);
+        std::string eventText = e.value("text", "");
+        checkTokens(id, eventText, slots);
+        if (eventText.find("\xE2\x80\x94") != std::string::npos)
+            fail(id, "em dash is not allowed in authored text");
+        if (e.value("remaster", "") == "v17") {
+            size_t split = eventText.rfind("\n\n");
+            if (split == std::string::npos || split + 2 >= eventText.size()) {
+                fail(id, "legacy remaster is missing its material coda");
+            } else {
+                std::string coda = eventText.substr(split + 2);
+                if (!remasterCodas.insert(coda).second)
+                    fail(id, "legacy remaster repeats another material coda");
+            }
+        }
         const json& choices = e["choices"];
         if (!choices.is_array() || choices.empty() || choices.size() > 4)
             fail(id, "events need 1-4 choices, has " +
                          std::to_string(choices.is_array() ? choices.size() : 0));
         for (auto& c : choices) {
-            if (c.contains("approach") && !c["approach"].is_string())
-                fail(id, "choice approach must be a string");
+            if (!c.contains("approach") || !c["approach"].is_string() ||
+                c.value("approach", "").empty())
+                fail(id, "choice approach must be a non-empty string");
             checkTokens(id, c.value("text", ""), slots);
+            if (c.value("text", "").find("\xE2\x80\x94") != std::string::npos)
+                fail(id, "em dash is not allowed in choice text");
             if (c.contains("requires")) {
                 const json& r = c["requires"];
                 std::string item = r.value("item", "");

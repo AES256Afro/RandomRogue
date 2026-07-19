@@ -8,7 +8,7 @@
     "slots": {
       "rumor": "chronicle_random"
     },
-    "text": "The talk of {site} tonight, delivered by a patron who swears they were there: \"{rumor}\"",
+    "text": "The talk of {site} tonight, delivered by a patron who swears they were there: \"{rumor}\"\n\nPeople remember \"Tavern Rumor\" differently, but the material fact remains: a ministry poster asks the hungry to defend the pantry from other hungry people.",
     "choices": [
       {
         "text": "Drink it in. History is free",
@@ -30,7 +30,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Buy the teller another round",
@@ -46,24 +47,28 @@
             "text": "The teller clocks your thin purse before the barkeep can pour and waves your coin away. 'Story tax runs the other way for the broke,' they say, and buy YOUR round instead. The ending, told for free, is better than anything money gets.",
             "effects": [
               "money +3",
-              "stat wis +1"
+              "stat wis +1",
+              "region solidarity -1"
             ]
           },
           {
             "weight": 70,
             "text": "Lubricated, they add details: names, dates, a startling amount of slander. Someone slips you a coin for the entertainment.",
             "effects": [
-              "money +1"
+              "money +1",
+              "region solidarity -1"
             ]
           },
           {
             "weight": 30,
             "text": "The second round undoes them entirely. The story dissolves into weeping about a goose. You'll never know the ending.",
             "effects": [
-              "money -2"
+              "money -2",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Loudly declare it never happened",
@@ -93,16 +98,25 @@
               "stat int +1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "tavern",
+    "theme": "propaganda",
+    "tags": [
+      "propaganda",
+      "voice_8"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_fizzing_drink",
     "locations": [
       "tavern"
     ],
-    "text": "A hooded figure at {site} slides you a drink. It is fizzing. Drinks here don't fizz.",
+    "text": "A hooded figure at {site} slides you a drink. It is fizzing. Drinks here don't fizz.\n\nThe argument around \"Tavern Fizzing Drink\" ends wherever someone finally admits that the universe is under no obligation to respect the official diagram.",
     "choices": [
       {
         "text": "Drink it",
@@ -141,7 +155,8 @@
               "trait +glowing"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Make them drink it first",
@@ -157,7 +172,8 @@
               "money +12"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Leave immediately",
@@ -175,16 +191,25 @@
             "text": "Coward. Effective, living coward.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "tavern",
+    "theme": "science",
+    "tags": [
+      "science",
+      "voice_9"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_arm_wrestle",
     "locations": [
       "tavern"
     ],
-    "text": "A stone golem sits at the corner table of {site}, arm up, palm open. The chalkboard reads: 'BEAT GRUNDLE. WIN 20 GOLD. NO REFUNDS ON BONES.'",
+    "text": "A stone golem sits at the corner table of {site}, arm up, palm open. The chalkboard reads: 'BEAT GRUNDLE. WIN 20 GOLD. NO REFUNDS ON BONES.'\n\nPeople remember \"Tavern Arm Wrestle\" differently, but the material fact remains: someone has posted a safety notice where only the injured can read it.",
     "choices": [
       {
         "text": "Wrestle the golem",
@@ -238,7 +263,8 @@
               "money +2"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Bet on the next challenger instead",
@@ -250,17 +276,20 @@
             "weight": 50,
             "text": "The blacksmith beats Grundle on a technicality. Your bet pays out.",
             "effects": [
-              "money +8"
+              "money +8",
+              "region unrest +1"
             ]
           },
           {
             "weight": 50,
             "text": "Grundle wins. Grundle always wins. The chalkboard was a warning, not a challenge.",
             "effects": [
-              "money -5"
+              "money -5",
+              "region unrest +1"
             ]
           }
-        ]
+        ],
+        "approach": "force"
       },
       {
         "text": "Buy Grundle a drink",
@@ -270,10 +299,12 @@
             "text": "Golems don't drink. Grundle holds the mug anyway, touched. You've made a very heavy friend.",
             "effects": [
               "stat cha +1",
-              "money -2"
+              "money -2",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Offer to be Grundle's promoter",
@@ -297,16 +328,25 @@
               "hp -3"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "tavern",
+    "theme": "labor",
+    "tags": [
+      "labor",
+      "voice_8"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_mystery_stew",
     "locations": [
       "tavern"
     ],
-    "text": "Tonight's special at {site} is 'Stew.' No further details. The bowl is looking at you.",
+    "text": "Tonight's special at {site} is 'Stew.' No further details. The bowl is looking at you.\n\nPeople remember \"Tavern Mystery Stew\" differently, but the material fact remains: the harvest was excellent until three contracts and a duke ate it.",
     "choices": [
       {
         "text": "Eat the stew",
@@ -331,7 +371,8 @@
               "hp -3"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Ask what's in it",
@@ -358,7 +399,8 @@
               "hp +3"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Order bread instead",
@@ -382,7 +424,8 @@
               "money -1"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Produce your own jar of stew and propose a taste-off",
@@ -406,16 +449,25 @@
               "stat cha -1"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "tavern",
+    "theme": "food",
+    "tags": [
+      "food",
+      "voice_8"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_bard_ballad",
     "locations": [
       "tavern"
     ],
-    "text": "A bard at {site} is singing a ballad about your life. The facts are wrong, the rhymes are worse, and the crowd loves it.",
+    "text": "A bard at {site} is singing a ballad about your life. The facts are wrong, the rhymes are worse, and the crowd loves it.\n\nThe paperwork around \"Tavern Bard Ballad\" avoids its central fact: the official account is polished, confident, and contradicted by every person who was there.",
     "choices": [
       {
         "text": "Own it. Take a bow",
@@ -453,7 +505,8 @@
               "stat cha -1"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Correct the bard's facts, loudly",
@@ -472,7 +525,8 @@
               "money +6"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Slip out the back",
@@ -490,16 +544,25 @@
             "text": "You escape. Behind you, the ballad gains a verse about your mysterious vanishing. Cool points, technically.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "tavern",
+    "theme": "propaganda",
+    "tags": [
+      "propaganda",
+      "voice_3"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_tab_dispute",
     "locations": [
       "tavern"
     ],
-    "text": "The barkeep of {site} slides you a tab as long as your arm. You ordered one drink. One item reads 'ambiance: 6 gold.'",
+    "text": "The barkeep of {site} slides you a tab as long as your arm. You ordered one drink. One item reads 'ambiance: 6 gold.'\n\nThe paperwork around \"Tavern Tab Dispute\" avoids its central fact: profit has been declared the only adult in the room despite eating all the furniture.",
     "choices": [
       {
         "text": "Dispute the ambiance charge",
@@ -532,7 +595,8 @@
               "money -9"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Pay it all like royalty",
@@ -560,7 +624,8 @@
               "stat cha +2"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Dine and dash",
@@ -585,9 +650,18 @@
               "trait +banned"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "tavern",
+    "theme": "capital",
+    "tags": [
+      "capital",
+      "voice_3"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_cartographer",
@@ -595,7 +669,7 @@
       "tavern"
     ],
     "weight": 8,
-    "text": "A cartographer slumps at the bar of {site}, surrounded by rolled maps and empty mugs. 'Treasure maps,' she says. 'Real ones. Eight gold. The fakes are eleven; better paper.'",
+    "text": "A cartographer slumps at the bar of {site}, surrounded by rolled maps and empty mugs. 'Treasure maps,' she says. 'Real ones. Eight gold. The fakes are eleven; better paper.'\n\nOfficials classify \"Tavern Cartographer\" as routine, although the border follows a ruler's old argument and cuts directly through a community's kitchen.",
     "choices": [
       {
         "text": "Buy a real one",
@@ -612,7 +686,8 @@
             "effects": [
               "money -8",
               "item treasure_map",
-              "stat wis +1"
+              "stat wis +1",
+              "region solidarity -1"
             ]
           },
           {
@@ -620,10 +695,12 @@
             "text": "She picks one seemingly at random, kisses it for luck, and hands it over with the solemnity of a state funeral.",
             "effects": [
               "money -8",
-              "item treasure_map"
+              "item treasure_map",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Haggle her down",
@@ -661,7 +738,8 @@
               "item treasure_map"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Ask why the fakes cost more",
@@ -673,9 +751,18 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       }
-    ]
+    ],
+    "primary": "tavern",
+    "theme": "colonialism",
+    "tags": [
+      "colonialism",
+      "voice_1"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_living_legend",
@@ -686,7 +773,7 @@
     "slots": {
       "npc": "figure_alive"
     },
-    "text": "The corner table of {site} has gone quiet. That's {npc} - THE {npc}, {npc_trait} {npc_prof} of {npc_faction} - nursing a drink and a reputation.",
+    "text": "The corner table of {site} has gone quiet. That's {npc} - THE {npc}, {npc_trait} {npc_prof} of {npc_faction} - nursing a drink and a reputation.\n\nAsk who pays for \"Tavern Living Legend\" and the answer begins here: power has commissioned a statue to remember events in the preferred direction.",
     "choices": [
       {
         "text": "Buy them a drink and ask for the true story",
@@ -703,7 +790,8 @@
             "effects": [
               "hp -3",
               "money -6",
-              "rep -4"
+              "rep -4",
+              "region solidarity -1"
             ]
           },
           {
@@ -715,7 +803,8 @@
             "effects": [
               "money -3",
               "rep +3",
-              "stat cha +1"
+              "stat cha +1",
+              "region solidarity -1"
             ]
           },
           {
@@ -723,7 +812,8 @@
             "text": "Two drinks in, the truth comes out: it was luck, mostly, and the ballads left out the running away. You feel better about your own odds.",
             "effects": [
               "money -3",
-              "stat wis +1"
+              "stat wis +1",
+              "region solidarity -1"
             ]
           },
           {
@@ -731,10 +821,12 @@
             "text": "They tell the story with full theatrical staging, using your drink as a prop. It's spent by the end. So are you. Magnificent.",
             "effects": [
               "money -3",
-              "stat cha +1"
+              "stat cha +1",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Challenge them to arm wrestling",
@@ -749,7 +841,8 @@
             "effects": [
               "money +6",
               "stat cha +1",
-              "rep +5"
+              "rep +5",
+              "region unrest +1"
             ]
           }
         ],
@@ -758,10 +851,12 @@
             "weight": 100,
             "text": "Your arm is a footnote in their legend now. They're gracious about it, which is worse.",
             "effects": [
-              "hp -2"
+              "hp -2",
+              "region unrest +1"
             ]
           }
-        ]
+        ],
+        "approach": "force"
       },
       {
         "text": "Pick their pocket. Legends carry legendary coin",
@@ -776,7 +871,8 @@
             "effects": [
               "money +14",
               "rep -5",
-              "npc_mark robbed"
+              "npc_mark robbed",
+              "region solidarity -1"
             ]
           }
         ],
@@ -787,12 +883,22 @@
             "effects": [
               "hp -4",
               "money -5",
-              "rep -8"
+              "rep -8",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       }
-    ]
+    ],
+    "primary": "tavern",
+    "theme": "propaganda",
+    "tags": [
+      "propaganda",
+      "voice_2"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_descendant",
@@ -803,7 +909,7 @@
     "slots": {
       "gone": "figure_dead"
     },
-    "text": "A stranger at {site} is holding a portrait and a grudge. 'My grandparent, {gone}. Died in year {gone_year}. And do you know what the histories call it? A FOOTNOTE.'",
+    "text": "A stranger at {site} is holding a portrait and a grudge. 'My grandparent, {gone}. Died in year {gone_year}. And do you know what the histories call it? A FOOTNOTE.'\n\nNobody affected by \"Tavern Descendant\" was consulted. The part authority avoids is that a small mercy cannot repair the system, but it can keep one person alive to organize tomorrow.",
     "choices": [
       {
         "text": "Offer sincere condolences",
@@ -827,7 +933,8 @@
               "rep +4"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Claim you've heard great things about {gone}",
@@ -854,7 +961,8 @@
               "rep -4"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Point out that footnotes are still history",
@@ -874,16 +982,25 @@
               "stat cha -1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "tavern",
+    "theme": "kindness",
+    "tags": [
+      "kindness",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_dice_game",
     "locations": [
       "tavern"
     ],
-    "text": "A dice game in the back of {site}. The stakes are five gold, the dice are 'house dice,' and the dealer's smile has too many teeth in it.",
+    "text": "A dice game in the back of {site}. The stakes are five gold, the dice are 'house dice,' and the dealer's smile has too many teeth in it.\n\nBehind the business of \"Tavern Dice Game\" sits an older truth: a merchant has found a way to own the risk while renting it back to everyone in danger.",
     "choices": [
       {
         "text": "Play it straight",
@@ -915,7 +1032,8 @@
               "money -5"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Cheat better than they do",
@@ -952,7 +1070,8 @@
               "rep -4"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Just watch and learn",
@@ -964,7 +1083,8 @@
               "stat int +1"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Produce your own dice and insist on neutral equipment",
@@ -987,16 +1107,25 @@
               "stat int +1"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "tavern",
+    "theme": "capital",
+    "tags": [
+      "capital",
+      "voice_5"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_karaoke_bard",
     "locations": [
       "tavern"
     ],
-    "text": "It's open-verse night at {site}. The bard's lute is passed from table to table like a dare. It is now in front of you. The room waits.",
+    "text": "It's open-verse night at {site}. The bard's lute is passed from table to table like a dare. It is now in front of you. The room waits.\n\nThe paperwork around \"Tavern Karaoke Bard\" avoids its central fact: nobody expects help, making help both naive and tactically surprising.",
     "choices": [
       {
         "text": "Perform your heart out",
@@ -1033,7 +1162,8 @@
               "stat cha -1"
             ]
           }
-        ]
+        ],
+        "approach": "wit"
       },
       {
         "text": "Play something instrumental. No words, no risk",
@@ -1056,7 +1186,8 @@
               "money +3"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Pass the lute and buy the next performer a drink",
@@ -1069,19 +1200,29 @@
             "text": "The next performer, emboldened by your drink, is magnificent. You are remembered as part of the story. Adjacent glory still counts.",
             "effects": [
               "money -2",
-              "hp +2"
+              "hp +2",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       }
-    ]
+    ],
+    "primary": "tavern",
+    "theme": "kindness",
+    "tags": [
+      "kindness",
+      "voice_3"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_mystery_keg",
     "locations": [
       "tavern"
     ],
-    "text": "Behind the bar of {site}, a keg is chained shut. Not locked. CHAINED. The barkeep follows your gaze. 'House special. Waiver's under the till.'",
+    "text": "Behind the bar of {site}, a keg is chained shut. Not locked. CHAINED. The barkeep follows your gaze. 'House special. Waiver's under the till.'\n\nAsk who pays for \"Tavern Mystery Keg\" and the answer begins here: the soup is communal, the spoons are disputed, and nobody is leaving hungry without a debate.",
     "choices": [
       {
         "text": "Sign the waiver. Drink the special",
@@ -1098,7 +1239,8 @@
             "text": "It goes down like a furnace deciding to be your friend. The winter outside stops mattering for a full day. The barkeep nods: 'That's why we chain it in summer.'",
             "effects": [
               "hp +4",
-              "stat con +1"
+              "stat con +1",
+              "region pressure +1"
             ]
           },
           {
@@ -1106,7 +1248,8 @@
             "text": "It tastes like lightning that's been through something. You remain standing. The bar applauds. The barkeep frames the waiver, unneeded.",
             "effects": [
               "hp +3",
-              "stat con +1"
+              "stat con +1",
+              "region pressure +1"
             ]
           }
         ],
@@ -1115,10 +1258,12 @@
             "weight": 100,
             "text": "You wake up two hours later under a table you don't recognize, holding a certificate that says 'PARTICIPANT.'",
             "effects": [
-              "hp -5"
+              "hp -5",
+              "region pressure +1"
             ]
           }
-        ]
+        ],
+        "approach": "law"
       },
       {
         "text": "Read the waiver first",
@@ -1130,7 +1275,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Ask what's in it",
@@ -1153,8 +1299,17 @@
               "hp +1"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       }
-    ]
+    ],
+    "primary": "tavern",
+    "theme": "food",
+    "tags": [
+      "food",
+      "voice_2"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   }
 ]

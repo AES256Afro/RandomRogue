@@ -1,194 +1,641 @@
 [
   {
     "id": "swamp_lantern_lights",
-    "locations": ["swamp"],
+    "locations": [
+      "swamp"
+    ],
     "weight": 14,
-    "text": "Lights out on the water, bobbing at lantern height, moving the way lanterns move when carried by someone who wants you to follow. Everyone knows you don't follow the lights. The lights know everyone knows. Lately they've started leaving small gifts at the water's edge, as an opening offer.",
+    "text": "Lights out on the water, bobbing at lantern height, moving the way lanterns move when carried by someone who wants you to follow. Everyone knows you don't follow the lights. The lights know everyone knows. Lately they've started leaving small gifts at the water's edge, as an opening offer.\n\nNothing about \"Swamp Lantern Lights\" is accidental once you notice that the forest has no legal standing but considerably more roots than the courthouse.",
     "choices": [
-      { "text": "Take the gift, decline the walk",
+      {
+        "text": "Take the gift, decline the walk",
         "outcomes": [
-          { "weight": 70, "text": "A river pearl, real, sitting on a lily pad like a business card. You pocket it and bow to the darkness. The lights bob once - acknowledgment, or amusement - and drift off to try the next traveler.", "effects": ["money +8"] },
-          { "weight": 30, "text": "The gift is attached to a string. The string is attached to an argument. You keep the pearl, but the mud keeps a boot, and the lights follow you for an hour making a sound you'd swear is giggling.", "effects": ["money +8", "hp -2"] }
-        ] },
-      { "text": "Follow them. Obviously", "check": { "stat": "wis", "dc": 14 },
+          {
+            "weight": 70,
+            "text": "A river pearl, real, sitting on a lily pad like a business card. You pocket it and bow to the darkness. The lights bob once - acknowledgment, or amusement - and drift off to try the next traveler.",
+            "effects": [
+              "money +8"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "The gift is attached to a string. The string is attached to an argument. You keep the pearl, but the mud keeps a boot, and the lights follow you for an hour making a sound you'd swear is giggling.",
+            "effects": [
+              "money +8",
+              "hp -2"
+            ]
+          }
+        ],
+        "approach": "caution"
+      },
+      {
+        "text": "Follow them. Obviously",
+        "check": {
+          "stat": "wis",
+          "dc": 14
+        },
         "success": [
-          { "weight": 100, "text": "You follow at a respectful distance with one hand on a rooted tree at all times, which is apparently the correct etiquette. The lights lead you to a drowned shrine, wait while you take what the water no longer needs, and see you politely back to the trail. Nobody will believe this.", "effects": ["loot fine", "stat wis +1"] }
+          {
+            "weight": 100,
+            "text": "You follow at a respectful distance with one hand on a rooted tree at all times, which is apparently the correct etiquette. The lights lead you to a drowned shrine, wait while you take what the water no longer needs, and see you politely back to the trail. Nobody will believe this.",
+            "effects": [
+              "loot fine",
+              "stat wis +1"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "The lights lead you in a large, patient circle for most of the night and deposit you exactly where you started, exhausted, soaked, and educationally humbled. On the way out, one of them winks.", "effects": ["hp -4"] }
-        ] },
-      { "text": "Light your own lantern and stand still",
+          {
+            "weight": 100,
+            "text": "The lights lead you in a large, patient circle for most of the night and deposit you exactly where you started, exhausted, soaked, and educationally humbled. On the way out, one of them winks.",
+            "effects": [
+              "hp -4"
+            ]
+          }
+        ],
+        "approach": "inquiry"
+      },
+      {
+        "text": "Light your own lantern and stand still",
         "outcomes": [
-          { "weight": 100, "text": "You become a light on the water. The lights consider this development for a long moment, then arrange themselves around you in what is unmistakably a formation. For one strange hour you are a constellation. Something enormous passes beneath the water and does not stop, because constellations are not food.", "effects": ["stat con +1", "stat wis +1"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "You become a light on the water. The lights consider this development for a long moment, then arrange themselves around you in what is unmistakably a formation. For one strange hour you are a constellation. Something enormous passes beneath the water and does not stop, because constellations are not food.",
+            "effects": [
+              "stat con +1",
+              "stat wis +1"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "swamp",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_11"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "swamp_stilt_hermit",
-    "locations": ["swamp"],
+    "locations": [
+      "swamp"
+    ],
     "weight": 13,
-    "text": "A hut on stilts, leaning over the water like it's reading something in it. The hermit on the porch has been watching you fail to find the dry path for ten minutes with the expression of someone watching a duckling. 'Toll's a story,' they call down. 'Or you can keep doing... whatever that was.'",
+    "text": "A hut on stilts, leaning over the water like it's reading something in it. The hermit on the porch has been watching you fail to find the dry path for ten minutes with the expression of someone watching a duckling. 'Toll's a story,' they call down. 'Or you can keep doing... whatever that was.'\n\nNothing about \"Swamp Stilt Hermit\" is accidental once you notice that the forest has no legal standing but considerably more roots than the courthouse.",
     "choices": [
-      { "text": "Pay the story toll",
+      {
+        "text": "Pay the story toll",
         "outcomes": [
-          { "weight": 100, "text": "You give them your best one - the whole arc, properly told. The hermit listens with their eyes closed like it's music, then points out the dry path, a shortcut, and which log is not a log. 'That one's Gerald,' they add. 'Wave.'", "effects": ["stat cha +1", "hp +2"] }
-        ] },
-      { "text": "Ask what they're hiding from", "check": { "stat": "wis", "dc": 12 },
+          {
+            "weight": 100,
+            "text": "You give them your best one - the whole arc, properly told. The hermit listens with their eyes closed like it's music, then points out the dry path, a shortcut, and which log is not a log. 'That one's Gerald,' they add. 'Wave.'",
+            "effects": [
+              "stat cha +1",
+              "hp +2",
+              "region pressure +1"
+            ]
+          }
+        ],
+        "approach": "law"
+      },
+      {
+        "text": "Ask what they're hiding from",
+        "check": {
+          "stat": "wis",
+          "dc": 12
+        },
         "success": [
-          { "weight": 100, "text": "'Hiding?' They laugh for a while. 'Friend, I WON. This is the prize.' And looking around - the quiet, the birds, the total absence of other people's problems - you briefly, dangerously, see it. They give you tea and a warning about the eastern channel that will later save your life.", "effects": ["stat wis +2"] }
+          {
+            "weight": 100,
+            "text": "'Hiding?' They laugh for a while. 'Friend, I WON. This is the prize.' And looking around - the quiet, the birds, the total absence of other people's problems - you briefly, dangerously, see it. They give you tea and a warning about the eastern channel that will later save your life.",
+            "effects": [
+              "stat wis +2"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "Their face closes like a door. Wrong question. The porch is suddenly just a porch, the hermit just a silhouette, and the dry path stays unfound. You take the wet one. All of it.", "effects": ["hp -3"] }
-        ] },
-      { "text": "Buy supplies off them", "requires": { "money": 6 },
+          {
+            "weight": 100,
+            "text": "Their face closes like a door. Wrong question. The porch is suddenly just a porch, the hermit just a silhouette, and the dry path stays unfound. You take the wet one. All of it.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ],
+        "approach": "inquiry"
+      },
+      {
+        "text": "Buy supplies off them",
+        "requires": {
+          "money": 6
+        },
         "outcomes": [
-          { "weight": 100, "text": "Swamp rations: smoked eel, hard bread, and a jar of something they describe only as 'for emergencies.' Overpriced, undeniably effective, and the eel is honestly the best thing you've eaten in weeks.", "effects": ["money -6", "item rations", "hp +3"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "Swamp rations: smoked eel, hard bread, and a jar of something they describe only as 'for emergencies.' Overpriced, undeniably effective, and the eel is honestly the best thing you've eaten in weeks.",
+            "effects": [
+              "money -6",
+              "item rations",
+              "hp +3",
+              "region solidarity -1"
+            ]
+          }
+        ],
+        "approach": "greed"
+      }
+    ],
+    "primary": "swamp",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_11"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "swamp_sunken_bell",
-    "locations": ["swamp"],
+    "locations": [
+      "swamp"
+    ],
     "weight": 12,
-    "slots": { "rumor": "chronicle_random" },
-    "text": "A church steeple rises from the middle of the marsh - just the steeple. The rest of the town is down there somewhere, taking the long view. The bell still hangs in the tower, green with years, and local memory insists it rings on its own when something in the Chronicle needs saying. Carved on the frame: \"{rumor}\"",
+    "slots": {
+      "rumor": "chronicle_random"
+    },
+    "text": "A church steeple rises from the middle of the marsh - just the steeple. The rest of the town is down there somewhere, taking the long view. The bell still hangs in the tower, green with years, and local memory insists it rings on its own when something in the Chronicle needs saying. Carved on the frame: \"{rumor}\"\n\nNothing about \"Swamp Sunken Bell\" is accidental once you notice that the poison travels downstream for free while responsibility requires a toll permit.",
     "choices": [
-      { "text": "Ring it and see what answers", "check": { "stat": "str", "dc": 12 },
+      {
+        "text": "Ring it and see what answers",
+        "check": {
+          "stat": "str",
+          "dc": 12
+        },
         "success": [
-          { "weight": 100, "text": "The bell's voice rolls across the water like a hand smoothing a bedsheet, and the swamp goes reverently still. In the silence afterward, bubbles: something below returning a courtesy. A collection plate floats up. It is not empty.", "effects": ["money +10", "stat wis +1"] }
+          {
+            "weight": 100,
+            "text": "The bell's voice rolls across the water like a hand smoothing a bedsheet, and the swamp goes reverently still. In the silence afterward, bubbles: something below returning a courtesy. A collection plate floats up. It is not empty.",
+            "effects": [
+              "money +10",
+              "stat wis +1"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "The clapper is heavier than your conviction. The half-rung note comes out flat and wrong, and every bird in the marsh files a complaint at once. Below, the congregation shifts, unimpressed with your service.", "effects": ["hp -2", "rep -2"] }
-        ] },
-      { "text": "Dive for the church door", "requires": { "item": "rope" },
+          {
+            "weight": 100,
+            "text": "The clapper is heavier than your conviction. The half-rung note comes out flat and wrong, and every bird in the marsh files a complaint at once. Below, the congregation shifts, unimpressed with your service.",
+            "effects": [
+              "hp -2",
+              "rep -2"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Dive for the church door",
+        "requires": {
+          "item": "rope"
+        },
         "outcomes": [
-          { "weight": 60, "text": "Rope around the steeple, breath held, down along the shingles into the green dark. The offering box is where offering boxes always are. You leave a tithe of what you take, because you are many things but not stupid.", "effects": ["money +14", "stat con +1"] },
-          { "weight": 40, "text": "The door opens as you reach for it, which doors underwater should not do. You are back on the surface faster than physics strictly allows, rope burns on both palms, dignity somewhere below with the congregation.", "effects": ["hp -4"] }
-        ] },
-      { "text": "Leave the parish in peace",
+          {
+            "weight": 60,
+            "text": "Rope around the steeple, breath held, down along the shingles into the green dark. The offering box is where offering boxes always are. You leave a tithe of what you take, because you are many things but not stupid.",
+            "effects": [
+              "money +14",
+              "stat con +1"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "The door opens as you reach for it, which doors underwater should not do. You are back on the surface faster than physics strictly allows, rope burns on both palms, dignity somewhere below with the congregation.",
+            "effects": [
+              "hp -4"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Leave the parish in peace",
         "outcomes": [
-          { "weight": 100, "text": "Some towns end and some towns just change parishes. You doff your hat to the steeple and squelch onward. Behind you - soft, once, and definitely not the wind - the bell rings you out.", "effects": ["trait +blessed"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "Some towns end and some towns just change parishes. You doff your hat to the steeple and squelch onward. Behind you - soft, once, and definitely not the wind - the bell rings you out.",
+            "effects": [
+              "trait +blessed"
+            ]
+          }
+        ],
+        "approach": "caution"
+      }
+    ],
+    "primary": "swamp",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_11"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "swamp_leech_barber",
-    "locations": ["swamp"],
+    "locations": [
+      "swamp"
+    ],
     "weight": 11,
-    "text": "A barber's chair, in the swamp, under a tarp, occupied by a sign: 'THE DOCTOR IS IN (THE WATER).' The proprietor surfaces - human, mostly cheerful, holding a jar of leeches with the pride of a sommelier. 'Bad humors,' he diagnoses from ten feet away. 'I can smell 'em. Sit.'",
+    "text": "A barber's chair, in the swamp, under a tarp, occupied by a sign: 'THE DOCTOR IS IN (THE WATER).' The proprietor surfaces - human, mostly cheerful, holding a jar of leeches with the pride of a sommelier. 'Bad humors,' he diagnoses from ten feet away. 'I can smell 'em. Sit.'\n\nThe official lesson of \"Swamp Leech Barber\" is complicated; the useful lesson is that the poison travels downstream for free while responsibility requires a toll permit.",
     "choices": [
-      { "text": "Submit to the treatment",
+      {
+        "text": "Submit to the treatment",
         "outcomes": [
-          { "weight": 65, "text": "It works. It has NO right to work, and you plan to tell no one it worked, but the deep ache you've carried since the last bad night lifts like fog. The leeches look smug. The doctor looks smugger.", "effects": ["hp +5", "money -4"] },
-          { "weight": 35, "text": "The humors, if anything, multiply. You leave lighter by four gold and some blood, with a receipt written on a leaf and a diagnosis you refuse to repeat.", "effects": ["hp -2", "money -4"] }
-        ] },
-      { "text": "Talk shop about the leeches", "check": { "stat": "int", "dc": 11 },
+          {
+            "weight": 65,
+            "text": "It works. It has NO right to work, and you plan to tell no one it worked, but the deep ache you've carried since the last bad night lifts like fog. The leeches look smug. The doctor looks smugger.",
+            "effects": [
+              "hp +5",
+              "money -4"
+            ]
+          },
+          {
+            "weight": 35,
+            "text": "The humors, if anything, multiply. You leave lighter by four gold and some blood, with a receipt written on a leaf and a diagnosis you refuse to repeat.",
+            "effects": [
+              "hp -2",
+              "money -4"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Talk shop about the leeches",
+        "check": {
+          "stat": "int",
+          "dc": 11
+        },
         "success": [
-          { "weight": 100, "text": "Forty minutes on leech husbandry, and you're surprised to find yourself genuinely interested. He gifts you the jar's runt - 'for the road, she's a good one' - and a field lesson in drawing poison from a wound that will absolutely come up later.", "effects": ["stat int +1", "item bandages"] }
+          {
+            "weight": 100,
+            "text": "Forty minutes on leech husbandry, and you're surprised to find yourself genuinely interested. He gifts you the jar's runt - 'for the road, she's a good one' - and a field lesson in drawing poison from a wound that will absolutely come up later.",
+            "effects": [
+              "stat int +1",
+              "item bandages"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "You call one of the leeches 'it.' The consultation ends immediately. HER NAME, you learn on the way out, IS PATRICIA.", "effects": [] }
-        ] },
-      { "text": "Decline, from a distance",
+          {
+            "weight": 100,
+            "text": "You call one of the leeches 'it.' The consultation ends immediately. HER NAME, you learn on the way out, IS PATRICIA.",
+            "effects": []
+          }
+        ],
+        "approach": "inquiry"
+      },
+      {
+        "text": "Decline, from a distance",
         "outcomes": [
-          { "weight": 100, "text": "'Suit yourself,' says the doctor, settling back into the water until only his hat shows. As you pass, the hat says: 'Mind the eastern channel.' The hat turns out to be right.", "effects": ["stat wis +1"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "'Suit yourself,' says the doctor, settling back into the water until only his hat shows. As you pass, the hat says: 'Mind the eastern channel.' The hat turns out to be right.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ],
+        "approach": "caution"
+      }
+    ],
+    "primary": "swamp",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_7"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "swamp_moss_effigy",
-    "locations": ["swamp"],
+    "locations": [
+      "swamp"
+    ],
     "weight": 12,
-    "slots": { "god": "god" },
-    "text": "Deep in the wet green, an effigy of woven moss and deer bone, taller than a house, older than the trees holding it up. Offerings rot pleasantly at its feet. A weathered plaque names it a shape of {god}, who holds {god_domain}, and the moss - you notice slowly - is breathing.",
+    "slots": {
+      "god": "god"
+    },
+    "text": "Deep in the wet green, an effigy of woven moss and deer bone, taller than a house, older than the trees holding it up. Offerings rot pleasantly at its feet. A weathered plaque names it a shape of {god}, who holds {god_domain}, and the moss - you notice slowly - is breathing.\n\nThe file titled \"Swamp Moss Effigy\" makes the arrangement plain: an extraction guild calls the damage temporary because mountains use a longer calendar.",
     "choices": [
-      { "text": "Leave an offering", "requires": { "money": 3 },
+      {
+        "text": "Leave an offering",
+        "requires": {
+          "money": 3
+        },
         "outcomes": [
-          { "weight": 100, "text": "Three coins into the moss. The swamp inhales. For the rest of the day the mud firms under your feet exactly where you step and nowhere else, and the mosquitoes treat you as a colleague.", "effects": ["money -3", "trait +blessed"] }
-        ] },
-      { "text": "Take from the offering pile",
+          {
+            "weight": 100,
+            "text": "Three coins into the moss. The swamp inhales. For the rest of the day the mud firms under your feet exactly where you step and nowhere else, and the mosquitoes treat you as a colleague.",
+            "effects": [
+              "money -3",
+              "trait +blessed"
+            ]
+          }
+        ],
+        "approach": "caution"
+      },
+      {
+        "text": "Take from the offering pile",
         "outcomes": [
-          { "weight": 40, "text": "You take only the coins already sinking - a salvage, you tell the effigy, not a theft. The moss watches you go. Days later you realize your boots have stopped leaking, and you decide not to think about the exchange rate.", "effects": ["money +9"] },
-          { "weight": 60, "text": "The moss stops breathing while your hand is in the pile. The walk out of that grove takes four hours. The grove is not four hours wide. You keep the coins. The swamp keeps your sense of direction for a week.", "effects": ["money +9", "trait +cursed"] }
-        ] },
-      { "text": "Study the weave", "check": { "stat": "int", "dc": 13 },
+          {
+            "weight": 40,
+            "text": "You take only the coins already sinking - a salvage, you tell the effigy, not a theft. The moss watches you go. Days later you realize your boots have stopped leaking, and you decide not to think about the exchange rate.",
+            "effects": [
+              "money +9"
+            ]
+          },
+          {
+            "weight": 60,
+            "text": "The moss stops breathing while your hand is in the pile. The walk out of that grove takes four hours. The grove is not four hours wide. You keep the coins. The swamp keeps your sense of direction for a week.",
+            "effects": [
+              "money +9",
+              "trait +cursed"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Study the weave",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
         "success": [
-          { "weight": 100, "text": "The weave is writing - old tongue, knot-script, a whole liturgy in moss. You read until the light goes, and the words follow you out like a second lantern.", "effects": ["learn 4", "stat int +1"] }
+          {
+            "weight": 100,
+            "text": "The weave is writing - old tongue, knot-script, a whole liturgy in moss. You read until the light goes, and the words follow you out like a second lantern.",
+            "effects": [
+              "learn 4",
+              "stat int +1"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "You pull one strand to see how it's joined. The whole left arm of the effigy sighs down into the water like a landslide deciding to be gentle about it. You leave before the rest of it has opinions.", "effects": ["hp -3"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "You pull one strand to see how it's joined. The whole left arm of the effigy sighs down into the water like a landslide deciding to be gentle about it. You leave before the rest of it has opinions.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ],
+        "approach": "inquiry"
+      }
+    ],
+    "primary": "swamp",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_0"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "swamp_ferryman",
-    "locations": ["swamp"],
+    "locations": [
+      "swamp"
+    ],
     "weight": 12,
-    "text": "The channel is too deep to wade and too wide to jump, and the only crossing is a flat-bottomed skiff poled by a figure in an oilskin coat who has clearly heard every ferryman joke in existence and is waiting, with visible patience, for yours.",
+    "text": "The channel is too deep to wade and too wide to jump, and the only crossing is a flat-bottomed skiff poled by a figure in an oilskin coat who has clearly heard every ferryman joke in existence and is waiting, with visible patience, for yours.\n\nThe paperwork around \"Swamp Ferryman\" avoids its central fact: the poison travels downstream for free while responsibility requires a toll permit.",
     "choices": [
-      { "text": "Pay the fare, skip the joke", "requires": { "money": 2 },
+      {
+        "text": "Pay the fare, skip the joke",
+        "requires": {
+          "money": 2
+        },
         "outcomes": [
-          { "weight": 100, "text": "Two coins, no coin-on-the-eyes remark, not even a raised eyebrow at the far shore. The ferryman is so grateful for the silence that the crossing includes a free tour: which channels eat boats, which islands move, and where the herons hold their grudges.", "effects": ["money -2", "stat wis +1"] }
-        ] },
-      { "text": "Make the joke",
+          {
+            "weight": 100,
+            "text": "Two coins, no coin-on-the-eyes remark, not even a raised eyebrow at the far shore. The ferryman is so grateful for the silence that the crossing includes a free tour: which channels eat boats, which islands move, and where the herons hold their grudges.",
+            "effects": [
+              "money -2",
+              "stat wis +1",
+              "region pressure +1"
+            ]
+          }
+        ],
+        "approach": "law"
+      },
+      {
+        "text": "Make the joke",
         "outcomes": [
-          { "weight": 50, "text": "You commit to it - the full bit, coins on the eyes, the underworld, everything. Silence. Then the ferryman laughs like a drain unblocking: 'Twenty years. Nobody's done the WHOLE bit.' You ride free, and part as friends.", "effects": ["stat cha +1"] },
-          { "weight": 50, "text": "The pole stops. The skiff drifts. 'Get out,' the ferryman says quietly, in the middle of the channel, and you learn how deep it actually is.", "effects": ["hp -3", "money -1"] }
-        ] },
-      { "text": "Work your passage", "check": { "stat": "str", "dc": 11 },
+          {
+            "weight": 50,
+            "text": "You commit to it - the full bit, coins on the eyes, the underworld, everything. Silence. Then the ferryman laughs like a drain unblocking: 'Twenty years. Nobody's done the WHOLE bit.' You ride free, and part as friends.",
+            "effects": [
+              "stat cha +1"
+            ]
+          },
+          {
+            "weight": 50,
+            "text": "The pole stops. The skiff drifts. 'Get out,' the ferryman says quietly, in the middle of the channel, and you learn how deep it actually is.",
+            "effects": [
+              "hp -3",
+              "money -1"
+            ]
+          }
+        ],
+        "approach": "wit"
+      },
+      {
+        "text": "Work your passage",
+        "check": {
+          "stat": "str",
+          "dc": 11
+        },
         "success": [
-          { "weight": 100, "text": "You pole the return leg while the ferryman naps like royalty. Hard work, honest water, and at the end a share of the day's fares pressed into your palm with genuine respect.", "effects": ["money +5", "stat str +1"] }
+          {
+            "weight": 100,
+            "text": "You pole the return leg while the ferryman naps like royalty. Hard work, honest water, and at the end a share of the day's fares pressed into your palm with genuine respect.",
+            "effects": [
+              "money +5",
+              "stat str +1"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "Poling is a craft, it turns out, and the craft rejects you. The skiff describes three slow circles while the ferryman watches with the joy of a man collecting stories. You pay double for the rescue.", "effects": ["money -4"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "Poling is a craft, it turns out, and the craft rejects you. The skiff describes three slow circles while the ferryman watches with the joy of a man collecting stories. You pay double for the rescue.",
+            "effects": [
+              "money -4"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "swamp",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_3"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "swamp_bog_body",
-    "locations": ["swamp"],
+    "locations": [
+      "swamp"
+    ],
     "weight": 11,
-    "slots": { "figure": "figure_dead" },
-    "text": "The peat has given someone back. Perfectly kept, leather-brown, peaceful as a sleeper: the bog does not rot what it takes, it ARCHIVES. The clothes are centuries out of fashion, and the ring on one finger bears a crest you've seen in the Chronicle - the household of {figure}, dead since year {figure_year}.",
+    "slots": {
+      "figure": "figure_dead"
+    },
+    "text": "The peat has given someone back. Perfectly kept, leather-brown, peaceful as a sleeper: the bog does not rot what it takes, it ARCHIVES. The clothes are centuries out of fashion, and the ring on one finger bears a crest you've seen in the Chronicle - the household of {figure}, dead since year {figure_year}.\n\nThe file titled \"Swamp Bog Body\" makes the arrangement plain: a company has discovered that nature is priceless and therefore available at no cost.",
     "choices": [
-      { "text": "Take the ring for the historians", "check": { "stat": "dex", "dc": 12 },
+      {
+        "text": "Take the ring for the historians",
+        "check": {
+          "stat": "dex",
+          "dc": 12
+        },
         "success": [
-          { "weight": 100, "text": "You work the ring free with an apology and a promise, and you keep the promise: the collectors in the next city pay honest money for provenance this clean, and the archivist actually weeps.", "effects": ["money +12", "stat int +1"] }
+          {
+            "weight": 100,
+            "text": "You work the ring free with an apology and a promise, and you keep the promise: the collectors in the next city pay honest money for provenance this clean, and the archivist actually weeps.",
+            "effects": [
+              "money +12",
+              "stat int +1"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "The hand closes. Bog bodies do not close their hands. You are informed by every nerve you own that the ring is not for sale, and you agree at volume, from a distance, in the dark.", "effects": ["hp -3"] }
-        ] },
-      { "text": "Rebury them properly",
+          {
+            "weight": 100,
+            "text": "The hand closes. Bog bodies do not close their hands. You are informed by every nerve you own that the ring is not for sale, and you agree at volume, from a distance, in the dark.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Rebury them properly",
         "outcomes": [
-          { "weight": 100, "text": "You dig the peat back over them, lay reeds the way the old rite wants, and say the words for travelers. The swamp settles around the grave like a blanket being tucked. Something old stops holding its breath.", "effects": ["stat wis +1", "trait +blessed"] }
-        ] },
-      { "text": "Ask them what happened",
+          {
+            "weight": 100,
+            "text": "You dig the peat back over them, lay reeds the way the old rite wants, and say the words for travelers. The swamp settles around the grave like a blanket being tucked. Something old stops holding its breath.",
+            "effects": [
+              "stat wis +1",
+              "trait +blessed"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Ask them what happened",
         "outcomes": [
-          { "weight": 100, "text": "You sit with the body and talk, because the swamp does strange things to etiquette. They don't answer - mostly. But dozing off beside them you dream the whole story: the road, the storm, the wrong guide. You wake knowing which channel not to take. The dead pay their debts.", "effects": ["stat wis +2"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "You sit with the body and talk, because the swamp does strange things to etiquette. They don't answer - mostly. But dozing off beside them you dream the whole story: the road, the storm, the wrong guide. You wake knowing which channel not to take. The dead pay their debts.",
+            "effects": [
+              "stat wis +2"
+            ]
+          }
+        ],
+        "approach": "inquiry"
+      }
+    ],
+    "primary": "swamp",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_0"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "swamp_chorus_frogs",
-    "locations": ["swamp"],
+    "locations": [
+      "swamp"
+    ],
     "weight": 10,
-    "text": "At dusk the frogs begin, thousands of them, and tonight - tonight it isn't noise. There's a structure in it, verses and answers, a call from the east channel and a response from the west. You are, you realize with absolute certainty, listening to a performance. And you're standing in the good seats.",
+    "text": "At dusk the frogs begin, thousands of them, and tonight - tonight it isn't noise. There's a structure in it, verses and answers, a call from the east channel and a response from the west. You are, you realize with absolute certainty, listening to a performance. And you're standing in the good seats.\n\nBehind the business of \"Swamp Chorus Frogs\" sits an older truth: the water is changing color in a way the refinery describes as innovative.",
     "choices": [
-      { "text": "Stay for the whole show",
+      {
+        "text": "Stay for the whole show",
         "outcomes": [
-          { "weight": 100, "text": "Three movements and a coda. When it ends - all at once, on a held silence that would make a conductor weep - the swamp applauds itself with rain. You will never be able to describe this to anyone, and you will never stop trying.", "effects": ["hp +3", "stat wis +1"] }
-        ] },
-      { "text": "Join in", "check": { "stat": "cha", "dc": 13 },
+          {
+            "weight": 100,
+            "text": "Three movements and a coda. When it ends - all at once, on a held silence that would make a conductor weep - the swamp applauds itself with rain. You will never be able to describe this to anyone, and you will never stop trying.",
+            "effects": [
+              "hp +3",
+              "stat wis +1"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Join in",
+        "check": {
+          "stat": "cha",
+          "dc": 13
+        },
         "success": [
-          { "weight": 100, "text": "You find the note and hold it. The chorus RESHAPES around your voice - a thousand small singers making room - and for eight bars you are the soloist in the oldest opera in the world. The frogs regard you afterward as one of their own. This has dietary implications you politely decline.", "effects": ["stat cha +2"] }
+          {
+            "weight": 100,
+            "text": "You find the note and hold it. The chorus RESHAPES around your voice - a thousand small singers making room - and for eight bars you are the soloist in the oldest opera in the world. The frogs regard you afterward as one of their own. This has dietary implications you politely decline.",
+            "effects": [
+              "stat cha +2"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "You come in flat, on the wrong beat, in what is apparently the sacred verse. Ten thousand frogs stop simultaneously to look at you. The silence has texture. Somewhere, one frog says a single syllable that needs no translation.", "effects": ["stat cha -1"] }
-        ] },
-      { "text": "Record the melody for the taverns",
+          {
+            "weight": 100,
+            "text": "You come in flat, on the wrong beat, in what is apparently the sacred verse. Ten thousand frogs stop simultaneously to look at you. The silence has texture. Somewhere, one frog says a single syllable that needs no translation.",
+            "effects": [
+              "stat cha -1"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Record the melody for the taverns",
         "outcomes": [
-          { "weight": 100, "text": "You transcribe what you can onto a ration wrapper - the shape of it, the answering phrases. The tavern bards will mangle it, the way bards do, but even mangled it will empty eyes and fill cups. Art launders well.", "effects": ["money +6", "stat int +1"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "You transcribe what you can onto a ration wrapper - the shape of it, the answering phrases. The tavern bards will mangle it, the way bards do, but even mangled it will empty eyes and fill cups. Art launders well.",
+            "effects": [
+              "money +6",
+              "stat int +1"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "swamp",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_5"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   }
 ]

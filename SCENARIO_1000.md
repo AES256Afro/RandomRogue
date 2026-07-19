@@ -5,8 +5,10 @@ It is not a promise that one premise will be copied into several biomes. Every
 id must have its own opening, conflict, choice structure, outcomes, and reason
 to exist in the Chronicle.
 
-The current deck is the foundation. New releases fill this matrix until the
-validator reports 1,000 playable ids. Scenario count is only one defense
+The current deck contains 521 cards. All of them have a primary theme and deck,
+and 351 foundation cards have completed the Release 17 narrative remaster. New
+releases fill this matrix until the validator reports 1,000 playable ids.
+Scenario count is only one defense
 against repetition. The engine also deals without replacement for an entire
 life, cools repeated themes, and preserves seen ids in saves.
 
@@ -127,7 +129,8 @@ No arc repeats an id. Recurring situations use a new beat with changed facts.
 | Wave | Deck total after wave | Focus |
 | --- | ---: | --- |
 | Foundation | 381 | Existing world, relationship, mystery, naval, and political cards |
-| Wave A | 500 | Labor, housing, care, anti-fascism, and repetition repair |
+| Wave A | 501 | Labor, housing, care, anti-fascism, and repetition repair |
+| Narrative remaster | 521 | Reframe every legacy card and establish twenty tone anchors |
 | Wave B | 625 | War refusal, refuge, borders, testimony, and propaganda |
 | Wave C | 750 | Ecology, food, land, pollution, and public infrastructure |
 | Wave D | 875 | Debt, automation, post-scarcity, science, and cosmic bureaucracy |

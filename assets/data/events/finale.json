@@ -5,7 +5,7 @@
       "dungeon_finale"
     ],
     "weight": 10,
-    "text": "The final chamber. An elderly lich sits at a desk buried in parchment. 'Adventurer,' it rasps, 'do you know ANYTHING about estate taxes? I've been dead for 300 years and they keep sending letters.'",
+    "text": "The final chamber. An elderly lich sits at a desk buried in parchment. 'Adventurer,' it rasps, 'do you know ANYTHING about estate taxes? I've been dead for 300 years and they keep sending letters.'\n\nThe official lesson of \"Dungeon Lich Taxes\" is complicated; the useful lesson is that an investor has purchased the problem, removed everything useful, and listed the remainder as growth.",
     "choices": [
       {
         "text": "Help with the taxes",
@@ -24,7 +24,8 @@
               "money +25",
               "loot fine",
               "stat int +1",
-              "rep +1"
+              "rep +1",
+              "region solidarity +1"
             ]
           },
           {
@@ -33,7 +34,8 @@
             "effects": [
               "money +25",
               "loot fine",
-              "stat int +1"
+              "stat int +1",
+              "region solidarity +1"
             ]
           }
         ],
@@ -42,10 +44,12 @@
             "weight": 100,
             "text": "You make it worse. The lich now owes back taxes in two kingdoms, one of which no longer exists. It curses you out of pure administrative grief.",
             "effects": [
-              "hp -5"
+              "hp -5",
+              "region solidarity +1"
             ]
           }
-        ]
+        ],
+        "approach": "mercy"
       },
       {
         "text": "Attack while it's distracted",
@@ -62,7 +66,8 @@
             "text": "Mid-parry, the lich sees the artifact you carry and stops cold. 'You already emptied SOMEONE'S final chamber. Fine. I know how this ends.' It signs its hoard over to you like a resignation letter and sits back down with the parchment, muttering about succession planning.",
             "effects": [
               "money +22",
-              "loot fine"
+              "loot fine",
+              "region unrest +1"
             ]
           },
           {
@@ -70,7 +75,8 @@
             "text": "The lich crumbles, almost relieved. Its final words: 'tell them... I'm... exempt.' The hoard is yours, minus filing fees.",
             "effects": [
               "money +30",
-              "hp -3"
+              "hp -3",
+              "region unrest +1"
             ]
           }
         ],
@@ -82,17 +88,20 @@
             ],
             "text": "The lich raises the parchment sheaf, looks at you swaying on your feet, and lowers it. 'I am not filing paperwork on THAT. Sit. There is tea. It is dust, but it is tea.' You leave un-slain and faintly warmed.",
             "effects": [
-              "hp -1"
+              "hp -1",
+              "region unrest +1"
             ]
           },
           {
             "weight": 100,
             "text": "The lich hits you with a sheaf of parchment. It's the deadliest thing in the room and it knows it.",
             "effects": [
-              "hp -8"
+              "hp -8",
+              "region unrest +1"
             ]
           }
-        ]
+        ],
+        "approach": "force"
       },
       {
         "text": "Suggest it just stop opening the letters",
@@ -116,16 +125,25 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "dungeon_finale",
+    "theme": "capital",
+    "tags": [
+      "capital",
+      "voice_7"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "dungeon_finale_vault",
     "locations": [
       "dungeon_finale"
     ],
-    "text": "The final door opens onto a vault. Actual treasure, actually glittering. A plaque reads: 'CONGRATULATIONS. PLEASE REVIEW YOUR EXPERIENCE ON THE WAY OUT.'",
+    "text": "The final door opens onto a vault. Actual treasure, actually glittering. A plaque reads: 'CONGRATULATIONS. PLEASE REVIEW YOUR EXPERIENCE ON THE WAY OUT.'\n\nBehind the business of \"Dungeon Finale Vault\" sits an older truth: a merchant has found a way to own the risk while renting it back to everyone in danger.",
     "choices": [
       {
         "text": "Fill your pockets, professionally",
@@ -138,7 +156,8 @@
             "text": "The vault's wards taste the artifact you carry and snap to attention, mistaking you for management. Inner cases you hadn't even noticed unlock themselves with an obsequious click. You are looted AT, efficiently.",
             "effects": [
               "money +25",
-              "loot fine"
+              "loot fine",
+              "region solidarity -1"
             ]
           },
           {
@@ -146,7 +165,8 @@
             "text": "Coins, trinkets, a thing that might be jewelry or dentistry. A clean haul.",
             "effects": [
               "money +22",
-              "loot fine"
+              "loot fine",
+              "region solidarity -1"
             ]
           },
           {
@@ -155,10 +175,12 @@
             "effects": [
               "money +25",
               "loot fine",
-              "hp -4"
+              "hp -4",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Take only what fits in one hand",
@@ -185,7 +207,8 @@
               "hp -2"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Leave a review instead",
@@ -209,7 +232,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       },
       {
         "text": "Rig a rope hoist and take a whole chest",
@@ -226,16 +250,25 @@
               "removeitem rope"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "dungeon_finale",
+    "theme": "capital",
+    "tags": [
+      "capital",
+      "voice_5"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "dungeon_finale_janitor",
     "locations": [
       "dungeon_finale"
     ],
-    "text": "The last chamber holds no monster. It holds a janitor, mopping around the bones. 'Mind the wet bones,' he says. 'You here for the hoard? It's behind the mop closet. I don't make the rules but I do clean up after them.'",
+    "text": "The last chamber holds no monster. It holds a janitor, mopping around the bones. 'Mind the wet bones,' he says. 'You here for the hoard? It's behind the mop closet. I don't make the rules but I do clean up after them.'\n\nA plaque may eventually misdescribe \"Dungeon Finale Janitor\". For now, the useful truth is that a supervisor has arrived to explain the task to everyone who has performed it for twenty years.",
     "choices": [
       {
         "text": "Ask him to open the closet",
@@ -272,7 +305,8 @@
               "loot common"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Fight him. He's clearly the boss",
@@ -284,7 +318,8 @@
             ],
             "text": "You raise your fists. He looks at you, swaying, held together mostly by stubbornness, and sets the mop down. 'I don't fight furniture.' He sits you on a crate and produces soup from somewhere janitorial. You don't ask. You drink.",
             "effects": [
-              "hp +4"
+              "hp +4",
+              "region unrest +1"
             ]
           },
           {
@@ -292,7 +327,8 @@
             "text": "He deflects your entire offense with the mop. Decades of technique. You wake up outside, neatly propped against a rock, with a pity coin in your palm.",
             "effects": [
               "hp -6",
-              "money +1"
+              "money +1",
+              "region unrest +1"
             ]
           },
           {
@@ -301,10 +337,12 @@
             "effects": [
               "hp -4",
               "money +20",
-              "loot fine"
+              "loot fine",
+              "region unrest +1"
             ]
           }
-        ]
+        ],
+        "approach": "force"
       },
       {
         "text": "Offer to help mop",
@@ -318,7 +356,8 @@
             "effects": [
               "money +14",
               "stat wis +1",
-              "hp +2"
+              "hp +2",
+              "region solidarity +1"
             ]
           },
           {
@@ -327,19 +366,29 @@
             "effects": [
               "money +10",
               "stat wis +1",
-              "hp +2"
+              "hp +2",
+              "region solidarity +1"
             ]
           }
-        ]
+        ],
+        "approach": "mercy"
       }
-    ]
+    ],
+    "primary": "dungeon_finale",
+    "theme": "labor",
+    "tags": [
+      "labor",
+      "voice_10"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "dungeon_finale_gift_shop",
     "locations": [
       "dungeon_finale"
     ],
-    "text": "The final chamber is... a gift shop. Shelves of branded merchandise: tiny plush mimics, 'I SURVIVED {site}' mugs, novelty curse scrolls. A skeleton in a lanyard waves. 'Exit's through here. Everyone exits through here.'",
+    "text": "The final chamber is... a gift shop. Shelves of branded merchandise: tiny plush mimics, 'I SURVIVED {site}' mugs, novelty curse scrolls. A skeleton in a lanyard waves. 'Exit's through here. Everyone exits through here.'\n\nPower calls \"Dungeon Finale Gift Shop\" an exception. The rule it conceals is simpler: a debt collector has arrived to repossess something the debtor grew personally.",
     "choices": [
       {
         "text": "Buy a souvenir",
@@ -355,7 +404,8 @@
             "text": "As you pay, the novelty curse scrolls all rustle toward your genuine curse like fans at a stage door. The skeleton is thrilled. 'A REAL one. We don't get many collectors.' It upgrades your purchase to the premium shelf, on the house.",
             "effects": [
               "money -5",
-              "loot fine"
+              "loot fine",
+              "region solidarity -1"
             ]
           },
           {
@@ -363,7 +413,8 @@
             "text": "The plush mimic is soft, judgmental, and possibly load-bearing to your happiness now.",
             "effects": [
               "money -5",
-              "loot common"
+              "loot common",
+              "region solidarity -1"
             ]
           },
           {
@@ -372,10 +423,12 @@
             "effects": [
               "money -5",
               "loot common",
-              "stat wis -1"
+              "stat wis -1",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Ask what happened to the actual boss",
@@ -399,7 +452,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Shoplift",
@@ -435,7 +489,8 @@
               "hp -5"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       },
       {
         "text": "License your name for the merch line",
@@ -451,8 +506,17 @@
               "rep +1"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "dungeon_finale",
+    "theme": "capital",
+    "tags": [
+      "capital",
+      "voice_4"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   }
 ]

@@ -1,270 +1,1719 @@
 [
   {
-    "id": "r13_heir_letter", "locations": ["city", "tavern", "road"], "weight": 18,
-    "family": "crooked_inheritance", "tags": ["relationship", "consequence", "history"],
-    "slots": {"pair": "social_pair"},
-    "text": "A courier hands you a will naming {pair} heir to a chair, a debt, and half of {pair_other}. The two are {pair_kind}, which explains nothing and worsens everything.",
+    "id": "r13_heir_letter",
+    "locations": [
+      "city",
+      "tavern",
+      "road"
+    ],
+    "weight": 18,
+    "family": "crooked_inheritance",
+    "tags": [
+      "relationship",
+      "consequence",
+      "history",
+      "capital",
+      "voice_6"
+    ],
+    "slots": {
+      "pair": "social_pair"
+    },
+    "text": "A courier hands you a will naming {pair} heir to a chair, a debt, and half of {pair_other}. The two are {pair_kind}, which explains nothing and worsens everything.\n\nNobody affected by \"Heir Letter\" was consulted. The part authority avoids is that the ledger reports excellent health and requests that nobody examine the patient.",
     "choices": [
-      {"text": "Deliver the will intact", "approach": "law", "outcomes": [{"weight": 100, "text": "{pair} reads every clause twice. {pair_other} reads your face. The chair is apparently evidence.", "effects": ["npc_rel trust +2", "network -1", "schedule 2 r13_heir_chair The inherited chair has been opened."]}]},
-      {"text": "Correct the insulting clauses first", "approach": "mercy", "check": {"stat": "int", "dc": 12}, "success": [{"weight": 100, "text": "Your edits prevent a duel and accidentally grant you standing in the estate.", "effects": ["network +2", "npc_rel respect +2", "schedule 3 r13_heir_chair The family requests its new legal expert."]}], "fail": [{"weight": 100, "text": "You move one comma and transfer the debt to yourself.", "effects": ["money -6", "schedule 2 r13_heir_chair The creditors found the chair."]}]}
-    ]
+      {
+        "text": "Deliver the will intact",
+        "approach": "law",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "{pair} reads every clause twice. {pair_other} reads your face. The chair is apparently evidence.",
+            "effects": [
+              "npc_rel trust +2",
+              "network -1",
+              "schedule 2 r13_heir_chair The inherited chair has been opened."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Correct the insulting clauses first",
+        "approach": "mercy",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Your edits prevent a duel and accidentally grant you standing in the estate.",
+            "effects": [
+              "network +2",
+              "npc_rel respect +2",
+              "schedule 3 r13_heir_chair The family requests its new legal expert."
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You move one comma and transfer the debt to yourself.",
+            "effects": [
+              "money -6",
+              "schedule 2 r13_heir_chair The creditors found the chair."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "capital",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r13_heir_chair", "locations": [], "weight": 1, "family": "crooked_inheritance", "tags": ["relationship", "consequence"],
-    "slots": {"pair": "social_pair"},
-    "text": "The inherited chair contains a second will, three teeth, and a map drawn by someone who hated straight roads. {pair} and {pair_other} both claim the teeth.",
+    "id": "r13_heir_chair",
+    "locations": [],
+    "weight": 1,
+    "family": "crooked_inheritance",
+    "tags": [
+      "relationship",
+      "consequence",
+      "colonialism",
+      "voice_3"
+    ],
+    "slots": {
+      "pair": "social_pair"
+    },
+    "text": "The inherited chair contains a second will, three teeth, and a map drawn by someone who hated straight roads. {pair} and {pair_other} both claim the teeth.\n\nThe paperwork around \"Heir Chair\" avoids its central fact: the expedition has discovered a place whose residents made the tactical error of already living here.",
     "choices": [
-      {"text": "Follow the map together", "approach": "curiosity", "outcomes": [{"weight": 100, "text": "The route ends beneath a tax office floor. The family secret has municipal foundations.", "effects": ["network +1", "evidence +1", "schedule 3 r13_heir_cellar The map has led below the tax office."]}]},
-      {"text": "Sell the chair and keep the map", "approach": "greed", "outcomes": [{"weight": 100, "text": "The chair sells immediately to a dentist with political ambitions.", "effects": ["money +10", "network -2", "schedule 4 r13_heir_cellar Someone else reached the cellar first."]}]}
-    ]
+      {
+        "text": "Follow the map together",
+        "approach": "curiosity",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The route ends beneath a tax office floor. The family secret has municipal foundations.",
+            "effects": [
+              "network +1",
+              "evidence +1",
+              "schedule 3 r13_heir_cellar The map has led below the tax office."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sell the chair and keep the map",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The chair sells immediately to a dentist with political ambitions.",
+            "effects": [
+              "money +10",
+              "network -2",
+              "schedule 4 r13_heir_cellar Someone else reached the cellar first."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "colonialism",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r13_heir_cellar", "locations": [], "weight": 1, "family": "crooked_inheritance", "tags": ["relationship", "regional", "history"],
-    "slots": {"pair": "social_pair"},
-    "text": "Below the tax office, {pair} finds ledgers proving the estate was built from money owed to {pair_other}'s family. The teeth belonged to the auditor.",
+    "id": "r13_heir_cellar",
+    "locations": [],
+    "weight": 1,
+    "family": "crooked_inheritance",
+    "tags": [
+      "relationship",
+      "regional",
+      "history",
+      "capital",
+      "voice_3"
+    ],
+    "slots": {
+      "pair": "social_pair"
+    },
+    "text": "Below the tax office, {pair} finds ledgers proving the estate was built from money owed to {pair_other}'s family. The teeth belonged to the auditor.\n\nThe paperwork around \"Heir Cellar\" avoids its central fact: profit has been declared the only adult in the room despite eating all the furniture.",
     "choices": [
-      {"text": "Return the estate to the injured line", "approach": "justice", "outcomes": [{"weight": 100, "text": "Ownership changes hands. So does the resentment, though it becomes more accurately addressed.", "effects": ["network +3", "region unrest -1", "schedule 4 r13_heir_hearing The inheritance hearing has been called."]}]},
-      {"text": "Destroy the ledger and split the estate", "approach": "pragmatic", "outcomes": [{"weight": 100, "text": "The paper burns. The debt does not, but now it lacks page numbers.", "effects": ["network +1", "money +8", "region unrest +1", "schedule 4 r13_heir_hearing The inheritance hearing lacks its best evidence."]}]}
-    ]
+      {
+        "text": "Return the estate to the injured line",
+        "approach": "justice",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Ownership changes hands. So does the resentment, though it becomes more accurately addressed.",
+            "effects": [
+              "network +3",
+              "region unrest -1",
+              "schedule 4 r13_heir_hearing The inheritance hearing has been called."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Destroy the ledger and split the estate",
+        "approach": "pragmatic",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The paper burns. The debt does not, but now it lacks page numbers.",
+            "effects": [
+              "network +1",
+              "money +8",
+              "region unrest +1",
+              "schedule 4 r13_heir_hearing The inheritance hearing lacks its best evidence."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "capital",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r13_heir_hearing", "locations": [], "weight": 1, "family": "crooked_inheritance", "tags": ["relationship", "social", "consequence"],
-    "slots": {"pair": "social_pair"},
-    "text": "At the hearing, {pair} speaks first. {pair_other} interrupts with the chair, now wearing a judge's wig. Nobody challenges its standing.",
+    "id": "r13_heir_hearing",
+    "locations": [],
+    "weight": 1,
+    "family": "crooked_inheritance",
+    "tags": [
+      "relationship",
+      "social",
+      "consequence",
+      "liberalism",
+      "voice_0"
+    ],
+    "slots": {
+      "pair": "social_pair"
+    },
+    "text": "At the hearing, {pair} speaks first. {pair_other} interrupts with the chair, now wearing a judge's wig. Nobody challenges its standing.\n\nThe file titled \"Heir Hearing\" makes the arrangement plain: the institution is capable of courage but requires three signatures from people selected for caution.",
     "choices": [
-      {"text": "Argue from the surviving evidence", "approach": "law", "check": {"stat": "cha", "dc": 13}, "success": [{"weight": 100, "text": "The court recognizes harm, kinship, and furniture as separate legal persons.", "effects": ["npc_rel respect +3", "network +2", "schedule 5 r13_heir_feast The estate invites everyone to a reconciliation feast."]}], "fail": [{"weight": 100, "text": "The judge awards the estate to the chair. It immediately raises rent.", "effects": ["money -5", "region unrest +1", "schedule 5 r13_heir_feast The chair is hosting a victory feast."]}]},
-      {"text": "Ask both claimants what they actually want", "approach": "mercy", "outcomes": [{"weight": 100, "text": "Neither wants the estate. Both want the other to admit the dead lied.", "effects": ["network +3", "stat wis +1", "schedule 3 r13_heir_feast The confession feast is ready."]}]}
-    ]
+      {
+        "text": "Argue from the surviving evidence",
+        "approach": "law",
+        "check": {
+          "stat": "cha",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The court recognizes harm, kinship, and furniture as separate legal persons.",
+            "effects": [
+              "npc_rel respect +3",
+              "network +2",
+              "schedule 5 r13_heir_feast The estate invites everyone to a reconciliation feast."
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The judge awards the estate to the chair. It immediately raises rent.",
+            "effects": [
+              "money -5",
+              "region unrest +1",
+              "schedule 5 r13_heir_feast The chair is hosting a victory feast."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask both claimants what they actually want",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Neither wants the estate. Both want the other to admit the dead lied.",
+            "effects": [
+              "network +3",
+              "stat wis +1",
+              "schedule 3 r13_heir_feast The confession feast is ready."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "liberalism",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r13_heir_feast", "locations": [], "weight": 1, "family": "crooked_inheritance", "tags": ["relationship", "history", "absurd"],
-    "slots": {"pair": "social_pair"},
-    "text": "The estate serves a final feast. {pair} and {pair_other} sit together beneath a portrait whose painted eyes keep changing sides.",
+    "id": "r13_heir_feast",
+    "locations": [],
+    "weight": 1,
+    "family": "crooked_inheritance",
+    "tags": [
+      "relationship",
+      "history",
+      "absurd",
+      "propaganda",
+      "voice_9"
+    ],
+    "slots": {
+      "pair": "social_pair"
+    },
+    "text": "The estate serves a final feast. {pair} and {pair_other} sit together beneath a portrait whose painted eyes keep changing sides.\n\nThe argument around \"Heir Feast\" ends wherever someone finally admits that the archive contains two histories: the bound edition and the notes hidden behind it.",
     "choices": [
-      {"text": "Toast the living instead of the estate", "approach": "mercy", "outcomes": [{"weight": 100, "text": "The toast is short. The peace is not perfect, which may be why it lasts.", "effects": ["network +4", "npc_rel affection +2", "region prosperity +1", "converge crooked_inheritance"]}]},
-      {"text": "Accept the chair as your fee", "approach": "absurd", "outcomes": [{"weight": 100, "text": "The chair objects, then follows you anyway. It knows too much to remain furniture.", "effects": ["money +15", "trait +famous", "network -1", "converge crooked_inheritance"]}]}
-    ]
-  },
-
-  {
-    "id": "r13_refugee_bells", "locations": ["road", "city", "coast"], "weight": 20,
-    "family": "refugee_bells", "tags": ["regional", "plague", "consequence"],
-    "when": ["neighbor plagued"],
-    "text": "Bells ring beyond the regional border. A line of refugees arrives before the sound does, carrying sealed letters and one extremely healthy-looking goat.",
-    "choices": [
-      {"text": "Open the gates and organize shelter", "approach": "mercy", "outcomes": [{"weight": 100, "text": "Every roof gains a family. Every family gains an opinion about the roof.", "effects": ["region pressure +2", "region_flag refugees", "schedule 3 r13_refugee_goat The refugee goat has become politically important."]}]},
-      {"text": "Quarantine the road camp", "approach": "caution", "outcomes": [{"weight": 100, "text": "The camp obeys. Hunger does not recognize the rope boundary.", "effects": ["region danger -1", "region unrest +2", "schedule 2 r13_refugee_goat The quarantined goat escaped."]}]}
-    ]
-  },
-  {
-    "id": "r13_refugee_goat", "locations": [], "weight": 1, "family": "refugee_bells", "tags": ["regional", "absurd"],
-    "text": "The healthy goat has eaten the quarantine ledger and is now the only creature who knows the official headcount.",
-    "choices": [
-      {"text": "Appoint the goat census clerk", "approach": "absurd", "outcomes": [{"weight": 100, "text": "Its first count is inaccurate but refreshingly free of favoritism.", "effects": ["region unrest -1", "region prosperity +1", "schedule 4 r13_refugee_work The new arrivals seek work."]}]},
-      {"text": "Reconstruct the ledger from memory", "approach": "law", "check": {"stat": "int", "dc": 12}, "success": [{"weight": 100, "text": "You remember every name except the goat's. It files a complaint.", "effects": ["rep +3", "schedule 3 r13_refugee_work The new arrivals seek work."]}], "fail": [{"weight": 100, "text": "You accidentally count the goat as six cobblers.", "effects": ["region unrest +1", "schedule 3 r13_refugee_work Six imaginary cobblers need jobs."]}]}
-    ]
-  },
-  {
-    "id": "r13_refugee_work", "locations": [], "weight": 1, "family": "refugee_bells", "tags": ["regional", "economy", "social"],
-    "text": "The newcomers can repair roads, brew medicine, and argue in three tax dialects. Local guilds call this an invasion of competence.",
-    "choices": [
-      {"text": "Fund mixed work crews", "approach": "mercy", "outcomes": [{"weight": 100, "text": "The first crew repairs a bridge and invents a shared insult for management.", "effects": ["money -5", "region prosperity +2", "region unrest -1", "region_spread prosperity +1", "schedule 5 r13_refugee_fever A fever appears in the work camp."]}]},
-      {"text": "Sell temporary guild permits", "approach": "greed", "outcomes": [{"weight": 100, "text": "The permits expire at noon and become collectible by dusk.", "effects": ["money +14", "region unrest +2", "schedule 4 r13_refugee_fever A fever appears near the permit office."]}]}
-    ]
-  },
-  {
-    "id": "r13_refugee_fever", "locations": [], "weight": 1, "family": "refugee_bells", "tags": ["regional", "plague", "danger"],
-    "text": "A child in the camp develops a fever. The physician says it may be plague, weather, or an aggressive dislike of turnips.",
-    "choices": [
-      {"text": "Treat first and identify later", "approach": "mercy", "outcomes": [{"weight": 100, "text": "The fever breaks. So does the physician's certainty, which was overdue.", "effects": ["money -6", "region danger -2", "region pressure -1", "schedule 3 r13_refugee_home The neighboring crisis has changed."]}]},
-      {"text": "Seal the district overnight", "approach": "caution", "outcomes": [{"weight": 100, "text": "Nobody leaves. By morning, everybody has exchanged soup and rumors.", "effects": ["region danger -1", "region unrest +2", "schedule 3 r13_refugee_home The sealed district demands an answer."]}]}
-    ]
-  },
-  {
-    "id": "r13_refugee_home", "locations": [], "weight": 1, "family": "refugee_bells", "tags": ["regional", "history", "consequence"],
-    "text": "Word arrives that the bells have stopped. Some families want to return. Others have planted gardens and named the drainage ditch.",
-    "choices": [
-      {"text": "Finance anyone who chooses to return", "approach": "mercy", "outcomes": [{"weight": 100, "text": "Half go home. Half stay. Both groups begin writing each other about what the other is missing.", "effects": ["money -8", "region pressure -3", "region_spread prosperity +1", "rep +5", "converge refugee_bells"]}]},
-      {"text": "Declare the camp a permanent quarter", "approach": "authority", "outcomes": [{"weight": 100, "text": "A neighborhood appears on the map before the cartographer approves it.", "effects": ["region prosperity +3", "region unrest -1", "region_flag trade_boom", "converge refugee_bells"]}]}
-    ]
-  },
-
-  {
-    "id": "r13_trade_seed", "locations": ["city", "road", "coast", "tavern"], "weight": 18,
-    "family": "contagious_trade", "tags": ["regional", "economy", "consequence"],
-    "when": ["region thriving"],
-    "text": "A merchant sells seeds that grow tiny locked strongboxes. The harvest is legal in this region and banned everywhere that has heard about it.",
-    "choices": [
-      {"text": "Plant a public demonstration", "approach": "curiosity", "outcomes": [{"weight": 100, "text": "By sunset, the crowd is watering the soil with investment contracts.", "effects": ["region prosperity +1", "region_spread prosperity +1", "schedule 3 r13_trade_harvest The first strongbox crop is ready."]}]},
-      {"text": "Buy the monopoly quietly", "approach": "greed", "requires": {"money": 8}, "outcomes": [{"weight": 100, "text": "You own every seed except the one the merchant kept in their mouth.", "effects": ["money -8", "region_flag trade_boom", "schedule 2 r13_trade_harvest Your private harvest has attracted inspectors."]}]}
-    ]
+      {
+        "text": "Toast the living instead of the estate",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The toast is short. The peace is not perfect, which may be why it lasts.",
+            "effects": [
+              "network +4",
+              "npc_rel affection +2",
+              "region prosperity +1",
+              "converge crooked_inheritance"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Accept the chair as your fee",
+        "approach": "absurd",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The chair objects, then follows you anyway. It knows too much to remain furniture.",
+            "effects": [
+              "money +15",
+              "trait +famous",
+              "network -1",
+              "converge crooked_inheritance"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "propaganda",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r13_trade_harvest", "locations": [], "weight": 1, "family": "contagious_trade", "tags": ["regional", "economy", "absurd"],
-    "text": "The strongboxes ripen. Most contain coins. One contains soil, which may be how the plant reinvests.",
+    "id": "r13_refugee_bells",
+    "locations": [
+      "road",
+      "city",
+      "coast"
+    ],
+    "weight": 20,
+    "family": "refugee_bells",
+    "tags": [
+      "regional",
+      "plague",
+      "consequence",
+      "anti_genocide",
+      "voice_7"
+    ],
+    "when": [
+      "neighbor plagued"
+    ],
+    "text": "Bells ring beyond the regional border. A line of refugees arrives before the sound does, carrying sealed letters and one extremely healthy-looking goat.\n\nThe official lesson of \"Refugee Bells\" is complicated; the useful lesson is that the survivors carry names that an efficient office tried to turn into numbers.",
     "choices": [
-      {"text": "Share seed stock with neighboring regions", "approach": "mercy", "outcomes": [{"weight": 100, "text": "Caravans depart carrying agriculture and future litigation.", "effects": ["region_spread prosperity +2", "money +6", "schedule 5 r13_trade_counterfeit Neighboring crops have produced counterfeit locks."]}]},
-      {"text": "Harvest everything before sunrise", "approach": "greed", "outcomes": [{"weight": 100, "text": "You become briefly wealthy and permanently recognizable to seed inspectors.", "effects": ["money +18", "region danger +1", "schedule 3 r13_trade_counterfeit Counterfeit locks flood the market."]}]}
-    ]
+      {
+        "text": "Open the gates and organize shelter",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Every roof gains a family. Every family gains an opinion about the roof.",
+            "effects": [
+              "region pressure +2",
+              "region_flag refugees",
+              "schedule 3 r13_refugee_goat The refugee goat has become politically important."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Quarantine the road camp",
+        "approach": "caution",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The camp obeys. Hunger does not recognize the rope boundary.",
+            "effects": [
+              "region danger -1",
+              "region unrest +2",
+              "schedule 2 r13_refugee_goat The quarantined goat escaped."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "road",
+    "theme": "anti_genocide",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r13_trade_counterfeit", "locations": [], "weight": 1, "family": "contagious_trade", "tags": ["regional", "economy", "danger"],
-    "text": "Counterfeit strongboxes spread across the border. They open only for people who do not own them, creating a remarkably honest crime wave.",
+    "id": "r13_refugee_goat",
+    "locations": [],
+    "weight": 1,
+    "family": "refugee_bells",
+    "tags": [
+      "regional",
+      "absurd",
+      "anti_genocide",
+      "voice_8"
+    ],
+    "text": "The healthy goat has eaten the quarantine ledger and is now the only creature who knows the official headcount.\n\nPeople remember \"Refugee Goat\" differently, but the material fact remains: the border is closed to the people whose homes were opened by artillery.",
     "choices": [
-      {"text": "Publish a safe lock design", "approach": "honesty", "check": {"stat": "int", "dc": 13}, "success": [{"weight": 100, "text": "The new design works. Criminals complain about unfair innovation.", "effects": ["region danger -2", "region_spread danger -1", "rep +4", "schedule 4 r13_trade_embargo The old lock guild demands compensation."]}], "fail": [{"weight": 100, "text": "Your lock opens for anyone carrying soup.", "effects": ["money -5", "region danger +1", "schedule 3 r13_trade_embargo The lock guild demands an embargo."]}]},
-      {"text": "Corner the counterfeit market", "approach": "greed", "outcomes": [{"weight": 100, "text": "You sell thieves boxes that rob them back. The economy becomes circular and furious.", "effects": ["money +20", "region unrest +2", "schedule 3 r13_trade_embargo The border closes around your inventory."]}]}
-    ]
+      {
+        "text": "Appoint the goat census clerk",
+        "approach": "absurd",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Its first count is inaccurate but refreshingly free of favoritism.",
+            "effects": [
+              "region unrest -1",
+              "region prosperity +1",
+              "schedule 4 r13_refugee_work The new arrivals seek work."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Reconstruct the ledger from memory",
+        "approach": "law",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You remember every name except the goat's. It files a complaint.",
+            "effects": [
+              "rep +3",
+              "schedule 3 r13_refugee_work The new arrivals seek work."
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You accidentally count the goat as six cobblers.",
+            "effects": [
+              "region unrest +1",
+              "schedule 3 r13_refugee_work Six imaginary cobblers need jobs."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "anti_genocide",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r13_trade_embargo", "locations": [], "weight": 1, "family": "contagious_trade", "tags": ["regional", "economy", "consequence"],
-    "text": "The lock guild declares an embargo. Every border gate closes except one operated by a clerk who accepts payment in interesting apologies.",
+    "id": "r13_refugee_work",
+    "locations": [],
+    "weight": 1,
+    "family": "refugee_bells",
+    "tags": [
+      "regional",
+      "economy",
+      "social",
+      "anti_genocide",
+      "voice_2"
+    ],
+    "text": "The newcomers can repair roads, brew medicine, and argue in three tax dialects. Local guilds call this an invasion of competence.\n\nAsk who pays for \"Refugee Work\" and the answer begins here: someone preserved the testimony because power was already preparing to forget.",
     "choices": [
-      {"text": "Negotiate a shared patent", "approach": "law", "outcomes": [{"weight": 100, "text": "The patent is fourteen pages and recognizes the plant as co-inventor.", "effects": ["region unrest -2", "region_spread prosperity +1", "schedule 5 r13_trade_fair The patent fair opens tomorrow."]}]},
-      {"text": "Smuggle seeds through the apology gate", "approach": "wit", "check": {"stat": "cha", "dc": 14}, "success": [{"weight": 100, "text": "Your apology is so interesting the clerk forgets to inspect three wagons.", "effects": ["money +14", "region_spread prosperity +1", "schedule 4 r13_trade_fair The illicit trade fair needs a keynote speaker."]}], "fail": [{"weight": 100, "text": "The clerk finds your apology derivative.", "effects": ["money -6", "trait +wanted", "schedule 4 r13_trade_fair The guild displays your confiscated seeds."]}]}
-    ]
+      {
+        "text": "Fund mixed work crews",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The first crew repairs a bridge and invents a shared insult for management.",
+            "effects": [
+              "money -5",
+              "region prosperity +2",
+              "region unrest -1",
+              "region_spread prosperity +1",
+              "schedule 5 r13_refugee_fever A fever appears in the work camp."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sell temporary guild permits",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The permits expire at noon and become collectible by dusk.",
+            "effects": [
+              "money +14",
+              "region unrest +2",
+              "schedule 4 r13_refugee_fever A fever appears near the permit office."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "anti_genocide",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r13_trade_fair", "locations": [], "weight": 1, "family": "contagious_trade", "tags": ["regional", "economy", "history"],
-    "text": "The first Interregional Strongbox Fair opens. Farmers, thieves, bankers, and one confused beekeeper share a ribbon.",
+    "id": "r13_refugee_fever",
+    "locations": [],
+    "weight": 1,
+    "family": "refugee_bells",
+    "tags": [
+      "regional",
+      "plague",
+      "danger",
+      "anti_genocide",
+      "voice_11"
+    ],
+    "text": "A child in the camp develops a fever. The physician says it may be plague, weather, or an aggressive dislike of turnips.\n\nNothing about \"Refugee Fever\" is accidental once you notice that the survivors carry names that an efficient office tried to turn into numbers.",
     "choices": [
-      {"text": "Make the trade charter public", "approach": "honesty", "outcomes": [{"weight": 100, "text": "The boom survives because nobody owns all of it. This disappoints several excellent villains.", "effects": ["region prosperity +2", "region_spread prosperity +2", "region unrest -1", "trait +famous", "converge contagious_trade"]}]},
-      {"text": "Sell your stake at the opening bell", "approach": "greed", "outcomes": [{"weight": 100, "text": "You leave rich before the beekeeper asks what strongboxes do to honey.", "effects": ["money +28", "region prosperity -1", "converge contagious_trade"]}]}
-    ]
-  },
-
-  {
-    "id": "r13_saint_arrives", "locations": ["city", "tavern", "road"], "weight": 20,
-    "family": "false_saint", "tags": ["mystery", "divine", "consequence"],
-    "when": ["mystery_active"], "slots": {"suspect": "mystery_suspect"},
-    "text": "A traveling saint declares {suspect}, the {suspect_trait} {suspect_prof}, innocent of {suspect_case}. Their halo is polished brass and squeaks in rain.",
-    "choices": [
-      {"text": "Inspect the halo and testimony", "approach": "curiosity", "outcomes": [{"weight": 100, "text": "The halo bears an archive inventory number filed after the alleged miracle.", "effects": ["evidence +1", "doubt +1", "schedule 2 r13_saint_miracle The saint announces a public miracle."]}]},
-      {"text": "Join the procession to stay close", "approach": "deception", "outcomes": [{"weight": 100, "text": "You receive a sash, a hymn sheet, and access to the donation wagon.", "effects": ["money +5", "npc_know 1", "schedule 3 r13_saint_miracle The procession reaches the miracle square."]}]}
-    ]
-  },
-  {
-    "id": "r13_saint_miracle", "locations": [], "weight": 1, "family": "false_saint", "tags": ["mystery", "divine", "absurd"],
-    "slots": {"suspect": "mystery_suspect"},
-    "text": "The saint heals a statue of {suspect} by removing a crack that was painted on this morning. The crowd gasps on schedule.",
-    "choices": [
-      {"text": "Reveal the wet paint", "approach": "honesty", "outcomes": [{"weight": 100, "text": "The paint comes away on your thumb. Half the crowd cheers the trick anyway.", "effects": ["evidence +1", "doubt -1", "region unrest +1", "schedule 3 r13_saint_donations The donation wagon leaves by the back road."]}]},
-      {"text": "Follow the donation wagon", "approach": "caution", "outcomes": [{"weight": 100, "text": "Its axle marks lead toward the original archive.", "effects": ["evidence +2", "schedule 2 r13_saint_donations You catch the donation wagon after dark."]}]}
-    ]
-  },
-  {
-    "id": "r13_saint_donations", "locations": [], "weight": 1, "family": "false_saint", "tags": ["mystery", "economy", "social"],
-    "slots": {"suspect": "mystery_suspect"},
-    "text": "The wagon carries donations, forged witness statements, and a letter addressed to {suspect}. The seal is genuine. The handwriting is trying too hard.",
-    "choices": [
-      {"text": "Preserve the letter as evidence", "approach": "law", "outcomes": [{"weight": 100, "text": "You seal it inside a cleaner envelope and sign every edge.", "effects": ["evidence +2", "schedule 3 r13_saint_witness The saint's former bookkeeper asks to meet."]}]},
-      {"text": "Use it to confront the saint now", "approach": "force", "outcomes": [{"weight": 100, "text": "The saint calls it a sacred forgery, which is a confession wearing incense.", "effects": ["evidence +1", "doubt +1", "rep +2", "schedule 2 r13_saint_witness A frightened bookkeeper follows you."]}]}
-    ]
-  },
-  {
-    "id": "r13_saint_witness", "locations": [], "weight": 1, "family": "false_saint", "tags": ["mystery", "relationship", "consequence"],
-    "slots": {"suspect": "mystery_suspect"},
-    "text": "The bookkeeper says the saint was paid to protect {suspect}. Then they admit three suspects used the same payment name.",
-    "choices": [
-      {"text": "Test the account against your evidence", "approach": "curiosity", "check": {"stat": "int", "dc": 13}, "success": [{"weight": 100, "text": "Dates, ink, and payments align around one person.", "effects": ["evidence +2", "doubt -1", "schedule 3 r13_saint_trial The public hearing begins."]}], "fail": [{"weight": 100, "text": "The numbers align around the bookkeeper's lunch expenses.", "effects": ["doubt +2", "schedule 3 r13_saint_trial The hearing begins with weak evidence."]}]},
-      {"text": "Protect the witness and trust the account", "approach": "mercy", "outcomes": [{"weight": 100, "text": "Protection earns details fear had withheld.", "effects": ["evidence +1", "rep +3", "schedule 3 r13_saint_trial The protected witness is ready."]}]}
-    ]
-  },
-  {
-    "id": "r13_saint_trial", "locations": [], "weight": 1, "family": "false_saint", "tags": ["mystery", "law", "history"],
-    "slots": {"suspect": "mystery_suspect"},
-    "text": "At the hearing, {suspect} waits beneath the squeaking halo. You have evidence, doubts, and one chance to put a name into history.",
-    "choices": [
-      {"text": "Accuse the person before you", "approach": "law", "outcomes": [{"weight": 100, "text": "You make the accusation and submit the full chain of evidence. The verdict will have to survive the facts.", "effects": ["mystery_accuse suspect", "mystery_trial", "rep +4", "converge false_saint"]}]},
-      {"text": "Refuse a verdict built on doubt", "approach": "caution", "outcomes": [{"weight": 100, "text": "The hearing adjourns. The saint flees, but an innocent name remains unbroken.", "effects": ["doubt -2", "stat wis +1", "region unrest -1", "converge false_saint"]}]}
-    ]
-  },
-
-  {
-    "id": "r13_guild_split", "locations": ["city", "tavern"], "weight": 20,
-    "family": "guild_schism", "tags": ["relationship", "social", "consequence"],
-    "slots": {"pair": "social_pair"},
-    "text": "The guild has split over whether {pair} or {pair_other} invented the left-handed invoice. Their {pair_kind} has become everybody's paperwork.",
-    "choices": [
-      {"text": "Hear both claims separately", "approach": "curiosity", "outcomes": [{"weight": 100, "text": "Both stories are convincing and mutually impossible.", "effects": ["npc_know 2", "network -1", "schedule 2 r13_guild_vote The guild calls an emergency vote."]}]},
-      {"text": "Back the person you know better", "approach": "loyalty", "outcomes": [{"weight": 100, "text": "Loyalty gains a chair and loses half the room.", "effects": ["npc_rel trust +3", "network -3", "schedule 2 r13_guild_vote The factional vote is tied."]}]}
-    ]
+      {
+        "text": "Treat first and identify later",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The fever breaks. So does the physician's certainty, which was overdue.",
+            "effects": [
+              "money -6",
+              "region danger -2",
+              "region pressure -1",
+              "schedule 3 r13_refugee_home The neighboring crisis has changed."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Seal the district overnight",
+        "approach": "caution",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Nobody leaves. By morning, everybody has exchanged soup and rumors.",
+            "effects": [
+              "region danger -1",
+              "region unrest +2",
+              "schedule 3 r13_refugee_home The sealed district demands an answer."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "anti_genocide",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r13_guild_vote", "locations": [], "weight": 1, "family": "guild_schism", "tags": ["relationship", "social"],
-    "slots": {"pair": "social_pair"},
-    "text": "The vote is tied because {pair} counts apprentices while {pair_other} counts chairs. Two chairs abstain.",
+    "id": "r13_refugee_home",
+    "locations": [],
+    "weight": 1,
+    "family": "refugee_bells",
+    "tags": [
+      "regional",
+      "history",
+      "consequence",
+      "anti_genocide",
+      "voice_4"
+    ],
+    "text": "Word arrives that the bells have stopped. Some families want to return. Others have planted gardens and named the drainage ditch.\n\nPower calls \"Refugee Home\" an exception. The rule it conceals is simpler: the border is closed to the people whose homes were opened by artillery.",
     "choices": [
-      {"text": "Count everyone affected", "approach": "justice", "outcomes": [{"weight": 100, "text": "Workers without titles enter the chamber and change the result.", "effects": ["network +2", "region unrest -1", "schedule 3 r13_guild_strike The losing faction calls a strike."]}]},
-      {"text": "Sell your deciding vote", "approach": "greed", "outcomes": [{"weight": 100, "text": "Both sides pay. You vote for adjournment.", "effects": ["money +12", "network -2", "schedule 2 r13_guild_strike Both factions strike against you."]}]}
-    ]
+      {
+        "text": "Finance anyone who chooses to return",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Half go home. Half stay. Both groups begin writing each other about what the other is missing.",
+            "effects": [
+              "money -8",
+              "region pressure -3",
+              "region_spread prosperity +1",
+              "rep +5",
+              "converge refugee_bells"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Declare the camp a permanent quarter",
+        "approach": "authority",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "A neighborhood appears on the map before the cartographer approves it.",
+            "effects": [
+              "region prosperity +3",
+              "region unrest -1",
+              "region_flag trade_boom",
+              "converge refugee_bells"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "anti_genocide",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r13_guild_strike", "locations": [], "weight": 1, "family": "guild_schism", "tags": ["relationship", "regional", "economy"],
-    "slots": {"pair": "social_pair"},
-    "text": "The strike closes workshops across the region. {pair} brings demands. {pair_other} brings lunch, accidentally making the picket line stronger.",
+    "id": "r13_trade_seed",
+    "locations": [
+      "city",
+      "road",
+      "coast",
+      "tavern"
+    ],
+    "weight": 18,
+    "family": "contagious_trade",
+    "tags": [
+      "regional",
+      "economy",
+      "consequence",
+      "capital",
+      "voice_3"
+    ],
+    "when": [
+      "region thriving"
+    ],
+    "text": "A merchant sells seeds that grow tiny locked strongboxes. The harvest is legal in this region and banned everywhere that has heard about it.\n\nThe paperwork around \"Trade Seed\" avoids its central fact: an investor has purchased the problem, removed everything useful, and listed the remainder as growth.",
     "choices": [
-      {"text": "Carry messages between the factions", "approach": "mercy", "outcomes": [{"weight": 100, "text": "By evening, insults become proposals with punctuation.", "effects": ["network +3", "region prosperity -1", "region unrest -1", "schedule 4 r13_guild_saboteur Someone sabotages the negotiations."]}]},
-      {"text": "Open a temporary workshop", "approach": "greed", "outcomes": [{"weight": 100, "text": "Business is excellent until both factions notice.", "effects": ["money +16", "network -3", "region unrest +2", "schedule 3 r13_guild_saboteur Your workshop is blamed for sabotage."]}]}
-    ]
+      {
+        "text": "Plant a public demonstration",
+        "approach": "curiosity",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "By sunset, the crowd is watering the soil with investment contracts.",
+            "effects": [
+              "region prosperity +1",
+              "region_spread prosperity +1",
+              "schedule 3 r13_trade_harvest The first strongbox crop is ready."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Buy the monopoly quietly",
+        "approach": "greed",
+        "requires": {
+          "money": 8
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You own every seed except the one the merchant kept in their mouth.",
+            "effects": [
+              "money -8",
+              "region_flag trade_boom",
+              "schedule 2 r13_trade_harvest Your private harvest has attracted inspectors."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "capital",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r13_guild_saboteur", "locations": [], "weight": 1, "family": "guild_schism", "tags": ["relationship", "danger", "consequence"],
-    "slots": {"pair": "social_pair"},
-    "text": "Someone has smashed the guild's master stamp. {pair} accuses {pair_other}. The broken handle smells strongly of soup.",
+    "id": "r13_trade_harvest",
+    "locations": [],
+    "weight": 1,
+    "family": "contagious_trade",
+    "tags": [
+      "regional",
+      "economy",
+      "absurd",
+      "food",
+      "voice_1"
+    ],
+    "text": "The strongboxes ripen. Most contain coins. One contains soil, which may be how the plant reinvests.\n\nOfficials classify \"Trade Harvest\" as routine, although someone has locked up tomorrow's bread to improve today's price.",
     "choices": [
-      {"text": "Trace the soup before choosing sides", "approach": "curiosity", "check": {"stat": "wis", "dc": 13}, "success": [{"weight": 100, "text": "The trail leads to a chair that abstained from the vote.", "effects": ["network +3", "npc_rel respect +2", "schedule 3 r13_guild_union The guild meets one final time."]}], "fail": [{"weight": 100, "text": "Every workshop serves the same soup. This is worse than no clue.", "effects": ["network -1", "schedule 3 r13_guild_union The final guild meeting begins angry."]}]},
-      {"text": "Replace the stamp and move on", "approach": "pragmatic", "outcomes": [{"weight": 100, "text": "The new stamp reads APPROXIMATELY OFFICIAL.", "effects": ["money -4", "region prosperity +1", "schedule 3 r13_guild_union The approximate guild charter is ready."]}]}
-    ]
+      {
+        "text": "Share seed stock with neighboring regions",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Caravans depart carrying agriculture and future litigation.",
+            "effects": [
+              "region_spread prosperity +2",
+              "money +6",
+              "schedule 5 r13_trade_counterfeit Neighboring crops have produced counterfeit locks."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Harvest everything before sunrise",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You become briefly wealthy and permanently recognizable to seed inspectors.",
+            "effects": [
+              "money +18",
+              "region danger +1",
+              "schedule 3 r13_trade_counterfeit Counterfeit locks flood the market."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "food",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r13_guild_union", "locations": [], "weight": 1, "family": "guild_schism", "tags": ["relationship", "social", "history"],
-    "slots": {"pair": "social_pair"},
-    "text": "{pair} and {pair_other} present a joint charter. It bans hereditary chairs, recognizes apprentices, and requires soup labels.",
+    "id": "r13_trade_counterfeit",
+    "locations": [],
+    "weight": 1,
+    "family": "contagious_trade",
+    "tags": [
+      "regional",
+      "economy",
+      "danger",
+      "anti_genocide",
+      "voice_2"
+    ],
+    "text": "Counterfeit strongboxes spread across the border. They open only for people who do not own them, creating a remarkably honest crime wave.\n\nAsk who pays for \"Trade Counterfeit\" and the answer begins here: the archive is incomplete because survival took priority over filing.",
     "choices": [
-      {"text": "Witness the charter", "approach": "law", "outcomes": [{"weight": 100, "text": "The guild reunites around rules broad enough to include its arguments.", "effects": ["network +4", "region prosperity +2", "region unrest -2", "rep +6", "converge guild_schism"]}]},
-      {"text": "Demand a consulting fee", "approach": "greed", "outcomes": [{"weight": 100, "text": "They pay you in stamped invoices redeemable after the next schism.", "effects": ["money +18", "network +1", "trait +agent", "converge guild_schism"]}]}
-    ]
+      {
+        "text": "Publish a safe lock design",
+        "approach": "honesty",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The new design works. Criminals complain about unfair innovation.",
+            "effects": [
+              "region danger -2",
+              "region_spread danger -1",
+              "rep +4",
+              "schedule 4 r13_trade_embargo The old lock guild demands compensation."
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "Your lock opens for anyone carrying soup.",
+            "effects": [
+              "money -5",
+              "region danger +1",
+              "schedule 3 r13_trade_embargo The lock guild demands an embargo."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Corner the counterfeit market",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You sell thieves boxes that rob them back. The economy becomes circular and furious.",
+            "effects": [
+              "money +20",
+              "region unrest +2",
+              "schedule 3 r13_trade_embargo The border closes around your inventory."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "anti_genocide",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
-
   {
-    "id": "r13_walking_town", "locations": ["road", "forest", "mountains", "coast"], "weight": 18,
-    "family": "walking_town", "tags": ["regional", "absurd", "consequence"],
-    "text": "A town walks past on hundreds of wooden legs. Its mayor leans from the clock tower and asks whether this road leads somewhere with lower property tax.",
+    "id": "r13_trade_embargo",
+    "locations": [],
+    "weight": 1,
+    "family": "contagious_trade",
+    "tags": [
+      "regional",
+      "economy",
+      "consequence",
+      "union",
+      "voice_9"
+    ],
+    "text": "The lock guild declares an embargo. Every border gate closes except one operated by a clerk who accepts payment in interesting apologies.\n\nThe argument around \"Trade Embargo\" ends wherever someone finally admits that a union meeting is converting private fear into public disagreement, which is progress.",
     "choices": [
-      {"text": "Offer directions through your region", "approach": "curiosity", "outcomes": [{"weight": 100, "text": "The town follows, flattening only roads that needed widening.", "effects": ["region pressure +1", "region prosperity +1", "schedule 2 r13_walking_zoning The walking town requests zoning permission."]}]},
-      {"text": "Charge a road toll per house", "approach": "greed", "outcomes": [{"weight": 100, "text": "The mayor pays for every house except the jail, which claims diplomatic immunity.", "effects": ["money +14", "region unrest +1", "schedule 2 r13_walking_zoning The jail has filed a zoning appeal."]}]}
-    ]
+      {
+        "text": "Negotiate a shared patent",
+        "approach": "law",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The patent is fourteen pages and recognizes the plant as co-inventor.",
+            "effects": [
+              "region unrest -2",
+              "region_spread prosperity +1",
+              "schedule 5 r13_trade_fair The patent fair opens tomorrow."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Smuggle seeds through the apology gate",
+        "approach": "wit",
+        "check": {
+          "stat": "cha",
+          "dc": 14
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Your apology is so interesting the clerk forgets to inspect three wagons.",
+            "effects": [
+              "money +14",
+              "region_spread prosperity +1",
+              "schedule 4 r13_trade_fair The illicit trade fair needs a keynote speaker."
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The clerk finds your apology derivative.",
+            "effects": [
+              "money -6",
+              "trait +wanted",
+              "schedule 4 r13_trade_fair The guild displays your confiscated seeds."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "union",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r13_walking_zoning", "locations": [], "weight": 1, "family": "walking_town", "tags": ["regional", "absurd"],
-    "text": "The town wants to stand here overnight. Local law defines a building as immobile, so every house has been charged with loitering.",
+    "id": "r13_trade_fair",
+    "locations": [],
+    "weight": 1,
+    "family": "contagious_trade",
+    "tags": [
+      "regional",
+      "economy",
+      "history",
+      "kindness",
+      "voice_6"
+    ],
+    "text": "The first Interregional Strongbox Fair opens. Farmers, thieves, bankers, and one confused beekeeper share a ribbon.\n\nNobody affected by \"Trade Fair\" was consulted. The part authority avoids is that the world is terrible at rewarding decency and strangely dependent upon it.",
     "choices": [
-      {"text": "Register the town as a vehicle", "approach": "law", "outcomes": [{"weight": 100, "text": "It receives one enormous license plate and a warning about turning signals.", "effects": ["region unrest -1", "schedule 3 r13_walking_market The mobile market opens at dawn."]}]},
-      {"text": "Hide the town behind the hill", "approach": "wit", "outcomes": [{"weight": 100, "text": "Inspectors accept that the skyline has always had chimneys.", "effects": ["rep -1", "region prosperity +1", "schedule 2 r13_walking_market The hidden town opens its market."]}]}
-    ]
+      {
+        "text": "Make the trade charter public",
+        "approach": "honesty",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The boom survives because nobody owns all of it. This disappoints several excellent villains.",
+            "effects": [
+              "region prosperity +2",
+              "region_spread prosperity +2",
+              "region unrest -1",
+              "trait +famous",
+              "converge contagious_trade"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sell your stake at the opening bell",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You leave rich before the beekeeper asks what strongboxes do to honey.",
+            "effects": [
+              "money +28",
+              "region prosperity -1",
+              "converge contagious_trade"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "kindness",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r13_walking_market", "locations": [], "weight": 1, "family": "walking_town", "tags": ["regional", "economy", "absurd"],
-    "text": "The walking market sells local goods from places it crossed yesterday. Every souvenir is authentic to somewhere else.",
+    "id": "r13_saint_arrives",
+    "locations": [
+      "city",
+      "tavern",
+      "road"
+    ],
+    "weight": 20,
+    "family": "false_saint",
+    "tags": [
+      "mystery",
+      "divine",
+      "consequence",
+      "faith",
+      "voice_7"
+    ],
+    "when": [
+      "mystery_active"
+    ],
+    "slots": {
+      "suspect": "mystery_suspect"
+    },
+    "text": "A traveling saint declares {suspect}, the {suspect_trait} {suspect_prof}, innocent of {suspect_case}. Their halo is polished brass and squeaks in rain.\n\nThe official lesson of \"Saint Arrives\" is complicated; the useful lesson is that the demon has a mother, a lunch break, and a complaint about unsafe summoning circles.",
     "choices": [
-      {"text": "Open trade with neighboring regions", "approach": "mercy", "outcomes": [{"weight": 100, "text": "Roads fill with goods following the town's footprints.", "effects": ["region_spread prosperity +2", "region_flag trade_boom", "schedule 4 r13_walking_bridge The town reaches a narrow bridge."]}]},
-      {"text": "Buy the mayor's route book", "approach": "greed", "requires": {"money": 6}, "outcomes": [{"weight": 100, "text": "The book lists every shortcut and three towns that are avoiding this one.", "effects": ["money -6", "stat wis +1", "schedule 3 r13_walking_bridge The route ends at a narrow bridge."]}]}
-    ]
+      {
+        "text": "Inspect the halo and testimony",
+        "approach": "curiosity",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The halo bears an archive inventory number filed after the alleged miracle.",
+            "effects": [
+              "evidence +1",
+              "doubt +1",
+              "schedule 2 r13_saint_miracle The saint announces a public miracle."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Join the procession to stay close",
+        "approach": "deception",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You receive a sash, a hymn sheet, and access to the donation wagon.",
+            "effects": [
+              "money +5",
+              "npc_know 1",
+              "schedule 3 r13_saint_miracle The procession reaches the miracle square."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "faith",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r13_walking_bridge", "locations": [], "weight": 1, "family": "walking_town", "tags": ["regional", "danger", "absurd"],
-    "text": "The bridge can hold twelve wagons. The town weighs approximately nine hundred wagons and refuses to cross one bakery at a time.",
+    "id": "r13_saint_miracle",
+    "locations": [],
+    "weight": 1,
+    "family": "false_saint",
+    "tags": [
+      "mystery",
+      "divine",
+      "absurd",
+      "faith",
+      "voice_2"
+    ],
+    "slots": {
+      "suspect": "mystery_suspect"
+    },
+    "text": "The saint heals a statue of {suspect} by removing a crack that was painted on this morning. The crowd gasps on schedule.\n\nAsk who pays for \"Saint Miracle\" and the answer begins here: the monster would like to be treated as a person before discussing the screaming.",
     "choices": [
-      {"text": "Teach the town to swim", "approach": "absurd", "check": {"stat": "int", "dc": 14}, "success": [{"weight": 100, "text": "Barrels become pontoons. The town floats badly but enthusiastically.", "effects": ["region danger -1", "stat int +1", "schedule 3 r13_walking_choice The walking town reaches the far bank."]}], "fail": [{"weight": 100, "text": "The courthouse sinks first and continues hearing cases underwater.", "effects": ["hp -3", "region danger +1", "schedule 3 r13_walking_choice The damp town reaches the far bank."]}]},
-      {"text": "Reinforce the bridge with local timber", "approach": "pragmatic", "outcomes": [{"weight": 100, "text": "The bridge survives. The forest sends an invoice.", "effects": ["money -8", "region prosperity +1", "schedule 3 r13_walking_choice The town must choose where to settle."]}]}
-    ]
+      {
+        "text": "Reveal the wet paint",
+        "approach": "honesty",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The paint comes away on your thumb. Half the crowd cheers the trick anyway.",
+            "effects": [
+              "evidence +1",
+              "doubt -1",
+              "region unrest +1",
+              "schedule 3 r13_saint_donations The donation wagon leaves by the back road."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Follow the donation wagon",
+        "approach": "caution",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Its axle marks lead toward the original archive.",
+            "effects": [
+              "evidence +2",
+              "schedule 2 r13_saint_donations You catch the donation wagon after dark."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "faith",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r13_walking_choice", "locations": [], "weight": 1, "family": "walking_town", "tags": ["regional", "history", "absurd"],
-    "text": "The town reaches an empty valley and asks whether it should finally stop. Its oldest resident cannot remember a floor that stayed beneath breakfast.",
+    "id": "r13_saint_donations",
+    "locations": [],
+    "weight": 1,
+    "family": "false_saint",
+    "tags": [
+      "mystery",
+      "economy",
+      "social",
+      "faith",
+      "voice_2"
+    ],
+    "slots": {
+      "suspect": "mystery_suspect"
+    },
+    "text": "The wagon carries donations, forged witness statements, and a letter addressed to {suspect}. The seal is genuine. The handwriting is trying too hard.\n\nAsk who pays for \"Saint Donations\" and the answer begins here: faith has arrived as practical courage; authority has arrived dressed like faith.",
     "choices": [
-      {"text": "Help it put down foundations", "approach": "mercy", "outcomes": [{"weight": 100, "text": "The legs fold beneath new streets. For the first time, the clock tower knows tomorrow's location.", "effects": ["region prosperity +3", "region pressure -2", "rep +6", "converge walking_town"]}]},
-      {"text": "Convince it to keep wandering", "approach": "curiosity", "outcomes": [{"weight": 100, "text": "The town turns toward the horizon. Years from now, maps will mark its migrations like weather.", "effects": ["region_spread prosperity +1", "trait +famous", "stat cha +1", "converge walking_town"]}]}
-    ]
+      {
+        "text": "Preserve the letter as evidence",
+        "approach": "law",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You seal it inside a cleaner envelope and sign every edge.",
+            "effects": [
+              "evidence +2",
+              "schedule 3 r13_saint_witness The saint's former bookkeeper asks to meet."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Use it to confront the saint now",
+        "approach": "force",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The saint calls it a sacred forgery, which is a confession wearing incense.",
+            "effects": [
+              "evidence +1",
+              "doubt +1",
+              "rep +2",
+              "schedule 2 r13_saint_witness A frightened bookkeeper follows you."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "faith",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
+  },
+  {
+    "id": "r13_saint_witness",
+    "locations": [],
+    "weight": 1,
+    "family": "false_saint",
+    "tags": [
+      "mystery",
+      "relationship",
+      "consequence",
+      "faith",
+      "voice_6"
+    ],
+    "slots": {
+      "suspect": "mystery_suspect"
+    },
+    "text": "The bookkeeper says the saint was paid to protect {suspect}. Then they admit three suspects used the same payment name.\n\nNobody affected by \"Saint Witness\" was consulted. The part authority avoids is that the monster would like to be treated as a person before discussing the screaming.",
+    "choices": [
+      {
+        "text": "Test the account against your evidence",
+        "approach": "curiosity",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Dates, ink, and payments align around one person.",
+            "effects": [
+              "evidence +2",
+              "doubt -1",
+              "schedule 3 r13_saint_trial The public hearing begins."
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The numbers align around the bookkeeper's lunch expenses.",
+            "effects": [
+              "doubt +2",
+              "schedule 3 r13_saint_trial The hearing begins with weak evidence."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Protect the witness and trust the account",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Protection earns details fear had withheld.",
+            "effects": [
+              "evidence +1",
+              "rep +3",
+              "schedule 3 r13_saint_trial The protected witness is ready."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "faith",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
+  },
+  {
+    "id": "r13_saint_trial",
+    "locations": [],
+    "weight": 1,
+    "family": "false_saint",
+    "tags": [
+      "mystery",
+      "law",
+      "history",
+      "faith",
+      "voice_11"
+    ],
+    "slots": {
+      "suspect": "mystery_suspect"
+    },
+    "text": "At the hearing, {suspect} waits beneath the squeaking halo. You have evidence, doubts, and one chance to put a name into history.\n\nNothing about \"Saint Trial\" is accidental once you notice that the demon has a mother, a lunch break, and a complaint about unsafe summoning circles.",
+    "choices": [
+      {
+        "text": "Accuse the person before you",
+        "approach": "law",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You make the accusation and submit the full chain of evidence. The verdict will have to survive the facts.",
+            "effects": [
+              "mystery_accuse suspect",
+              "mystery_trial",
+              "rep +4",
+              "converge false_saint",
+              "region pressure +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Refuse a verdict built on doubt",
+        "approach": "caution",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The hearing adjourns. The saint flees, but an innocent name remains unbroken.",
+            "effects": [
+              "doubt -2",
+              "stat wis +1",
+              "region unrest -1",
+              "converge false_saint"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "faith",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
+  },
+  {
+    "id": "r13_guild_split",
+    "locations": [
+      "city",
+      "tavern"
+    ],
+    "weight": 20,
+    "family": "guild_schism",
+    "tags": [
+      "relationship",
+      "social",
+      "consequence",
+      "union",
+      "voice_5"
+    ],
+    "slots": {
+      "pair": "social_pair"
+    },
+    "text": "The guild has split over whether {pair} or {pair_other} invented the left-handed invoice. Their {pair_kind} has become everybody's paperwork.\n\nBehind the business of \"Guild Split\" sits an older truth: a union meeting is converting private fear into public disagreement, which is progress.",
+    "choices": [
+      {
+        "text": "Hear both claims separately",
+        "approach": "curiosity",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Both stories are convincing and mutually impossible.",
+            "effects": [
+              "npc_know 2",
+              "network -1",
+              "schedule 2 r13_guild_vote The guild calls an emergency vote."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Back the person you know better",
+        "approach": "loyalty",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Loyalty gains a chair and loses half the room.",
+            "effects": [
+              "npc_rel trust +3",
+              "network -3",
+              "schedule 2 r13_guild_vote The factional vote is tied."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "union",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
+  },
+  {
+    "id": "r13_guild_vote",
+    "locations": [],
+    "weight": 1,
+    "family": "guild_schism",
+    "tags": [
+      "relationship",
+      "social",
+      "union",
+      "voice_5"
+    ],
+    "slots": {
+      "pair": "social_pair"
+    },
+    "text": "The vote is tied because {pair} counts apprentices while {pair_other} counts chairs. Two chairs abstain.\n\nBehind the business of \"Guild Vote\" sits an older truth: the scabs were lied to, the strikers are furious, and the owner is vacationing beyond thrown-vegetable range.",
+    "choices": [
+      {
+        "text": "Count everyone affected",
+        "approach": "justice",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Workers without titles enter the chamber and change the result.",
+            "effects": [
+              "network +2",
+              "region unrest -1",
+              "schedule 3 r13_guild_strike The losing faction calls a strike."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sell your deciding vote",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Both sides pay. You vote for adjournment.",
+            "effects": [
+              "money +12",
+              "network -2",
+              "schedule 2 r13_guild_strike Both factions strike against you."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "union",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
+  },
+  {
+    "id": "r13_guild_strike",
+    "locations": [],
+    "weight": 1,
+    "family": "guild_schism",
+    "tags": [
+      "relationship",
+      "regional",
+      "economy",
+      "union",
+      "voice_3"
+    ],
+    "slots": {
+      "pair": "social_pair"
+    },
+    "text": "The strike closes workshops across the region. {pair} brings demands. {pair_other} brings lunch, accidentally making the picket line stronger.\n\nThe paperwork around \"Guild Strike\" avoids its central fact: the workers agree the boss is a problem and have opened a longer argument about everything after that.",
+    "choices": [
+      {
+        "text": "Carry messages between the factions",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "By evening, insults become proposals with punctuation.",
+            "effects": [
+              "network +3",
+              "region prosperity -1",
+              "region unrest -1",
+              "schedule 4 r13_guild_saboteur Someone sabotages the negotiations."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Open a temporary workshop",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Business is excellent until both factions notice.",
+            "effects": [
+              "money +16",
+              "network -3",
+              "region unrest +2",
+              "schedule 3 r13_guild_saboteur Your workshop is blamed for sabotage."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "union",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
+  },
+  {
+    "id": "r13_guild_saboteur",
+    "locations": [],
+    "weight": 1,
+    "family": "guild_schism",
+    "tags": [
+      "relationship",
+      "danger",
+      "consequence",
+      "union",
+      "voice_4"
+    ],
+    "slots": {
+      "pair": "social_pair"
+    },
+    "text": "Someone has smashed the guild's master stamp. {pair} accuses {pair_other}. The broken handle smells strongly of soup.\n\nPower calls \"Guild Saboteur\" an exception. The rule it conceals is simpler: the picket line has survived rain, threats, and a three-hour dispute over the soup rota.",
+    "choices": [
+      {
+        "text": "Trace the soup before choosing sides",
+        "approach": "curiosity",
+        "check": {
+          "stat": "wis",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The trail leads to a chair that abstained from the vote.",
+            "effects": [
+              "network +3",
+              "npc_rel respect +2",
+              "schedule 3 r13_guild_union The guild meets one final time."
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "Every workshop serves the same soup. This is worse than no clue.",
+            "effects": [
+              "network -1",
+              "schedule 3 r13_guild_union The final guild meeting begins angry."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Replace the stamp and move on",
+        "approach": "pragmatic",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The new stamp reads APPROXIMATELY OFFICIAL.",
+            "effects": [
+              "money -4",
+              "region prosperity +1",
+              "schedule 3 r13_guild_union The approximate guild charter is ready."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "union",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
+  },
+  {
+    "id": "r13_guild_union",
+    "locations": [],
+    "weight": 1,
+    "family": "guild_schism",
+    "tags": [
+      "relationship",
+      "social",
+      "history",
+      "union",
+      "voice_8"
+    ],
+    "slots": {
+      "pair": "social_pair"
+    },
+    "text": "{pair} and {pair_other} present a joint charter. It bans hereditary chairs, recognizes apprentices, and requires soup labels.\n\nPeople remember \"Guild Union\" differently, but the material fact remains: the picket line has survived rain, threats, and a three-hour dispute over the soup rota.",
+    "choices": [
+      {
+        "text": "Witness the charter",
+        "approach": "law",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The guild reunites around rules broad enough to include its arguments.",
+            "effects": [
+              "network +4",
+              "region prosperity +2",
+              "region unrest -2",
+              "rep +6",
+              "converge guild_schism"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Demand a consulting fee",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "They pay you in stamped invoices redeemable after the next schism.",
+            "effects": [
+              "money +18",
+              "network +1",
+              "trait +agent",
+              "converge guild_schism"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "union",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
+  },
+  {
+    "id": "r13_walking_town",
+    "locations": [
+      "road",
+      "forest",
+      "mountains",
+      "coast"
+    ],
+    "weight": 18,
+    "family": "walking_town",
+    "tags": [
+      "regional",
+      "absurd",
+      "consequence",
+      "housing",
+      "voice_5"
+    ],
+    "text": "A town walks past on hundreds of wooden legs. Its mayor leans from the clock tower and asks whether this road leads somewhere with lower property tax.\n\nBehind the business of \"Walking Town\" sits an older truth: three families need this space, while one absent owner needs a fourth summer palace.",
+    "choices": [
+      {
+        "text": "Offer directions through your region",
+        "approach": "curiosity",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The town follows, flattening only roads that needed widening.",
+            "effects": [
+              "region pressure +1",
+              "region prosperity +1",
+              "schedule 2 r13_walking_zoning The walking town requests zoning permission."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Charge a road toll per house",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The mayor pays for every house except the jail, which claims diplomatic immunity.",
+            "effects": [
+              "money +14",
+              "region unrest +1",
+              "schedule 2 r13_walking_zoning The jail has filed a zoning appeal."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "road",
+    "theme": "housing",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
+  },
+  {
+    "id": "r13_walking_zoning",
+    "locations": [],
+    "weight": 1,
+    "family": "walking_town",
+    "tags": [
+      "regional",
+      "absurd",
+      "housing",
+      "voice_10"
+    ],
+    "text": "The town wants to stand here overnight. Local law defines a building as immobile, so every house has been charged with loitering.\n\nA plaque may eventually misdescribe \"Walking Zoning\". For now, the useful truth is that the deed is immaculate. The walls, tenants, and moral argument are damp.",
+    "choices": [
+      {
+        "text": "Register the town as a vehicle",
+        "approach": "law",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "It receives one enormous license plate and a warning about turning signals.",
+            "effects": [
+              "region unrest -1",
+              "schedule 3 r13_walking_market The mobile market opens at dawn."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Hide the town behind the hill",
+        "approach": "wit",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Inspectors accept that the skyline has always had chimneys.",
+            "effects": [
+              "rep -1",
+              "region prosperity +1",
+              "schedule 2 r13_walking_market The hidden town opens its market."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "housing",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
+  },
+  {
+    "id": "r13_walking_market",
+    "locations": [],
+    "weight": 1,
+    "family": "walking_town",
+    "tags": [
+      "regional",
+      "economy",
+      "absurd",
+      "capital",
+      "voice_1"
+    ],
+    "text": "The walking market sells local goods from places it crossed yesterday. Every souvenir is authentic to somewhere else.\n\nOfficials classify \"Walking Market\" as routine, although a merchant has found a way to own the risk while renting it back to everyone in danger.",
+    "choices": [
+      {
+        "text": "Open trade with neighboring regions",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Roads fill with goods following the town's footprints.",
+            "effects": [
+              "region_spread prosperity +2",
+              "region_flag trade_boom",
+              "schedule 4 r13_walking_bridge The town reaches a narrow bridge."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Buy the mayor's route book",
+        "approach": "greed",
+        "requires": {
+          "money": 6
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The book lists every shortcut and three towns that are avoiding this one.",
+            "effects": [
+              "money -6",
+              "stat wis +1",
+              "schedule 3 r13_walking_bridge The route ends at a narrow bridge."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "capital",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
+  },
+  {
+    "id": "r13_walking_bridge",
+    "locations": [],
+    "weight": 1,
+    "family": "walking_town",
+    "tags": [
+      "regional",
+      "danger",
+      "absurd",
+      "liberalism",
+      "voice_2"
+    ],
+    "text": "The bridge can hold twelve wagons. The town weighs approximately nine hundred wagons and refuses to cross one bakery at a time.\n\nAsk who pays for \"Walking Bridge\" and the answer begins here: the moderates have proposed meeting the boot halfway and are surprised by its direction of travel.",
+    "choices": [
+      {
+        "text": "Teach the town to swim",
+        "approach": "absurd",
+        "check": {
+          "stat": "int",
+          "dc": 14
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Barrels become pontoons. The town floats badly but enthusiastically.",
+            "effects": [
+              "region danger -1",
+              "stat int +1",
+              "schedule 3 r13_walking_choice The walking town reaches the far bank."
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The courthouse sinks first and continues hearing cases underwater.",
+            "effects": [
+              "hp -3",
+              "region danger +1",
+              "schedule 3 r13_walking_choice The damp town reaches the far bank."
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Reinforce the bridge with local timber",
+        "approach": "pragmatic",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The bridge survives. The forest sends an invoice.",
+            "effects": [
+              "money -8",
+              "region prosperity +1",
+              "schedule 3 r13_walking_choice The town must choose where to settle."
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "liberalism",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
+  },
+  {
+    "id": "r13_walking_choice",
+    "locations": [],
+    "weight": 1,
+    "family": "walking_town",
+    "tags": [
+      "regional",
+      "history",
+      "absurd",
+      "kindness",
+      "voice_0"
+    ],
+    "text": "The town reaches an empty valley and asks whether it should finally stop. Its oldest resident cannot remember a floor that stayed beneath breakfast.\n\nThe file titled \"Walking Choice\" makes the arrangement plain: kindness has no budget, no armor, and an alarming record of surviving anyway.",
+    "choices": [
+      {
+        "text": "Help it put down foundations",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The legs fold beneath new streets. For the first time, the clock tower knows tomorrow's location.",
+            "effects": [
+              "region prosperity +3",
+              "region pressure -2",
+              "rep +6",
+              "converge walking_town"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Convince it to keep wandering",
+        "approach": "curiosity",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The town turns toward the horizon. Years from now, maps will mark its migrations like weather.",
+            "effects": [
+              "region_spread prosperity +1",
+              "trait +famous",
+              "stat cha +1",
+              "converge walking_town"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "kindness",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   }
 ]

@@ -49,6 +49,87 @@ References, quotations, catchphrases, named characters, and copied scene
 structures from other works do not belong in authored content. Inspirations
 guide rhythm and concerns, not imitation.
 
+## Inspiration compass
+
+These references define ingredients, not a voice to copy:
+
+- Space Quest contributes cosmic slapstick, lethal interfaces, and irony.
+- TED contributes humane domestic comedy, especially the radical act of
+  treating a frightening demon like a person with needs.
+- Disco Elysium contributes class analysis, failed revolution, political
+  interiority, melancholy, and hope that understands the likelihood of defeat.
+- Rick and Morty contributes cosmic skepticism, scientific irresponsibility,
+  family damage, and jokes that puncture grand claims.
+- One Piece contributes freedom politics, chosen family, liberation, and
+  cheerful defiance of illegitimate authority.
+- The Hitchhiker's Guide to the Galaxy contributes cosmic bureaucracy and the
+  collision between universal scale and petty administration.
+- Labor history contributes material stakes, workplace democracy, strikes,
+  union conflict, mutual aid, and ownership as a practical question.
+- Monkey Island contributes pirate argument, scams, verbal play, and heroes
+  surviving by nerve rather than dignity.
+- Monty Python contributes ceremonial nonsense, escalating literalism,
+  confident incompetence, anticlimax, and institutions defeated by their own
+  absurd rules.
+- Star Trek contributes radical humanism, post-scarcity aspiration, humane
+  exploration, and the belief that people and institutions can become better.
+
+Random Rogue combines these ingredients into an original solidarity absurdist
+voice. It does not reproduce recognizable dialogue, characters, catchphrases,
+or scene structures from any source.
+
+## The solidarity absurdist voice
+
+The remastered voice combines several comic engines without copying another
+writer's surface style:
+
+- Spacefaring slapstick: interfaces are hostile, machines are literal, and a
+  cosmic revelation may still require the correct receipt.
+- Political interiority: people carry ideologies, shame, class interests,
+  impossible hope, and very ordinary needs at the same time.
+- Ceremonial absurdity: officials defend nonsense with perfect posture,
+  pageantry escalates petty disputes, and confident authority is defeated by
+  the literal meaning of its own rule.
+- Humane monsters: demons, mimics, ghosts, gods, cryptids, and artificial
+  minds are treated as people with boundaries, families, work, and moral
+  agency. A frightened mother offering a demon soup can reveal more about the
+  world than another monster hunt.
+- Cosmic skepticism: existence is enormous, institutions are ridiculous,
+  and nihilism is never allowed to monopolize intelligence.
+- Liberation adventure: freedom means refusing domination and building the
+  material conditions that let other people refuse it too.
+- Pirate argument: crews debate authority, ownership, loyalty, lunch, and who
+  gets to call a terrible plan navigation.
+- Radical humanism: a better future is possible because people can become
+  better, build better institutions, and repair the ones they inherit.
+
+The joke should usually move in one of four directions:
+
+1. Upward, toward wealth, hierarchy, cowardly institutions, and official lies.
+2. Sideways, toward pride, semantic confusion, bad equipment, and cosmic bad
+   timing.
+3. Inward, when the protagonist recognizes an embarrassing contradiction in
+   their own politics or motives.
+4. Forward, when kindness produces a fragile possibility nobody budgeted for.
+
+Victims, refugees, the poor, disabled people, and people facing extermination
+are never the joke. The machinery harming them can be ridiculous without the
+harm becoming trivial.
+
+## Legacy remaster rule
+
+Every legacy card now receives a primary political theme, a material coda,
+distinct choice approaches, and at least one path that touches persistent
+regional conditions when its original mechanics had no lasting consequence.
+The original hook remains first so a strange cave, bad drink, or argumentative
+door can still be itself. The coda answers why this oddity belongs in this
+world and who benefits from the surrounding arrangement.
+
+The coda is not a moral label. It must complicate the premise rather than tell
+the player which button is correct. Solidarity may cost blood or time.
+Compromise may save a person and preserve the institution hurting them.
+Self-interest may work. The Chronicle remembers what each strategy built.
+
 ## Choice design
 
 Political choices must remain game choices rather than morality buttons.

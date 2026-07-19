@@ -517,3 +517,28 @@ The audit's design program, executed:
 - **Presentation update** - the homepage describes the no-repeat guarantee,
   the larger deck, and the public content plan without claiming unfinished
   cards are already playable.
+
+---
+
+## Release 17 - Solidarity Absurdism
+
+- **Legacy narrative remaster** - all 351 foundation cards now have a primary
+  political theme, a material coda, named choice approaches, and persistent
+  regional consequences where the old card previously ended at money or hit
+  points.
+- **Twenty tone anchors** - one complete new scenario for every production
+  theme establishes the remastered voice through labor trials, tenant plants,
+  anti-fascist coalitions, war refusal, survivor testimony, public care,
+  ecological sabotage, free ships, a monster union, a consenting cryptid, and
+  a demon whose first humane visitor brings soup.
+- **Solidarity absurdism** - ceremonial bureaucracy, cosmic inconvenience,
+  humane monsters, pirate democracy, interior political contradiction, and
+  radical humanism join the narrative constitution. Jokes target power,
+  vanity, bad rules, and failing tools. Victims are never the punchline.
+- **Mechanics carry politics** - legacy choices now identify strategies such
+  as solidarity, mercy, greed, force, law, inquiry, caution, and wit. Their
+  outcomes can alter rent, supply, pollution, pressure, unrest, and regional
+  solidarity instead of disappearing after the result screen.
+- **Machine-enforced direction** - every one of 521 cards must declare a valid
+  primary deck and theme, carry that theme as a semantic tag, use non-empty
+  choice approaches, and pass the project's no-em-dash authoring rule.

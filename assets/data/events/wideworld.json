@@ -9,7 +9,7 @@
     "slots": {
       "god": "god"
     },
-    "text": "A wayside shrine, moss-eaten but swept clean by someone recent: a niche, a bowl, and the worn sigil of {god}, keeper of {god_domain}. The bowl holds two coins and a button. Standards around here are humble.",
+    "text": "A wayside shrine, moss-eaten but swept clean by someone recent: a niche, a bowl, and the worn sigil of {god}, keeper of {god_domain}. The bowl holds two coins and a button. Standards around here are humble.\n\nNobody affected by \"Forest Wayside Shrine\" was consulted. The part authority avoids is that everyone agrees the land must be saved immediately after the next profitable quarter.",
     "choices": [
       {
         "text": "Make a proper offering",
@@ -33,7 +33,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Take the two coins",
@@ -54,7 +55,8 @@
               "stat wis -1"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Ask {god} for a sign",
@@ -66,9 +68,18 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       }
-    ]
+    ],
+    "primary": "forest",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_grand_temple",
@@ -79,7 +90,7 @@
     "slots": {
       "god": "god"
     },
-    "text": "The temple of {god} dominates the square, all bells and incense and acolytes moving like clockwork. A donation plate the size of a shield waits at the door. {god} is {god_mood} this season, per the notice board. They post it like weather.",
+    "text": "The temple of {god} dominates the square, all bells and incense and acolytes moving like clockwork. A donation plate the size of a shield waits at the door. {god} is {god_mood} this season, per the notice board. They post it like weather.\n\nPower calls \"City Grand Temple\" an exception. The rule it conceals is simpler: a local grandmother has invited the haunting to tea and learned it takes three sugars.",
     "choices": [
       {
         "text": "Tithe like you mean it",
@@ -105,7 +116,8 @@
               "rep +3"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Debate the priests on doctrine",
@@ -131,7 +143,8 @@
               "stat cha -1"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Light a candle for someone gone",
@@ -145,9 +158,18 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "faith",
+    "tags": [
+      "faith",
+      "voice_4"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "cave_forgotten_idol",
@@ -159,7 +181,7 @@
     "slots": {
       "god": "god"
     },
-    "text": "Deep in the dark: an idol with the sigil of {god}, older than the temple style, older maybe than the name. Someone chained it to the wall facing the corner, like a punishment. The chain is on the WALL's side.",
+    "text": "Deep in the dark: an idol with the sigil of {god}, older than the temple style, older maybe than the name. Someone chained it to the wall facing the corner, like a punishment. The chain is on the WALL's side.\n\nThe official lesson of \"Cave Forgotten Idol\" is complicated; the useful lesson is that the demon has a mother, a lunch break, and a complaint about unsafe summoning circles.",
     "choices": [
       {
         "text": "Turn the idol back around",
@@ -185,7 +207,8 @@
               "hp -2"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Leave it exactly as you found it",
@@ -197,7 +220,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       },
       {
         "text": "Read the chain's inscription",
@@ -221,9 +245,18 @@
             "text": "The script swims. The one word you make out is 'SOON.' The dark feels attentive on the way out.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "inquiry"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "faith",
+    "tags": [
+      "faith",
+      "voice_7"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "road_vehicle_breakdown",
@@ -234,7 +267,7 @@
     "when": [
       "vehicle"
     ],
-    "text": "A noise from your vehicle that vehicles should not make: part cough, part opinion. It rolls to a stop with theatrical timing, miles from anything, under a sky that's considering rain.",
+    "text": "A noise from your vehicle that vehicles should not make: part cough, part opinion. It rolls to a stop with theatrical timing, miles from anything, under a sky that's considering rain.\n\nThe official lesson of \"Road Vehicle Breakdown\" is complicated; the useful lesson is that freedom begins where someone can refuse an order without losing dinner.",
     "choices": [
       {
         "text": "Repair it properly",
@@ -249,7 +282,8 @@
               "removeitem repair_kit"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Improvise a fix",
@@ -274,7 +308,8 @@
               "hp -3"
             ]
           }
-        ]
+        ],
+        "approach": "wit"
       },
       {
         "text": "Flag down help",
@@ -283,19 +318,30 @@
             "weight": 60,
             "text": "A passing tinker fixes it in minutes for a fair price and one long, judgmental look at your maintenance habits.",
             "effects": [
-              "money -5"
+              "money -5",
+              "region solidarity +1"
             ]
           },
           {
             "weight": 40,
             "text": "The only passerby is a goblin scooter gang. They fix it FOR FREE, out of vehicular solidarity, then ride circles around you honking for a mile. The toll is dignity.",
             "effects": [
-              "stat cha -1"
+              "stat cha -1",
+              "region solidarity +1"
             ]
           }
-        ]
+        ],
+        "approach": "mercy"
       }
-    ]
+    ],
+    "primary": "road",
+    "theme": "freedom",
+    "tags": [
+      "freedom",
+      "voice_7"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "road_joyride",
@@ -306,7 +352,7 @@
     "when": [
       "vehicle"
     ],
-    "text": "The road ahead: empty, downhill, freshly dry, and gently curved in exactly the way that whispers to anyone with wheels. You know the whisper. Everyone with a vehicle knows the whisper.",
+    "text": "The road ahead: empty, downhill, freshly dry, and gently curved in exactly the way that whispers to anyone with wheels. You know the whisper. Everyone with a vehicle knows the whisper.\n\nThe official lesson of \"Road Joyride\" is complicated; the useful lesson is that freedom begins where someone can refuse an order without losing dinner.",
     "choices": [
       {
         "text": "Answer the whisper",
@@ -332,7 +378,8 @@
               "hp -3"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Maintain a sensible speed",
@@ -344,7 +391,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Close your eyes and trust providence",
@@ -359,9 +407,18 @@
               "hp +2"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "road",
+    "theme": "freedom",
+    "tags": [
+      "freedom",
+      "voice_7"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_vehicle_dealer",
@@ -372,7 +429,7 @@
     "when": [
       "!vehicle"
     ],
-    "text": "A yard of vehicles in various states of hope: scooters, a wagon with 'RUNS GOOD' chalked on it, and one sky-metal thing under a tarp the dealer keeps glancing at. 'Everything's road-ready,' he says, road-readily.",
+    "text": "A yard of vehicles in various states of hope: scooters, a wagon with 'RUNS GOOD' chalked on it, and one sky-metal thing under a tarp the dealer keeps glancing at. 'Everything's road-ready,' he says, road-readily.\n\nAsk who pays for \"City Vehicle Dealer\" and the answer begins here: a full pantry and an empty street are conducting a quiet argument about distribution.",
     "choices": [
       {
         "text": "Buy the wagon",
@@ -385,7 +442,8 @@
             "text": "It does, in fact, run good. The previous owner's lucky horseshoe is still nailed inside. The horizon just got closer.",
             "effects": [
               "money -24",
-              "item wagon"
+              "item wagon",
+              "region solidarity -1"
             ]
           },
           {
@@ -394,10 +452,12 @@
             "effects": [
               "money -24",
               "item wagon",
-              "stat wis +1"
+              "stat wis +1",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Ask about the thing under the tarp",
@@ -413,7 +473,8 @@
               "item dune_buggy"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Kick some tires, buy nothing",
@@ -421,10 +482,21 @@
           {
             "weight": 100,
             "text": "You kick tires with the gravity of an expert. The dealer matches your nods. Neither of you knows what the kicking is for. It's tradition. It's enough.",
-            "effects": []
+            "effects": [
+              "region solidarity -1"
+            ]
           }
-        ]
+        ],
+        "approach": "greed"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "food",
+    "tags": [
+      "food",
+      "voice_2"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   }
 ]

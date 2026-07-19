@@ -1,153 +1,518 @@
 [
   {
     "id": "road_bounty_hunters",
-    "locations": ["road", "city"],
+    "locations": [
+      "road",
+      "city"
+    ],
     "weight": 18,
-    "when": ["trait wanted"],
-    "text": "Three professionals block the road, unrolling a poster with your face on it. The artist was unkind but accurate. 'Easy way or fun way,' says the short one, who is clearly hoping for fun.",
+    "when": [
+      "trait wanted"
+    ],
+    "text": "Three professionals block the road, unrolling a poster with your face on it. The artist was unkind but accurate. 'Easy way or fun way,' says the short one, who is clearly hoping for fun.\n\nNobody affected by \"Road Bounty Hunters\" was consulted. The part authority avoids is that a financier calls the missing roof an efficiency and the rain a subscription service.",
     "choices": [
-      { "text": "Surrender and do the time",
+      {
+        "text": "Surrender and do the time",
         "outcomes": [
-          { "weight": 100, "text": "Two days in a cell with adequate soup and a cellmate who snores in rhymes. Your debt to society: settled. Your reputation: complicated.", "effects": ["trait -wanted", "money -8", "hp +2"] }
-        ] },
-      { "text": "Bribe them generously", "requires": { "money": 15 },
+          {
+            "weight": 100,
+            "text": "Two days in a cell with adequate soup and a cellmate who snores in rhymes. Your debt to society: settled. Your reputation: complicated.",
+            "effects": [
+              "trait -wanted",
+              "money -8",
+              "hp +2"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Bribe them generously",
+        "requires": {
+          "money": 15
+        },
         "outcomes": [
-          { "weight": 70, "text": "The poster is ceremonially eaten by the short one. 'What fugitive?' Professional courtesy at its finest.", "effects": ["money -15", "trait -wanted"] },
-          { "weight": 30, "text": "They take the bribe AND keep the poster. 'Inflation,' shrugs the short one. You remain a walking payday.", "effects": ["money -15"] }
-        ] },
-      { "text": "Run for it", "check": { "stat": "dex", "dc": 13 },
+          {
+            "weight": 70,
+            "text": "The poster is ceremonially eaten by the short one. 'What fugitive?' Professional courtesy at its finest.",
+            "effects": [
+              "money -15",
+              "trait -wanted"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "They take the bribe AND keep the poster. 'Inflation,' shrugs the short one. You remain a walking payday.",
+            "effects": [
+              "money -15"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Run for it",
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
         "success": [
-          { "weight": 100, "text": "You vault a fence, cut through a chicken yard, and emerge legendary. The poster's bounty just went up, which is almost flattering.", "effects": [] }
+          {
+            "weight": 100,
+            "text": "You vault a fence, cut through a chicken yard, and emerge legendary. The poster's bounty just went up, which is almost flattering.",
+            "effects": []
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "The fun way, then. They're gentle, by profession's standards, and the cell soup is honestly not bad.", "effects": ["hp -4", "money -8", "trait -wanted"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "The fun way, then. They're gentle, by profession's standards, and the cell soup is honestly not bad.",
+            "effects": [
+              "hp -4",
+              "money -8",
+              "trait -wanted"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "road",
+    "theme": "capital",
+    "tags": [
+      "capital",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_autograph_seeker",
-    "locations": ["city", "tavern"],
+    "locations": [
+      "city",
+      "tavern"
+    ],
     "weight": 14,
-    "when": ["trait famous"],
-    "text": "A breathless admirer skids to a halt in front of you, thrusting out a quill and what appears to be a portrait of you mid-sneeze. 'It's YOU. Sign it. Please. I've walked from two regions over.'",
+    "when": [
+      "trait famous"
+    ],
+    "text": "A breathless admirer skids to a halt in front of you, thrusting out a quill and what appears to be a portrait of you mid-sneeze. 'It's YOU. Sign it. Please. I've walked from two regions over.'\n\nThe argument around \"City Autograph Seeker\" ends wherever someone finally admits that the newspaper reports calm beneath a headline printed while the office shook.",
     "choices": [
-      { "text": "Sign it with a flourish",
+      {
+        "text": "Sign it with a flourish",
         "outcomes": [
-          { "weight": 70, "text": "They weep. A small crowd gathers. Someone buys the signed sneeze-portrait off them on the spot, and they split the windfall with you out of pure joy.", "effects": ["money +6"] },
-          { "weight": 30, "text": "Your signature is declared 'disappointingly legible.' Fame is a harsh curator.", "effects": [] }
-        ] },
-      { "text": "Deny being you",
+          {
+            "weight": 70,
+            "text": "They weep. A small crowd gathers. Someone buys the signed sneeze-portrait off them on the spot, and they split the windfall with you out of pure joy.",
+            "effects": [
+              "money +6",
+              "region pressure +1"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "Your signature is declared 'disappointingly legible.' Fame is a harsh curator.",
+            "effects": [
+              "region pressure +1"
+            ]
+          }
+        ],
+        "approach": "law"
+      },
+      {
+        "text": "Deny being you",
         "outcomes": [
-          { "weight": 50, "text": "'Classic YOU,' they whisper, delighted, and leave. Denial has only deepened the legend.", "effects": [] },
-          { "weight": 50, "text": "They loudly announce the denial to the street. The mystique curdles. Two taverns quietly remove your sandwich from their menus.", "effects": ["trait -famous"] }
-        ] },
-      { "text": "Charge for it", "check": { "stat": "cha", "dc": 12 },
+          {
+            "weight": 50,
+            "text": "'Classic YOU,' they whisper, delighted, and leave. Denial has only deepened the legend.",
+            "effects": []
+          },
+          {
+            "weight": 50,
+            "text": "They loudly announce the denial to the street. The mystique curdles. Two taverns quietly remove your sandwich from their menus.",
+            "effects": [
+              "trait -famous"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Charge for it",
+        "check": {
+          "stat": "cha",
+          "dc": 12
+        },
         "success": [
-          { "weight": 100, "text": "You invent 'appearance fees' on the spot. They pay gladly. You've turned fame into an economy, which is how it always ends.", "effects": ["money +10"] }
+          {
+            "weight": 100,
+            "text": "You invent 'appearance fees' on the spot. They pay gladly. You've turned fame into an economy, which is how it always ends.",
+            "effects": [
+              "money +10",
+              "region solidarity -1"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "'Charging? For JOY?' The story of your greed travels faster than any ballad ever did.", "effects": ["trait -famous", "rep -4"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "'Charging? For JOY?' The story of your greed travels faster than any ballad ever did.",
+            "effects": [
+              "trait -famous",
+              "rep -4",
+              "region solidarity -1"
+            ]
+          }
+        ],
+        "approach": "greed"
+      }
+    ],
+    "primary": "city",
+    "theme": "propaganda",
+    "tags": [
+      "propaganda",
+      "voice_9"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_curse_breaker",
-    "locations": ["tavern"],
+    "locations": [
+      "tavern"
+    ],
     "weight": 16,
-    "when": ["trait cursed"],
-    "text": "A priest at {site} lowers their drink and squints at you. 'Oh, that's a CURSE, that is. Nasty one. Third-circle, judging by the smell. I can remove it. Donations appreciated. Results guaranteed-ish.'",
+    "when": [
+      "trait cursed"
+    ],
+    "text": "A priest at {site} lowers their drink and squints at you. 'Oh, that's a CURSE, that is. Nasty one. Third-circle, judging by the smell. I can remove it. Donations appreciated. Results guaranteed-ish.'\n\nPeople remember \"Tavern Curse Breaker\" differently, but the material fact remains: a local grandmother has invited the haunting to tea and learned it takes three sugars.",
     "choices": [
-      { "text": "Pay for the ritual", "requires": { "money": 10 },
+      {
+        "text": "Pay for the ritual",
+        "requires": {
+          "money": 10
+        },
         "outcomes": [
-          { "weight": 75, "text": "Chanting, incense, one alarming moment involving an egg. The weight lifts off your shoulders like a wet coat. The egg is not explained.", "effects": ["money -10", "trait -cursed", "hp +2"] },
-          { "weight": 25, "text": "The ritual works but overshoots. The curse is gone, and so is your sense of which way is north for a week.", "effects": ["money -10", "trait -cursed", "stat wis -1"] }
-        ] },
-      { "text": "Haggle - curses should have a sliding scale", "check": { "stat": "cha", "dc": 12 },
+          {
+            "weight": 75,
+            "text": "Chanting, incense, one alarming moment involving an egg. The weight lifts off your shoulders like a wet coat. The egg is not explained.",
+            "effects": [
+              "money -10",
+              "trait -cursed",
+              "hp +2"
+            ]
+          },
+          {
+            "weight": 25,
+            "text": "The ritual works but overshoots. The curse is gone, and so is your sense of which way is north for a week.",
+            "effects": [
+              "money -10",
+              "trait -cursed",
+              "stat wis -1"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Haggle - curses should have a sliding scale",
+        "check": {
+          "stat": "cha",
+          "dc": 12
+        },
         "success": [
-          { "weight": 100, "text": "'Fine. Clergy rate.' Five gold and the curse dissolves with a sound like a disappointed sigh.", "effects": ["money -5", "trait -cursed"] }
+          {
+            "weight": 100,
+            "text": "'Fine. Clergy rate.' Five gold and the curse dissolves with a sound like a disappointed sigh.",
+            "effects": [
+              "money -5",
+              "trait -cursed"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "The priest is offended on the curse's behalf. The curse, flattered, digs in deeper. Your ale goes flat instantly.", "effects": ["hp -1"] }
-        ] },
-      { "text": "Insist you've grown attached to it",
+          {
+            "weight": 100,
+            "text": "The priest is offended on the curse's behalf. The curse, flattered, digs in deeper. Your ale goes flat instantly.",
+            "effects": [
+              "hp -1"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Insist you've grown attached to it",
         "outcomes": [
-          { "weight": 100, "text": "The priest studies you, then nods slowly. 'Some people and their curses do make a life together.' They bless your drink anyway, free of charge, as a courtesy to whatever you're becoming.", "effects": ["stat wis +1"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "The priest studies you, then nods slowly. 'Some people and their curses do make a life together.' They bless your drink anyway, free of charge, as a courtesy to whatever you're becoming.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "tavern",
+    "theme": "faith",
+    "tags": [
+      "faith",
+      "voice_8"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "forest_glow_moths",
-    "locations": ["forest", "road"],
+    "locations": [
+      "forest",
+      "road"
+    ],
     "weight": 14,
-    "when": ["trait glowing"],
-    "text": "Dusk falls, and your faint glow becomes the brightest thing for miles. Every moth in the region has noticed. They arrive in waves, devoted and numerous. You are their moon now.",
+    "when": [
+      "trait glowing"
+    ],
+    "text": "Dusk falls, and your faint glow becomes the brightest thing for miles. Every moth in the region has noticed. They arrive in waves, devoted and numerous. You are their moon now.\n\nThe argument around \"Forest Glow Moths\" ends wherever someone finally admits that the local wildlife has filed its complaint through teeth, weather, and one unusually organized fungus.",
     "choices": [
-      { "text": "Harvest the swarm - alchemists pay for moths", "check": { "stat": "dex", "dc": 11 },
+      {
+        "text": "Harvest the swarm - alchemists pay for moths",
+        "check": {
+          "stat": "dex",
+          "dc": 11
+        },
         "success": [
-          { "weight": 100, "text": "You bag three dozen premium glow-drunk moths. Your worshippers, monetized. The glow fades by dawn, its work complete.", "effects": ["money +9", "trait -glowing"] }
+          {
+            "weight": 100,
+            "text": "You bag three dozen premium glow-drunk moths. Your worshippers, monetized. The glow fades by dawn, its work complete.",
+            "effects": [
+              "money +9",
+              "trait -glowing"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "The moths object to the harvest as a theological matter. Being softly mobbed by a thousand devotees is not painful, exactly, but you inhale at least four.", "effects": ["hp -2"] }
-        ] },
-      { "text": "Accept your role. Lead them somewhere nice",
+          {
+            "weight": 100,
+            "text": "The moths object to the harvest as a theological matter. Being softly mobbed by a thousand devotees is not painful, exactly, but you inhale at least four.",
+            "effects": [
+              "hp -2"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Accept your role. Lead them somewhere nice",
         "outcomes": [
-          { "weight": 100, "text": "You walk your congregation to a meadow of night-blooming flowers and abdicate. They settle among the blossoms. The glow fades as if satisfied. You feel absurdly moved.", "effects": ["trait -glowing", "stat wis +1", "hp +2"] }
-        ] },
-      { "text": "Sprint until you outrun the glow's reputation",
+          {
+            "weight": 100,
+            "text": "You walk your congregation to a meadow of night-blooming flowers and abdicate. They settle among the blossoms. The glow fades as if satisfied. You feel absurdly moved.",
+            "effects": [
+              "trait -glowing",
+              "stat wis +1",
+              "hp +2"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Sprint until you outrun the glow's reputation",
         "outcomes": [
-          { "weight": 60, "text": "You cannot outrun moths. You CAN, it turns out, outlast them. Twelve miles later you collapse, alone, dimmer, and weirdly proud.", "effects": ["trait -glowing", "hp -2"] },
-          { "weight": 40, "text": "The sprint through dark woods introduces you to a low branch. The moths gather around your fallen form like mourners.", "effects": ["hp -4"] }
-        ] }
-    ]
+          {
+            "weight": 60,
+            "text": "You cannot outrun moths. You CAN, it turns out, outlast them. Twelve miles later you collapse, alone, dimmer, and weirdly proud.",
+            "effects": [
+              "trait -glowing",
+              "hp -2"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "The sprint through dark woods introduces you to a low branch. The moths gather around your fallen form like mourners.",
+            "effects": [
+              "hp -4"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "forest",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_9"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_gang_dues",
-    "locations": ["city", "road"],
+    "locations": [
+      "city",
+      "road"
+    ],
     "weight": 12,
-    "when": ["trait gang_member"],
-    "text": "A goblin on a scooter idles up beside you, flips open a tiny ledger, and taps it meaningfully. 'Dues,' she says. 'Four gold. Member benefits include belonging, scooter access, and this conversation.'",
+    "when": [
+      "trait gang_member"
+    ],
+    "text": "A goblin on a scooter idles up beside you, flips open a tiny ledger, and taps it meaningfully. 'Dues,' she says. 'Four gold. Member benefits include belonging, scooter access, and this conversation.'\n\nBehind the business of \"City Gang Dues\" sits an older truth: a border guard has confused movement with permission and permission with virtue.",
     "choices": [
-      { "text": "Pay your dues", "requires": { "money": 4 },
+      {
+        "text": "Pay your dues",
+        "requires": {
+          "money": 4
+        },
         "outcomes": [
-          { "weight": 70, "text": "She stamps your hand and shares this month's gang gossip, which is ninety percent scooter maintenance drama and ten percent genuinely useful road intel.", "effects": ["money -4", "stat wis +1"] },
-          { "weight": 30, "text": "Paid in full. As a bonus, she teaches you the gang's secret horn signal. You will never need it. You will use it constantly.", "effects": ["money -4", "stat cha +1"] }
-        ] },
-      { "text": "Ride along on a job instead",
+          {
+            "weight": 70,
+            "text": "She stamps your hand and shares this month's gang gossip, which is ninety percent scooter maintenance drama and ten percent genuinely useful road intel.",
+            "effects": [
+              "money -4",
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 30,
+            "text": "Paid in full. As a bonus, she teaches you the gang's secret horn signal. You will never need it. You will use it constantly.",
+            "effects": [
+              "money -4",
+              "stat cha +1"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Ride along on a job instead",
         "outcomes": [
-          { "weight": 60, "text": "The 'job' is escorting a shipment of soup to a tavern with intimidating slowness. It pays, though. Dues waived for services rendered.", "effects": ["money +7"] },
-          { "weight": 40, "text": "The job goes sideways in a way involving a chicken cart and jurisdictional issues. You scatter. Dues waived out of shared embarrassment.", "effects": ["hp -2"] }
-        ] },
-      { "text": "Quit the gang",
+          {
+            "weight": 60,
+            "text": "The 'job' is escorting a shipment of soup to a tavern with intimidating slowness. It pays, though. Dues waived for services rendered.",
+            "effects": [
+              "money +7"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "The job goes sideways in a way involving a chicken cart and jurisdictional issues. You scatter. Dues waived out of shared embarrassment.",
+            "effects": [
+              "hp -2"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Quit the gang",
         "outcomes": [
-          { "weight": 100, "text": "There's a form. Of course there's a form. She takes your resignation with wounded dignity and revokes your horn privileges. The scooters honk mournfully as they ride off.", "effects": ["trait -gang_member", "rep -3"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "There's a form. Of course there's a form. She takes your resignation with wounded dignity and revokes your horn privileges. The scooters honk mournfully as they ride off.",
+            "effects": [
+              "trait -gang_member",
+              "rep -3"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "city",
+    "theme": "freedom",
+    "tags": [
+      "freedom",
+      "voice_5"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_doors_closed",
-    "locations": ["tavern"],
+    "locations": [
+      "tavern"
+    ],
     "weight": 20,
-    "when": ["trait banned"],
-    "text": "The bouncer at {site} recognizes you before you're through the door. He doesn't move. He simply holds up a small portrait of your face with 'NO' painted under it in tavern-official red.",
+    "when": [
+      "trait banned"
+    ],
+    "text": "The bouncer at {site} recognizes you before you're through the door. He doesn't move. He simply holds up a small portrait of your face with 'NO' painted under it in tavern-official red.\n\nThe argument around \"Tavern Doors Closed\" ends wherever someone finally admits that hunger has been classified as a personal budgeting error by people eating dessert.",
     "choices": [
-      { "text": "Grovel professionally", "check": { "stat": "cha", "dc": 12 },
+      {
+        "text": "Grovel professionally",
+        "check": {
+          "stat": "cha",
+          "dc": 12
+        },
         "success": [
-          { "weight": 100, "text": "Your apology has structure, sincerity, and a self-deprecating flourish that makes the bouncer's mustache twitch. The portrait comes down. Probation granted.", "effects": ["trait -banned"] }
+          {
+            "weight": 100,
+            "text": "Your apology has structure, sincerity, and a self-deprecating flourish that makes the bouncer's mustache twitch. The portrait comes down. Probation granted.",
+            "effects": [
+              "trait -banned"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "Mid-grovel, you accidentally reference The Incident. The portrait gets laminated.", "effects": [] }
-        ] },
-      { "text": "Sneak in through the kitchen", "check": { "stat": "dex", "dc": 13 },
+          {
+            "weight": 100,
+            "text": "Mid-grovel, you accidentally reference The Incident. The portrait gets laminated.",
+            "effects": []
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Sneak in through the kitchen",
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
         "success": [
-          { "weight": 100, "text": "In through the kitchen, past the cook (bribed with a compliment about the stew), out among the patrons. You drink in enemy territory. It tastes better.", "effects": ["hp +2"] }
+          {
+            "weight": 100,
+            "text": "In through the kitchen, past the cook (bribed with a compliment about the stew), out among the patrons. You drink in enemy territory. It tastes better.",
+            "effects": [
+              "hp +2"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "The cook rings the bell. The BANNED bell. They have a bell for you. You're escorted out via a door you didn't know taverns had.", "effects": ["hp -2"] }
-        ] },
-      { "text": "Drink in the alley with the other exiles",
+          {
+            "weight": 100,
+            "text": "The cook rings the bell. The BANNED bell. They have a bell for you. You're escorted out via a door you didn't know taverns had.",
+            "effects": [
+              "hp -2"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Drink in the alley with the other exiles",
         "outcomes": [
-          { "weight": 100, "text": "The alley has its own economy, its own gossip, and honestly better company. A fellow exile shares their bottle and their story. Two of the stories are about you.", "effects": ["hp +1", "stat wis +1"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "The alley has its own economy, its own gossip, and honestly better company. A fellow exile shares their bottle and their story. Two of the stories are about you.",
+            "effects": [
+              "hp +1",
+              "stat wis +1"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "tavern",
+    "theme": "food",
+    "tags": [
+      "food",
+      "voice_9"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   }
 ]

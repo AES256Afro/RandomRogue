@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cstdio>
 #include <fstream>
 #include <set>
@@ -161,6 +162,35 @@ int main(int argc, char** argv) {
     const Event* relaxedDraw = worldCooldownDeck.draw(cooldownRng, "cave");
     ok &= expect(relaxedDraw && relaxedDraw->id == "old",
                  "world memory may relax rather than empty an old location");
+
+    EventDeck narrativeDeck;
+    narrativeDeck.loadJsonText(
+        "[{\"id\":\"remaster\",\"primary\":\"city\",\"theme\":\"labor\","
+        "\"locations\":[\"city\"],\"tags\":[\"voice_3\"],\"choices\":[{\"text\":\"a\","
+        "\"approach\":\"solidarity\",\"outcomes\":[{\"text\":\"a\"}]}]}]");
+    const Event* remaster = narrativeDeck.find("remaster");
+    ok &= expect(remaster && remaster->primary == "city" && remaster->theme == "labor",
+                 "event loading must preserve primary deck and political theme");
+    if (remaster) {
+        std::vector<std::string> narrativeTags = StoryDirector::tagsFor(*remaster);
+        ok &= expect(std::find(narrativeTags.begin(), narrativeTags.end(), "labor") !=
+                         narrativeTags.end(),
+                     "the Director must treat an event theme as a semantic tag");
+    }
+
+    StoryDirector voiceDirector;
+    Event voiceA = unrelated;
+    voiceA.id = "voice_a";
+    voiceA.family = "voice_test_a";
+    voiceA.tags = {"voice_3"};
+    Event voiceB = unrelated;
+    voiceB.id = "voice_b";
+    voiceB.family = "voice_test_b";
+    voiceB.tags = {"voice_7"};
+    voiceDirector.record(voiceA, nullptr, 1);
+    ok &= expect(voiceDirector.score(voiceA, StoryContext{}) <
+                     voiceDirector.score(voiceB, StoryContext{}),
+                 "recent remaster cadences must cool below a fresh prose cadence");
 
     static const std::set<std::string> required = {
         "plains", "coast", "forest", "mountains", "swamp", "desert"

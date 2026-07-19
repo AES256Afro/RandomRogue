@@ -1,74 +1,262 @@
 [
   {
     "id": "wayside_shrine",
-    "locations": ["road", "forest", "mountains", "swamp", "coast"],
+    "locations": [
+      "road",
+      "forest",
+      "mountains",
+      "swamp",
+      "coast"
+    ],
     "weight": 15,
-    "slots": { "god": "god" },
-    "text": "A wayside shrine to {god}, keeper of {god_domain}: a niche of stacked stones, a bowl worn smooth by offerings, and a carved face that manages, in six chisel strokes, to look {god_mood}. Your standing with them, if the bowl's residue is any judge, is measurable. Travelers' rule: never pass a shrine at a walk.",
+    "slots": {
+      "god": "god"
+    },
+    "text": "A wayside shrine to {god}, keeper of {god_domain}: a niche of stacked stones, a bowl worn smooth by offerings, and a carved face that manages, in six chisel strokes, to look {god_mood}. Your standing with them, if the bowl's residue is any judge, is measurable. Travelers' rule: never pass a shrine at a walk.\n\nA plaque may eventually misdescribe \"Wayside Shrine\". For now, the useful truth is that the monster would like to be treated as a person before discussing the screaming.",
     "choices": [
-      { "text": "Make an offering", "requires": { "money": 3 },
+      {
+        "text": "Make an offering",
+        "requires": {
+          "money": 3
+        },
         "outcomes": [
-          { "weight": 80, "text": "Three coins in the bowl and a moment with your head bowed. The carved face does not move, but the road ahead of you unknots itself all afternoon - the fords shallow, the dogs friendly, the weather holding its breath on your behalf.", "effects": ["money -3", "favor 2"] },
-          { "weight": 20, "text": "Three coins in the bowl. A magpie lands, studies your offering with an accountant's eye, and adds a button. The god, you sense, finds the magpie funnier than you. Everyone's a critic, but the favor counts.", "effects": ["money -3", "favor 2", "stat cha +1"] }
-        ] },
-      { "text": "Tend the shrine instead",
+          {
+            "weight": 80,
+            "text": "Three coins in the bowl and a moment with your head bowed. The carved face does not move, but the road ahead of you unknots itself all afternoon - the fords shallow, the dogs friendly, the weather holding its breath on your behalf.",
+            "effects": [
+              "money -3",
+              "favor 2"
+            ]
+          },
+          {
+            "weight": 20,
+            "text": "Three coins in the bowl. A magpie lands, studies your offering with an accountant's eye, and adds a button. The god, you sense, finds the magpie funnier than you. Everyone's a critic, but the favor counts.",
+            "effects": [
+              "money -3",
+              "favor 2",
+              "stat cha +1"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Tend the shrine instead",
         "outcomes": [
-          { "weight": 100, "text": "No coin, but you have hands: you clear the leaf-rot, re-stack the fallen stones, and scrub the bowl in the stream. Labor is the older currency. The carved face, when you finish, looks - you'd swear - slightly less {god_mood}.", "effects": ["favor 3", "stat wis +1"] }
-        ] },
-      { "text": "Rob the bowl",
+          {
+            "weight": 100,
+            "text": "No coin, but you have hands: you clear the leaf-rot, re-stack the fallen stones, and scrub the bowl in the stream. Labor is the older currency. The carved face, when you finish, looks - you'd swear - slightly less {god_mood}.",
+            "effects": [
+              "favor 3",
+              "stat wis +1"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Rob the bowl",
         "outcomes": [
-          { "weight": 50, "text": "The bowl's takings fit in one fist. As you pocket them, the birdsong stops - all of it, at once, like a ledger being opened. Nothing else happens. Nothing else NEEDS to happen. You spend the coins fast, before they can testify.", "effects": ["money +7", "favor -3"] },
-          { "weight": 50, "text": "You lift the coins and the carved face watches you do it with six strokes of pure disappointment. The road ahead develops opinions: every root finds your toes, every low branch your hat. The account is being settled in installments.", "effects": ["money +7", "favor -4", "hp -2"] }
-        ] }
-    ]
+          {
+            "weight": 50,
+            "text": "The bowl's takings fit in one fist. As you pocket them, the birdsong stops - all of it, at once, like a ledger being opened. Nothing else happens. Nothing else NEEDS to happen. You spend the coins fast, before they can testify.",
+            "effects": [
+              "money +7",
+              "favor -3",
+              "region solidarity -1"
+            ]
+          },
+          {
+            "weight": 50,
+            "text": "You lift the coins and the carved face watches you do it with six strokes of pure disappointment. The road ahead develops opinions: every root finds your toes, every low branch your hat. The account is being settled in installments.",
+            "effects": [
+              "money +7",
+              "favor -4",
+              "hp -2",
+              "region solidarity -1"
+            ]
+          }
+        ],
+        "approach": "greed"
+      }
+    ],
+    "primary": "road",
+    "theme": "faith",
+    "tags": [
+      "faith",
+      "voice_10"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_high_temple",
-    "locations": ["city"],
+    "locations": [
+      "city"
+    ],
     "weight": 13,
-    "slots": { "god": "god" },
-    "text": "The high temple of {god} runs on incense, echo, and donations. A junior priest sizes you up with the practiced glance of someone converting adventurers to expected revenue. Above the altar, the god's regard for {god_domain} is rendered in gold leaf and, the priest confides, 'currently {god_mood}, so, you know. Good time to invest.'",
+    "slots": {
+      "god": "god"
+    },
+    "text": "The high temple of {god} runs on incense, echo, and donations. A junior priest sizes you up with the practiced glance of someone converting adventurers to expected revenue. Above the altar, the god's regard for {god_domain} is rendered in gold leaf and, the priest confides, 'currently {god_mood}, so, you know. Good time to invest.'\n\nThe file titled \"City High Temple\" makes the arrangement plain: a priest promises heaven later while the congregation organizes breakfast now.",
     "choices": [
-      { "text": "Fund a candle rite", "requires": { "money": 6 },
+      {
+        "text": "Fund a candle rite",
+        "requires": {
+          "money": 6
+        },
         "outcomes": [
-          { "weight": 100, "text": "Six gold buys the full ceremony: your name, chanted, correctly, twice. The smoke goes straight up. The priest's eyebrows suggest that this is rarer than you'd think, and the ledger of heaven is amended in your favor.", "effects": ["money -6", "favor 3", "hp +2"] }
-        ] },
-      { "text": "Ask the archivist about the god's true name", "check": { "stat": "int", "dc": 13 },
+          {
+            "weight": 100,
+            "text": "Six gold buys the full ceremony: your name, chanted, correctly, twice. The smoke goes straight up. The priest's eyebrows suggest that this is rarer than you'd think, and the ledger of heaven is amended in your favor.",
+            "effects": [
+              "money -6",
+              "favor 3",
+              "hp +2"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Ask the archivist about the god's true name",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
         "success": [
-          { "weight": 100, "text": "The archivist, thrilled that anyone asked, unrolls scrolls older than the temple: the god's name in the old tongue, all nine syllables, each one a word you can keep. Knowledge is also worship - the informed kind, which the gold leaf upstairs finds slightly threatening.", "effects": ["learn 4", "favor 1", "stat int +1"] }
+          {
+            "weight": 100,
+            "text": "The archivist, thrilled that anyone asked, unrolls scrolls older than the temple: the god's name in the old tongue, all nine syllables, each one a word you can keep. Knowledge is also worship - the informed kind, which the gold leaf upstairs finds slightly threatening.",
+            "effects": [
+              "learn 4",
+              "favor 1",
+              "stat int +1"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "You mispronounce the second syllable, which - the archivist informs you, going pale - is the name of a DIFFERENT god, now also aware of you. The consultation ends early, with incense.", "effects": ["favor -1"] }
-        ] },
-      { "text": "Question the whole enterprise, loudly",
+          {
+            "weight": 100,
+            "text": "You mispronounce the second syllable, which - the archivist informs you, going pale - is the name of a DIFFERENT god, now also aware of you. The consultation ends early, with incense.",
+            "effects": [
+              "favor -1"
+            ]
+          }
+        ],
+        "approach": "inquiry"
+      },
+      {
+        "text": "Question the whole enterprise, loudly",
         "outcomes": [
-          { "weight": 55, "text": "Your theological critique - delivered from the nave, gesturing at the gold leaf - draws an appalled crowd and, worse, three curious novices who find your points 'interesting.' You are escorted out before the schism takes. The god's opinion arrives later, as weather.", "effects": ["favor -3", "rep -2", "stat cha +1"] },
-          { "weight": 45, "text": "Halfway through your critique, the acoustics of the dome do something clarifying to your own voice, and you hear yourself the way the room does. You trail off, drop a coin in the box on the way out - hedging - and the god, amused, notes the coin.", "effects": ["money -1", "favor 1"] }
-        ] }
-    ]
+          {
+            "weight": 55,
+            "text": "Your theological critique - delivered from the nave, gesturing at the gold leaf - draws an appalled crowd and, worse, three curious novices who find your points 'interesting.' You are escorted out before the schism takes. The god's opinion arrives later, as weather.",
+            "effects": [
+              "favor -3",
+              "rep -2",
+              "stat cha +1"
+            ]
+          },
+          {
+            "weight": 45,
+            "text": "Halfway through your critique, the acoustics of the dome do something clarifying to your own voice, and you hear yourself the way the room does. You trail off, drop a coin in the box on the way out - hedging - and the god, amused, notes the coin.",
+            "effects": [
+              "money -1",
+              "favor 1"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "city",
+    "theme": "faith",
+    "tags": [
+      "faith",
+      "voice_0"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "pilgrim_road",
-    "locations": ["road", "mountains"],
+    "locations": [
+      "road",
+      "mountains"
+    ],
     "weight": 12,
-    "slots": { "god": "god" },
-    "text": "A pilgrim column fills the road, dusty and singing, bound for a shrine of {god} three valleys over. Their cantor waves you in without breaking meter: the walking rite of {god_domain} counts every step, and pilgrims are paid in the only coin the road mints - company, blisters, and standing.",
+    "slots": {
+      "god": "god"
+    },
+    "text": "A pilgrim column fills the road, dusty and singing, bound for a shrine of {god} three valleys over. Their cantor waves you in without breaking meter: the walking rite of {god_domain} counts every step, and pilgrims are paid in the only coin the road mints - company, blisters, and standing.\n\nThe official lesson of \"Pilgrim Road\" is complicated; the useful lesson is that the miracle is genuine, although the licensing office suspects unauthorized hope.",
     "choices": [
-      { "text": "Walk a day with them",
+      {
+        "text": "Walk a day with them",
         "outcomes": [
-          { "weight": 100, "text": "You give the rite a full day: the songs (learnable), the blisters (educational), the evening soup (transcendent, somehow, out of six shared vegetables). At the day's end the cantor marks your brow with road-dust. It does not wash off so much as wear in.", "effects": ["favor 2", "hp +2", "stat con +1"] }
-        ] },
-      { "text": "Sell supplies to the column", "check": { "stat": "cha", "dc": 12 },
+          {
+            "weight": 100,
+            "text": "You give the rite a full day: the songs (learnable), the blisters (educational), the evening soup (transcendent, somehow, out of six shared vegetables). At the day's end the cantor marks your brow with road-dust. It does not wash off so much as wear in.",
+            "effects": [
+              "favor 2",
+              "hp +2",
+              "stat con +1"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Sell supplies to the column",
+        "check": {
+          "stat": "cha",
+          "dc": 12
+        },
         "success": [
-          { "weight": 100, "text": "Pilgrims need bandages, rations, and someone who'll haggle cheerfully, and you are all three. Honest margins, holy customers, and the cantor blesses your purse 'that it may always be this heavy,' which you choose to hear as prophecy.", "effects": ["money +9", "favor 1"] }
+          {
+            "weight": 100,
+            "text": "Pilgrims need bandages, rations, and someone who'll haggle cheerfully, and you are all three. Honest margins, holy customers, and the cantor blesses your purse 'that it may always be this heavy,' which you choose to hear as prophecy.",
+            "effects": [
+              "money +9",
+              "favor 1",
+              "region solidarity -1"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "You misjudge the market: pilgrims have taken vows about exactly the kind of markup you just quoted. The column sings a NEW verse as it passes, composed on the spot, about you. It scans perfectly. It will reach the next town before you do.", "effects": ["rep -3"] }
-        ] },
-      { "text": "Cut through the column to save an hour",
+          {
+            "weight": 100,
+            "text": "You misjudge the market: pilgrims have taken vows about exactly the kind of markup you just quoted. The column sings a NEW verse as it passes, composed on the spot, about you. It scans perfectly. It will reach the next town before you do.",
+            "effects": [
+              "rep -3",
+              "region solidarity -1"
+            ]
+          }
+        ],
+        "approach": "greed"
+      },
+      {
+        "text": "Cut through the column to save an hour",
         "outcomes": [
-          { "weight": 100, "text": "You shoulder through the singing like a man late for something ordinary. Nobody stops you. Nobody curses you. The cantor just watches you go with the mild, terrible patience of the professionally forgiven - and the hour you saved is lost at the next ford, exactly, to the minute.", "effects": ["favor -2"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "You shoulder through the singing like a man late for something ordinary. Nobody stops you. Nobody curses you. The cantor just watches you go with the mild, terrible patience of the professionally forgiven - and the hour you saved is lost at the next ford, exactly, to the minute.",
+            "effects": [
+              "favor -2",
+              "region solidarity +1"
+            ]
+          }
+        ],
+        "approach": "mercy"
+      }
+    ],
+    "primary": "road",
+    "theme": "faith",
+    "tags": [
+      "faith",
+      "voice_7"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   }
 ]

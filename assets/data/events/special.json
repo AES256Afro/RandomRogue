@@ -2,7 +2,7 @@
   {
     "id": "hidden_glade",
     "locations": [],
-    "text": "The path opens into a hidden glade: a ring of wildflowers, a stone table, and a strongbox half-swallowed by moss. Whoever painted the sign lived here. Judging by the tin cups - two of everything - they didn't live alone. Judging by the dust, that was a long time ago.",
+    "text": "The path opens into a hidden glade: a ring of wildflowers, a stone table, and a strongbox half-swallowed by moss. Whoever painted the sign lived here. Judging by the tin cups - two of everything - they didn't live alone. Judging by the dust, that was a long time ago.\n\nNobody affected by \"Hidden Glade\" was consulted. The part authority avoids is that profit left the region yesterday. The smoke, invoices, and cough remain.",
     "choices": [
       {
         "text": "Open the strongbox",
@@ -23,7 +23,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Rest in the glade without touching anything",
@@ -35,7 +36,8 @@
               "hp +6"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Set the fake signpost pointing here on fire on your way out",
@@ -48,8 +50,17 @@
               "rep +2"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "special",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   }
 ]

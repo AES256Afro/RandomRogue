@@ -1,13 +1,18 @@
 [
   {
     "id": "b2d_dungeon_proud_pit",
-    "locations": ["dungeon"],
+    "locations": [
+      "dungeon"
+    ],
     "weight": 12,
-    "text": "A spike pit, immaculately maintained. Polished spikes, raked gravel, tasteful lighting. At the edge, a small box on a post: 'HOW WAS YOUR FALL? SUGGESTIONS WELCOME.'",
+    "text": "A spike pit, immaculately maintained. Polished spikes, raked gravel, tasteful lighting. At the edge, a small box on a post: 'HOW WAS YOUR FALL? SUGGESTIONS WELCOME.'\n\nPeople remember \"Dungeon Proud Pit\" differently, but the material fact remains: a museum label calls this object found; the family searching for it uses a different verb.",
     "choices": [
       {
         "text": "Jump it",
-        "check": { "stat": "dex", "dc": 12 },
+        "check": {
+          "stat": "dex",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
@@ -19,9 +24,12 @@
           {
             "weight": 100,
             "text": "You catch the far lip with your shins and most of your dignity. The suggestion box creaks expectantly as you climb out.",
-            "effects": ["hp -3"]
+            "effects": [
+              "hp -3"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Leave a glowing review in the box",
@@ -29,9 +37,13 @@
           {
             "weight": 100,
             "text": "'Excellent spike placement. Fell for it completely (metaphorically).' The gravel shifts, revealing a maintenance ledge around the edge and a small pile of coins from patrons who reviewed less kindly.",
-            "effects": ["money +7", "stat cha +1"]
+            "effects": [
+              "money +7",
+              "stat cha +1"
+            ]
           }
-        ]
+        ],
+        "approach": "caution"
       },
       {
         "text": "Climb down and loot the bottom",
@@ -39,40 +51,68 @@
           {
             "weight": 60,
             "text": "The bottom of a well-run pit is a museum of poor decisions. You pocket the best of them and climb out with only minor punctures.",
-            "effects": ["money +10", "hp -2"]
+            "effects": [
+              "money +10",
+              "hp -2",
+              "region solidarity -1"
+            ]
           },
           {
             "weight": 40,
             "text": "The spikes, it turns out, retract and extend on a schedule. You learn the schedule experimentally.",
-            "effects": ["hp -5", "money +5"]
+            "effects": [
+              "hp -5",
+              "money +5",
+              "region solidarity -1"
+            ]
           }
-        ]
+        ],
+        "approach": "greed"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "colonialism",
+    "tags": [
+      "colonialism",
+      "voice_8"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_dungeon_cold_camp",
-    "locations": ["dungeon"],
+    "locations": [
+      "dungeon"
+    ],
     "weight": 12,
-    "text": "A cold campsite: bedroll, kettle, one boot. The journal's last entry reads 'the scratching is probably nothing.' Historically, the scratching has never been nothing.",
+    "text": "A cold campsite: bedroll, kettle, one boot. The journal's last entry reads 'the scratching is probably nothing.' Historically, the scratching has never been nothing.\n\nA plaque may eventually misdescribe \"Dungeon Cold Camp\". For now, the useful truth is that history was written by the conqueror, edited by the insurer, and corrected in charcoal by everyone else.",
     "choices": [
       {
         "text": "Read the whole journal first",
-        "check": { "stat": "int", "dc": 11 },
+        "check": {
+          "stat": "int",
+          "dc": 11
+        },
         "success": [
           {
             "weight": 100,
             "text": "Between complaints about the kettle, a map: three caches, two already looted, one marked 'too obvious, saving for emergencies.' The emergency, evidently, never got the chance.",
-            "effects": ["money +9", "learn 1"]
+            "effects": [
+              "money +9",
+              "learn 1"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The handwriting collapses into abbreviations around day six. You piece together that they were either rich or itchy, possibly both. The scratching starts while you're on the last page.",
-            "effects": ["hp -2"]
+            "effects": [
+              "hp -2"
+            ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Grab the gear and go",
@@ -80,14 +120,20 @@
           {
             "weight": 70,
             "text": "Bedroll, kettle, boot. Speed is a virtue and you are extremely virtuous right now.",
-            "effects": ["loot common"]
+            "effects": [
+              "loot common"
+            ]
           },
           {
             "weight": 30,
             "text": "The scratching resumes mid-grab. You take the gear anyway because your priorities have never once wavered, and pay the exit toll in skin.",
-            "effects": ["loot common", "hp -3"]
+            "effects": [
+              "loot common",
+              "hp -3"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Build a cairn and say some words",
@@ -95,32 +141,56 @@
           {
             "weight": 100,
             "text": "You stack stones over the bedroll and say what you'd want said. The scratching, wherever it is, goes quiet for a respectful interval. Word of the gesture somehow gets ahead of you.",
-            "effects": ["rep 1", "hp +2"]
+            "effects": [
+              "rep 1",
+              "hp +2"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "colonialism",
+    "tags": [
+      "colonialism",
+      "voice_10"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_dungeon_rust_paddock",
-    "locations": ["dungeon"],
+    "locations": [
+      "dungeon"
+    ],
     "weight": 10,
-    "text": "A fenced paddock of rust monsters, grazing peacefully on a heap of confiscated weapons. A feeding schedule is chalked on the wall in neat handwriting. Someone runs this place, and they are conscientious.",
+    "text": "A fenced paddock of rust monsters, grazing peacefully on a heap of confiscated weapons. A feeding schedule is chalked on the wall in neat handwriting. Someone runs this place, and they are conscientious.\n\nThe paperwork around \"Dungeon Rust Paddock\" avoids its central fact: the generals call this a front; the families living here continue calling it home.",
     "choices": [
       {
         "text": "Feed them your rusty sword",
-        "requires": { "item": "rusty_sword" },
+        "requires": {
+          "item": "rusty_sword"
+        },
         "outcomes": [
           {
             "weight": 100,
             "text": "They descend on it like it's a holiday. One of them, moved, coughs up a pellet of compressed oxide that alchemists inexplicably treasure.",
-            "effects": ["removeitem rusty_sword", "money +8"]
+            "effects": [
+              "removeitem rusty_sword",
+              "money +8",
+              "region solidarity +1"
+            ]
           }
-        ]
+        ],
+        "approach": "mercy"
       },
       {
         "text": "Sneak past hugging the far wall",
-        "check": { "stat": "dex", "dc": 12 },
+        "check": {
+          "stat": "dex",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
@@ -132,9 +202,12 @@
           {
             "weight": 100,
             "text": "One of them takes an exploratory taste of your buckles. Everything metal you own is now slightly younger-looking and significantly weaker, and the nibbling process was not gentle.",
-            "effects": ["hp -3"]
+            "effects": [
+              "hp -3"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Skim the weapon heap for survivors",
@@ -142,60 +215,95 @@
           {
             "weight": 60,
             "text": "Under the oxidized layer: one dagger, kept dry by luck and geometry. The herd watches you take it with the mild grief of someone losing a dessert.",
-            "effects": ["item dagger"]
+            "effects": [
+              "item dagger"
+            ]
           },
           {
             "weight": 40,
             "text": "The heap shifts. The heap was structural. You emerge from a small avalanche of ex-weapons with opinions about tetanus.",
-            "effects": ["hp -3"]
+            "effects": [
+              "hp -3"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "antiwar",
+    "tags": [
+      "antiwar",
+      "voice_3"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_dungeon_eleventh_lock",
-    "locations": ["dungeon"],
+    "locations": [
+      "dungeon"
+    ],
     "weight": 11,
-    "text": "A door bearing eleven locks of different makes and centuries. Ten hang rusted open. The eleventh is polished, oiled, and clearly the only one anyone ever believed in.",
+    "text": "A door bearing eleven locks of different makes and centuries. Ten hang rusted open. The eleventh is polished, oiled, and clearly the only one anyone ever believed in.\n\nNothing about \"Dungeon Eleventh Lock\" is accidental once you notice that housing has become scarce since a distant heir discovered that doors can collect income.",
     "choices": [
       {
         "text": "Pick the eleventh lock",
-        "requires": { "item": "lockpick" },
-        "check": { "stat": "dex", "dc": 12 },
+        "requires": {
+          "item": "lockpick"
+        },
+        "check": {
+          "stat": "dex",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "It's a masterwork, and it fights fair. Click. Behind the door: what eleven locks' worth of paranoia was protecting, minus interest.",
-            "effects": ["loot fine"]
+            "effects": [
+              "loot fine"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The lock eats your pick with the satisfaction of a machine doing its one job. The door remains a door. The pick remains inside it, forever.",
-            "effects": ["removeitem lockpick"]
+            "effects": [
+              "removeitem lockpick"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Attack the hinges instead",
-        "check": { "stat": "str", "dc": 13 },
+        "check": {
+          "stat": "str",
+          "dc": 13
+        },
         "success": [
           {
             "weight": 100,
             "text": "Nobody ever oils the hinges. The door comes down like an apology, and the room behind it never saw the betrayal coming.",
-            "effects": ["loot fine", "hp -1"]
+            "effects": [
+              "loot fine",
+              "hp -1",
+              "region unrest +1"
+            ]
           }
-        ]
-      ,
+        ],
         "fail": [
           {
             "weight": 100,
             "text": "The hinges were the trap. Eleven locks of theater, two hinges of consequence. The recoil spring launches you into last week.",
-            "effects": ["hp -4"]
+            "effects": [
+              "hp -4",
+              "region unrest +1"
+            ]
           }
-        ]
+        ],
+        "approach": "force"
       },
       {
         "text": "Knock in an official-sounding rhythm",
@@ -203,22 +311,39 @@
           {
             "weight": 50,
             "text": "Shave-and-a-haircut, but sinister. A voice inside: 'FINALLY, the inspector.' The door opens. You inspect. You confiscate one item as evidence.",
-            "effects": ["loot common"]
+            "effects": [
+              "loot common",
+              "region pressure +1"
+            ]
           },
           {
             "weight": 50,
             "text": "The rhythm you invented is, by pure chance, the alarm signal. A dart emerges from lock number four, which was never rusted at all.",
-            "effects": ["hp -2"]
+            "effects": [
+              "hp -2",
+              "region pressure +1"
+            ]
           }
-        ]
+        ],
+        "approach": "law"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "housing",
+    "tags": [
+      "housing",
+      "voice_11"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_dungeon_previous_owner",
-    "locations": ["dungeon"],
+    "locations": [
+      "dungeon"
+    ],
     "weight": 10,
-    "text": "A cell holds a man who insists he is the dungeon's previous owner, imprisoned by 'a hostile takeover.' The lock is old. His story has holes. His shoes are excellent.",
+    "text": "A cell holds a man who insists he is the dungeon's previous owner, imprisoned by 'a hostile takeover.' The lock is old. His story has holes. His shoes are excellent.\n\nOfficials classify \"Dungeon Previous Owner\" as routine, although surveillance has made everyone safer from privacy and little else.",
     "choices": [
       {
         "text": "Let him out",
@@ -226,23 +351,33 @@
           {
             "weight": 55,
             "text": "'I won't forget this.' He doesn't. Before vanishing upward, he tells you where the new management never thought to look: behind the third torch, a hollow, a purse.",
-            "effects": ["money +10"]
+            "effects": [
+              "money +10"
+            ]
           },
           {
             "weight": 45,
             "text": "He shakes your hand warmly, blesses your generosity, and picks your pocket during the blessing. The shoes, you realize too late, were somebody else's too.",
-            "effects": ["money -6"]
+            "effects": [
+              "money -6"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Cross-examine him through the bars",
-        "check": { "stat": "int", "dc": 12 },
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "His dates don't line up and you say so. He sighs, drops the act, and trades the location of his actual stash for your silence. Everyone leaves with what they wanted.",
-            "effects": ["money +8"]
+            "effects": [
+              "money +8"
+            ]
           }
         ],
         "fail": [
@@ -251,62 +386,95 @@
             "text": "Twenty minutes later you're somehow defending YOUR backstory. He pokes two holes in it. You leave before he finds a third.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Slide him some bread, no questions",
-        "requires": { "item": "bread" },
+        "requires": {
+          "item": "bread"
+        },
         "outcomes": [
           {
             "weight": 100,
             "text": "He eats it like a man who owns nothing, which settles at least one question. 'Kindness without an angle,' he says. 'Rarer down here than gold.' Word travels, even from cells.",
-            "effects": ["removeitem bread", "rep 1"]
+            "effects": [
+              "removeitem bread",
+              "rep 1"
+            ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "state_power",
+    "tags": [
+      "state_power",
+      "voice_1"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_dungeon_defensive_mural",
-    "locations": ["dungeon"],
+    "locations": [
+      "dungeon"
+    ],
     "weight": 10,
-    "text": "A mural depicts the dungeon's founder heroically taming a dragon. Later panels show the dragon 'voluntarily' signing over its hoard. The brushwork gets noticeably defensive toward the end.",
+    "text": "A mural depicts the dungeon's founder heroically taming a dragon. Later panels show the dragon 'voluntarily' signing over its hoard. The brushwork gets noticeably defensive toward the end.\n\nOfficials classify \"Dungeon Defensive Mural\" as routine, although surveillance has made everyone safer from privacy and little else.",
     "choices": [
       {
         "text": "Look for what got painted over",
-        "check": { "stat": "int", "dc": 12 },
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "Under the varnish, the original panel: the dragon winning, and a side door where the founder hid what he salvaged. The side door is still there. So is the salvage.",
-            "effects": ["money +12"]
+            "effects": [
+              "money +12"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "You scrape through three layers and find only an earlier, even more flattering draft. History down here is turtles all the way, and every turtle is lying.",
-            "effects": ["hp -1"]
+            "effects": [
+              "hp -1"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Pry out the dragon's gemstone eyes",
-        "check": { "stat": "dex", "dc": 13 },
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
         "success": [
           {
             "weight": 100,
             "text": "Two garnets, each the size of a grape. The dragon in the mural now stares with empty sockets, which honestly improves its argument.",
-            "effects": ["money +9"]
+            "effects": [
+              "money +9"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The left eye was a trigger. A jet of pigment older than the kingdom catches you full in the face. It does not wash off so much as gradually forgive you.",
-            "effects": ["hp -3"]
+            "effects": [
+              "hp -3"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Add a corrective caption",
@@ -314,40 +482,65 @@
           {
             "weight": 60,
             "text": "'CITATION NEEDED,' you carve, neatly. Something in the walls exhales, as if it has waited centuries for someone to say it. A loose brick swings open in gratitude.",
-            "effects": ["loot common", "stat wis +1"]
+            "effects": [
+              "loot common",
+              "stat wis +1"
+            ]
           },
           {
             "weight": 40,
             "text": "The mural has a defender: a small animated paint golem with strong feelings about artistic license. It expresses them at ankle height.",
-            "effects": ["hp -2"]
+            "effects": [
+              "hp -2"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "state_power",
+    "tags": [
+      "state_power",
+      "voice_1"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_dungeon_audited_treasury",
-    "locations": ["dungeon"],
+    "locations": [
+      "dungeon"
+    ],
     "weight": 11,
-    "text": "A modest treasury, every coin catalogued in an open ledger. Entry one, underlined twice: 'IF THE COUNTS DIFFER, THE ROOM KNOWS.'",
+    "text": "A modest treasury, every coin catalogued in an open ledger. Entry one, underlined twice: 'IF THE COUNTS DIFFER, THE ROOM KNOWS.'\n\nPower calls \"Dungeon Audited Treasury\" an exception. The rule it conceals is simpler: the price rose after someone important bought all the alternatives.",
     "choices": [
       {
         "text": "Take exactly the shrinkage allowance",
-        "check": { "stat": "int", "dc": 11 },
+        "check": {
+          "stat": "int",
+          "dc": 11
+        },
         "success": [
           {
             "weight": 100,
             "text": "Line 40: 'ACCEPTABLE ANNUAL LOSS: 8.' You take precisely eight, initial the ledger, and the room lets you go with the grudging respect of one professional for another.",
-            "effects": ["money +8"]
+            "effects": [
+              "money +8"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "You misread the allowance column as the fee column. The room, which knows, applies a correction to your shins and your purse.",
-            "effects": ["hp -2", "money -3"]
+            "effects": [
+              "hp -2",
+              "money -3"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Take everything and run",
@@ -355,14 +548,20 @@
           {
             "weight": 50,
             "text": "You sweep the shelves and sprint. The room knows immediately, but knowing and catching are different departments, and they don't talk.",
-            "effects": ["money +16"]
+            "effects": [
+              "money +16"
+            ]
           },
           {
             "weight": 50,
             "text": "The room knows, and the room has a door budget. Both exits slam. You leave through a gap you make yourself, taxed heavily in bruises.",
-            "effects": ["money +16", "hp -5"]
+            "effects": [
+              "money +16",
+              "hp -5"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Balance the ledger for them",
@@ -370,32 +569,55 @@
           {
             "weight": 100,
             "text": "Two hours of honest arithmetic. You find three errors, one of them in the room's favor, which delights it. A standard auditor's fee dispenses from a slot with a fresh-minted clink.",
-            "effects": ["money +6", "stat int +1"]
+            "effects": [
+              "money +6",
+              "stat int +1"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "capital",
+    "tags": [
+      "capital",
+      "voice_4"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_dungeon_torch_strike",
-    "locations": ["dungeon"],
+    "locations": [
+      "dungeon"
+    ],
     "weight": 10,
-    "text": "The corridor torches are all dark. Beneath them, a goblin with folded arms and a tiny sign: 'ON STRIKE. NO LIGHT WITHOUT FAIR SNACKS.'",
+    "text": "The corridor torches are all dark. Beneath them, a goblin with folded arms and a tiny sign: 'ON STRIKE. NO LIGHT WITHOUT FAIR SNACKS.'\n\nThe argument around \"Dungeon Torch Strike\" ends wherever someone finally admits that a union meeting is converting private fear into public disagreement, which is progress.",
     "choices": [
       {
         "text": "Meet the snack demands",
-        "requires": { "item": "jerky" },
+        "requires": {
+          "item": "jerky"
+        },
         "outcomes": [
           {
             "weight": 100,
             "text": "He inspects the jerky, nods like an arbitrator, and lights the corridor. As a union courtesy he also points out which flagstone not to trust and where a scab once dropped his wages.",
-            "effects": ["removeitem jerky", "money +6"]
+            "effects": [
+              "removeitem jerky",
+              "money +6"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Proceed in the dark",
-        "check": { "stat": "wis", "dc": 12 },
+        "check": {
+          "stat": "wis",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
@@ -407,9 +629,12 @@
           {
             "weight": 100,
             "text": "The dark contains a trap that specifically relied on the lighting budget. From the blackness, the goblin's voice: 'THAT one's not ours. Freelancer.'",
-            "effects": ["hp -4"]
+            "effects": [
+              "hp -4"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Light the torches yourself",
@@ -417,59 +642,93 @@
           {
             "weight": 60,
             "text": "Scab labor, but effective. The goblin heckles you clause by clause. While relighting sconce six you find where past travelers stashed tips for better service.",
-            "effects": ["money +4"]
+            "effects": [
+              "money +4"
+            ]
           },
           {
             "weight": 40,
             "text": "The goblin produces a whistle. It turns out he is not striking alone; he is merely striking closest to the entrance. Solidarity arrives, throwing pebbles with unionized accuracy.",
-            "effects": ["hp -2"]
+            "effects": [
+              "hp -2"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "union",
+    "tags": [
+      "union",
+      "voice_9"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_dungeon_fallen_block",
-    "locations": ["dungeon"],
+    "locations": [
+      "dungeon"
+    ],
     "weight": 10,
-    "text": "A ten-ton falling-block trap has already fallen, wedged at an angle against the wall. Beneath it: one flattened previous visitor and a gap exactly wide enough to be a bad idea.",
+    "text": "A ten-ton falling-block trap has already fallen, wedged at an angle against the wall. Beneath it: one flattened previous visitor and a gap exactly wide enough to be a bad idea.\n\nNobody affected by \"Dungeon Fallen Block\" was consulted. The part authority avoids is that the rebels have a plan, a counterplan, and one kettle recognized by every faction.",
     "choices": [
       {
         "text": "Crawl through the gap",
-        "check": { "stat": "dex", "dc": 13 },
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
         "success": [
           {
             "weight": 100,
             "text": "You slither through, pausing only to relieve the flattened visitor of a purse they are in no position to defend. The block groans philosophically above you the whole way.",
-            "effects": ["money +9"]
+            "effects": [
+              "money +9"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "Halfway through, the block settles two inches. Two inches is a lot of settlement when you are the foundation. You extract yourself in a hurry that costs skin.",
-            "effects": ["hp -5"]
+            "effects": [
+              "hp -5"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Winch it back up with rope",
-        "requires": { "item": "rope" },
-        "check": { "stat": "str", "dc": 13 },
+        "requires": {
+          "item": "rope"
+        },
+        "check": {
+          "stat": "str",
+          "dc": 13
+        },
         "success": [
           {
             "weight": 100,
             "text": "You rig the trap's own reset pulley and haul. The block rises with a sound like a cathedral clearing its throat, revealing the counterweight chamber and everything the mechanism has quietly swallowed for a century.",
-            "effects": ["loot fine"]
+            "effects": [
+              "loot fine"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The rope holds. Your grip doesn't. The block drops the last foot with a boom that will be someone else's mysterious dungeon noise, and the rope is now part of the exhibit.",
-            "effects": ["removeitem rope", "hp -2"]
+            "effects": [
+              "removeitem rope",
+              "hp -2"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Take the long way around",
@@ -479,44 +738,70 @@
             "text": "Forty minutes of detour. The block watches you go, ten tons of patience that will outlast your entire bloodline. You feel it was the correct call and also that the block agrees, smugly.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "revolution",
+    "tags": [
+      "revolution",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_dungeon_lost_and_found",
-    "locations": ["dungeon"],
+    "locations": [
+      "dungeon"
+    ],
     "weight": 10,
-    "text": "A chest labeled LOST AND FOUND, maintained with unsettling diligence by a skeleton clerk. Inside: one glove, a full set of teeth, and several items you could plausibly claim.",
+    "text": "A chest labeled LOST AND FOUND, maintained with unsettling diligence by a skeleton clerk. Inside: one glove, a full set of teeth, and several items you could plausibly claim.\n\nThe paperwork around \"Dungeon Lost And Found\" avoids its central fact: someone has made the strategically indefensible decision to treat a stranger as a person.",
     "choices": [
       {
         "text": "Claim something plausible",
-        "check": { "stat": "cha", "dc": 12 },
+        "check": {
+          "stat": "cha",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "'Yes, the satchel-shaped one, with the sentimental value.' The clerk stamps a form with the weary generosity of someone who stopped checking stories a century ago.",
-            "effects": ["loot common"]
+            "effects": [
+              "loot common"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "'Describe its contents.' You cannot. The clerk levies the standard false-claim fine, payable immediately, receipt written in beautiful bone-dry cursive.",
-            "effects": ["money -3"]
+            "effects": [
+              "money -3"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Donate to the finder's fund",
-        "requires": { "money": 3 },
+        "requires": {
+          "money": 3
+        },
         "outcomes": [
           {
             "weight": 100,
             "text": "Three coins in the tin. The clerk's jaw drops open, which is either shock or its resting state. Bureaucracy, moved to its hollow core, extends you its formal goodwill. You feel oddly restored.",
-            "effects": ["money -3", "rep 1", "hp +3"]
+            "effects": [
+              "money -3",
+              "rep 1",
+              "hp +3"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Ask about the reward for the teeth",
@@ -524,48 +809,74 @@
           {
             "weight": 60,
             "text": "There IS a reward. The teeth's owner, a skeleton two corridors down, has been gumming its way through eternity. The reunion is genuinely touching. The reward is genuinely money.",
-            "effects": ["money +7"]
+            "effects": [
+              "money +7"
+            ]
           },
           {
             "weight": 40,
             "text": "You pick up the teeth to examine them. The teeth examine you back, at speed. The clerk makes no move to intervene; this is clearly a known hazard with its own form.",
-            "effects": ["hp -2"]
+            "effects": [
+              "hp -2"
+            ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "kindness",
+    "tags": [
+      "kindness",
+      "voice_3"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_dungeon_recent_tomb",
-    "locations": ["dungeon"],
+    "locations": [
+      "dungeon"
+    ],
     "weight": 10,
     "slots": {
       "figure": "figure_dead"
     },
-    "text": "A tomb, recent by dungeon standards: {figure}, laid down in {figure_year}. The epitaph reads simply '{figure_trait}, TO THE END.' Grave goods glint through the iron grate.",
+    "text": "A tomb, recent by dungeon standards: {figure}, laid down in {figure_year}. The epitaph reads simply '{figure_trait}, TO THE END.' Grave goods glint through the iron grate.\n\nA plaque may eventually misdescribe \"Dungeon Recent Tomb\". For now, the useful truth is that an empire left ruins, debts, and a heroic plaque describing only the ruins.",
     "choices": [
       {
         "text": "Pry the grate",
-        "check": { "stat": "str", "dc": 13 },
+        "check": {
+          "stat": "str",
+          "dc": 13
+        },
         "success": [
           {
             "weight": 70,
             "text": "The grate yields. The goods are exactly as advertised, and {figure} raises no objection, being extremely dead. You leave the least valuable piece behind, as a technicality of conscience.",
-            "effects": ["money +11"]
+            "effects": [
+              "money +11"
+            ]
           },
           {
             "weight": 30,
             "text": "The grate yields, the goods are yours, and something cold passes through your wrist on the way out. {figure} apparently kept one thing in reserve: a grudge, portable.",
-            "effects": ["money +11", "trait +cursed"]
+            "effects": [
+              "money +11",
+              "trait +cursed"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The grate was installed by someone who expected exactly you. It springs back with interest, and you sit down hard next to a tomb that suddenly feels like it's smirking.",
-            "effects": ["hp -4"]
+            "effects": [
+              "hp -4"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Pay your respects properly",
@@ -573,18 +884,28 @@
           {
             "weight": 100,
             "text": "You stand a moment for {figure}, who died in {figure_year} doing whatever this was. The dungeon's cold lifts a little around you. Respect is a currency down here, and you've just been seen spending it.",
-            "effects": ["stat wis +1", "hp +2"]
+            "effects": [
+              "stat wis +1",
+              "hp +2"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Study the full inscription",
-        "check": { "stat": "int", "dc": 11 },
+        "check": {
+          "stat": "int",
+          "dc": 11
+        },
         "success": [
           {
             "weight": 100,
             "text": "Below the epitaph, in smaller letters: burial instructions, executor's notes, and the location of the fee set aside for a mourner. No mourner ever came. You qualify on a technicality.",
-            "effects": ["money +6", "learn 1"]
+            "effects": [
+              "money +6",
+              "learn 1"
+            ]
           }
         ],
         "fail": [
@@ -593,85 +914,135 @@
             "text": "The lower inscription is in a mortuary shorthand you can't crack. You're fairly sure one symbol means 'debt' and another means 'still.' You choose not to combine them.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "inquiry"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "colonialism",
+    "tags": [
+      "colonialism",
+      "voice_10"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_dungeon_empty_den",
-    "locations": ["dungeon"],
+    "locations": [
+      "dungeon"
+    ],
     "weight": 10,
     "slots": {
       "beast": "beast_here"
     },
-    "text": "Tally marks by a den mouth: {beast_kills} and counting. The den belongs to {beast}, who is currently out. The hoard of the moderately successful sits unattended.",
+    "text": "Tally marks by a den mouth: {beast_kills} and counting. The den belongs to {beast}, who is currently out. The hoard of the moderately successful sits unattended.\n\nThe paperwork around \"Dungeon Empty Den\" avoids its central fact: the forest has no legal standing but considerably more roots than the courthouse.",
     "choices": [
       {
         "text": "Raid it fast",
-        "check": { "stat": "dex", "dc": 13 },
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
         "success": [
           {
             "weight": 100,
             "text": "In, handfuls, out. Sixty seconds flat. Somewhere in the dark, {beast} is making tally mark material out of someone slower, and you intend to keep it that way.",
-            "effects": ["money +12"]
+            "effects": [
+              "money +12"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "{beast} comes home early, and you are standing in its living room holding its things. The negotiation is brief, physical, and entirely one-sided. You keep a fistful out of spite.",
-            "effects": ["hp -6", "money +4"]
+            "effects": [
+              "hp -6",
+              "money +4"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Leave a tribute at the threshold",
-        "requires": { "money": 3 },
+        "requires": {
+          "money": 3
+        },
         "outcomes": [
           {
             "weight": 100,
             "text": "Three coins on the flattest stone, the old way. When you pass this stretch again later, the tally marks have grown but your scent has been notably, deliberately skipped.",
-            "effects": ["money -3"]
+            "effects": [
+              "money -3"
+            ]
           }
-        ]
+        ],
+        "approach": "caution"
       },
       {
         "text": "Rig a snare at the entrance",
-        "check": { "stat": "int", "dc": 12 },
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "You don't kill {beast}. You inconvenience it, thoroughly, from a distance, and shop its hoard while it untangles itself and reassesses its life choices.",
-            "effects": ["loot common", "money +6"]
+            "effects": [
+              "loot common",
+              "money +6"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The snare works flawlessly on the first thing to hit it, which is you, backing up to admire your work. You hang there long enough to hear {beast} return, pause, and decide you're not worth the tally mark.",
-            "effects": ["hp -3"]
+            "effects": [
+              "hp -3"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_3"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_dungeon_graffiti_wall",
-    "locations": ["dungeon"],
+    "locations": [
+      "dungeon"
+    ],
     "weight": 9,
     "slots": {
       "tale": "chronicle_random"
     },
-    "text": "A wall of adventurer graffiti: initials, boasts, one very old recipe. Among them, a freshly chalked line: '{tale}' Someone down here keeps up with the news.",
+    "text": "A wall of adventurer graffiti: initials, boasts, one very old recipe. Among them, a freshly chalked line: '{tale}' Someone down here keeps up with the news.\n\nThe official lesson of \"Dungeon Graffiti Wall\" is complicated; the useful lesson is that the rumor is inaccurate in detail and devastatingly correct about ownership.",
     "choices": [
       {
         "text": "Read the whole wall for intel",
-        "check": { "stat": "int", "dc": 11 },
+        "check": {
+          "stat": "int",
+          "dc": 11
+        },
         "success": [
           {
             "weight": 100,
             "text": "Between the boasts, real information: which corridor floods, which merchant waters the ale, and where someone named Fat Oswin 'hid it, third brick, you're welcome.' Third brick delivers.",
-            "effects": ["money +5", "learn 1"]
+            "effects": [
+              "money +5",
+              "learn 1"
+            ]
           }
         ],
         "fail": [
@@ -680,7 +1051,8 @@
             "text": "You spend an hour on it and retain only the recipe, which calls for an amount of vinegar that cannot be legal. The wall has beaten better scholars than you.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Add your own line",
@@ -688,14 +1060,19 @@
           {
             "weight": 30,
             "text": "You write something short, true, and quotable. Within days it's being repeated in taverns by people who claim they were there. The wall has made stranger careers.",
-            "effects": ["trait +famous"]
+            "effects": [
+              "trait +famous"
+            ]
           },
           {
             "weight": 70,
             "text": "You chalk your mark among centuries of others. It's not the best line on the wall, but it's yours, and something about that squares your shoulders on the way out.",
-            "effects": ["stat cha +1"]
+            "effects": [
+              "stat cha +1"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Pry out a famously signed brick to sell",
@@ -703,63 +1080,100 @@
           {
             "weight": 60,
             "text": "Collectors pay real coin for authenticated dungeon graffiti, and this signature is one of the big ones. The wall now has a gap, and you have the vague sense of having sold a page out of someone's diary.",
-            "effects": ["money +6", "stat wis -1"]
+            "effects": [
+              "money +6",
+              "stat wis -1"
+            ]
           },
           {
             "weight": 40,
             "text": "The brick was load-bearing for the paragraph above it. A century of correspondence comes down on your head in a cloud of chalk and consequence.",
-            "effects": ["hp -2"]
+            "effects": [
+              "hp -2"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "propaganda",
+    "tags": [
+      "propaganda",
+      "voice_7"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_dungeon_ward_gauntlet",
-    "locations": ["dungeon"],
+    "locations": [
+      "dungeon"
+    ],
     "weight": 10,
-    "when": ["carrying_artifact"],
-    "text": "The wall runes wake as you pass, tasting the air around your pack. One by one they flare, spelling out something that translates, roughly, to 'SHOPLIFTER.'",
+    "when": [
+      "carrying_artifact"
+    ],
+    "text": "The wall runes wake as you pass, tasting the air around your pack. One by one they flare, spelling out something that translates, roughly, to 'SHOPLIFTER.'\n\nThe official lesson of \"Dungeon Ward Gauntlet\" is complicated; the useful lesson is that the generals call this a front; the families living here continue calling it home.",
     "choices": [
       {
         "text": "Sprint the gauntlet",
-        "check": { "stat": "con", "dc": 13 },
+        "check": {
+          "stat": "con",
+          "dc": 13
+        },
         "success": [
           {
             "weight": 100,
             "text": "You run through a corridor of indignant light. The wards score you as you pass but can't hold you. The last rune flickers something that might be 'BANNED' but lacks the paperwork to enforce it.",
-            "effects": ["hp -1"]
+            "effects": [
+              "hp -1"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The wards coordinate. Every third step earns a jolt of official disapproval, itemized. You emerge smoking gently, still in possession, technically victorious.",
-            "effects": ["hp -5"]
+            "effects": [
+              "hp -5"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Argue provenance",
-        "check": { "stat": "cha", "dc": 13 },
+        "check": {
+          "stat": "cha",
+          "dc": 13
+        },
         "success": [
           {
             "weight": 100,
             "text": "You cite salvage rights, abandonment statutes, and the fact that nobody has dusted this hallway in two hundred years. The wards confer, dim in embarrassment, and dispense a wrongful-accusation settlement.",
-            "effects": ["money +8"]
+            "effects": [
+              "money +8"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The wards were installed by lawyers. Your argument is rejected with citations, and contempt of corridor carries a physical penalty, administered promptly.",
-            "effects": ["hp -3"]
+            "effects": [
+              "hp -3"
+            ]
           }
-        ]
+        ],
+        "approach": "wit"
       },
       {
         "text": "Muffle the artifact and creep through",
-        "check": { "stat": "dex", "dc": 12 },
+        "check": {
+          "stat": "dex",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
@@ -771,50 +1185,81 @@
           {
             "weight": 100,
             "text": "The wrapping slips at the worst rune. The wall lights up like a festival with a grievance, and the resulting jolt teaches you a new respect for municipal magic.",
-            "effects": ["hp -4"]
+            "effects": [
+              "hp -4"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "antiwar",
+    "tags": [
+      "antiwar",
+      "voice_7"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_cave_light_eater",
-    "locations": ["cave"],
+    "locations": [
+      "cave"
+    ],
     "weight": 11,
-    "text": "The passage ahead eats light. Torch, glow, spark: everything stops at an invisible line, politely but absolutely. Beyond it, the dark has texture.",
+    "text": "The passage ahead eats light. Torch, glow, spark: everything stops at an invisible line, politely but absolutely. Beyond it, the dark has texture.\n\nThe official lesson of \"Cave Light Eater\" is complicated; the useful lesson is that the property office recognizes ownership more readily than occupancy, repair, or breathing.",
     "choices": [
       {
         "text": "Walk through blind",
-        "check": { "stat": "wis", "dc": 12 },
+        "check": {
+          "stat": "wis",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "You cross by ear and memory, one hand on the wall. On the far side your eyes come back changed, and for a minute you can see the glitter the darkness was hoarding for itself.",
-            "effects": ["money +8"]
+            "effects": [
+              "money +8"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The dark rearranges the floor while you're in it. You'd swear to this. You emerge with barked shins, a bruised elbow, and the distinct memory of something stepping politely around you.",
-            "effects": ["hp -3"]
+            "effects": [
+              "hp -3"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Throw a coin in and listen",
-        "requires": { "money": 1 },
+        "requires": {
+          "money": 1
+        },
         "outcomes": [
           {
             "weight": 100,
             "text": "Clink. Roll. Clink-clink. Pause. Splash. You now know the room's shape, the pit's location, and that something in there catches coins on the second bounce. You cross the mapped route without incident.",
-            "effects": ["money -1", "learn 1"]
+            "effects": [
+              "money -1",
+              "learn 1",
+              "region solidarity +1"
+            ]
           }
-        ]
+        ],
+        "approach": "mercy"
       },
       {
         "text": "Find a crawlway around",
-        "check": { "stat": "dex", "dc": 11 },
+        "check": {
+          "stat": "dex",
+          "dc": 11
+        },
         "success": [
           {
             "weight": 100,
@@ -826,101 +1271,166 @@
           {
             "weight": 100,
             "text": "The crawlway narrows to a decision point, and you make the wrong decision with your shoulders. Reversing out of stone is an art form. You are not an artist.",
-            "effects": ["hp -2"]
+            "effects": [
+              "hp -2"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "housing",
+    "tags": [
+      "housing",
+      "voice_7"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_cave_mugger_stream",
-    "locations": ["cave"],
+    "locations": [
+      "cave"
+    ],
     "weight": 11,
-    "text": "A stream crosses the path, fast and cold. Its bed glints: coins, buckles, one entire dagger. This stream has been mugging travelers for centuries and keeping trophies.",
+    "text": "A stream crosses the path, fast and cold. Its bed glints: coins, buckles, one entire dagger. This stream has been mugging travelers for centuries and keeping trophies.\n\nThe argument around \"Cave Mugger Stream\" ends wherever someone finally admits that the people maintaining this place know exactly how it fails and are forbidden to say so near customers.",
     "choices": [
       {
         "text": "Dredge the bed",
-        "check": { "stat": "con", "dc": 12 },
+        "check": {
+          "stat": "con",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "Numb to the elbows, you work the gravel like a professional grievance. The stream's trophy case yields coins, a good buckle, and the dagger, which you feel it owed somebody anyway.",
-            "effects": ["money +9", "item dagger"]
+            "effects": [
+              "money +9",
+              "item dagger"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The cold gets past your resolve and into your bones, and the current picks your pocket while you're distracted. The stream adds your coins to the display with what can only be called curation.",
-            "effects": ["hp -3", "money -2"]
+            "effects": [
+              "hp -3",
+              "money -2"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Cross with everything held high",
-        "check": { "stat": "dex", "dc": 11 },
+        "check": {
+          "stat": "dex",
+          "dc": 11
+        },
         "success": [
           {
             "weight": 100,
             "text": "Pack overhead, boots full of winter, dignity intact. The stream tugs at your laces the whole way, testing, and finds you a disappointing mark.",
-            "effects": ["hp -1"]
+            "effects": [
+              "hp -1"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The stream sweeps your feet like it's done ten thousand times before, because it has. You keep your pack. Your purse pays the experience tax.",
-            "effects": ["money -4", "hp -1"]
+            "effects": [
+              "money -4",
+              "hp -1"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Toss it a tribute first",
-        "requires": { "money": 2 },
+        "requires": {
+          "money": 2
+        },
         "outcomes": [
           {
             "weight": 100,
             "text": "Two coins, underhand, respectful. The current gentles visibly. As you cross, something the stream took long ago washes up against your boot, released from the collection: a professional courtesy.",
-            "effects": ["money -2", "loot common"]
+            "effects": [
+              "money -2",
+              "loot common"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "labor",
+    "tags": [
+      "labor",
+      "voice_9"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_cave_spore_market",
-    "locations": ["cave"],
+    "locations": [
+      "cave"
+    ],
     "weight": 10,
-    "text": "A ring of mushrooms the size of stools, and arranged on each one: goods. Moss cord, dried beetles, a jar of something amber. Spores drift overhead in patterns that feel distinctly like a sales pitch.",
+    "text": "A ring of mushrooms the size of stools, and arranged on each one: goods. Moss cord, dried beetles, a jar of something amber. Spores drift overhead in patterns that feel distinctly like a sales pitch.\n\nNothing about \"Cave Spore Market\" is accidental once you notice that an investor has purchased the problem, removed everything useful, and listed the remainder as growth.",
     "choices": [
       {
         "text": "Buy provisions",
-        "requires": { "money": 4 },
+        "requires": {
+          "money": 4
+        },
         "outcomes": [
           {
             "weight": 100,
             "text": "You leave coins on a stool and take the amber jar and a wrapped bundle. The spores swirl in what you're increasingly sure is a thank-you. The provisions are excellent. You decide not to ask what the beetles were for.",
-            "effects": ["money -4", "item rations"]
+            "effects": [
+              "money -4",
+              "item rations",
+              "region solidarity -1"
+            ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Haggle by interpretive spore",
-        "check": { "stat": "wis", "dc": 12 },
+        "check": {
+          "stat": "wis",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "You waft counteroffers with your hat until an equilibrium is reached. The market respects a negotiator. You pay a fraction of sticker and receive a small bonus item, possibly as a joke.",
-            "effects": ["money -2", "loot common"]
+            "effects": [
+              "money -2",
+              "loot common"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The spores out-negotiate you comprehensively. You come to at the ring's edge, lighter of purse and wearing a hat you have no memory of purchasing. It is, infuriatingly, a great hat.",
-            "effects": ["money -5", "item fancy_hat"]
+            "effects": [
+              "money -5",
+              "item fancy_hat"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Take without paying",
@@ -928,58 +1438,89 @@
           {
             "weight": 60,
             "text": "The spores have a loss-prevention department. Your next hour features colors that don't exist and a lecture delivered directly to your sinuses. You keep nothing. You apologize to a mushroom, sincerely.",
-            "effects": ["hp -3"]
+            "effects": [
+              "hp -3"
+            ]
           },
           {
             "weight": 40,
             "text": "You snatch and sprint before the spore cloud can convene. Cave capitalism, it turns out, has no enforcement arm beyond disappointment, which follows you for exactly one corridor.",
-            "effects": ["loot common"]
+            "effects": [
+              "loot common"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "capital",
+    "tags": [
+      "capital",
+      "voice_11"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_cave_pyrite_seam",
-    "locations": ["cave"],
+    "locations": [
+      "cave"
+    ],
     "weight": 10,
-    "text": "A seam of gold glitters in the wall. Beneath it, an old prospector's chalk note: 'ITS PYRITE. ITS ALWAYS PYRITE. - EVERY PROSPECTOR EVER'",
+    "text": "A seam of gold glitters in the wall. Beneath it, an old prospector's chalk note: 'ITS PYRITE. ITS ALWAYS PYRITE. - EVERY PROSPECTOR EVER'\n\nThe argument around \"Cave Pyrite Seam\" ends wherever someone finally admits that the market is invisible except when it needs guards, roads, courts, or lunch.",
     "choices": [
       {
         "text": "Mine it anyway",
-        "check": { "stat": "str", "dc": 12 },
+        "check": {
+          "stat": "str",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "It's pyrite. It's always pyrite. Except the fist-sized nugget hiding behind the pyrite, which is the real thing, using the fool's gold as a decoy. Smart rock. Not smart enough.",
-            "effects": ["money +10"]
+            "effects": [
+              "money +10"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "Sparks, chips, a bent pick-grip, and a wall that gives up nothing but confirmation. Somewhere, every prospector ever nods in unison.",
-            "effects": ["hp -2"]
+            "effects": [
+              "hp -2"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Test it properly first",
-        "check": { "stat": "int", "dc": 11 },
+        "check": {
+          "stat": "int",
+          "dc": 11
+        },
         "success": [
           {
             "weight": 100,
             "text": "Streak test: pyrite, obviously. But pyrite in bulk sells to alchemists, firestarters, and one specific jeweler with flexible ethics. You mine with correct expectations and profit modestly, which is the whole trick.",
-            "effects": ["money +5"]
+            "effects": [
+              "money +5"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "Lacking proper tools, you use the bite test. The seam wins the bite test. Your tooth files a formal complaint.",
-            "effects": ["hp -1"]
+            "effects": [
+              "hp -1"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Follow the seam deeper",
@@ -987,51 +1528,82 @@
           {
             "weight": 50,
             "text": "The glitter leads through a squeeze and down a slope to a pocket the chalk prospector never reached, and this pocket did not get the memo about always being pyrite.",
-            "effects": ["money +13", "hp -1"]
+            "effects": [
+              "money +13",
+              "hp -1"
+            ]
           },
           {
             "weight": 50,
             "text": "The seam leads into the dark, thins to a promise, and ends at a drop you find with one foot. You climb back up with nothing but a new appreciation for chalk-based wisdom.",
-            "effects": ["hp -4"]
+            "effects": [
+              "hp -4"
+            ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "capital",
+    "tags": [
+      "capital",
+      "voice_9"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_cave_ticking_ceiling",
-    "locations": ["cave"],
+    "locations": [
+      "cave"
+    ],
     "weight": 10,
-    "text": "The ceiling ticks. Dust sifts down in threads. Somewhere above, the mountain is redistributing its weight, and this room is in the budget.",
+    "text": "The ceiling ticks. Dust sifts down in threads. Somewhere above, the mountain is redistributing its weight, and this room is in the budget.\n\nPower calls \"Cave Ticking Ceiling\" an exception. The rule it conceals is simpler: the landlord calls this shelter; the roof calls it a temporary misunderstanding.",
     "choices": [
       {
         "text": "Sprint through now",
-        "check": { "stat": "dex", "dc": 12 },
+        "check": {
+          "stat": "dex",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "You cross at a dead run, snagging something shiny off a ledge mid-stride because you are, at heart, incorrigible. The room comes down behind you with a boom that renders the question academic.",
-            "effects": ["money +6"]
+            "effects": [
+              "money +6"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The mountain's schedule and yours overlap by half a second. Half a second of mountain is plenty. You clear the fall radius wearing some of the ceiling.",
-            "effects": ["hp -5"]
+            "effects": [
+              "hp -5"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Shore up the weak point",
-        "requires": { "item": "repair_kit" },
+        "requires": {
+          "item": "repair_kit"
+        },
         "outcomes": [
           {
             "weight": 100,
             "text": "Braces, wedges, one prayer to whoever handles geology. The ticking slows, considers, stops. While setting the last wedge you find what the previous ceiling ate: a satisfying settlement for services rendered.",
-            "effects": ["removeitem repair_kit", "loot common", "money +5"]
+            "effects": [
+              "removeitem repair_kit",
+              "loot common",
+              "money +5"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Back out and wait for the mountain to finish",
@@ -1041,37 +1613,61 @@
             "text": "From a respectful distance you listen to the room close its own account. When the dust settles, the passage is sealed, the detour is long, and you are alive to complain about both. A fair exchange.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "housing",
+    "tags": [
+      "housing",
+      "voice_4"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_cave_bat_cathedral",
-    "locations": ["cave"],
+    "locations": [
+      "cave"
+    ],
     "weight": 10,
-    "text": "The ceiling rustles: ten thousand bats packed wing to wing, a furry storm waiting for dusk. The floor beneath them is deep, pungent, and, to the right alchemist, extremely valuable.",
+    "text": "The ceiling rustles: ten thousand bats packed wing to wing, a furry storm waiting for dusk. The floor beneath them is deep, pungent, and, to the right alchemist, extremely valuable.\n\nBehind the business of \"Cave Bat Cathedral\" sits an older truth: the local wildlife has filed its complaint through teeth, weather, and one unusually organized fungus.",
     "choices": [
       {
         "text": "Harvest the saltpeter",
-        "check": { "stat": "con", "dc": 11 },
+        "check": {
+          "stat": "con",
+          "dc": 11
+        },
         "success": [
           {
             "weight": 100,
             "text": "You fill two sacks with what dignity you can spare, which is none. Alchemists pay premium rates precisely because of afternoons like this one, and you have earned every coin at the molecular level.",
-            "effects": ["money +8", "hp -1"]
+            "effects": [
+              "money +8",
+              "hp -1"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "You get the sacks filled, but the smell forms a personal relationship with you that outlasts three washes. Innkeepers will develop opinions. So will everyone.",
-            "effects": ["money +4", "stat cha -1"]
+            "effects": [
+              "money +4",
+              "stat cha -1"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Pass beneath without a sound",
-        "check": { "stat": "dex", "dc": 12 },
+        "check": {
+          "stat": "dex",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
@@ -1083,18 +1679,27 @@
           {
             "weight": 100,
             "text": "One misstep, one squelch, one bat with insomnia. The storm breaks early and all at once, and you experience weather that has teeth and no barometric explanation.",
-            "effects": ["hp -4"]
+            "effects": [
+              "hp -4"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Chart their exit routes",
-        "check": { "stat": "int", "dc": 11 },
+        "check": {
+          "stat": "int",
+          "dc": 11
+        },
         "success": [
           {
             "weight": 100,
             "text": "Bats fly the efficient route; they've had millennia to optimize. Their main exit crevice doubles as a shortcut, and its floor holds coins from every traveler who found it before you and dropped things in the dark.",
-            "effects": ["money +4", "learn 1"]
+            "effects": [
+              "money +4",
+              "learn 1"
+            ]
           }
         ],
         "fail": [
@@ -1103,15 +1708,26 @@
             "text": "You track wing patterns for an hour and conclude, with full confidence, that the bats are going 'up.' Cartography has suffered worse contributions, but not many.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_5"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_cave_old_hands",
-    "locations": ["cave"],
+    "locations": [
+      "cave"
+    ],
     "weight": 9,
-    "text": "Hand prints on stone, hundreds of them, older than every kingdom you can name. Low on the wall: small hands. Someone brought their children into the dark, and everyone left a mark.",
+    "text": "Hand prints on stone, hundreds of them, older than every kingdom you can name. Low on the wall: small hands. Someone brought their children into the dark, and everyone left a mark.\n\nBehind the business of \"Cave Old Hands\" sits an older truth: the universe is under no obligation to respect the official diagram.",
     "choices": [
       {
         "text": "Add your own print",
@@ -1119,9 +1735,13 @@
           {
             "weight": 100,
             "text": "Ochre from the ledge, palm to stone, and now you are part of the oldest guest book in the world. Whatever was heavy in you sets itself down for a while among the hands.",
-            "effects": ["stat wis +1", "hp +3"]
+            "effects": [
+              "stat wis +1",
+              "hp +3"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Search the wall base for burial goods",
@@ -1129,79 +1749,121 @@
           {
             "weight": 60,
             "text": "Beneath a flat stone under the smallest hands: beads, a shell blade, a pouch of trade pieces still good at any collector's table. You take them, and the hands watch you do it, all of them.",
-            "effects": ["money +7", "stat wis -1"]
+            "effects": [
+              "money +7",
+              "stat wis -1"
+            ]
           },
           {
             "weight": 40,
             "text": "You dig, find nothing, and slowly realize the arrangement of stones you dismantled spelled something in a language of placement. You put it back wrong. You can feel that it's wrong.",
-            "effects": ["hp -1"]
+            "effects": [
+              "hp -1"
+            ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Copy the pigment recipe",
-        "check": { "stat": "int", "dc": 12 },
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "Ochre, fat, and a binding agent nobody has reproduced in an age. You reverse it from residue like a scholar. Dye-makers will pay honest coin for a formula that has already lasted ten thousand years.",
-            "effects": ["money +6", "learn 1"]
+            "effects": [
+              "money +6",
+              "learn 1"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "Your sampling smears a print that outlived empires. In the dark behind you, something inhales sharply. You do not ask what. You leave a fingerprint-sized donation of guilt and go.",
-            "effects": ["hp -2"]
+            "effects": [
+              "hp -2"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "science",
+    "tags": [
+      "science",
+      "voice_5"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_cave_crystal_prisoner",
-    "locations": ["cave"],
+    "locations": [
+      "cave"
+    ],
     "weight": 9,
     "slots": {
       "relic": "artifact_here"
     },
-    "text": "In the heart of a crystal column, suspended mid-glitter: {relic}. The crystal is a foot thick and older than greed itself. It is not coming out today, and it knows it.",
+    "text": "In the heart of a crystal column, suspended mid-glitter: {relic}. The crystal is a foot thick and older than greed itself. It is not coming out today, and it knows it.\n\nThe file titled \"Cave Crystal Prisoner\" makes the arrangement plain: a scholar has found the answer and is now searching for an institution willing to hear it.",
     "choices": [
       {
         "text": "Study it through the crystal",
-        "check": { "stat": "int", "dc": 12 },
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "The crystal magnifies. You catalog details no living scholar has seen: tool marks, maker's signs, one small deliberate flaw. Knowledge, unlike the relic, fits in your pack.",
-            "effects": ["learn 1", "stat int +1"]
+            "effects": [
+              "learn 1",
+              "stat int +1"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The refraction fights you. Two hours of squinting produce a headache shaped exactly like the column and one note that reads, in its entirety, 'shiny, significant?'",
-            "effects": ["hp -1"]
+            "effects": [
+              "hp -1"
+            ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Sketch it for a collector",
-        "check": { "stat": "dex", "dc": 11 },
+        "check": {
+          "stat": "dex",
+          "dc": 11
+        },
         "success": [
           {
             "weight": 100,
             "text": "Steady hands, good light, honest linework. Collectors pay handsomely for proof that {relic} exists and precise directions on where it can be visited but never bought. Scarcity is the whole product.",
-            "effects": ["money +9"]
+            "effects": [
+              "money +9"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "Your sketch captures the majesty of {relic} in the way a potato captures the majesty of a horse. A less discerning collector buys it anyway, for reasons you don't investigate.",
-            "effects": ["money +3"]
+            "effects": [
+              "money +3"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Take a chisel to the column",
@@ -1209,23 +1871,40 @@
           {
             "weight": 70,
             "text": "The crystal doesn't notice your chisel. Your wrists notice your chisel. Deep in the column, the {relic_material} gleam of {relic} seems to shift slightly, the way a thing does when it is comfortable.",
-            "effects": ["hp -2"]
+            "effects": [
+              "hp -2"
+            ]
           },
           {
             "weight": 30,
             "text": "You free no relic, but you do knock loose a fist of gem-grade crystal from the column's shoulder. The mountain grew it around a treasure; some of the value rubbed off.",
-            "effects": ["money +6"]
+            "effects": [
+              "money +6"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "science",
+    "tags": [
+      "science",
+      "voice_0"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_cave_companion_veto",
-    "locations": ["cave"],
+    "locations": [
+      "cave"
+    ],
     "weight": 10,
-    "when": ["companion"],
-    "text": "Your companion stops dead at a narrow squeeze in the rock and communicates, in their particular way, that this is a terrible idea. They have been right before. They are insufferable about it.",
+    "when": [
+      "companion"
+    ],
+    "text": "Your companion stops dead at a narrow squeeze in the rock and communicates, in their particular way, that this is a terrible idea. They have been right before. They are insufferable about it.\n\nPeople remember \"Cave Companion Veto\" differently, but the material fact remains: kindness has no budget, no armor, and an alarming record of surviving anyway.",
     "choices": [
       {
         "text": "Trust them and detour",
@@ -1233,27 +1912,40 @@
           {
             "weight": 100,
             "text": "The detour skirts a ledge, and from the ledge you can see where the squeeze lets out: a sheer drop, decorated at the bottom with someone who didn't have a companion. Their pack, retrieved with rope and care, settles the argument permanently.",
-            "effects": ["money +7", "stat wis +1"]
+            "effects": [
+              "money +7",
+              "stat wis +1"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Go through alone anyway",
-        "check": { "stat": "con", "dc": 12 },
+        "check": {
+          "stat": "con",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "Past the squeeze, before the drop, a side grotto: a still pool with a glittering bottom that no sensible creature has ever reached. You return through the squeeze rich, scraped, and unbearable at your companion for a full day.",
-            "effects": ["money +9", "hp -1"]
+            "effects": [
+              "money +9",
+              "hp -1"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The squeeze accepts your entrance and disputes your exit. By the time you're free, you have new scrapes, less skin, and a companion whose silence is louder than any anthem of triumph could ever be.",
-            "effects": ["hp -4"]
+            "effects": [
+              "hp -4"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Throw a lit torch through first",
@@ -1261,40 +1953,63 @@
           {
             "weight": 60,
             "text": "The torch arcs through, lands, and illuminates a floor, walls, and an absence of horrors. Your companion sniffs, unconvinced but outvoted by evidence. You proceed together and split what the light finds.",
-            "effects": ["loot common"]
+            "effects": [
+              "loot common"
+            ]
           },
           {
             "weight": 40,
             "text": "The torch lands in something's nest. The something exits the squeeze at speed, aflame with grievance. Your companion's expression will sustain them through the winter.",
-            "effects": ["hp -3"]
+            "effects": [
+              "hp -3"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "kindness",
+    "tags": [
+      "kindness",
+      "voice_8"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_cave_breathing_deep",
-    "locations": ["cave"],
+    "locations": [
+      "cave"
+    ],
     "weight": 9,
-    "text": "The cave breathes. A slow wind in, a slow wind out, on a cycle of about a minute. Deep systems do this, the books say. The books also say 'usually.'",
+    "text": "The cave breathes. A slow wind in, a slow wind out, on a cycle of about a minute. Deep systems do this, the books say. The books also say 'usually.'\n\nAsk who pays for \"Cave Breathing Deep\" and the answer begins here: a guard is enforcing an ordinance invented moments ago by the guard.",
     "choices": [
       {
         "text": "Ride the inhale across the chasm",
-        "check": { "stat": "dex", "dc": 13 },
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
         "success": [
           {
             "weight": 100,
             "text": "You time the gust, commit, and let the mountain's own breath shove you across to a shelf no one has stood on since the air itself was younger. The shelf has been saving things.",
-            "effects": ["loot fine"]
+            "effects": [
+              "loot fine"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "You mistime the cycle by three seconds and meet the exhale mid-leap. The chasm declines you; the near wall accepts you, abruptly. The cave breathes on, unbothered.",
-            "effects": ["hp -4"]
+            "effects": [
+              "hp -4"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Bottle the deep air",
@@ -1302,67 +2017,103 @@
           {
             "weight": 60,
             "text": "Air from the world's lungs, corked at the source. An alchemist will pay honestly for it, uncork it in a quiet shop, and refuse to say what it told them.",
-            "effects": ["money +6"]
+            "effects": [
+              "money +6"
+            ]
           },
           {
             "weight": 40,
             "text": "The bottle seals fine, but every time it's shaken, it sighs. Deeply. Personally. No buyer keeps it past the first sigh, and neither, eventually, do you.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Sit and time the cycle properly",
-        "check": { "stat": "int", "dc": 11 },
+        "check": {
+          "stat": "int",
+          "dc": 11
+        },
         "success": [
           {
             "weight": 100,
             "text": "Fifty-eight seconds in, sixty-one out, a hitch every ninth cycle like a snore. You cross on the hitch, safe as arithmetic, and pick up the coins of everyone who guessed instead of counted.",
-            "effects": ["money +4", "learn 1"]
+            "effects": [
+              "money +4",
+              "learn 1"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "You lose count around forty and start over. Twice. On your eventual crossing, the exhale gives you a dust bath and, you would swear before any court, a chuckle.",
-            "effects": ["hp -2"]
+            "effects": [
+              "hp -2"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "state_power",
+    "tags": [
+      "state_power",
+      "voice_2"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_crash_calm_recorder",
-    "locations": ["crash"],
+    "locations": [
+      "crash"
+    ],
     "weight": 11,
-    "text": "Half-buried in the wreck's tail section: a flight recorder, still narrating in a calm corporate voice. 'Impact in three. Two. One. Impact. Thank you for flying.'",
+    "text": "Half-buried in the wreck's tail section: a flight recorder, still narrating in a calm corporate voice. 'Impact in three. Two. One. Impact. Thank you for flying.'\n\nOfficials classify \"Crash Calm Recorder\" as routine, although the technology eliminated want before a committee restored it for market stability.",
     "choices": [
       {
         "text": "Pry it free to sell",
-        "check": { "stat": "str", "dc": 12 },
+        "check": {
+          "stat": "str",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "It comes loose still narrating. 'Unscheduled extraction in progress. Thank you for salvaging.' Collectors of dead voices pay well, and this one has excellent diction.",
-            "effects": ["item recording", "credits +4"]
+            "effects": [
+              "item recording",
+              "credits +4"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The mounting bracket holds a residual charge, saved up for three centuries like a grudge. You sit down involuntarily. 'Please remain seated,' says the recorder, with what you refuse to believe is timing.",
-            "effects": ["hp -3"]
+            "effects": [
+              "hp -3"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Ask it what happened",
-        "check": { "stat": "int", "dc": 12 },
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "With the right query syntax, it disgorges the whole manifest: cargo, insurance codes, and the hold section where the valuables were secured 'for your safety.' They are still secure. Briefly.",
-            "effects": ["credits +10"]
+            "effects": [
+              "credits +10"
+            ]
           }
         ],
         "fail": [
@@ -1371,7 +2122,8 @@
             "text": "Every question routes to the same recorded disclaimer, a liability waiver forty minutes long. You listen to eleven minutes of it out of a horrified respect before your legs make an executive decision.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Leave it narrating",
@@ -1379,17 +2131,30 @@
           {
             "weight": 100,
             "text": "It's the only voice these people have left, and it's telling their story to the ferns on a loop. You straighten a bent panel near it, which is the closest thing to a headstone the site will get, and go.",
-            "effects": ["stat wis +1"]
+            "effects": [
+              "stat wis +1"
+            ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "crash",
+    "theme": "post_scarcity",
+    "tags": [
+      "post_scarcity",
+      "voice_1"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_crash_eternal_onboarding",
-    "locations": ["crash"],
+    "locations": [
+      "crash"
+    ],
     "weight": 10,
-    "text": "A flickering hologram runs new-crew orientation for a company three centuries defunct. 'Welcome to the team!' it tells the ferns. 'Your safety is our fourth priority!'",
+    "text": "A flickering hologram runs new-crew orientation for a company three centuries defunct. 'Welcome to the team!' it tells the ferns. 'Your safety is our fourth priority!'\n\nNobody affected by \"Crash Eternal Onboarding\" was consulted. The part authority avoids is that humanity reached the heavens and discovered procurement had arrived earlier.",
     "choices": [
       {
         "text": "Complete the orientation",
@@ -1397,23 +2162,34 @@
           {
             "weight": 60,
             "text": "Ninety minutes, two quizzes, one pledge. At the end the hologram beams, declares you Employee of a Month from a discontinued calendar, and issues your signing bonus from a slot that still, impossibly, works.",
-            "effects": ["item credit_chip"]
+            "effects": [
+              "item credit_chip"
+            ]
           },
           {
             "weight": 40,
             "text": "The final module is a mandatory trust fall. There is no one to catch you. There has been no one to catch anyone for three hundred years. You complete the module anyway; the completion stipend is real.",
-            "effects": ["hp -2", "credits +6"]
+            "effects": [
+              "hp -2",
+              "credits +6"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Social-engineer the supply room code",
-        "check": { "stat": "cha", "dc": 12 },
+        "check": {
+          "stat": "cha",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "'I'm from regional. Surprise audit.' The hologram, programmed to fear exactly this sentence, surrenders the code instantly. The supply room's vending reserves have been compounding in the dark ever since.",
-            "effects": ["credits +12"]
+            "effects": [
+              "credits +12"
+            ]
           }
         ],
         "fail": [
@@ -1422,7 +2198,8 @@
             "text": "It escalates you to a manager who no longer exists, then places you on hold. The hold music has outlived the company, the crew, and arguably the concept of patience. You hang up on a ghost.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Unplug it",
@@ -1430,22 +2207,38 @@
           {
             "weight": 60,
             "text": "The power cell alone is worth the trouble. As the projection fades, it gets out one last 'great first day, everyone,' to a crew that never clocked out. You pocket the cell and do not whistle on the way back.",
-            "effects": ["credits +8"]
+            "effects": [
+              "credits +8"
+            ]
           },
           {
             "weight": 40,
             "text": "As your hand closes on the cable, the hologram looks directly at you, which it should not be able to do, and says 'thank you.' The cell is worth less than expected. The silence afterward is worth something you can't sell.",
-            "effects": ["credits +4", "stat wis +1"]
+            "effects": [
+              "credits +4",
+              "stat wis +1"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "crash",
+    "theme": "post_scarcity",
+    "tags": [
+      "post_scarcity",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_crash_claim_flags",
-    "locations": ["crash"],
+    "locations": [
+      "crash"
+    ],
     "weight": 10,
-    "text": "Every salvageable hull section wears a claim flag: rag on antenna, dibs by the old rules. One flag is so sun-bleached its claim may have lapsed. Salvage etiquette is unwritten. It is also, typically, armed.",
+    "text": "Every salvageable hull section wears a claim flag: rag on antenna, dibs by the old rules. One flag is so sun-bleached its claim may have lapsed. Salvage etiquette is unwritten. It is also, typically, armed.\n\nNothing about \"Crash Claim Flags\" is accidental once you notice that the machine can provide abundance, but its license agreement remains emotionally committed to scarcity.",
     "choices": [
       {
         "text": "Honor the flags, take only unclaimed scraps",
@@ -1453,9 +2246,13 @@
           {
             "weight": 100,
             "text": "You work the margins: loose fasteners, a coil of wire, one intact gauge. Thin pickings, but a scavver watching from the ridge lowers their spyglass and, later, their prices. The rules saw you keep them.",
-            "effects": ["credits +5", "rep 1"]
+            "effects": [
+              "credits +5",
+              "rep 1"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Work the faded claim",
@@ -1463,40 +2260,64 @@
           {
             "weight": 60,
             "text": "Three seasons of sun means a lapsed claim; that IS the old rule, and you cite it to nobody as you strip the section clean. Whoever flagged it is a memory, and memories can't hold salvage rights.",
-            "effects": ["credits +11"]
+            "effects": [
+              "credits +11"
+            ]
           },
           {
             "weight": 40,
             "text": "The claimant is alive, patient, and has been letting the flag fade on purpose as bait. The conversation is short and their prybar does most of the talking. Your description now circulates among people with opinions.",
-            "effects": ["hp -2", "trait +marked"]
+            "effects": [
+              "hp -2",
+              "trait +marked"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Plant your own flags on everything else",
-        "check": { "stat": "cha", "dc": 12 },
+        "check": {
+          "stat": "cha",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "Your flags are convincing: weathered just right, knotted in the local style. When you return with a cart, your claims stand untouched, and one has accrued a respectful note asking to buy in.",
-            "effects": ["credits +9"]
+            "effects": [
+              "credits +9"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "You return to find every one of your flags relocated to a single latrine pit, arranged with editorial care. Message received. The scavver community communicates fluently in placement.",
-            "effects": ["stat cha -1"]
+            "effects": [
+              "stat cha -1"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "crash",
+    "theme": "post_scarcity",
+    "tags": [
+      "post_scarcity",
+      "voice_11"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_finale_warm_throne",
-    "locations": ["dungeon_finale"],
+    "locations": [
+      "dungeon_finale"
+    ],
     "weight": 10,
-    "text": "The bottom of {site}: a throne room with no king, no bones, no dust on the seat. The throne is warm. It has been waiting a long time, and it is not picky.",
+    "text": "The bottom of {site}: a throne room with no king, no bones, no dust on the seat. The throne is warm. It has been waiting a long time, and it is not picky.\n\nThe paperwork around \"Finale Warm Throne\" avoids its central fact: the generals call this a front; the families living here continue calling it home.",
     "choices": [
       {
         "text": "Sit on it",
@@ -1504,126 +2325,207 @@
           {
             "weight": 50,
             "text": "Vast administrative awareness floods in: every trap, every ledger, every gold piece in the dark. You skim the treasury as acting management, sign nothing, and abdicate before the paperwork notices you.",
-            "effects": ["money +22"]
+            "effects": [
+              "money +22"
+            ]
           },
           {
             "weight": 30,
             "text": "The throne closes around you like a handshake that won't end. Getting free costs skin and leverage, but your flailing kicks open the tribute drawer, which softens the memory considerably.",
-            "effects": ["hp -6", "money +10"]
+            "effects": [
+              "hp -6",
+              "money +10"
+            ]
           },
           {
             "weight": 20,
             "text": "Something old stamps you before you can stand: crowned in absentia, heir to an office you cannot find on any map. The coronation gift is generous. The obligation hums under your skin.",
-            "effects": ["money +18", "trait +cursed"]
+            "effects": [
+              "money +18",
+              "trait +cursed"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Loot the room, never touching the seat",
-        "check": { "stat": "dex", "dc": 13 },
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
         "success": [
           {
             "weight": 100,
             "text": "You strip the hall of everything portable while giving the throne the wide, respectful berth you'd give a sleeping dog with a title. It watches. It permits. Professionals recognize professionals.",
-            "effects": ["money +16", "loot fine"]
+            "effects": [
+              "money +16",
+              "loot fine",
+              "region solidarity -1"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "You get greedy near the armrest. The throne makes its displeasure known through the floor, which briefly forgets to be solid. You crawl out of the hall with a partial haul and total clarity.",
-            "effects": ["money +8", "hp -5"]
+            "effects": [
+              "money +8",
+              "hp -5",
+              "region solidarity -1"
+            ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Destroy it",
-        "check": { "stat": "str", "dc": 14 },
+        "check": {
+          "stat": "str",
+          "dc": 14
+        },
         "success": [
           {
             "weight": 100,
             "text": "The throne comes apart under your hands, and with it, something that had been leaning its whole weight on this room for centuries lets go. The dungeon itself seems to stand straighter. So, permanently, do you.",
-            "effects": ["maxhp +1", "loot fine"]
+            "effects": [
+              "maxhp +1",
+              "loot fine"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The throne is upholstered in consequences. Your first blow bounces; its reply does not. You leave the hall walking backward, bleeding, while the seat radiates the patience of furniture that has outlasted better regicides.",
-            "effects": ["hp -7"]
+            "effects": [
+              "hp -7"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "dungeon_finale",
+    "theme": "antiwar",
+    "tags": [
+      "antiwar",
+      "voice_3"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_finale_lapsed_guardian",
-    "locations": ["dungeon_finale"],
+    "locations": [
+      "dungeon_finale"
+    ],
     "weight": 10,
-    "text": "The vault's guardian, a granite colossus, blocks the final door. 'CONTRACT EXPIRED,' it grinds. '743 YEARS AGO. I GUARD NOW ON PRINCIPLE ALONE. PRINCIPLE IS NEGOTIABLE.'",
+    "text": "The vault's guardian, a granite colossus, blocks the final door. 'CONTRACT EXPIRED,' it grinds. '743 YEARS AGO. I GUARD NOW ON PRINCIPLE ALONE. PRINCIPLE IS NEGOTIABLE.'\n\nNobody affected by \"Finale Lapsed Guardian\" was consulted. The part authority avoids is that a full pantry and an empty street are conducting a quiet argument about distribution.",
     "choices": [
       {
         "text": "Negotiate a buyout",
-        "requires": { "money": 10 },
-        "check": { "stat": "cha", "dc": 12 },
+        "requires": {
+          "money": 10
+        },
+        "check": {
+          "stat": "cha",
+          "dc": 12
+        },
         "success": [
           {
             "weight": 100,
             "text": "Ten gold, itemized as 'severance, back pay, gesture.' The colossus counts it twice with fingers like millstones, steps aside, and even recommends the good shelf. The vault has been earning interest in the dark.",
-            "effects": ["money +15", "loot fine"]
+            "effects": [
+              "money +15",
+              "loot fine"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "It takes your retainer, deliberates for a geological moment, and rules against you. 'PRINCIPLE,' it explains, pocketing the gold, 'IS NEGOTIABLE. NOT CHEAP.' The door stays guarded. You stay outside.",
-            "effects": ["money -10"]
+            "effects": [
+              "money -10"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Fight it on principle",
-        "check": { "stat": "str", "dc": 14 },
+        "check": {
+          "stat": "str",
+          "dc": 14
+        },
         "success": [
           {
             "weight": 100,
             "text": "It fights like something with nothing left but the job, and loses like something relieved to. 'ADEQUATE,' it grinds from the floor, sliding the door open with its last mobile arm. The vault is everything 743 years promised.",
-            "effects": ["money +24", "hp -4"]
+            "effects": [
+              "money +24",
+              "hp -4",
+              "region unrest +1"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "Granite does not tire, feel doubt, or leave openings. It deposits you at the stairs with terrible gentleness and returns to its post, principle intact, your silhouette lightly revised.",
-            "effects": ["hp -8"]
+            "effects": [
+              "hp -8",
+              "region unrest +1"
+            ]
           }
-        ]
+        ],
+        "approach": "force"
       },
       {
         "text": "Draft its formal release papers",
-        "check": { "stat": "int", "dc": 13 },
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
         "success": [
           {
             "weight": 100,
             "text": "Termination of service, discharge of obligation, witnessed by echo. The colossus reads all nine clauses twice, weeps a little gravel, and signs with a thumbprint that cracks the floor. It opens the vault, takes nothing, and walks toward daylight for the first time in 743 years. Your share is called 'executor's portion.'",
-            "effects": ["money +20", "stat int +1"]
+            "effects": [
+              "money +20",
+              "stat int +1"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "Your draft says 'in perpetuity' where you meant 'heretofore.' The colossus catches it, points it out with genuine sympathy, and explains you have accidentally renewed its contract. It escorts you out and tips you for trying. Nobody ever tries.",
-            "effects": ["money +4"]
+            "effects": [
+              "money +4"
+            ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "dungeon_finale",
+    "theme": "food",
+    "tags": [
+      "food",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "b2d_finale_speaking_pool",
-    "locations": ["dungeon_finale"],
+    "locations": [
+      "dungeon_finale"
+    ],
     "weight": 10,
-    "text": "Beneath the last stair, a pool of dark that talks. It knows your name, your debts, and your shoe size. 'Everything down here can be yours,' it says, pleasantly. 'Rates apply.'",
+    "text": "Beneath the last stair, a pool of dark that talks. It knows your name, your debts, and your shoe size. 'Everything down here can be yours,' it says, pleasantly. 'Rates apply.'\n\nPeople remember \"Finale Speaking Pool\" differently, but the material fact remains: the kitchen can feed everyone or satisfy the ledger, but apparently not both before supper.",
     "choices": [
       {
         "text": "Take the deal",
@@ -1631,32 +2533,47 @@
           {
             "weight": 60,
             "text": "The dark keeps its word: gold rises from the pool like it's glad to leave. The rate applies itself on your way up the stairs, settling into your shadow where the light can't audit it.",
-            "effects": ["money +25", "trait +cursed"]
+            "effects": [
+              "money +25",
+              "trait +cursed"
+            ]
           },
           {
             "weight": 40,
             "text": "The gold surfaces; the rate, somehow, does not. Deep below, something files the paperwork wrong and doesn't notice. You climb the stairs quickly, quietly, like a person leaving a bank during a clerical error.",
-            "effects": ["money +18"]
+            "effects": [
+              "money +18"
+            ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Counter-offer",
-        "check": { "stat": "cha", "dc": 14 },
+        "check": {
+          "stat": "cha",
+          "dc": 14
+        },
         "success": [
           {
             "weight": 100,
             "text": "You negotiate with the dark the way it has negotiated with everyone: patiently, knowing what the other party wants. It wants conversation. You give it an hour and walk out with a no-strings settlement and its grudging professional regard.",
-            "effects": ["money +16", "stat cha +1"]
+            "effects": [
+              "money +16",
+              "stat cha +1"
+            ]
           }
         ],
         "fail": [
           {
             "weight": 100,
             "text": "The dark has closed harder deals than you across ten thousand years, and it finds your terms insulting. The exit fee is assessed in full, on the spot, from ankle height.",
-            "effects": ["hp -6"]
+            "effects": [
+              "hp -6"
+            ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Refuse everything and walk away",
@@ -1664,15 +2581,30 @@
           {
             "weight": 70,
             "text": "'No one refuses,' says the pool, and for the first time in its long career it sounds interested. As you climb, something arrives in your pack unasked: a gift with no rates, because the dark wants to see what you do next.",
-            "effects": ["loot fine", "stat wis +1"]
+            "effects": [
+              "loot fine",
+              "stat wis +1"
+            ]
           },
           {
             "weight": 30,
             "text": "The pool goes still, then, quietly: 'first one ever.' The blessing that follows you up the stairs is not the pool's; it belongs to whatever the pool has been sitting on all this time, and it has been waiting for exactly this.",
-            "effects": ["trait +blessed", "hp +4"]
+            "effects": [
+              "trait +blessed",
+              "hp +4"
+            ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "dungeon_finale",
+    "theme": "food",
+    "tags": [
+      "food",
+      "voice_8"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   }
 ]

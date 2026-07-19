@@ -49,6 +49,8 @@ struct Choice {
 
 struct Event {
     std::string id;
+    std::string primary; // quota deck for the thousand-scenario production map
+    std::string theme;   // primary political and human concern
     std::vector<std::string> locations;
     int weight = 10;
     std::vector<std::string> tags; // semantic ingredients used by the director

@@ -75,12 +75,16 @@ int main(int argc, char** argv) {
         for (auto& event : part) events.push_back(event);
     }
 
-    std::map<std::string, int> locations, tags, approaches, families;
+    std::map<std::string, int> locations, tags, voiceCadence, approaches, families;
     std::map<std::string, int> primaryDecks, primaryThemes;
     std::map<std::string, std::vector<std::string>> openings, structures;
     int gated = 0, slotted = 0, delayed = 0, relationship = 0;
+    int remastered = 0, fullyThemed = 0;
     for (auto& event : events) {
         std::string id = event.value("id", "");
+        if (event.value("remaster", "") == "v17") remastered++;
+        if (!event.value("theme", "").empty() &&
+            !event.value("primary", "").empty()) fullyThemed++;
         std::string primary = event.value("primary", "");
         if (primary.empty()) {
             json eventLocations = event.value("locations", json::array());
@@ -93,7 +97,8 @@ int main(int argc, char** argv) {
         std::string primaryTheme = event.value("theme", "");
         for (auto& tag : event.value("tags", json::array())) {
             std::string tagName = tag.get<std::string>();
-            tags[tagName]++;
+            if (tagName.rfind("voice_", 0) == 0) voiceCadence[tagName]++;
+            else tags[tagName]++;
             if (primaryTheme.empty() && !targets.is_discarded() &&
                 targets.contains("themes") && targets["themes"].contains(tagName))
                 primaryTheme = tagName;
@@ -117,12 +122,18 @@ int main(int argc, char** argv) {
     std::printf("authoring: %d events, %d explicit families, %d semantic tags, %d approaches\n",
                 (int)events.size(), (int)families.size(), (int)tags.size(),
                 (int)approaches.size());
+    std::printf("narrative remaster: %d legacy cards rewritten, %d/%d cards classified\n",
+                remastered, fullyThemed, (int)events.size());
     std::printf("connections: %d gated, %d slotted, %d delayed choices, %d relationship choices\n",
                 gated, slotted, delayed, relationship);
     std::printf("location coverage:");
     for (auto& pair : locations) std::printf(" %s=%d", pair.first.c_str(), pair.second);
     std::printf("\nsemantic coverage:");
     for (auto& pair : tags) std::printf(" %s=%d", pair.first.c_str(), pair.second);
+    std::printf("\n");
+    std::printf("voice cadence:");
+    for (auto& pair : voiceCadence)
+        std::printf(" %s=%d", pair.first.c_str(), pair.second);
     std::printf("\n");
 
     if (!targets.is_discarded() && targets.is_object()) {

@@ -46,6 +46,7 @@ void StoryDirector::reset() {
 
 std::vector<std::string> StoryDirector::tagsFor(const Event& event) {
     std::set<std::string> unique(event.tags.begin(), event.tags.end());
+    if (!event.theme.empty()) unique.insert(event.theme);
     for (const std::string& location : event.locations) unique.insert(location);
 
     for (const auto& slot : event.slots) {

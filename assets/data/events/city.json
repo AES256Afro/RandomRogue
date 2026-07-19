@@ -4,7 +4,7 @@
     "locations": [
       "city"
     ],
-    "text": "A book stall run by a woman with ink-stained fingers and the eyes of someone who has read ALL the footnotes. 'Histories,' she says. 'Real ones. Six gold and I don't answer questions about chapter four.'",
+    "text": "A book stall run by a woman with ink-stained fingers and the eyes of someone who has read ALL the footnotes. 'Histories,' she says. 'Real ones. Six gold and I don't answer questions about chapter four.'\n\nNobody affected by \"City Book Stall\" was consulted. The part authority avoids is that power has commissioned a statue to remember events in the preferred direction.",
     "choices": [
       {
         "text": "Buy a history book",
@@ -17,10 +17,12 @@
             "text": "The book is heavier than it looks. All the true ones are, she says, counting your coins.",
             "effects": [
               "money -6",
-              "item book"
+              "item book",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Ask about chapter four",
@@ -42,7 +44,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Haggle",
@@ -80,16 +83,25 @@
               "item book"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "propaganda",
+    "tags": [
+      "propaganda",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_doom_prophet",
     "locations": [
       "city"
     ],
-    "text": "A street prophet grabs your sleeve. 'You will die on a TUESDAY,' she hisses. She's selling anti-Tuesday charms, 10 gold each.",
+    "text": "A street prophet grabs your sleeve. 'You will die on a TUESDAY,' she hisses. She's selling anti-Tuesday charms, 10 gold each.\n\nNobody affected by \"City Doom Prophet\" was consulted. The part authority avoids is that faith has arrived as practical courage; authority has arrived dressed like faith.",
     "choices": [
       {
         "text": "Buy the charm",
@@ -101,7 +113,8 @@
             "weight": 70,
             "text": "It's a rock with 'NO' painted on it. You feel scammed and yet, somehow, safer.",
             "effects": [
-              "money -10"
+              "money -10",
+              "region solidarity -1"
             ]
           },
           {
@@ -109,10 +122,12 @@
             "text": "The rock hums faintly. It might actually be doing something. Unsettling value for money.",
             "effects": [
               "money -10",
-              "stat wis +1"
+              "stat wis +1",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Ask which Tuesday",
@@ -130,7 +145,8 @@
             "text": "She consults her notes. 'One of them,' she admits. Refreshing honesty. She gives you a discount rock for free.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Point out it's currently Tuesday",
@@ -161,16 +177,25 @@
               "hp -1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "faith",
+    "tags": [
+      "faith",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_pickpocket",
     "locations": [
       "city"
     ],
-    "text": "Fingers, light as regret, brush your coin purse. The pickpocket is already three steps away, whistling.",
+    "text": "Fingers, light as regret, brush your coin purse. The pickpocket is already three steps away, whistling.\n\nNothing about \"City Pickpocket\" is accidental once you notice that an investor has purchased the problem, removed everything useful, and listed the remainder as growth.",
     "choices": [
       {
         "text": "Grab them",
@@ -205,7 +230,8 @@
               "money -8"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Shout 'STOP, THIEF!'",
@@ -232,7 +258,8 @@
               "money -6"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Respect the craft",
@@ -245,16 +272,25 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "capital",
+    "tags": [
+      "capital",
+      "voice_11"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_guard_shakedown",
     "locations": [
       "city"
     ],
-    "text": "A guard blocks your path. 'Walking tax,' he says, inventing it. 'Five gold.' His halberd suggests this is not a negotiation.",
+    "text": "A guard blocks your path. 'Walking tax,' he says, inventing it. 'Five gold.' His halberd suggests this is not a negotiation.\n\nPeople remember \"City Guard Shakedown\" differently, but the material fact remains: authority has mistaken being obeyed for being correct, a common occupational injury.",
     "choices": [
       {
         "text": "Cite the nonexistent tax code",
@@ -289,7 +325,8 @@
               "money -7"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Pay the 'tax'",
@@ -304,7 +341,8 @@
             ],
             "text": "He recognizes you mid-shakedown and turns the extortion into an escort. 'Can't have YOU walking unaccompanied.' No tax. A salute, even.",
             "effects": [
-              "rep +2"
+              "rep +2",
+              "region pressure +1"
             ]
           },
           {
@@ -316,17 +354,20 @@
             "effects": [
               "money -12",
               "hp -2",
-              "trait -wanted"
+              "trait -wanted",
+              "region pressure +1"
             ]
           },
           {
             "weight": 100,
             "text": "He pockets it and waves you through. At least the corruption is efficient here.",
             "effects": [
-              "money -5"
+              "money -5",
+              "region pressure +1"
             ]
           }
-        ]
+        ],
+        "approach": "law"
       },
       {
         "text": "Run",
@@ -350,7 +391,8 @@
               "hp -1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       },
       {
         "text": "Offer him the ale instead",
@@ -374,16 +416,25 @@
               "money -5"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "state_power",
+    "tags": [
+      "state_power",
+      "voice_8"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_spaceship_parts",
     "locations": [
       "city"
     ],
-    "text": "A vendor's stall displays gleaming junk: 'AUTHENTIC SKY-DEBRIS. FELL OFF A STAR-WAGON. NO REFUNDS.' One piece is blinking.",
+    "text": "A vendor's stall displays gleaming junk: 'AUTHENTIC SKY-DEBRIS. FELL OFF A STAR-WAGON. NO REFUNDS.' One piece is blinking.\n\nThe official lesson of \"City Spaceship Parts\" is complicated; the useful lesson is that the machine can provide abundance, but its license agreement remains emotionally committed to scarcity.",
     "choices": [
       {
         "text": "Buy the blinking one",
@@ -399,7 +450,8 @@
             "text": "You turn the blinking piece over with a shipowner's eye. It is a bilge sensor. A GOOD bilge sensor. The vendor has no idea what he is sitting on, and you pay his silly price for a part worth triple to anyone with a hull.",
             "effects": [
               "money -8",
-              "item repair_kit"
+              "item repair_kit",
+              "region solidarity -1"
             ]
           },
           {
@@ -407,14 +459,16 @@
             "text": "It's a 'credit chip,' whatever that is. The vendor swears it's money somewhere. It does feel like money.",
             "effects": [
               "money -8",
-              "credits +15"
+              "credits +15",
+              "region solidarity -1"
             ]
           },
           {
             "weight": 35,
             "text": "It blinks faster in your hand, then stops forever. You have purchased a dead rectangle.",
             "effects": [
-              "money -8"
+              "money -8",
+              "region solidarity -1"
             ]
           },
           {
@@ -422,10 +476,12 @@
             "text": "It chirps 'RECALIBRATED' and zaps your brain pleasantly. You suddenly understand fractions.",
             "effects": [
               "money -8",
-              "stat int +2"
+              "stat int +2",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Ask where exactly it fell from",
@@ -443,7 +499,8 @@
             "text": "The vendor points straight up and maintains eye contact. Technically unfalsifiable. You respect it.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Report the stall to a guard",
@@ -452,19 +509,29 @@
             "weight": 100,
             "text": "The guard is the vendor's cousin. Everyone is disappointed in you, including, somehow, the merchandise.",
             "effects": [
-              "stat cha -1"
+              "stat cha -1",
+              "region pressure +1"
             ]
           }
-        ]
+        ],
+        "approach": "law"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "post_scarcity",
+    "tags": [
+      "post_scarcity",
+      "voice_7"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_lost_noble_child",
     "locations": [
       "city"
     ],
-    "text": "A small child in absurdly expensive clothes tugs your sleeve. 'I am LOST,' they announce, with the confidence of someone who has never once faced a consequence.",
+    "text": "A small child in absurdly expensive clothes tugs your sleeve. 'I am LOST,' they announce, with the confidence of someone who has never once faced a consequence.\n\nAsk who pays for \"City Lost Noble Child\" and the answer begins here: the world is terrible at rewarding decency and strangely dependent upon it.",
     "choices": [
       {
         "text": "Escort them home",
@@ -500,7 +567,8 @@
               "money -4"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Deliver them to the city guard",
@@ -512,7 +580,8 @@
               "money +4"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Walk away. Not your circus",
@@ -535,9 +604,18 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "kindness",
+    "tags": [
+      "kindness",
+      "voice_2"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_smith_shop",
@@ -545,7 +623,7 @@
       "city"
     ],
     "weight": 12,
-    "text": "The smithy of {site} rings with hammer-song. The smith looks up, appraises your gear with open pity, and gestures at the racks.",
+    "text": "The smithy of {site} rings with hammer-song. The smith looks up, appraises your gear with open pity, and gestures at the racks.\n\nAsk who pays for \"City Smith Shop\" and the answer begins here: a supervisor has arrived to explain the task to everyone who has performed it for twenty years.",
     "choices": [
       {
         "text": "Browse the wares",
@@ -567,7 +645,8 @@
               "shop"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Compliment the craftsmanship first",
@@ -594,7 +673,8 @@
               "shop"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Just warm your hands and leave",
@@ -616,9 +696,18 @@
               "hp +1"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "labor",
+    "tags": [
+      "labor",
+      "voice_2"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_general_store",
@@ -626,7 +715,7 @@
       "city"
     ],
     "weight": 12,
-    "text": "A general store, shelves packed floor to ceiling. The sign says 'EVERYTHING MUST GO', and has said so, by the fading, for decades.",
+    "text": "A general store, shelves packed floor to ceiling. The sign says 'EVERYTHING MUST GO', and has said so, by the fading, for decades.\n\nNobody affected by \"City General Store\" was consulted. The part authority avoids is that a financier calls the missing roof an efficiency and the rain a subscription service.",
     "choices": [
       {
         "text": "Shop the eternal clearance",
@@ -648,7 +737,8 @@
               "shop"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Ask what must go, exactly",
@@ -660,7 +750,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Offer to repaint the fading sign",
@@ -683,9 +774,18 @@
               "hp -2"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "capital",
+    "tags": [
+      "capital",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_faction_recruiter",
@@ -693,7 +793,7 @@
       "city"
     ],
     "weight": 8,
-    "text": "A recruiter at a folding table, banner overhead, quill ready. 'Sign here and be part of something. Benefits include belonging, a sash, and enemies you didn't choose.'",
+    "text": "A recruiter at a folding table, banner overhead, quill ready. 'Sign here and be part of something. Benefits include belonging, a sash, and enemies you didn't choose.'\n\nA plaque may eventually misdescribe \"City Faction Recruiter\". For now, the useful truth is that the army has requisitioned common sense for ceremonial use.",
     "choices": [
       {
         "text": "Sign up enthusiastically",
@@ -706,7 +806,8 @@
             "text": "The recruiter finds your name already in the ledger of Notable Persons and skips 'member' entirely. You are inducted as an Honorary Something. The sash is nicer. The dues are waived. The meetings, tragically, are not.",
             "effects": [
               "money +6",
-              "rep +5"
+              "rep +5",
+              "region pressure +1"
             ]
           },
           {
@@ -714,7 +815,8 @@
             "text": "You're in. There's a stipend, a sash, and a meeting schedule you will never fully escape.",
             "effects": [
               "money +6",
-              "rep +8"
+              "rep +8",
+              "region pressure +1"
             ]
           },
           {
@@ -722,10 +824,12 @@
             "text": "The fine print includes dues. You've paid to join something you don't understand, which the recruiter calls 'tradition.'",
             "effects": [
               "money -4",
-              "rep +6"
+              "rep +6",
+              "region pressure +1"
             ]
           }
-        ]
+        ],
+        "approach": "law"
       },
       {
         "text": "Debate the philosophy of belonging",
@@ -751,7 +855,8 @@
               "money -2"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Take a pamphlet and flee",
@@ -771,16 +876,25 @@
             "text": "The pamphlet is 90% sash diagrams. You feel you understand the organization completely now.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "antiwar",
+    "tags": [
+      "antiwar",
+      "voice_10"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_fountain_wish",
     "locations": [
       "city"
     ],
-    "text": "The city fountain. Locals swear it grants wishes. The bottom glitters with the copper of a thousand optimists.",
+    "text": "The city fountain. Locals swear it grants wishes. The bottom glitters with the copper of a thousand optimists.\n\nA plaque may eventually misdescribe \"City Fountain Wish\". For now, the useful truth is that the world is terrible at rewarding decency and strangely dependent upon it.",
     "choices": [
       {
         "text": "Toss a coin and wish",
@@ -820,7 +934,8 @@
               "money +3"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Wade in and collect the coins",
@@ -859,7 +974,8 @@
               "trait +wanted"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Drink from it",
@@ -872,7 +988,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       },
       {
         "text": "Offer the fountain your lucky rock",
@@ -895,16 +1012,25 @@
               "hp -2"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "kindness",
+    "tags": [
+      "kindness",
+      "voice_10"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_street_magician",
     "locations": [
       "city"
     ],
-    "text": "A street magician is doing card tricks. The cards are floating. Actual levitation for copper tips, while three blocks away the guild sells the same magic for a fortune.",
+    "text": "A street magician is doing card tricks. The cards are floating. Actual levitation for copper tips, while three blocks away the guild sells the same magic for a fortune.\n\nNothing about \"City Street Magician\" is accidental once you notice that the work is necessary, the workers are disposable, and the contradiction has begun making noise.",
     "choices": [
       {
         "text": "Figure out the trick",
@@ -930,7 +1056,8 @@
               "money -6"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Tip generously",
@@ -946,7 +1073,8 @@
             "text": "You tip two of your last coins. The magician notices exactly what that costs you, makes them vanish, and returns them behind your ear with a wink. 'Trade rule: never rob the poor. No margins in it.'",
             "effects": [
               "hp +2",
-              "stat wis +1"
+              "stat wis +1",
+              "region solidarity +1"
             ]
           },
           {
@@ -954,10 +1082,12 @@
             "text": "The magician makes your tip vanish, then makes a rose appear behind your ear. Net loss, gross delight.",
             "effects": [
               "money -2",
-              "hp +2"
+              "hp +2",
+              "region solidarity +1"
             ]
           }
-        ]
+        ],
+        "approach": "mercy"
       },
       {
         "text": "Heckle",
@@ -987,9 +1117,18 @@
               "money +7"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "labor",
+    "tags": [
+      "labor",
+      "voice_11"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_bathhouse",
@@ -999,7 +1138,7 @@
     "slots": {
       "rumor": "chronicle_random"
     },
-    "text": "The public bathhouse: steam, echoes, and the total collapse of social rank. Somewhere in the fog a voice holds court: \"{rumor}\"",
+    "text": "The public bathhouse: steam, echoes, and the total collapse of social rank. Somewhere in the fog a voice holds court: \"{rumor}\"\n\nOfficials classify \"City Bathhouse\" as routine, although a life can be saved cheaply, creating a serious problem for the people charging more.",
     "choices": [
       {
         "text": "Soak and listen",
@@ -1015,7 +1154,8 @@
             "text": "Half the pools are roped off and the attendant swears the steam 'boils the miasma out.' Medically dubious, spiritually unimpeachable. You emerge scalded pink and feeling, for one evening, immortal.",
             "effects": [
               "money -2",
-              "hp +4"
+              "hp +4",
+              "region solidarity +1"
             ]
           },
           {
@@ -1026,7 +1166,8 @@
             "text": "Winter has made the bathhouse the most crowded building in the city. You soak shoulder to shoulder with strangers, every rank and grudge dissolved at temperature. Leaving is the hardest thing you do all week.",
             "effects": [
               "money -2",
-              "hp +5"
+              "hp +5",
+              "region solidarity +1"
             ]
           },
           {
@@ -1034,10 +1175,12 @@
             "text": "Two hours of heat, gossip, and mineral water. You emerge pruned, informed, and at peace.",
             "effects": [
               "money -2",
-              "hp +5"
+              "hp +5",
+              "region solidarity +1"
             ]
           }
-        ]
+        ],
+        "approach": "mercy"
       },
       {
         "text": "Correct the storyteller from inside the fog",
@@ -1057,7 +1200,8 @@
               "stat cha -1"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Check the changing room for unattended purses",
@@ -1086,7 +1230,8 @@
               "trait +wanted"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       },
       {
         "text": "Sell your incense to the attendant",
@@ -1100,19 +1245,30 @@
             "effects": [
               "removeitem incense",
               "money +8",
-              "hp +3"
+              "hp +3",
+              "region solidarity -1"
             ]
           },
           {
             "weight": 30,
             "text": "The attendant burns a sample. Somewhere in the fog, someone is violently allergic. The incense is returned. So are you, to the street.",
             "effects": [
-              "rep -2"
+              "rep -2",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "care",
+    "tags": [
+      "care",
+      "voice_1"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_execution_crowd",
@@ -1120,7 +1276,7 @@
       "city"
     ],
     "weight": 7,
-    "text": "A crowd has gathered in the square. On the scaffold, a man is being sentenced for 'aggravated mime-craft.' The crowd's mood is somewhere between festival and refund.",
+    "text": "A crowd has gathered in the square. On the scaffold, a man is being sentenced for 'aggravated mime-craft.' The crowd's mood is somewhere between festival and refund.\n\nPower calls \"City Execution Crowd\" an exception. The rule it conceals is simpler: authority has mistaken being obeyed for being correct, a common occupational injury.",
     "choices": [
       {
         "text": "Petition for a pardon",
@@ -1137,7 +1293,8 @@
             "text": "You step forward and the crowd recognizes you before you speak. The magistrate, sensing which way the ballads will be written, commutes the sentence mid-gasp. The mime performs 'gratitude' so hard it becomes briefly visible.",
             "effects": [
               "rep +5",
-              "stat cha +1"
+              "stat cha +1",
+              "region pressure +1"
             ]
           },
           {
@@ -1145,7 +1302,8 @@
             "text": "Your speech about proportionality moves the magistrate to tears and the sentence to community theater. The mime thanks you, silently but at length.",
             "effects": [
               "rep +6",
-              "stat cha +1"
+              "stat cha +1",
+              "region pressure +1"
             ]
           }
         ],
@@ -1155,10 +1313,12 @@
             "text": "The crowd boos you in unison. The mime, professionally, mimes booing you as well. Even the condemned have standards.",
             "effects": [
               "stat cha -1",
-              "rep -3"
+              "rep -3",
+              "region pressure +1"
             ]
           }
-        ]
+        ],
+        "approach": "law"
       },
       {
         "text": "Work the distracted crowd",
@@ -1185,7 +1345,8 @@
               "hp -1"
             ]
           }
-        ]
+        ],
+        "approach": "wit"
       },
       {
         "text": "Leave. This isn't entertainment",
@@ -1207,9 +1368,18 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "state_power",
+    "tags": [
+      "state_power",
+      "voice_4"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_credit_exchange",
@@ -1217,7 +1387,7 @@
       "city"
     ],
     "weight": 8,
-    "text": "A currency exchange run by a woman with an abacus, a sky-metal calculator, and visible contempt for both. The board lists today's rate for 'star money' in chalk, already crossed out twice.",
+    "text": "A currency exchange run by a woman with an abacus, a sky-metal calculator, and visible contempt for both. The board lists today's rate for 'star money' in chalk, already crossed out twice.\n\nBehind the business of \"City Credit Exchange\" sits an older truth: a merchant has found a way to own the risk while renting it back to everyone in danger.",
     "choices": [
       {
         "text": "Sell 5 credits for gold",
@@ -1234,7 +1404,8 @@
             "effects": [
               "credits -5",
               "money +11",
-              "stat wis +1"
+              "stat wis +1",
+              "region solidarity -1"
             ]
           },
           {
@@ -1242,7 +1413,8 @@
             "text": "She counts out coins with the weariness of someone who's seen currencies die. Fair rate, all things considered.",
             "effects": [
               "credits -5",
-              "money +9"
+              "money +9",
+              "region solidarity -1"
             ]
           },
           {
@@ -1250,10 +1422,12 @@
             "text": "The rate improved while you stood there. She honors the chalk, cursing softly. Windfall.",
             "effects": [
               "credits -5",
-              "money +13"
+              "money +13",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Buy 10 credits with gold",
@@ -1269,7 +1443,8 @@
             "text": "'War discount,' she says, sliding extra chips across. 'Everyone is dumping sky money for steel and bread. Their panic, your portfolio.' The abacus clicks in what might be approval.",
             "effects": [
               "money -12",
-              "credits +14"
+              "credits +14",
+              "region solidarity -1"
             ]
           },
           {
@@ -1277,10 +1452,12 @@
             "text": "'Investing in the sky economy,' she says, deadpan, sliding the blinking chips across. 'Bold.'",
             "effects": [
               "money -12",
-              "credits +10"
+              "credits +10",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Ask which currency will win",
@@ -1305,8 +1482,17 @@
               "money -2"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "capital",
+    "tags": [
+      "capital",
+      "voice_5"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   }
 ]

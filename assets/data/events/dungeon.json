@@ -8,7 +8,7 @@
     "slots": {
       "relic": "artifact_here"
     },
-    "text": "Behind a collapsed wall, on a pedestal that has clearly eaten hands before: {relic}. It's real. It's here. The stories all end badly, but they do all mention it's worth a fortune.",
+    "text": "Behind a collapsed wall, on a pedestal that has clearly eaten hands before: {relic}. It's real. It's here. The stories all end badly, but they do all mention it's worth a fortune.\n\nThe argument around \"Dungeon Artifact Find\" ends wherever someone finally admits that the border follows a ruler's old argument and cuts directly through a community's kitchen.",
     "choices": [
       {
         "text": "Take it",
@@ -39,7 +39,8 @@
               "hp -4"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Check for traps first",
@@ -76,7 +77,8 @@
               "hp -5"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Leave it. Some things should stay legendary",
@@ -88,7 +90,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       },
       {
         "text": "Swap in your lucky rock, heist-style",
@@ -104,16 +107,25 @@
               "removeitem lucky_rock"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "colonialism",
+    "tags": [
+      "colonialism",
+      "voice_9"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "dungeon_no_refunds_door",
     "locations": [
       "dungeon"
     ],
-    "text": "The entrance door bears a carved sign: 'WELCOME. NO REFUNDS. MIND THE GAP.' There is, as far as you can see, no gap.",
+    "text": "The entrance door bears a carved sign: 'WELCOME. NO REFUNDS. MIND THE GAP.' There is, as far as you can see, no gap.\n\nOfficials classify \"Dungeon No Refunds Door\" as routine, although a merchant has found a way to own the risk while renting it back to everyone in danger.",
     "choices": [
       {
         "text": "Enter confidently",
@@ -148,7 +160,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Probe ahead with a stick",
@@ -160,7 +173,9 @@
           {
             "weight": 100,
             "text": "The stick finds the gap, then a second gap, then a mimic pretending to be a third gap. You proceed safely, stickless.",
-            "effects": []
+            "effects": [
+              "region solidarity -1"
+            ]
           }
         ],
         "fail": [
@@ -168,10 +183,12 @@
             "weight": 100,
             "text": "The stick was the mimic. It bites your hand and scampers off, offended.",
             "effects": [
-              "hp -2"
+              "hp -2",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Knock politely",
@@ -181,16 +198,25 @@
             "text": "A voice from inside: 'It's open! Mind the gap!' Forewarned is forearmed. Whoever they are, you never find them.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "capital",
+    "tags": [
+      "capital",
+      "voice_1"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "dungeon_ribcage_sword",
     "locations": [
       "dungeon"
     ],
-    "text": "A sword is wedged in a rib cage. The plaque reads: 'HERE LIES THE PREVIOUS OWNER OF THIS SWORD.' The sword looks excellent.",
+    "text": "A sword is wedged in a rib cage. The plaque reads: 'HERE LIES THE PREVIOUS OWNER OF THIS SWORD.' The sword looks excellent.\n\nPeople remember \"Dungeon Ribcage Sword\" differently, but the material fact remains: a mapmaker has moved the border again without consulting the houses underneath the ink.",
     "choices": [
       {
         "text": "Take the sword",
@@ -240,7 +266,8 @@
               "trait +cursed"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Add a coin to the grave and move on",
@@ -253,7 +280,8 @@
               "hp +2"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Read the plaque's fine print",
@@ -276,9 +304,18 @@
             "text": "The fine print is in Skeletal. You nod like you understood. The rib cage nods back. You leave quickly.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "inquiry"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "antiwar",
+    "tags": [
+      "antiwar",
+      "voice_8"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "dungeon_goblin_toll",
@@ -286,7 +323,7 @@
       "dungeon",
       "cave"
     ],
-    "text": "A goblin sits at a tiny desk before a bridge. 'Toll bridge,' he says. 'Five gold. I don't make the rules.' He gestures at a rock labeled RULES.",
+    "text": "A goblin sits at a tiny desk before a bridge. 'Toll bridge,' he says. 'Five gold. I don't make the rules.' He gestures at a rock labeled RULES.\n\nNobody affected by \"Dungeon Goblin Toll\" was consulted. The part authority avoids is that the ledger reports excellent health and requests that nobody examine the patient.",
     "choices": [
       {
         "text": "Pay the toll",
@@ -300,7 +337,9 @@
               "rep > 9"
             ],
             "text": "The goblin checks a list, finds your name on the GOOD side of it, and waves you through free. 'Friends of the region ride free. The rock insists.' The rock says nothing, benevolently.",
-            "effects": []
+            "effects": [
+              "region pressure +1"
+            ]
           },
           {
             "weight": 100,
@@ -309,17 +348,20 @@
             ],
             "text": "The goblin squints at you. 'You've got the look of someone who's paid a LOT of tolls.' He stamps your hand at the veteran rate and notes it on the rock, which now bears an asterisk.",
             "effects": [
-              "money -3"
+              "money -3",
+              "region pressure +1"
             ]
           },
           {
             "weight": 100,
             "text": "He stamps your hand with a mushroom. 'Receipt.' The bridge is sturdy and the transaction weirdly professional.",
             "effects": [
-              "money -5"
+              "money -5",
+              "region pressure +1"
             ]
           }
-        ]
+        ],
+        "approach": "law"
       },
       {
         "text": "Challenge the rock's authority",
@@ -331,7 +373,9 @@
           {
             "weight": 100,
             "text": "You argue jurisdiction. The goblin consults the rock, loses the argument on your behalf, and waves you through, muttering about precedent.",
-            "effects": []
+            "effects": [
+              "region unrest +1"
+            ]
           }
         ],
         "fail": [
@@ -339,10 +383,12 @@
             "weight": 100,
             "text": "The rock wins. Somehow. There's a surcharge now for 'contempt of rock.'",
             "effects": [
-              "money -7"
+              "money -7",
+              "region unrest +1"
             ]
           }
-        ]
+        ],
+        "approach": "force"
       },
       {
         "text": "Wade across the river below",
@@ -385,7 +431,8 @@
               "hp -4"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       },
       {
         "text": "Offer jerky in lieu of coin",
@@ -400,16 +447,25 @@
               "removeitem jerky"
             ]
           }
-        ]
+        ],
+        "approach": "wit"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "capital",
+    "tags": [
+      "capital",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "dungeon_forgotten_altar",
     "locations": [
       "dungeon"
     ],
-    "text": "An altar to a forgotten god. The offering bowl holds three coins, a button, and a note: 'PLEASE. ANYTHING. I USED TO HAVE A WHOLE THING.'",
+    "text": "An altar to a forgotten god. The offering bowl holds three coins, a button, and a note: 'PLEASE. ANYTHING. I USED TO HAVE A WHOLE THING.'\n\nA plaque may eventually misdescribe \"Dungeon Forgotten Altar\". For now, the useful truth is that faith has arrived as practical courage; authority has arrived dressed like faith.",
     "choices": [
       {
         "text": "Donate generously",
@@ -447,7 +503,8 @@
               "hp +3"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Take the three coins",
@@ -479,7 +536,8 @@
               "trait +cursed"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Leave the button. Take nothing. Say something kind",
@@ -503,16 +561,25 @@
               "hp +2"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "faith",
+    "tags": [
+      "faith",
+      "voice_10"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "dungeon_slime_janitorial",
     "locations": [
       "dungeon"
     ],
-    "text": "A gelatinous cube fills the corridor, drifting slowly, absorbing bones and debris. A sign taped to it reads: 'CLEANING IN PROGRESS. PLEASE USE OTHER HALL.' There is no other hall.",
+    "text": "A gelatinous cube fills the corridor, drifting slowly, absorbing bones and debris. A sign taped to it reads: 'CLEANING IN PROGRESS. PLEASE USE OTHER HALL.' There is no other hall.\n\nOfficials classify \"Dungeon Slime Janitorial\" as routine, although the people maintaining this place know exactly how it fails and are forbidden to say so near customers.",
     "choices": [
       {
         "text": "Wait for it to pass",
@@ -539,7 +606,8 @@
               "money +8"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       },
       {
         "text": "Squeeze past it",
@@ -562,7 +630,8 @@
               "hp -3"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Compliment its work",
@@ -575,16 +644,25 @@
               "stat cha +1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "labor",
+    "tags": [
+      "labor",
+      "voice_1"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "dungeon_puzzle_door",
     "locations": [
       "dungeon"
     ],
-    "text": "A door with four dials and an inscription: 'SPEAK THE ANSWER: WHAT WALKS ON FOUR LEGS AT DAWN, TWO AT NOON, AND THREE AT DUSK?' Below, scratched by a previous visitor: 'ITS NOT MAN. WE TRIED MAN.'",
+    "text": "A door with four dials and an inscription: 'SPEAK THE ANSWER: WHAT WALKS ON FOUR LEGS AT DAWN, TWO AT NOON, AND THREE AT DUSK?' Below, scratched by a previous visitor: 'ITS NOT MAN. WE TRIED MAN.'\n\nNobody affected by \"Dungeon Puzzle Door\" was consulted. The part authority avoids is that the instrument is precise, the theory is provisional, and the sponsor wants a slogan.",
     "choices": [
       {
         "text": "Reason it out",
@@ -610,7 +688,8 @@
               "hp -3"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Try the handle",
@@ -629,7 +708,8 @@
               "hp -2"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Answer with your own riddle",
@@ -651,7 +731,8 @@
               "stat cha +1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       },
       {
         "text": "Skip the riddle. Pick the lock",
@@ -666,9 +747,18 @@
               "loot common"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "science",
+    "tags": [
+      "science",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "dungeon_mimic_support_group",
@@ -676,7 +766,7 @@
       "dungeon"
     ],
     "weight": 7,
-    "text": "You interrupt a circle of chests, barrels, and one apologetic bookshelf arranged in a ring. A banner droops overhead: 'DISGUISE-DEPENDENT PREDATORS ANONYMOUS. ALL FORMS WELCOME.'",
+    "text": "You interrupt a circle of chests, barrels, and one apologetic bookshelf arranged in a ring. A banner droops overhead: 'DISGUISE-DEPENDENT PREDATORS ANONYMOUS. ALL FORMS WELCOME.'\n\nNobody affected by \"Dungeon Mimic Support Group\" was consulted. The part authority avoids is that the world is terrible at rewarding decency and strangely dependent upon it.",
     "choices": [
       {
         "text": "Sit in. Listen. Grow",
@@ -690,7 +780,8 @@
             "effects": [
               "stat wis +1",
               "loot common",
-              "hp +2"
+              "hp +2",
+              "region solidarity +1"
             ]
           },
           {
@@ -698,10 +789,12 @@
             "text": "A barrel shares its fear of being opened 'for the wrong reasons.' You cry a little. Everyone pretends not to notice, which for mimics is deeply on-brand. They gift you a member's token.",
             "effects": [
               "stat wis +1",
-              "loot common"
+              "loot common",
+              "region solidarity +1"
             ]
           }
-        ]
+        ],
+        "approach": "mercy"
       },
       {
         "text": "Ask which of them is the real treasure chest",
@@ -730,7 +823,8 @@
               "money +12"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Share your own struggles with pretending",
@@ -744,7 +838,8 @@
             "effects": [
               "hp +4",
               "item rations",
-              "loot common"
+              "loot common",
+              "region solidarity +1"
             ]
           },
           {
@@ -752,11 +847,21 @@
             "text": "You talk about smiling through tavern ballads about your life. The circle is moved. A chest dabs its lid. You leave lighter, with the group's blessing and a snack for the road.",
             "effects": [
               "hp +4",
-              "item rations"
+              "item rations",
+              "region solidarity +1"
             ]
           }
-        ]
+        ],
+        "approach": "solidarity"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "kindness",
+    "tags": [
+      "kindness",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   }
 ]

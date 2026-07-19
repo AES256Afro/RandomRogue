@@ -8,7 +8,7 @@
     "slots": {
       "rumor": "chronicle_random"
     },
-    "text": "A one-room museum, admission two coins, curated by a man who calls every exhibit 'priceless' while pricing them. The centerpiece plaque tells an old story: \"{rumor}\"",
+    "text": "A one-room museum, admission two coins, curated by a man who calls every exhibit 'priceless' while pricing them. The centerpiece plaque tells an old story: \"{rumor}\"\n\nNothing about \"City Era Museum\" is accidental once you notice that the experiment was designed to improve life and funded to improve quarterly output.",
     "choices": [
       {
         "text": "Pay admission and browse",
@@ -54,7 +54,8 @@
               "rep +2"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Sell him something from your pack",
@@ -67,10 +68,12 @@
             "text": "You present the rock with a straight face and three invented dynasties of provenance. He pays museum prices. There is now a plinth for it.",
             "effects": [
               "removeitem lucky_rock",
-              "money +12"
+              "money +12",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Point out the breathing exhibit",
@@ -82,9 +85,18 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "science",
+    "tags": [
+      "science",
+      "voice_11"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_goblin_diplomat",
@@ -92,7 +104,7 @@
       "tavern"
     ],
     "weight": 8,
-    "text": "A goblin in a tiny formal doublet stands on the bar of {site}, reading from a scroll: 'PEACE PROPOSAL, ARTICLE ONE: EVERYONE CALM DOWN.' Nobody is not calm, which is throwing off his rhythm.",
+    "text": "A goblin in a tiny formal doublet stands on the bar of {site}, reading from a scroll: 'PEACE PROPOSAL, ARTICLE ONE: EVERYONE CALM DOWN.' Nobody is not calm, which is throwing off his rhythm.\n\nThe argument around \"Tavern Goblin Diplomat\" ends wherever someone finally admits that hunger has been classified as a personal budgeting error by people eating dessert.",
     "choices": [
       {
         "text": "Applaud the proposal",
@@ -116,7 +128,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Raise a point of order",
@@ -142,7 +155,8 @@
               "stat cha -1"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Ask who sent him",
@@ -160,9 +174,18 @@
             "text": "'The rock,' he whispers. You know the one. You leave before jurisdiction attaches.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "inquiry"
       }
-    ]
+    ],
+    "primary": "tavern",
+    "theme": "food",
+    "tags": [
+      "food",
+      "voice_9"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "dungeon_spacer_terminal",
@@ -170,7 +193,7 @@
       "dungeon"
     ],
     "weight": 9,
-    "text": "Half-buried in the wall: a slab of sky-metal with a cracked glass face. When you approach, it flickers alive: 'WELCOME, CUSTOMER. YOUR WAIT TIME IS: 847 YEARS. YOUR CALL IS IMPORTANT TO US.'",
+    "text": "Half-buried in the wall: a slab of sky-metal with a cracked glass face. When you approach, it flickers alive: 'WELCOME, CUSTOMER. YOUR WAIT TIME IS: 847 YEARS. YOUR CALL IS IMPORTANT TO US.'\n\nAsk who pays for \"Dungeon Spacer Terminal\" and the answer begins here: humanity reached the heavens and discovered procurement had arrived earlier.",
     "choices": [
       {
         "text": "Wait on hold, briefly",
@@ -189,7 +212,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       },
       {
         "text": "Demand a manager",
@@ -212,7 +236,8 @@
             "text": "'YOUR FEEDBACK MATTERS,' it says, and adds 200 years to your wait time out of spite.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Pry it open for parts",
@@ -237,7 +262,8 @@
               "hp -3"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       },
       {
         "text": "Feed it your credit chip",
@@ -250,7 +276,8 @@
             "text": "The slot swallows the chip with the satisfaction of a machine finally doing its actual job. 'BALANCE TRANSFERRED. THANK YOU FOR CHOOSING US. YOU HAD NO CHOICE.' Coins of several dead currencies rattle from a hatch, most still legal somewhere.",
             "effects": [
               "removeitem credit_chip",
-              "money +13"
+              "money +13",
+              "region solidarity +1"
             ]
           },
           {
@@ -258,12 +285,22 @@
             "text": "'CHIP EXPIRED 763 YEARS AGO,' it announces, keeping the chip. 'A LATE FEE HAS BEEN ASSESSED.' You have somehow left this transaction owing money to a wall.",
             "effects": [
               "removeitem credit_chip",
-              "money -2"
+              "money -2",
+              "region solidarity +1"
             ]
           }
-        ]
+        ],
+        "approach": "mercy"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "post_scarcity",
+    "tags": [
+      "post_scarcity",
+      "voice_2"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "forest_liturgical_procession",
@@ -271,7 +308,7 @@
       "forest"
     ],
     "weight": 7,
-    "text": "Through the trees comes a procession in gray robes, chanting in a tongue that sounds like a cathedral apologizing. They carry an enormous bell on poles. The bell is cracked. They seem very proud of it.",
+    "text": "Through the trees comes a procession in gray robes, chanting in a tongue that sounds like a cathedral apologizing. They carry an enormous bell on poles. The bell is cracked. They seem very proud of it.\n\nPeople remember \"Forest Liturgical Procession\" differently, but the material fact remains: a company has discovered that nature is priceless and therefore available at no cost.",
     "choices": [
       {
         "text": "Walk with them a while",
@@ -306,7 +343,8 @@
               "hp +2"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Ask about the crack",
@@ -323,7 +361,8 @@
             "text": "Wrong question. The procession stops. Forty hooded faces turn. You apologize to the bell directly, which turns out to be correct protocol.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Offer to fix the bell",
@@ -338,9 +377,18 @@
               "money +9"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "forest",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_8"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "road_toll_war_veteran",
@@ -351,7 +399,7 @@
     "slots": {
       "vet": "figure_alive"
     },
-    "text": "An old soldier sits on a milestone, medals pinned to a coat two wars out of date. 'I served under {vet},' he says to no one, or to you, or to the road. 'Nobody remembers the siege. I remember the siege.'",
+    "text": "An old soldier sits on a milestone, medals pinned to a coat two wars out of date. 'I served under {vet},' he says to no one, or to you, or to the road. 'Nobody remembers the siege. I remember the siege.'\n\nNothing about \"Road Toll War Veteran\" is accidental once you notice that the generals call this a front; the families living here continue calling it home.",
     "choices": [
       {
         "text": "Sit and hear the whole siege",
@@ -376,7 +424,8 @@
               "rep +3"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Buy a medal off him",
@@ -389,17 +438,20 @@
             "text": "He sells you the third-shiniest one and invents its story fresh for the occasion. Both of you know. Neither of you says.",
             "effects": [
               "money -6",
-              "loot common"
+              "loot common",
+              "region solidarity -1"
             ]
           },
           {
             "weight": 40,
             "text": "He refuses your coin and PINS the medal on you instead. 'For listening.' You are now decorated for a war you weren't born for.",
             "effects": [
-              "stat cha +1"
+              "stat cha +1",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Claim you also served",
@@ -426,9 +478,18 @@
               "rep -3"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "road",
+    "theme": "antiwar",
+    "tags": [
+      "antiwar",
+      "voice_11"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "cave_spacer_pod",
@@ -436,7 +497,7 @@
       "cave"
     ],
     "weight": 7,
-    "text": "Deep in the cave, a sky-metal pod stands upright, frosted glass fogged from inside. A panel blinks: 'OCCUPANT: 1. WAKE? Y/N.' Someone has scratched next to it: 'DONT'. Someone else has scratched: 'DO'.",
+    "text": "Deep in the cave, a sky-metal pod stands upright, frosted glass fogged from inside. A panel blinks: 'OCCUPANT: 1. WAKE? Y/N.' Someone has scratched next to it: 'DONT'. Someone else has scratched: 'DO'.\n\nPeople remember \"Cave Spacer Pod\" differently, but the material fact remains: a visitor from a better future has encountered an ancient and apparently immortal invoice.",
     "choices": [
       {
         "text": "Press Y",
@@ -464,7 +525,8 @@
               "stat con +1"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Press N, respectfully",
@@ -476,7 +538,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Wipe the fog and peek",
@@ -501,9 +564,18 @@
               "hp -1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "post_scarcity",
+    "tags": [
+      "post_scarcity",
+      "voice_8"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_swamp_delegation",
@@ -511,7 +583,7 @@
       "city"
     ],
     "weight": 7,
-    "text": "A delegation of swamp folk has set up in the square, selling jars of gray-green paste and glaring at anyone who wrinkles their nose. Their banner reads, in dripping letters: 'IT IS GOOD FOR YOU.'",
+    "text": "A delegation of swamp folk has set up in the square, selling jars of gray-green paste and glaring at anyone who wrinkles their nose. Their banner reads, in dripping letters: 'IT IS GOOD FOR YOU.'\n\nThe official lesson of \"City Swamp Delegation\" is complicated; the useful lesson is that the poison travels downstream for free while responsibility requires a toll permit.",
     "choices": [
       {
         "text": "Buy a jar",
@@ -524,7 +596,8 @@
             "text": "It tastes like a pond's opinion of you. It is also, infuriatingly, good for you.",
             "effects": [
               "money -3",
-              "hp +5"
+              "hp +5",
+              "region solidarity -1"
             ]
           },
           {
@@ -533,7 +606,8 @@
             "effects": [
               "money -3",
               "hp +4",
-              "stat cha -1"
+              "stat cha -1",
+              "region solidarity -1"
             ]
           },
           {
@@ -545,7 +619,8 @@
             "effects": [
               "money -6",
               "hp +6",
-              "stat con +1"
+              "stat con +1",
+              "region solidarity -1"
             ]
           },
           {
@@ -556,10 +631,12 @@
             "text": "The eldest delegate looks at your purse, then your face, then pushes a jar across for a single coin. 'Eat,' she says, in the tone of every grandmother who ever lived. You do not argue with the tone.",
             "effects": [
               "money -1",
-              "hp +5"
+              "hp +5",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Ask what's in it",
@@ -571,7 +648,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Wrinkle your nose",
@@ -584,9 +662,18 @@
               "hp +5"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_7"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_wanted_poster_wall",
@@ -594,7 +681,7 @@
       "tavern"
     ],
     "weight": 7,
-    "text": "The back wall of {site} is papered with wanted posters, some so old the faces have faded to smudges with bounties. Patrons play darts against the top row.",
+    "text": "The back wall of {site} is papered with wanted posters, some so old the faces have faded to smudges with bounties. Patrons play darts against the top row.\n\nOfficials classify \"Tavern Wanted Poster Wall\" as routine, although the newspaper reports calm beneath a headline printed while the office shook.",
     "choices": [
       {
         "text": "Study the current bounties",
@@ -617,7 +704,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Check for your own face",
@@ -637,7 +725,8 @@
               "money -8"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Throw darts",
@@ -657,9 +746,18 @@
               "stat cha -1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "tavern",
+    "theme": "propaganda",
+    "tags": [
+      "propaganda",
+      "voice_1"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "dungeon_archive_room",
@@ -667,7 +765,7 @@
       "dungeon"
     ],
     "weight": 8,
-    "text": "A room of rotted shelves and one miraculously dry cabinet, stamped with the seal of a faction you half-recognize. Records survive in here. Records, and the smell of very old decisions.",
+    "text": "A room of rotted shelves and one miraculously dry cabinet, stamped with the seal of a faction you half-recognize. Records survive in here. Records, and the smell of very old decisions.\n\nOfficials classify \"Dungeon Archive Room\" as routine, although every available room is affordable to someone who does not need it.",
     "choices": [
       {
         "text": "Read the records",
@@ -680,7 +778,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Take documents to sell",
@@ -703,7 +802,8 @@
             "text": "You grab the impressive-looking ones. They turn out to be 300-year-old inventory lists for socks. Even the rats judge your curation.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Burn it all. Some history should rest",
@@ -713,12 +813,22 @@
             "text": "The cabinet goes up like a confession. Somewhere, several old grudges lose their evidence. The dungeon feels lighter. So do you.",
             "effects": [
               "stat wis +1",
-              "rep +2"
+              "rep +2",
+              "region unrest +1"
             ]
           }
-        ]
+        ],
+        "approach": "force"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "housing",
+    "tags": [
+      "housing",
+      "voice_1"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "road_goblin_moving_day",
@@ -726,7 +836,7 @@
       "road"
     ],
     "weight": 7,
-    "text": "An entire goblin warren is migrating: forty goblins, one road, furniture on backs, a grandfather clock carried by six of them like a fallen king. A scooter outrider waves you to the shoulder.",
+    "text": "An entire goblin warren is migrating: forty goblins, one road, furniture on backs, a grandfather clock carried by six of them like a fallen king. A scooter outrider waves you to the shoulder.\n\nAsk who pays for \"Road Goblin Moving Day\" and the answer begins here: the pirates recognize fewer property laws and considerably more lunch breaks.",
     "choices": [
       {
         "text": "Help carry something",
@@ -736,7 +846,8 @@
             "text": "You take a corner of the clock for three miles. Goblin moving songs are 90% complaints and 10% threats against stairs. At the rest stop they feed you gratitude stew, which is better than it sounds.",
             "effects": [
               "hp +2",
-              "rep +5"
+              "rep +5",
+              "region solidarity +1"
             ]
           },
           {
@@ -744,10 +855,12 @@
             "text": "They hand you the jar shelf. THE JAR SHELF. You learn what's in goblin jars. You carry it anyway, forever changed.",
             "effects": [
               "stat wis +1",
-              "rep +4"
+              "rep +4",
+              "region solidarity +1"
             ]
           }
-        ]
+        ],
+        "approach": "mercy"
       },
       {
         "text": "Ask why they're moving",
@@ -766,7 +879,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Sell them supplies at migration prices",
@@ -780,12 +894,22 @@
             "effects": [
               "removeitem rations",
               "money +6",
-              "rep +3"
+              "rep +3",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       }
-    ]
+    ],
+    "primary": "road",
+    "theme": "freedom",
+    "tags": [
+      "freedom",
+      "voice_2"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "forest_hermit_exchange",
@@ -793,7 +917,7 @@
       "forest"
     ],
     "weight": 7,
-    "text": "A hermit's hut with a shelf out front: 'TAKE A THING, LEAVE A THING. NO SHOUTING.' The current inventory: a boot, a jar of teeth, a small excellent painting of a duck, and a bell you are certain rang by itself.",
+    "text": "A hermit's hut with a shelf out front: 'TAKE A THING, LEAVE A THING. NO SHOUTING.' The current inventory: a boot, a jar of teeth, a small excellent painting of a duck, and a bell you are certain rang by itself.\n\nOfficials classify \"Forest Hermit Exchange\" as routine, although the local wildlife has filed its complaint through teeth, weather, and one unusually organized fungus.",
     "choices": [
       {
         "text": "Trade something in",
@@ -809,7 +933,8 @@
               "loot common"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Take the bell",
@@ -828,7 +953,8 @@
               "hp -1"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Knock and say hello",
@@ -840,9 +966,18 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "forest",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_1"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_street_food_gauntlet",
@@ -850,7 +985,7 @@
       "city"
     ],
     "weight": 8,
-    "text": "The food street: forty stalls, one alley, every vendor shouting. Skewers of what is PROBABLY chicken. A soup that glows. A pastry with a waiting list. Your stomach seizes executive control.",
+    "text": "The food street: forty stalls, one alley, every vendor shouting. Skewers of what is PROBABLY chicken. A soup that glows. A pastry with a waiting list. Your stomach seizes executive control.\n\nThe paperwork around \"City Street Food Gauntlet\" avoids its central fact: there is enough food nearby, although ownership has placed itself between appetite and lunch.",
     "choices": [
       {
         "text": "Eat dangerously, stall by stall",
@@ -907,7 +1042,8 @@
               "hp +5"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Wait-list for the famous pastry",
@@ -920,7 +1056,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       },
       {
         "text": "Just inhale the smells for free",
@@ -932,9 +1069,18 @@
               "hp +1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "food",
+    "tags": [
+      "food",
+      "voice_3"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_arm_wrestling_league",
@@ -945,7 +1091,7 @@
     "when": [
       "day > 5"
     ],
-    "text": "It's league night at {site}. A bracket board, folding chairs, a referee with a whistle and unshakable authority. Grundle's name is at the top, undefeated across three taverns. There's an open slot in the bracket.",
+    "text": "It's league night at {site}. A bracket board, folding chairs, a referee with a whistle and unshakable authority. Grundle's name is at the top, undefeated across three taverns. There's an open slot in the bracket.\n\nBehind the business of \"Tavern Arm Wrestling League\" sits an older truth: the local strongmen demand obedience while arguing over whose boots look most traditional.",
     "choices": [
       {
         "text": "Enter the bracket",
@@ -980,7 +1126,8 @@
               "stat cha -1"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Bookmake the bracket",
@@ -1006,7 +1153,8 @@
               "money -10"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Officiate as a volunteer",
@@ -1019,9 +1167,18 @@
               "rep +4"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "tavern",
+    "theme": "antifascist",
+    "tags": [
+      "antifascist",
+      "voice_5"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "dungeon_wine_cellar",
@@ -1029,7 +1186,7 @@
       "dungeon"
     ],
     "weight": 7,
-    "text": "A collapsed manor's cellar, racks intact. Bottles from before the wars, labels in a beautiful dead hand. One rack is chained and padlocked, which in your experience means either the best wine or the worst mistake.",
+    "text": "A collapsed manor's cellar, racks intact. Bottles from before the wars, labels in a beautiful dead hand. One rack is chained and padlocked, which in your experience means either the best wine or the worst mistake.\n\nNobody affected by \"Dungeon Wine Cellar\" was consulted. The part authority avoids is that the soup is communal, the spoons are disputed, and nobody is leaving hungry without a debate.",
     "choices": [
       {
         "text": "Take the good unlocked bottles",
@@ -1041,7 +1198,8 @@
               "money +12"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Pick the padlock",
@@ -1065,7 +1223,8 @@
               "trait +cursed"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Drink a toast to the dead house",
@@ -1089,9 +1248,18 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "dungeon",
+    "theme": "food",
+    "tags": [
+      "food",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "road_pilgrim_bus",
@@ -1099,7 +1267,7 @@
       "road"
     ],
     "weight": 6,
-    "text": "A wagon converted for pilgrims rattles past, gray-robed passengers packed in like devout cargo. It stops. A window slides open. 'ROOM FOR ONE,' intones the driver. 'DESTINATION: WHEREVER IT IS ALL GOING.'",
+    "text": "A wagon converted for pilgrims rattles past, gray-robed passengers packed in like devout cargo. It stops. A window slides open. 'ROOM FOR ONE,' intones the driver. 'DESTINATION: WHEREVER IT IS ALL GOING.'\n\nA plaque may eventually misdescribe \"Road Pilgrim Bus\". For now, the useful truth is that the monster would like to be treated as a person before discussing the screaming.",
     "choices": [
       {
         "text": "Board the pilgrim wagon",
@@ -1135,7 +1303,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Ask where it is all going",
@@ -1147,7 +1316,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Race the wagon on foot",
@@ -1173,9 +1343,18 @@
               "hp -2"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "road",
+    "theme": "faith",
+    "tags": [
+      "faith",
+      "voice_10"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "cave_echo_market",
@@ -1183,7 +1362,7 @@
       "cave"
     ],
     "weight": 6,
-    "text": "A cavern where echoes gather like moths. Traders in the know come here to sell SOUNDS: a dead singer's high note, a grandmother's laugh, the exact crunch of autumn. A blind broker sits at a stone desk, listening to inventory.",
+    "text": "A cavern where echoes gather like moths. Traders in the know come here to sell SOUNDS: a dead singer's high note, a grandmother's laugh, the exact crunch of autumn. A blind broker sits at a stone desk, listening to inventory.\n\nPeople remember \"Cave Echo Market\" differently, but the material fact remains: a scholar has found the answer and is now searching for an institution willing to hear it.",
     "choices": [
       {
         "text": "Sell a sound of your own",
@@ -1193,17 +1372,20 @@
             "text": "You give up the sound of your first door closing behind you. The broker pays well. You won't miss it, you think. You think.",
             "effects": [
               "money +10",
-              "stat wis -1"
+              "stat wis -1",
+              "region solidarity -1"
             ]
           },
           {
             "weight": 40,
             "text": "You offer your best sigh. The broker auditions it, nods slowly: 'quality weariness.' Premium rate.",
             "effects": [
-              "money +7"
+              "money +7",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Buy the autumn crunch",
@@ -1217,10 +1399,12 @@
             "effects": [
               "money -5",
               "hp +3",
-              "stat wis +1"
+              "stat wis +1",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Just listen to the stock",
@@ -1229,12 +1413,22 @@
             "weight": 100,
             "text": "The broker plays you samples: rain on a tent, a crowd gasping, someone saying a name you almost recognize. 'Browsing is free,' he says. 'Feeling things costs extra.' He doesn't charge you. He should have.",
             "effects": [
-              "stat wis +1"
+              "stat wis +1",
+              "region solidarity +1"
             ]
           }
-        ]
+        ],
+        "approach": "mercy"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "science",
+    "tags": [
+      "science",
+      "voice_8"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "city_beast_insurance",
@@ -1242,7 +1436,7 @@
       "city"
     ],
     "weight": 7,
-    "text": "A stall under a banner: 'BEAST ATTACK INSURANCE. COMPREHENSIVE. ACTS OF WYRM INCLUDED.' The actuary has a wooden leg, an eyepatch, and the serene confidence of someone whose premiums are working.",
+    "text": "A stall under a banner: 'BEAST ATTACK INSURANCE. COMPREHENSIVE. ACTS OF WYRM INCLUDED.' The actuary has a wooden leg, an eyepatch, and the serene confidence of someone whose premiums are working.\n\nPower calls \"City Beast Insurance\" an exception. The rule it conceals is simpler: a company has discovered that nature is priceless and therefore available at no cost.",
     "choices": [
       {
         "text": "Buy a policy",
@@ -1255,17 +1449,20 @@
             "text": "You are now covered against mauling, hoarding-adjacent losses, and 'gaze-related petrification (partial).' The certificate is beautiful. The peace of mind is real, if actuarially dubious.",
             "effects": [
               "money -6",
-              "stat wis +1"
+              "stat wis +1",
+              "region solidarity -1"
             ]
           },
           {
             "weight": 30,
             "text": "Reading the policy, you find clause 9: coverage void if you 'approach, taunt, or befriend' a beast. That's... that's your whole career. He will not refund you. Clause 12.",
             "effects": [
-              "money -6"
+              "money -6",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Ask about the leg and the eyepatch",
@@ -1289,7 +1486,8 @@
             "text": "'Shark,' he says flatly, in a city three weeks from any coast. You have offended an actuary. Your premium quote triples on the spot.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "File a fraudulent claim",
@@ -1316,9 +1514,18 @@
               "rep -4"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_4"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "forest_old_battlefield",
@@ -1330,7 +1537,7 @@
     "slots": {
       "gone": "figure_dead"
     },
-    "text": "The forest opens onto old earthworks: a battlefield gone green, trenches soft with moss. A stone marker lists the fallen. Most names are weathered out. One is legible: {gone}.",
+    "text": "The forest opens onto old earthworks: a battlefield gone green, trenches soft with moss. A stone marker lists the fallen. Most names are weathered out. One is legible: {gone}.\n\nA plaque may eventually misdescribe \"Forest Old Battlefield\". For now, the useful truth is that recruiters promise glory in quantities inversely proportional to their distance from danger.",
     "choices": [
       {
         "text": "Search the earthworks",
@@ -1356,7 +1563,8 @@
               "hp -3"
             ]
           }
-        ]
+        ],
+        "approach": "inquiry"
       },
       {
         "text": "Clean the marker stone",
@@ -1369,7 +1577,8 @@
               "rep +3"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Camp here for the night",
@@ -1395,9 +1604,18 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "forest",
+    "theme": "antiwar",
+    "tags": [
+      "antiwar",
+      "voice_10"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_recipe_feud",
@@ -1405,7 +1623,7 @@
       "tavern"
     ],
     "weight": 7,
-    "text": "Two cooks at {site} are dueling with ladles - actually dueling - over whose stew is canonical. The barkeep referees with visible exhaustion. Both stews simmer, and both cooks turn to YOU. 'Neutral tongue! JUDGE.'",
+    "text": "Two cooks at {site} are dueling with ladles - actually dueling - over whose stew is canonical. The barkeep referees with visible exhaustion. Both stews simmer, and both cooks turn to YOU. 'Neutral tongue! JUDGE.'\n\nNobody affected by \"Tavern Recipe Feud\" was consulted. The part authority avoids is that a full pantry and an empty street are conducting a quiet argument about distribution.",
     "choices": [
       {
         "text": "Judge honestly",
@@ -1433,7 +1651,8 @@
               "hp +2"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Declare both stews inferior to your grandmother's",
@@ -1453,7 +1672,8 @@
               "hp -4"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Steal both recipes during the chaos",
@@ -1467,7 +1687,8 @@
             "text": "Two recipe cards, one pocket, zero witnesses. Sold separately to rival taverns in the next region, they fund a week of your life.",
             "effects": [
               "money +11",
-              "rep -3"
+              "rep -3",
+              "region solidarity -1"
             ]
           }
         ],
@@ -1477,10 +1698,12 @@
             "text": "Both cooks catch you mid-lift. The feud is OVER. The alliance is AGAINST YOU. The stews, you learn, are excellent projectiles.",
             "effects": [
               "hp -3",
-              "rep -5"
+              "rep -5",
+              "region solidarity -1"
             ]
           }
-        ]
+        ],
+        "approach": "greed"
       },
       {
         "text": "Enter your own jar of stew as a third contender",
@@ -1506,16 +1729,25 @@
               "stat cha -1"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "tavern",
+    "theme": "food",
+    "tags": [
+      "food",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "dungeon_finale_throne_squatter",
     "locations": [
       "dungeon_finale"
     ],
-    "text": "The throne room. The throne. And ON the throne: a very comfortable goat. It has clearly been here for years. Around it, offerings - the dungeon's denizens have drawn their own conclusions about what sits on thrones.",
+    "text": "The throne room. The throne. And ON the throne: a very comfortable goat. It has clearly been here for years. Around it, offerings - the dungeon's denizens have drawn their own conclusions about what sits on thrones.\n\nThe official lesson of \"Dungeon Finale Throne Squatter\" is complicated; the useful lesson is that there is enough food nearby, although ownership has placed itself between appetite and lunch.",
     "choices": [
       {
         "text": "Pay respects to the goat king",
@@ -1552,7 +1784,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Depose the goat",
@@ -1578,7 +1811,8 @@
               "hp -5"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Leave an offering yourself",
@@ -1591,8 +1825,17 @@
               "loot fine"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "dungeon_finale",
+    "theme": "food",
+    "tags": [
+      "food",
+      "voice_7"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   }
 ]

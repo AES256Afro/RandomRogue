@@ -4,7 +4,7 @@
     "locations": [
       "cave"
     ],
-    "text": "You shout 'HELLO' into the dark. The echo answers 'HELLO,' then, after a pause, 'WHO TOLD YOU THAT NAME?'",
+    "text": "You shout 'HELLO' into the dark. The echo answers 'HELLO,' then, after a pause, 'WHO TOLD YOU THAT NAME?'\n\nThe argument around \"Cave Wrong Echo\" ends wherever someone finally admits that the researchers know how the danger works and lack permission to stop it.",
     "choices": [
       {
         "text": "Interrogate the echo",
@@ -47,7 +47,8 @@
               "hp -1"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Apologize and keep walking",
@@ -59,15 +60,19 @@
             ],
             "text": "'THANK YOU,' says the echo, and then, quieter: 'NOT MANY SAY SORRY DOWN HERE. FEWER STILL COME ALONE.' It walks you past two pits and a loose ledge, chatting the whole way. Down here, manners are company.",
             "effects": [
-              "hp +1"
+              "hp +1",
+              "region solidarity +1"
             ]
           },
           {
             "weight": 100,
             "text": "'THANK YOU,' says the echo, mollified. It guides you around a pit as a courtesy. Manners: still undefeated.",
-            "effects": []
+            "effects": [
+              "region solidarity +1"
+            ]
           }
-        ]
+        ],
+        "approach": "mercy"
       },
       {
         "text": "Shout something rude",
@@ -86,16 +91,25 @@
               "money +7"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "science",
+    "tags": [
+      "science",
+      "voice_9"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "cave_sleeping_something",
     "locations": [
       "cave"
     ],
-    "text": "Something enormous is asleep across the passage. Its breathing sounds like a forge. A sign around its neck: 'DO NOT WAKE. SERIOUSLY. -MANAGEMENT.'",
+    "text": "Something enormous is asleep across the passage. Its breathing sounds like a forge. A sign around its neck: 'DO NOT WAKE. SERIOUSLY. -MANAGEMENT.'\n\nNobody affected by \"Cave Sleeping Something\" was consulted. The part authority avoids is that a supervisor has arrived to explain the task to everyone who has performed it for twenty years.",
     "choices": [
       {
         "text": "Sneak past",
@@ -140,7 +154,8 @@
               "hp -6"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Poke it",
@@ -167,7 +182,8 @@
               "money +14"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Turn back",
@@ -177,7 +193,8 @@
             "text": "You live to be a coward another day. The something snores approvingly.",
             "effects": []
           }
-        ]
+        ],
+        "approach": "defiance"
       },
       {
         "text": "Leave rations by its snout as tribute",
@@ -193,16 +210,25 @@
               "money +9"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "labor",
+    "tags": [
+      "labor",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "cave_glow_worms",
     "locations": [
       "cave"
     ],
-    "text": "The ceiling is a galaxy of glow worms, blue-green constellations rearranging slowly. It is genuinely, unfairly beautiful for a hole in the ground.",
+    "text": "The ceiling is a galaxy of glow worms, blue-green constellations rearranging slowly. It is genuinely, unfairly beautiful for a hole in the ground.\n\nA plaque may eventually misdescribe \"Cave Glow Worms\". For now, the useful truth is that everyone agrees the land must be saved immediately after the next profitable quarter.",
     "choices": [
       {
         "text": "Harvest a few for the glow",
@@ -246,7 +272,8 @@
               "hp -2"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Just watch for a while",
@@ -270,7 +297,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Eat one. For science",
@@ -289,16 +317,25 @@
               "hp -3"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_10"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "cave_underground_lake",
     "locations": [
       "cave"
     ],
-    "text": "An underground lake, black and still as held breath. Something in the middle of it is faintly, patiently, ringing. Like a bell. Like an invitation.",
+    "text": "An underground lake, black and still as held breath. Something in the middle of it is faintly, patiently, ringing. Like a bell. Like an invitation.\n\nNothing about \"Cave Underground Lake\" is accidental once you notice that the poison travels downstream for free while responsibility requires a toll permit.",
     "choices": [
       {
         "text": "Swim to the ringing",
@@ -344,7 +381,8 @@
               "hp -5"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Fish the shallows",
@@ -363,7 +401,8 @@
               "money +4"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Skip a stone at the ringing",
@@ -375,7 +414,8 @@
               "stat wis +1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       },
       {
         "text": "Scout it with your spyglass first",
@@ -390,16 +430,25 @@
               "money +9"
             ]
           }
-        ]
+        ],
+        "approach": "caution"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "ecology",
+    "tags": [
+      "ecology",
+      "voice_11"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "cave_crystal_choir",
     "locations": [
       "cave"
     ],
-    "text": "A chamber of crystals, each humming a different note. Together they almost make a chord. Almost. One crystal is flat, and the whole cave seems embarrassed about it.",
+    "text": "A chamber of crystals, each humming a different note. Together they almost make a chord. Almost. One crystal is flat, and the whole cave seems embarrassed about it.\n\nPeople remember \"Cave Crystal Choir\" differently, but the material fact remains: a discovery belongs to everyone until the grant office locates a lock.",
     "choices": [
       {
         "text": "Tune the flat crystal",
@@ -436,7 +485,8 @@
               "hp -2"
             ]
           }
-        ]
+        ],
+        "approach": "engage"
       },
       {
         "text": "Sing along",
@@ -467,7 +517,8 @@
               "stat cha -1"
             ]
           }
-        ]
+        ],
+        "approach": "pragmatic"
       },
       {
         "text": "Chip off a crystal to sell",
@@ -480,8 +531,17 @@
               "stat wis -1"
             ]
           }
-        ]
+        ],
+        "approach": "defiance"
       }
-    ]
+    ],
+    "primary": "cave",
+    "theme": "science",
+    "tags": [
+      "science",
+      "voice_8"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   }
 ]

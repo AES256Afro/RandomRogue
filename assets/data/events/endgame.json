@@ -1,155 +1,496 @@
 [
   {
     "id": "crash_debris_field",
-    "locations": ["crash"],
+    "locations": [
+      "crash"
+    ],
     "weight": 12,
-    "text": "The debris field stretches for acres: ribs of sky-metal, glass gone rainbow from heat centuries cold, and everywhere the small stubborn machines that still blink. Salvagers' trails crisscross it all. Nobody takes the blinking ones.",
+    "text": "The debris field stretches for acres: ribs of sky-metal, glass gone rainbow from heat centuries cold, and everywhere the small stubborn machines that still blink. Salvagers' trails crisscross it all. Nobody takes the blinking ones.\n\nPower calls \"Crash Debris Field\" an exception. The rule it conceals is simpler: a visitor from a better future has encountered an ancient and apparently immortal invoice.",
     "choices": [
-      { "text": "Salvage methodically", "check": { "stat": "int", "dc": 11 },
+      {
+        "text": "Salvage methodically",
+        "check": {
+          "stat": "int",
+          "dc": 11
+        },
         "success": [
-          { "weight": 100, "text": "Filaments, casings, one intact credit chip in a dead officer's console. Methodical wins. Methodical always wins out here.", "effects": ["money +8", "item credit_chip"] }
+          {
+            "weight": 100,
+            "text": "Filaments, casings, one intact credit chip in a dead officer's console. Methodical wins. Methodical always wins out here.",
+            "effects": [
+              "money +8",
+              "item credit_chip"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "You grab one of the blinking ones. It reports you to a network that no longer exists, loudly, at length. Everything within a mile knows where you are.", "effects": ["hp -3"] }
-        ] },
-      { "text": "Follow the oldest salvager trail",
+          {
+            "weight": 100,
+            "text": "You grab one of the blinking ones. It reports you to a network that no longer exists, loudly, at length. Everything within a mile knows where you are.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Follow the oldest salvager trail",
         "outcomes": [
-          { "weight": 60, "text": "It leads to a picked-over hull and, past it, a cache the first salvagers hid and never came back for. Their loss is the polite term.", "effects": ["money +11", "loot common"] },
-          { "weight": 40, "text": "It leads to the first salvagers. What's left is neat, laid out, and centuries old. You add stones over them and take nothing from this part of the field.", "effects": ["stat wis +1", "rep +2"] }
-        ] },
-      { "text": "Take a blinking one",
+          {
+            "weight": 60,
+            "text": "It leads to a picked-over hull and, past it, a cache the first salvagers hid and never came back for. Their loss is the polite term.",
+            "effects": [
+              "money +11",
+              "loot common"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "It leads to the first salvagers. What's left is neat, laid out, and centuries old. You add stones over them and take nothing from this part of the field.",
+            "effects": [
+              "stat wis +1",
+              "rep +2"
+            ]
+          }
+        ],
+        "approach": "inquiry"
+      },
+      {
+        "text": "Take a blinking one",
         "outcomes": [
-          { "weight": 50, "text": "It blinks in your pack for three days, then speaks one sentence in dead-corporate and goes dark forever: 'THANK YOU FOR CHOOSING US.' You keep it. Obviously you keep it.", "effects": ["item recording"] },
-          { "weight": 50, "text": "Every salvager rule exists for a reason. This one existed for a very good reason.", "effects": ["hp -4"] }
-        ] }
-    ]
+          {
+            "weight": 50,
+            "text": "It blinks in your pack for three days, then speaks one sentence in dead-corporate and goes dark forever: 'THANK YOU FOR CHOOSING US.' You keep it. Obviously you keep it.",
+            "effects": [
+              "item recording"
+            ]
+          },
+          {
+            "weight": 50,
+            "text": "Every salvager rule exists for a reason. This one existed for a very good reason.",
+            "effects": [
+              "hp -4"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "crash",
+    "theme": "post_scarcity",
+    "tags": [
+      "post_scarcity",
+      "voice_4"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "crash_cryo_row",
-    "locations": ["crash"],
+    "locations": [
+      "crash"
+    ],
     "weight": 9,
-    "text": "A cargo section, split open like a seed pod: rows of cryo-pods, all dark, all empty - except the frost on the ground. Fresh frost. In summer. Leading away in bare footprints.",
+    "text": "A cargo section, split open like a seed pod: rows of cryo-pods, all dark, all empty - except the frost on the ground. Fresh frost. In summer. Leading away in bare footprints.\n\nNobody affected by \"Crash Cryo Row\" was consulted. The part authority avoids is that humanity reached the heavens and discovered procurement had arrived earlier.",
     "choices": [
-      { "text": "Follow the footprints", "check": { "stat": "wis", "dc": 12 },
+      {
+        "text": "Follow the footprints",
+        "check": {
+          "stat": "wis",
+          "dc": 12
+        },
         "success": [
-          { "weight": 100, "text": "They end at a hot spring, where a very old, very confused person sits soaking, awake for the first time in centuries. You share your rations and the news. All of it. They take the thousand years surprisingly well.", "effects": ["stat wis +1", "rep +4"] }
+          {
+            "weight": 100,
+            "text": "They end at a hot spring, where a very old, very confused person sits soaking, awake for the first time in centuries. You share your rations and the news. All of it. They take the thousand years surprisingly well.",
+            "effects": [
+              "stat wis +1",
+              "rep +4"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "The footprints loop. Behind you, someone who has been awake for one hour and lost for nine centuries panics at the sight of you. The misunderstanding is mutual, athletic, and bruising.", "effects": ["hp -3"] }
-        ] },
-      { "text": "Check the pod manifests",
+          {
+            "weight": 100,
+            "text": "The footprints loop. Behind you, someone who has been awake for one hour and lost for nine centuries panics at the sight of you. The misunderstanding is mutual, athletic, and bruising.",
+            "effects": [
+              "hp -3"
+            ]
+          }
+        ],
+        "approach": "inquiry"
+      },
+      {
+        "text": "Check the pod manifests",
         "outcomes": [
-          { "weight": 100, "text": "Names, weights, destinations. The destination column says only 'BETTER.' Whatever they were leaving, they were sure about the direction. You copy the manifest for the historians.", "effects": ["money +6", "stat int +1"] }
-        ] },
-      { "text": "Climb into a pod, just to see",
+          {
+            "weight": 100,
+            "text": "Names, weights, destinations. The destination column says only 'BETTER.' Whatever they were leaving, they were sure about the direction. You copy the manifest for the historians.",
+            "effects": [
+              "money +6",
+              "stat int +1"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Climb into a pod, just to see",
         "outcomes": [
-          { "weight": 60, "text": "It's cold and shaped like a promise. The lid stays open - dead power - but for one minute you lie where someone lay when they bet everything on the sky. You understand them completely.", "effects": ["stat wis +1"] },
-          { "weight": 40, "text": "The lid closes. The lid CLOSES. Dead power, live springs. The four minutes before you find the manual release age you a decade.", "effects": ["hp -2", "stat con +1"] }
-        ] }
-    ]
+          {
+            "weight": 60,
+            "text": "It's cold and shaped like a promise. The lid stays open - dead power - but for one minute you lie where someone lay when they bet everything on the sky. You understand them completely.",
+            "effects": [
+              "stat wis +1"
+            ]
+          },
+          {
+            "weight": 40,
+            "text": "The lid closes. The lid CLOSES. Dead power, live springs. The four minutes before you find the manual release age you a decade.",
+            "effects": [
+              "hp -2",
+              "stat con +1"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "crash",
+    "theme": "post_scarcity",
+    "tags": [
+      "post_scarcity",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "crash_silent_ship",
-    "locations": ["crash"],
+    "locations": [
+      "crash"
+    ],
     "weight": 8,
-    "text": "Past the debris field, half-buried and whole: a ship. Not wreckage - a SHIP, hull intact, sitting in its crater like a coin in a palm. The airlock stands open. Inside, a console breathes one slow amber light. It has been waiting a very long time for a crew.",
+    "text": "Past the debris field, half-buried and whole: a ship. Not wreckage - a SHIP, hull intact, sitting in its crater like a coin in a palm. The airlock stands open. Inside, a console breathes one slow amber light. It has been waiting a very long time for a crew.\n\nNobody affected by \"Crash Silent Ship\" was consulted. The part authority avoids is that this device can rearrange matter but cannot override a regional manager.",
     "choices": [
-      { "text": "Step aboard and survey the systems",
+      {
+        "text": "Step aboard and survey the systems",
         "outcomes": [
-          { "weight": 100, "text": "Dust an inch thick, a pilot's chair worn to the shape of someone long gone, and the amber light steady as a heartbeat. The console's one readable line: 'REPAIRABLE.' Your own heart does something complicated.", "effects": ["goto ship_power"] }
-        ] },
-      { "text": "Strip the hull plating for a fortune",
+          {
+            "weight": 100,
+            "text": "Dust an inch thick, a pilot's chair worn to the shape of someone long gone, and the amber light steady as a heartbeat. The console's one readable line: 'REPAIRABLE.' Your own heart does something complicated.",
+            "effects": [
+              "goto ship_power"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Strip the hull plating for a fortune",
         "outcomes": [
-          { "weight": 100, "text": "The plating alone pays like a dungeon finale. As you pry the first sheet, the amber light goes out - not dramatically. Just out. You are briefly, absurdly, ashamed in front of a machine.", "effects": ["money +20", "stat wis -1"] }
-        ] },
-      { "text": "Leave it for someone with more courage",
+          {
+            "weight": 100,
+            "text": "The plating alone pays like a dungeon finale. As you pry the first sheet, the amber light goes out - not dramatically. Just out. You are briefly, absurdly, ashamed in front of a machine.",
+            "effects": [
+              "money +20",
+              "stat wis -1"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Leave it for someone with more courage",
         "outcomes": [
-          { "weight": 100, "text": "You back out of the crater. The amber light holds steady behind you, patient as ever. It waited nine hundred years. It can wait past you.", "effects": ["stat wis +1"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "You back out of the crater. The amber light holds steady behind you, patient as ever. It waited nine hundred years. It can wait past you.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ],
+        "approach": "caution"
+      }
+    ],
+    "primary": "crash",
+    "theme": "post_scarcity",
+    "tags": [
+      "post_scarcity",
+      "voice_6"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "ship_power",
     "locations": [],
-    "text": "The engine room is a cathedral of dead machinery around one dying amber ember. The fault is findable - a burned relay, replaceable with honest parts and honest work. This is the kind of repair that decides what kind of story you're in.",
+    "text": "The engine room is a cathedral of dead machinery around one dying amber ember. The fault is findable - a burned relay, replaceable with honest parts and honest work. This is the kind of repair that decides what kind of story you're in.\n\nThe file titled \"Ship Power\" makes the arrangement plain: the crew elects its captain and reserves the right to unelect them before dessert.",
     "choices": [
-      { "text": "Rebuild the relay", "requires": { "item": "repair_kit" },
+      {
+        "text": "Rebuild the relay",
+        "requires": {
+          "item": "repair_kit"
+        },
         "outcomes": [
-          { "weight": 100, "text": "Four hours. Every part of the kit. When you throw the breaker, the ship inhales - lights cascading awake deck by deck, and somewhere above, a voice dead nine centuries says 'GOOD MORNING, CREW.'", "effects": ["removeitem repair_kit", "goto ship_nav"] }
-        ] },
-      { "text": "Jury-rig it from debris", "check": { "stat": "int", "dc": 14 },
+          {
+            "weight": 100,
+            "text": "Four hours. Every part of the kit. When you throw the breaker, the ship inhales - lights cascading awake deck by deck, and somewhere above, a voice dead nine centuries says 'GOOD MORNING, CREW.'",
+            "effects": [
+              "removeitem repair_kit",
+              "goto ship_nav"
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Jury-rig it from debris",
+        "check": {
+          "stat": "int",
+          "dc": 14
+        },
         "success": [
-          { "weight": 100, "text": "Salvaged filaments, a prayer to whichever god handles near misses, and a closed breaker. The ship wakes rough, coughing static - but it WAKES.", "effects": ["goto ship_nav"] }
+          {
+            "weight": 100,
+            "text": "Salvaged filaments, a prayer to whichever god handles near misses, and a closed breaker. The ship wakes rough, coughing static - but it WAKES.",
+            "effects": [
+              "goto ship_nav"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "The relay takes your best guess and returns it with interest, at speed, through the air. The amber light dims to half - reproachful - and you retreat to heal and think.", "effects": ["hp -5"] }
-        ] },
-      { "text": "This is beyond you today",
+          {
+            "weight": 100,
+            "text": "The relay takes your best guess and returns it with interest, at speed, through the air. The amber light dims to half - reproachful - and you retreat to heal and think.",
+            "effects": [
+              "hp -5"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "This is beyond you today",
         "outcomes": [
-          { "weight": 100, "text": "You mark the crater on your map and climb out. Some doors want you to come back ready, and this one will keep.", "effects": ["stat wis +1"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "You mark the crater on your map and climb out. Some doors want you to come back ready, and this one will keep.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "special",
+    "theme": "freedom",
+    "tags": [
+      "freedom",
+      "voice_0"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "ship_nav",
     "locations": [],
-    "text": "The bridge, awake: charts of a sky you've only seen from underneath. The navigation core wants one thing before it will plot ascent - payment. 'CREDITS ACCEPTED,' it says, and names a figure. Dead corporations keep their tolls.",
+    "text": "The bridge, awake: charts of a sky you've only seen from underneath. The navigation core wants one thing before it will plot ascent - payment. 'CREDITS ACCEPTED,' it says, and names a figure. Dead corporations keep their tolls.\n\nThe file titled \"Ship Nav\" makes the arrangement plain: the cage is legal, the escape is necessary, and the locksmith prefers cash.",
     "choices": [
-      { "text": "Pay the toll", "requires": { "credits": 15 },
+      {
+        "text": "Pay the toll",
+        "requires": {
+          "credits": 15
+        },
         "outcomes": [
-          { "weight": 100, "text": "Fifteen credits to a company nine hundred years bankrupt. The core chimes, satisfied, and the charts unfold: a course, a countdown, a choice.", "effects": ["credits -15", "goto ship_liftoff"] }
-        ] },
-      { "text": "Hack the paywall", "check": { "stat": "int", "dc": 14 },
+          {
+            "weight": 100,
+            "text": "Fifteen credits to a company nine hundred years bankrupt. The core chimes, satisfied, and the charts unfold: a course, a countdown, a choice.",
+            "effects": [
+              "credits -15",
+              "goto ship_liftoff",
+              "region pressure +1"
+            ]
+          }
+        ],
+        "approach": "law"
+      },
+      {
+        "text": "Hack the paywall",
+        "check": {
+          "stat": "int",
+          "dc": 14
+        },
         "success": [
-          { "weight": 100, "text": "You convince the core that you are, in fact, a senior vice president. The charts unfold with an obsequious chime. Middle management survives even the death of stars.", "effects": ["stat int +1", "goto ship_liftoff"] }
+          {
+            "weight": 100,
+            "text": "You convince the core that you are, in fact, a senior vice president. The charts unfold with an obsequious chime. Middle management survives even the death of stars.",
+            "effects": [
+              "stat int +1",
+              "goto ship_liftoff"
+            ]
+          }
         ],
         "fail": [
-          { "weight": 100, "text": "The core triggers loss-prevention protocols and locks the bridge for a day. You are escorted out by doors. Come back with credits or better lies.", "effects": ["hp -2"] }
-        ] },
-      { "text": "Step away from the charts",
+          {
+            "weight": 100,
+            "text": "The core triggers loss-prevention protocols and locks the bridge for a day. You are escorted out by doors. Come back with credits or better lies.",
+            "effects": [
+              "hp -2"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Step away from the charts",
         "outcomes": [
-          { "weight": 100, "text": "The sky can keep another season. You leave the bridge humming behind you, course half-plotted, and the walk back to town is strange and light.", "effects": ["stat wis +1"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "The sky can keep another season. You leave the bridge humming behind you, course half-plotted, and the walk back to town is strange and light.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "special",
+    "theme": "freedom",
+    "tags": [
+      "freedom",
+      "voice_0"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "ship_liftoff",
     "locations": [],
-    "text": "The countdown holds at zero, waiting on you. Through the viewport: the crater's rim, the road you came in on, the whole scarred, ridiculous, thousand-year world. The pilot's chair has already shaped itself to you a little. The ship asks, in its way: WELL?",
+    "text": "The countdown holds at zero, waiting on you. Through the viewport: the crater's rim, the road you came in on, the whole scarred, ridiculous, thousand-year world. The pilot's chair has already shaped itself to you a little. The ship asks, in its way: WELL?\n\nThe argument around \"Ship Liftoff\" ends wherever someone finally admits that a border guard has confused movement with permission and permission with virtue.",
     "choices": [
-      { "text": "Go. Up. NOW",
+      {
+        "text": "Go. Up. NOW",
         "outcomes": [
-          { "weight": 100, "text": "Thunder, then pressure, then silence, then stars. Below, the world becomes a coin, then a marble, then a story you were in once. Taverns will argue about the dot of light for a hundred years. You are the dot of light.", "effects": ["finish They fixed a dead ship and flew it into the sky. The world still argues about the dot of light."] }
-        ] },
-      { "text": "Stay. The world isn't done with you",
+          {
+            "weight": 100,
+            "text": "Thunder, then pressure, then silence, then stars. Below, the world becomes a coin, then a marble, then a story you were in once. Taverns will argue about the dot of light for a hundred years. You are the dot of light.",
+            "effects": [
+              "finish They fixed a dead ship and flew it into the sky. The world still argues about the dot of light."
+            ]
+          }
+        ],
+        "approach": "engage"
+      },
+      {
+        "text": "Stay. The world isn't done with you",
         "outcomes": [
-          { "weight": 100, "text": "You power the ship down gently, like tucking in a giant. The story of the one who FIXED it and walked away spreads faster than any liftoff would have. Everyone buys the person who refused the sky a drink.", "effects": ["trait +famous", "money +15", "rep +6"] }
-        ] },
-      { "text": "Send it up empty, as a message",
+          {
+            "weight": 100,
+            "text": "You power the ship down gently, like tucking in a giant. The story of the one who FIXED it and walked away spreads faster than any liftoff would have. Everyone buys the person who refused the sky a drink.",
+            "effects": [
+              "trait +famous",
+              "money +15",
+              "rep +6"
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Send it up empty, as a message",
         "outcomes": [
-          { "weight": 100, "text": "You set the course, step out, and watch the old ship climb alone - a nine-hundred-year promise finally kept, addressed to whoever's still up there. The light of it stands in the sky all night. You feel like a mailbox for gods.", "effects": ["trait +blessed", "stat wis +1", "rep +4"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "You set the course, step out, and watch the old ship climb alone - a nine-hundred-year promise finally kept, addressed to whoever's still up there. The light of it stands in the sky all night. You feel like a mailbox for gods.",
+            "effects": [
+              "trait +blessed",
+              "stat wis +1",
+              "rep +4"
+            ]
+          }
+        ],
+        "approach": "defiance"
+      }
+    ],
+    "primary": "special",
+    "theme": "freedom",
+    "tags": [
+      "freedom",
+      "voice_9"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "tavern_retirement",
-    "locations": ["tavern"],
+    "locations": [
+      "tavern"
+    ],
     "weight": 8,
-    "when": ["day > 14"],
-    "text": "The owner of {site} watches you settle into what has quietly become 'your' chair. 'You know,' she says, wiping a glass, 'I'm selling this place. And you've got the look of somebody whose feet hurt in a permanent kind of way.'",
+    "when": [
+      "day > 14"
+    ],
+    "text": "The owner of {site} watches you settle into what has quietly become 'your' chair. 'You know,' she says, wiping a glass, 'I'm selling this place. And you've got the look of somebody whose feet hurt in a permanent kind of way.'\n\nA plaque may eventually misdescribe \"Tavern Retirement\". For now, the useful truth is that the soup is communal, the spoons are disputed, and nobody is leaving hungry without a debate.",
     "choices": [
-      { "text": "Buy the tavern. Retire", "requires": { "money": 60 },
+      {
+        "text": "Buy the tavern. Retire",
+        "requires": {
+          "money": 60
+        },
         "outcomes": [
-          { "weight": 100, "text": "The deed changes hands over one last drink as a customer and the first as the house. Years later, travelers will know the place for its unbeatable stew, its strict no-ballads-about-the-owner policy, and the chair by the fire nobody else may use.", "effects": ["finish Retired. Bought the tavern, kept the chair by the fire, and heard every story the roads had left."] }
-        ] },
-      { "text": "Settle down as the local legend", "requires": { "trait": "famous" },
+          {
+            "weight": 100,
+            "text": "The deed changes hands over one last drink as a customer and the first as the house. Years later, travelers will know the place for its unbeatable stew, its strict no-ballads-about-the-owner policy, and the chair by the fire nobody else may use.",
+            "effects": [
+              "finish Retired. Bought the tavern, kept the chair by the fire, and heard every story the roads had left.",
+              "region solidarity -1"
+            ]
+          }
+        ],
+        "approach": "greed"
+      },
+      {
+        "text": "Settle down as the local legend",
+        "requires": {
+          "trait": "famous"
+        },
         "outcomes": [
-          { "weight": 100, "text": "No purchase necessary - fame is its own pension here. A corner table for life, meals on the house, and your only duty is telling the stories one more time whenever the room gets quiet. It never gets old. That's the miracle.", "effects": ["finish Settled down as the town legend. The stories got better every year, and only half of that was lying."] }
-        ] },
-      { "text": "Not yet. The road's still talking",
+          {
+            "weight": 100,
+            "text": "No purchase necessary - fame is its own pension here. A corner table for life, meals on the house, and your only duty is telling the stories one more time whenever the room gets quiet. It never gets old. That's the miracle.",
+            "effects": [
+              "finish Settled down as the town legend. The stories got better every year, and only half of that was lying."
+            ]
+          }
+        ],
+        "approach": "pragmatic"
+      },
+      {
+        "text": "Not yet. The road's still talking",
         "outcomes": [
-          { "weight": 100, "text": "She nods like she's heard it before, because she has, from everyone the road eventually kept. 'Chair's here when your feet win the argument.' You leave a good tip and take the ache with you.", "effects": ["stat wis +1"] }
-        ] }
-    ]
+          {
+            "weight": 100,
+            "text": "She nods like she's heard it before, because she has, from everyone the road eventually kept. 'Chair's here when your feet win the argument.' You leave a good tip and take the ache with you.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ],
+        "approach": "inquiry"
+      }
+    ],
+    "primary": "tavern",
+    "theme": "food",
+    "tags": [
+      "food",
+      "voice_10"
+    ],
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   }
 ]

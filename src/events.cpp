@@ -87,6 +87,8 @@ void EventDeck::loadJsonText(const char* jsonText) {
     for (auto& e : j) {
         Event ev;
         ev.id = e.value("id", "");
+        ev.primary = e.value("primary", "");
+        ev.theme = e.value("theme", "");
         ev.weight = e.value("weight", 10);
         ev.family = e.value("family", "");
         ev.text = e.value("text", "");

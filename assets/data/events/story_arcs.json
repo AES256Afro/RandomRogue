@@ -1,307 +1,1588 @@
 [
   {
     "id": "r12_rooftop_thief",
-    "locations": ["city", "tavern"],
+    "locations": [
+      "city",
+      "tavern"
+    ],
     "weight": 18,
     "family": "returning_thief",
-    "tags": ["relationship", "consequence", "social"],
-    "slots": {"person": "figure_alive"},
-    "text": "You catch {person}, a {person_trait} {person_prof}, halfway through stealing your purse through an upstairs window. They freeze with one foot on the sill. 'Before you decide,' they whisper, 'I am having a historically bad week.'",
+    "tags": [
+      "relationship",
+      "consequence",
+      "social",
+      "capital",
+      "voice_2"
+    ],
+    "slots": {
+      "person": "figure_alive"
+    },
+    "text": "You catch {person}, a {person_trait} {person_prof}, halfway through stealing your purse through an upstairs window. They freeze with one foot on the sill. 'Before you decide,' they whisper, 'I am having a historically bad week.'\n\nAsk who pays for \"Rooftop Thief\" and the answer begins here: the ledger reports excellent health and requests that nobody examine the patient.",
     "choices": [
       {
         "text": "Let them go with travel money",
         "approach": "mercy",
         "outcomes": [
-          {"weight": 100, "text": "You add two coins to the purse and hand it over. {person} stares as if kindness were a trap with unfamiliar engineering. 'I will return this,' they say. The promise sounds dangerous because they mean it.", "effects": ["money -2", "npc_rel trust +3", "npc_rel debt +3", "npc_know 1", "schedule 3 r12_thief_returns The thief you spared has found you again."]}
+          {
+            "weight": 100,
+            "text": "You add two coins to the purse and hand it over. {person} stares as if kindness were a trap with unfamiliar engineering. 'I will return this,' they say. The promise sounds dangerous because they mean it.",
+            "effects": [
+              "money -2",
+              "npc_rel trust +3",
+              "npc_rel debt +3",
+              "npc_know 1",
+              "schedule 3 r12_thief_returns The thief you spared has found you again."
+            ]
+          }
         ]
       },
       {
         "text": "Hire them to steal something useful",
         "approach": "greed",
         "outcomes": [
-          {"weight": 100, "text": "You redirect the crime. By dawn, {person} returns with a respectable purse and several questions about your ethics. You split the proceeds like professionals who absolutely never met.", "effects": ["money +10", "npc_rel respect +2", "npc_rel fear +1", "npc_know 2", "schedule 5 r12_thief_returns Your accomplice wants to discuss the consequences."]}
+          {
+            "weight": 100,
+            "text": "You redirect the crime. By dawn, {person} returns with a respectable purse and several questions about your ethics. You split the proceeds like professionals who absolutely never met.",
+            "effects": [
+              "money +10",
+              "npc_rel respect +2",
+              "npc_rel fear +1",
+              "npc_know 2",
+              "schedule 5 r12_thief_returns Your accomplice wants to discuss the consequences."
+            ]
+          }
         ]
       },
       {
         "text": "Turn them over to the watch",
         "approach": "law",
         "outcomes": [
-          {"weight": 100, "text": "The watch takes {person} away. They do not threaten you. They only memorize your face with professional care, which is considerably worse.", "effects": ["rep +3", "npc_rel grudge +4", "npc_rel fear +1", "npc_know 3", "schedule 4 r12_thief_returns The prisoner has acquired both freedom and a plan."]}
+          {
+            "weight": 100,
+            "text": "The watch takes {person} away. They do not threaten you. They only memorize your face with professional care, which is considerably worse.",
+            "effects": [
+              "rep +3",
+              "npc_rel grudge +4",
+              "npc_rel fear +1",
+              "npc_know 3",
+              "schedule 4 r12_thief_returns The prisoner has acquired both freedom and a plan."
+            ]
+          }
         ]
       }
-    ]
+    ],
+    "primary": "city",
+    "theme": "capital",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_thief_returns",
     "locations": [],
     "weight": 1,
     "family": "returning_thief",
-    "tags": ["relationship", "consequence"],
-    "slots": {"person": "remembered_figure"},
-    "text": "{person} steps out of the crowd carrying the memory of your last meeting. Trust {person_trust}. Debt {person_debt}. Grudge {person_grudge}. They have brought a locked box and the expression of someone about to redefine a relationship.",
+    "tags": [
+      "relationship",
+      "consequence",
+      "kindness",
+      "voice_0"
+    ],
+    "slots": {
+      "person": "remembered_figure"
+    },
+    "text": "{person} steps out of the crowd carrying the memory of your last meeting. Trust {person_trust}. Debt {person_debt}. Grudge {person_grudge}. They have brought a locked box and the expression of someone about to redefine a relationship.\n\nThe file titled \"Thief Returns\" makes the arrangement plain: kindness has no budget, no armor, and an alarming record of surviving anyway.",
     "choices": [
       {
         "text": "Open the box together",
         "approach": "trust",
         "outcomes": [
-          {"weight": 100, "when": ["npc_rel trust >= 2"], "text": "The box contains your old kindness with interest: coin, a route, and the name of someone lying about you. {person} keeps nothing. That is how you know this has become friendship.", "effects": ["money +12", "npc_rel trust +2", "npc_rel affection +1", "npc_rel debt -2", "schedule 7 r12_thief_finale A friend has one last impossible favor to ask."]},
-          {"weight": 100, "text": "The box contains a spring, purple dye, and a note reading THANK YOU FOR PARTICIPATING. {person} is already on a roof. The crowd laughs until they realize their purses are also gone.", "effects": ["money -6", "npc_rel respect +1", "npc_rel grudge +1"]}
+          {
+            "weight": 100,
+            "when": [
+              "npc_rel trust >= 2"
+            ],
+            "text": "The box contains your old kindness with interest: coin, a route, and the name of someone lying about you. {person} keeps nothing. That is how you know this has become friendship.",
+            "effects": [
+              "money +12",
+              "npc_rel trust +2",
+              "npc_rel affection +1",
+              "npc_rel debt -2",
+              "schedule 7 r12_thief_finale A friend has one last impossible favor to ask."
+            ]
+          },
+          {
+            "weight": 100,
+            "text": "The box contains a spring, purple dye, and a note reading THANK YOU FOR PARTICIPATING. {person} is already on a roof. The crowd laughs until they realize their purses are also gone.",
+            "effects": [
+              "money -6",
+              "npc_rel respect +1",
+              "npc_rel grudge +1"
+            ]
+          }
         ]
       },
       {
         "text": "Demand the debt be paid now",
         "approach": "authority",
         "outcomes": [
-          {"weight": 100, "when": ["npc_rel debt >= 2"], "text": "{person} pays in information and gold, then crosses the debt from a small private ledger. Relief and disappointment share their face. Accounts close more cleanly than friendships.", "effects": ["money +15", "npc_rel debt -4", "npc_rel trust -1", "stat int +1"]},
-          {"weight": 100, "text": "'Debt?' {person} asks. Their laugh is careful and public. By sunset, three taverns believe you owe THEM money. Reputation is just accounting performed by drunks.", "effects": ["rep -4", "npc_rel grudge +2"]}
+          {
+            "weight": 100,
+            "when": [
+              "npc_rel debt >= 2"
+            ],
+            "text": "{person} pays in information and gold, then crosses the debt from a small private ledger. Relief and disappointment share their face. Accounts close more cleanly than friendships.",
+            "effects": [
+              "money +15",
+              "npc_rel debt -4",
+              "npc_rel trust -1",
+              "stat int +1"
+            ]
+          },
+          {
+            "weight": 100,
+            "text": "'Debt?' {person} asks. Their laugh is careful and public. By sunset, three taverns believe you owe THEM money. Reputation is just accounting performed by drunks.",
+            "effects": [
+              "rep -4",
+              "npc_rel grudge +2"
+            ]
+          }
         ]
       },
       {
         "text": "Apologize for how the first meeting ended",
         "approach": "mercy",
         "outcomes": [
-          {"weight": 100, "text": "A sincere apology lands harder than a threat. {person} had prepared for every version of you except this one. The locked box stays closed. The grudge does not.", "effects": ["npc_rel grudge -3", "npc_rel trust +2", "stat cha +1"]}
+          {
+            "weight": 100,
+            "text": "A sincere apology lands harder than a threat. {person} had prepared for every version of you except this one. The locked box stays closed. The grudge does not.",
+            "effects": [
+              "npc_rel grudge -3",
+              "npc_rel trust +2",
+              "stat cha +1"
+            ]
+          }
         ]
       }
-    ]
+    ],
+    "primary": "special",
+    "theme": "kindness",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_thief_finale",
     "locations": [],
     "weight": 1,
     "family": "returning_thief",
-    "tags": ["relationship", "consequence", "quest"],
-    "slots": {"person": "remembered_figure"},
-    "text": "{person} needs help stealing their own criminal record before a promotion board reads it. 'I could become respectable,' they say with horror. 'Please do not make me do it honestly.'",
+    "tags": [
+      "relationship",
+      "consequence",
+      "quest",
+      "state_power",
+      "voice_0"
+    ],
+    "slots": {
+      "person": "remembered_figure"
+    },
+    "text": "{person} needs help stealing their own criminal record before a promotion board reads it. 'I could become respectable,' they say with horror. 'Please do not make me do it honestly.'\n\nThe file titled \"Thief Finale\" makes the arrangement plain: the court recognizes property, rank, and lunchtime, roughly in that order.",
     "choices": [
-      {"text": "Steal the record together", "approach": "loyalty", "check": {"stat": "dex", "dc": 13}, "success": [{"weight": 100, "text": "You remove the file, the backup file, and the clerk who had memorized both. The clerk joins you for breakfast and agrees the system was asking for it. {person} will remember this when names matter.", "effects": ["npc_rel trust +3", "npc_rel affection +2", "npc_rel debt +2", "trait +famous"]}], "fail": [{"weight": 100, "text": "You steal the wrong drawer. It contains recipes and one warrant for you. {person} laughs until the watch arrives, then carries you both out through a laundry chute.", "effects": ["hp -4", "trait +wanted", "npc_rel affection +1"]}]},
-      {"text": "Make the record legally irrelevant", "approach": "wit", "check": {"stat": "int", "dc": 14}, "success": [{"weight": 100, "text": "You find a law declaring all theft records invalid if catalogued under an extinct calendar. Three stamps later, {person} has never committed a crime in any year the city recognizes.", "effects": ["npc_rel respect +3", "npc_rel grudge -2", "stat int +1"]}], "fail": [{"weight": 100, "text": "Your legal argument accidentally proves the city itself is contraband. The clerk impounds the building while everyone is still inside.", "effects": ["money -5", "rep -2"]}]},
-      {"text": "Tell them respectability is overrated", "approach": "honesty", "outcomes": [{"weight": 100, "text": "{person} considers this, tears up the promotion letter, and looks ten years younger. 'Good,' they say. 'I was worried I would need stationery.' They leave you the locked box. This time it contains exactly what it promises.", "effects": ["loot fine", "npc_rel trust +2", "npc_rel affection +2"]}]}
-    ]
+      {
+        "text": "Steal the record together",
+        "approach": "loyalty",
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You remove the file, the backup file, and the clerk who had memorized both. The clerk joins you for breakfast and agrees the system was asking for it. {person} will remember this when names matter.",
+            "effects": [
+              "npc_rel trust +3",
+              "npc_rel affection +2",
+              "npc_rel debt +2",
+              "trait +famous"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You steal the wrong drawer. It contains recipes and one warrant for you. {person} laughs until the watch arrives, then carries you both out through a laundry chute.",
+            "effects": [
+              "hp -4",
+              "trait +wanted",
+              "npc_rel affection +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Make the record legally irrelevant",
+        "approach": "wit",
+        "check": {
+          "stat": "int",
+          "dc": 14
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You find a law declaring all theft records invalid if catalogued under an extinct calendar. Three stamps later, {person} has never committed a crime in any year the city recognizes.",
+            "effects": [
+              "npc_rel respect +3",
+              "npc_rel grudge -2",
+              "stat int +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "Your legal argument accidentally proves the city itself is contraband. The clerk impounds the building while everyone is still inside.",
+            "effects": [
+              "money -5",
+              "rep -2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Tell them respectability is overrated",
+        "approach": "honesty",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "{person} considers this, tears up the promotion letter, and looks ten years younger. 'Good,' they say. 'I was worried I would need stationery.' They leave you the locked box. This time it contains exactly what it promises.",
+            "effects": [
+              "loot fine",
+              "npc_rel trust +2",
+              "npc_rel affection +2"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "state_power",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_old_acquaintance",
-    "locations": ["road", "tavern", "city", "coast"],
+    "locations": [
+      "road",
+      "tavern",
+      "city",
+      "coast"
+    ],
     "weight": 20,
     "family": "relationship_callback",
-    "tags": ["relationship", "social"],
-    "slots": {"person": "remembered_figure"},
-    "when": ["npc_rel trust >= 2"],
-    "text": "Someone calls your name correctly on the first try. {person}, the {person_prof}, remembers what you did and has apparently been telling the flattering version. They saved you a chair and a problem.",
+    "tags": [
+      "relationship",
+      "social",
+      "kindness",
+      "voice_7"
+    ],
+    "slots": {
+      "person": "remembered_figure"
+    },
+    "when": [
+      "npc_rel trust >= 2"
+    ],
+    "text": "Someone calls your name correctly on the first try. {person}, the {person_prof}, remembers what you did and has apparently been telling the flattering version. They saved you a chair and a problem.\n\nThe official lesson of \"Old Acquaintance\" is complicated; the useful lesson is that someone has made the strategically indefensible decision to treat a stranger as a person.",
     "choices": [
-      {"text": "Take the chair and hear the problem", "approach": "loyalty", "outcomes": [{"weight": 100, "text": "The problem becomes a plan, then a profitable afternoon. Familiar people skip the expensive part where everyone pretends not to need anyone.", "effects": ["money +8", "npc_rel trust +1", "npc_rel debt +1", "contract"]}]},
-      {"text": "Ask what they have heard about you", "approach": "curiosity", "outcomes": [{"weight": 100, "text": "The answer is mostly true, which is intolerable. {person} corrects two details and teaches you which lie has been helping most.", "effects": ["stat wis +1", "npc_know 1", "rep +2"]}]},
-      {"text": "Keep moving before familiarity becomes responsibility", "approach": "caution", "outcomes": [{"weight": 100, "text": "{person} lets you go, but the empty chair follows you in memory for several miles. Freedom has many small invoices.", "effects": ["npc_rel trust -1", "npc_rel grudge +1"]}]}
-    ]
+      {
+        "text": "Take the chair and hear the problem",
+        "approach": "loyalty",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The problem becomes a plan, then a profitable afternoon. Familiar people skip the expensive part where everyone pretends not to need anyone.",
+            "effects": [
+              "money +8",
+              "npc_rel trust +1",
+              "npc_rel debt +1",
+              "contract"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask what they have heard about you",
+        "approach": "curiosity",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The answer is mostly true, which is intolerable. {person} corrects two details and teaches you which lie has been helping most.",
+            "effects": [
+              "stat wis +1",
+              "npc_know 1",
+              "rep +2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Keep moving before familiarity becomes responsibility",
+        "approach": "caution",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "{person} lets you go, but the empty chair follows you in memory for several miles. Freedom has many small invoices.",
+            "effects": [
+              "npc_rel trust -1",
+              "npc_rel grudge +1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "road",
+    "theme": "kindness",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_blackmail",
-    "locations": ["city", "tavern"],
+    "locations": [
+      "city",
+      "tavern"
+    ],
     "weight": 16,
     "family": "relationship_callback",
-    "tags": ["relationship", "social", "danger"],
-    "slots": {"person": "remembered_figure"},
-    "when": ["npc_rel knowledge >= 2"],
-    "text": "{person} knows enough about you to write either a biography or an arrest warrant. They slide a blank page across the table. 'You decide which story I sell.'",
+    "tags": [
+      "relationship",
+      "social",
+      "danger",
+      "capital",
+      "voice_4"
+    ],
+    "slots": {
+      "person": "remembered_figure"
+    },
+    "when": [
+      "npc_rel knowledge >= 2"
+    ],
+    "text": "{person} knows enough about you to write either a biography or an arrest warrant. They slide a blank page across the table. 'You decide which story I sell.'\n\nPower calls \"Blackmail\" an exception. The rule it conceals is simpler: a debt collector has arrived to repossess something the debtor grew personally.",
     "choices": [
-      {"text": "Buy the blank page", "approach": "greed", "requires": {"money": 10}, "outcomes": [{"weight": 100, "text": "Ten gold purchases silence for approximately as long as ten gold remains impressive. {person} folds the blank page into a tiny expensive bird.", "effects": ["money -10", "npc_rel debt -2", "npc_rel grudge -1"]}]},
-      {"text": "Give them a better story", "approach": "wit", "check": {"stat": "cha", "dc": 13}, "success": [{"weight": 100, "text": "You provide a scandal so elegant it makes the truth look poorly edited. {person} leaves delighted, and by morning the city is discussing someone who does not exist.", "effects": ["rep +3", "npc_rel respect +2"]}], "fail": [{"weight": 100, "text": "Your invented scandal contains a real address and an unfortunately real duke. The blank page fills itself with consequences.", "effects": ["trait +wanted", "npc_rel fear +1"]}]},
-      {"text": "Publish everything first", "approach": "honesty", "outcomes": [{"weight": 100, "text": "You stand on the table and confess the useful parts, the embarrassing parts, and one crime {person} had not discovered. Blackmail dies when deprived of surprise. Your dignity survives in an altered form.", "effects": ["trait +famous", "npc_rel knowledge -3", "npc_rel respect +3", "rep -2"]}]}
-    ]
+      {
+        "text": "Buy the blank page",
+        "approach": "greed",
+        "requires": {
+          "money": 10
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Ten gold purchases silence for approximately as long as ten gold remains impressive. {person} folds the blank page into a tiny expensive bird.",
+            "effects": [
+              "money -10",
+              "npc_rel debt -2",
+              "npc_rel grudge -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Give them a better story",
+        "approach": "wit",
+        "check": {
+          "stat": "cha",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You provide a scandal so elegant it makes the truth look poorly edited. {person} leaves delighted, and by morning the city is discussing someone who does not exist.",
+            "effects": [
+              "rep +3",
+              "npc_rel respect +2"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "Your invented scandal contains a real address and an unfortunately real duke. The blank page fills itself with consequences.",
+            "effects": [
+              "trait +wanted",
+              "npc_rel fear +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Publish everything first",
+        "approach": "honesty",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You stand on the table and confess the useful parts, the embarrassing parts, and one crime {person} had not discovered. Blackmail dies when deprived of surprise. Your dignity survives in an altered form.",
+            "effects": [
+              "trait +famous",
+              "npc_rel knowledge -3",
+              "npc_rel respect +3",
+              "rep -2"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "capital",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_mystery_first",
-    "locations": ["city", "tavern", "road", "coast"],
+    "locations": [
+      "city",
+      "tavern",
+      "road",
+      "coast"
+    ],
     "weight": 24,
     "family": "world_mystery",
-    "tags": ["mystery", "history", "quest"],
-    "when": ["mystery_active"],
-    "slots": {"clue": "mystery_clue"},
-    "text": "A loose Chronicle page describes {clue_case}, then contradicts itself in two inks. In the margin, someone wrote: {clue}",
+    "tags": [
+      "mystery",
+      "history",
+      "quest",
+      "science",
+      "voice_4"
+    ],
+    "when": [
+      "mystery_active"
+    ],
+    "slots": {
+      "clue": "mystery_clue"
+    },
+    "text": "A loose Chronicle page describes {clue_case}, then contradicts itself in two inks. In the margin, someone wrote: {clue}\n\nPower calls \"Mystery First\" an exception. The rule it conceals is simpler: a scholar has found the answer and is now searching for an institution willing to hear it.",
     "choices": [
-      {"text": "Compare the ink against public records", "approach": "curiosity", "check": {"stat": "int", "dc": 12}, "success": [{"weight": 100, "text": "The public copy was altered second. That means the lie had institutional help and a deadline. You preserve the difference before anyone can correct it again.", "effects": ["mystery_clue 1", "stat int +1"]}], "fail": [{"weight": 100, "text": "The archive charges by the hour and organizes by personal grievance. You leave poorer, ink-stained, and only slightly less confused.", "effects": ["money -4"]}]},
-      {"text": "Ask who benefits from the contradiction", "approach": "social", "outcomes": [{"weight": 100, "text": "Nobody answers directly. Three people answer indirectly in exactly the same words, which is much better evidence.", "effects": ["mystery_clue 1", "stat wis +1"]}]},
-      {"text": "Sell the page to a collector", "approach": "greed", "outcomes": [{"weight": 100, "text": "The collector pays well and burns it immediately. Whatever the page threatened is worth more than you charged.", "effects": ["money +12", "region unrest +1"]}]}
-    ]
+      {
+        "text": "Compare the ink against public records",
+        "approach": "curiosity",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The public copy was altered second. That means the lie had institutional help and a deadline. You preserve the difference before anyone can correct it again.",
+            "effects": [
+              "mystery_clue 1",
+              "stat int +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The archive charges by the hour and organizes by personal grievance. You leave poorer, ink-stained, and only slightly less confused.",
+            "effects": [
+              "money -4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask who benefits from the contradiction",
+        "approach": "social",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Nobody answers directly. Three people answer indirectly in exactly the same words, which is much better evidence.",
+            "effects": [
+              "mystery_clue 1",
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sell the page to a collector",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The collector pays well and burns it immediately. Whatever the page threatened is worth more than you charged.",
+            "effects": [
+              "money +12",
+              "region unrest +1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "science",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_mystery_second",
     "locations": [],
     "weight": 1,
     "family": "world_mystery",
-    "tags": ["mystery", "consequence"],
-    "slots": {"clue": "mystery_clue"},
-    "text": "A witness finds you two days later, exhausted from avoiding you. They will not give a name, only this: {clue}",
+    "tags": [
+      "mystery",
+      "consequence",
+      "liberalism",
+      "voice_4"
+    ],
+    "slots": {
+      "clue": "mystery_clue"
+    },
+    "text": "A witness finds you two days later, exhausted from avoiding you. They will not give a name, only this: {clue}\n\nPower calls \"Mystery Second\" an exception. The rule it conceals is simpler: a committee has bravely condemned the temperature of the fire while declining to inconvenience the arsonist.",
     "choices": [
-      {"text": "Protect the witness and record everything", "approach": "mercy", "outcomes": [{"weight": 100, "text": "You hide them somewhere no official would voluntarily inspect: a municipal budget meeting. Their statement survives the night.", "effects": ["mystery_clue 1", "rep +2"]}]},
-      {"text": "Pressure them for the final name", "approach": "force", "check": {"stat": "cha", "dc": 13}, "success": [{"weight": 100, "text": "The name comes out as a whisper and changes the shape of the whole case. You now know where to look for the signature.", "effects": ["mystery_clue 2", "rep -1"]}], "fail": [{"weight": 100, "text": "They flee into a crowd trained by years of pretending not to see witnesses. The trail goes cold and your reputation warms unpleasantly.", "effects": ["rep -4"]}]},
-      {"text": "Let them remain anonymous", "approach": "caution", "outcomes": [{"weight": 100, "text": "You take the clue and leave the name untouched. Some truths survive only because nobody insists on owning them.", "effects": ["mystery_clue 1", "stat wis +1"]}]}
-    ]
+      {
+        "text": "Protect the witness and record everything",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You hide them somewhere no official would voluntarily inspect: a municipal budget meeting. Their statement survives the night.",
+            "effects": [
+              "mystery_clue 1",
+              "rep +2",
+              "region solidarity +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Pressure them for the final name",
+        "approach": "force",
+        "check": {
+          "stat": "cha",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The name comes out as a whisper and changes the shape of the whole case. You now know where to look for the signature.",
+            "effects": [
+              "mystery_clue 2",
+              "rep -1",
+              "region unrest +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "They flee into a crowd trained by years of pretending not to see witnesses. The trail goes cold and your reputation warms unpleasantly.",
+            "effects": [
+              "rep -4",
+              "region unrest +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Let them remain anonymous",
+        "approach": "caution",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You take the clue and leave the name untouched. Some truths survive only because nobody insists on owning them.",
+            "effects": [
+              "mystery_clue 1",
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "liberalism",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_mystery_reckoning",
     "locations": [],
     "weight": 1,
     "family": "world_mystery",
-    "tags": ["mystery", "consequence", "social"],
-    "slots": {"culprit": "mystery_culprit"},
-    "text": "The evidence points to {culprit}, the {culprit_trait} {culprit_prof}. They are waiting at the original archive with a packed bag and one final offer concerning {culprit_case}.",
+    "tags": [
+      "mystery",
+      "consequence",
+      "social",
+      "science",
+      "voice_8"
+    ],
+    "slots": {
+      "culprit": "mystery_culprit"
+    },
+    "text": "The evidence points to {culprit}, the {culprit_trait} {culprit_prof}. They are waiting at the original archive with a packed bag and one final offer concerning {culprit_case}.\n\nPeople remember \"Mystery Reckoning\" differently, but the material fact remains: a scholar has found the answer and is now searching for an institution willing to hear it.",
     "choices": [
-      {"text": "Expose the complete truth", "approach": "law", "outcomes": [{"weight": 100, "text": "You read the hidden record aloud. Every correction, payment, and forged witness lands in order. {culprit} does not deny it. History closes around them like a cell.", "effects": ["mystery_solve", "rep +8", "npc_rel grudge +4", "trait +famous"]}]},
-      {"text": "Trade silence for restitution", "approach": "greed", "outcomes": [{"weight": 100, "text": "{culprit} restores what can be restored and pays for what cannot. The official history remains wrong, but several living people become safer. Truth and justice leave by different doors.", "effects": ["mystery_solve", "money +25", "npc_rel debt +4", "rep -2"]}]},
-      {"text": "Ask why they did it", "approach": "mercy", "outcomes": [{"weight": 100, "text": "The motive is smaller than the damage: fear, loyalty, one bad promise made young. You preserve the confession and omit the spectacle. The Chronicle records the truth without learning cruelty from you.", "effects": ["mystery_solve", "stat wis +2", "npc_rel trust +2", "region unrest -1"]}]}
-    ]
+      {
+        "text": "Expose the complete truth",
+        "approach": "law",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You read the hidden record aloud. Every correction, payment, and forged witness lands in order. {culprit} does not deny it. History closes around them like a cell.",
+            "effects": [
+              "mystery_solve",
+              "rep +8",
+              "npc_rel grudge +4",
+              "trait +famous"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Trade silence for restitution",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "{culprit} restores what can be restored and pays for what cannot. The official history remains wrong, but several living people become safer. Truth and justice leave by different doors.",
+            "effects": [
+              "mystery_solve",
+              "money +25",
+              "npc_rel debt +4",
+              "rep -2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask why they did it",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The motive is smaller than the damage: fear, loyalty, one bad promise made young. You preserve the confession and omit the spectacle. The Chronicle records the truth without learning cruelty from you.",
+            "effects": [
+              "mystery_solve",
+              "stat wis +2",
+              "npc_rel trust +2",
+              "region unrest -1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "science",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_mystery_dossier",
-    "locations": ["city", "tavern", "dungeon", "cave"],
+    "locations": [
+      "city",
+      "tavern",
+      "dungeon",
+      "cave"
+    ],
     "weight": 30,
     "family": "world_mystery",
-    "tags": ["mystery", "item", "history"],
-    "when": ["mystery_active", "has evidence_dossier"],
-    "slots": {"clue": "mystery_clue"},
-    "text": "Your cross-referenced dossier fits a missing Chronicle entry so precisely that the page edges seem embarrassed. The combined evidence says: {clue}",
+    "tags": [
+      "mystery",
+      "item",
+      "history",
+      "science",
+      "voice_9"
+    ],
+    "when": [
+      "mystery_active",
+      "has evidence_dossier"
+    ],
+    "slots": {
+      "clue": "mystery_clue"
+    },
+    "text": "Your cross-referenced dossier fits a missing Chronicle entry so precisely that the page edges seem embarrassed. The combined evidence says: {clue}\n\nThe argument around \"Mystery Dossier\" ends wherever someone finally admits that the universe is under no obligation to respect the official diagram.",
     "choices": [
-      {"text": "Commit the dossier to the case", "approach": "curiosity", "requires": {"item": "evidence_dossier"}, "outcomes": [{"weight": 100, "text": "Map, recording, and official lie align. The dossier becomes evidence rather than luggage, and the case leaps forward.", "effects": ["removeitem evidence_dossier", "mystery_clue 2", "stat int +1"]}]},
-      {"text": "Keep it as leverage", "approach": "greed", "outcomes": [{"weight": 100, "text": "Knowledge remains most valuable just before use. You close the cover and notice two nearby officials trying not to watch.", "effects": ["money +5", "region unrest +1"]}]}
-    ]
+      {
+        "text": "Commit the dossier to the case",
+        "approach": "curiosity",
+        "requires": {
+          "item": "evidence_dossier"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Map, recording, and official lie align. The dossier becomes evidence rather than luggage, and the case leaps forward.",
+            "effects": [
+              "removeitem evidence_dossier",
+              "mystery_clue 2",
+              "stat int +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Keep it as leverage",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Knowledge remains most valuable just before use. You close the cover and notice two nearby officials trying not to watch.",
+            "effects": [
+              "money +5",
+              "region unrest +1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "science",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_regional_relief",
-    "locations": ["city", "road", "swamp", "coast"],
+    "locations": [
+      "city",
+      "road",
+      "swamp",
+      "coast"
+    ],
     "weight": 26,
     "family": "regional_crisis",
-    "tags": ["regional", "plague", "social"],
-    "when": ["region plagued"],
-    "text": "The regional relief office has medicine, wagons, and no idea which village still exists. Their map is current as of the previous catastrophe.",
+    "tags": [
+      "regional",
+      "plague",
+      "social",
+      "care",
+      "voice_9"
+    ],
+    "when": [
+      "region plagued"
+    ],
+    "text": "The regional relief office has medicine, wagons, and no idea which village still exists. Their map is current as of the previous catastrophe.\n\nThe argument around \"Regional Relief\" ends wherever someone finally admits that someone needs help now, which is earlier than the institution's next available appointment.",
     "choices": [
-      {"text": "Guide the relief wagons", "approach": "mercy", "check": {"stat": "wis", "dc": 12}, "success": [{"weight": 100, "text": "You route supplies around washed bridges and one invented checkpoint. By sunset, the medicine reaches people instead of a warehouse report.", "effects": ["region prosperity +2", "region danger -1", "rep +5"]}], "fail": [{"weight": 100, "text": "The convoy reaches the correct village after visiting three incorrect ones and a wedding. Nobody dies, but the cake is medically unnecessary.", "effects": ["hp -2", "region prosperity +1"]}]},
-      {"text": "Sell them your more accurate map", "approach": "greed", "outcomes": [{"weight": 100, "text": "They pay, copy it badly, and promote the copyist. Still, wagons start moving in approximately useful directions.", "effects": ["money +12", "region prosperity +1"]}]},
-      {"text": "Audit the missing supplies", "approach": "law", "check": {"stat": "int", "dc": 13}, "success": [{"weight": 100, "text": "Half the medicine was stolen by a clerk who listed himself as a weather event. You correct both crimes.", "effects": ["money +6", "region unrest -2", "rep +4"]}], "fail": [{"weight": 100, "text": "The ledger proves every bottle exists in a column. The patients remain stubbornly physical.", "effects": ["rep -2"]}]}
-    ]
+      {
+        "text": "Guide the relief wagons",
+        "approach": "mercy",
+        "check": {
+          "stat": "wis",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You route supplies around washed bridges and one invented checkpoint. By sunset, the medicine reaches people instead of a warehouse report.",
+            "effects": [
+              "region prosperity +2",
+              "region danger -1",
+              "rep +5"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The convoy reaches the correct village after visiting three incorrect ones and a wedding. Nobody dies, but the cake is medically unnecessary.",
+            "effects": [
+              "hp -2",
+              "region prosperity +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sell them your more accurate map",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "They pay, copy it badly, and promote the copyist. Still, wagons start moving in approximately useful directions.",
+            "effects": [
+              "money +12",
+              "region prosperity +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Audit the missing supplies",
+        "approach": "law",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Half the medicine was stolen by a clerk who listed himself as a weather event. You correct both crimes.",
+            "effects": [
+              "money +6",
+              "region unrest -2",
+              "rep +4"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The ledger proves every bottle exists in a column. The patients remain stubbornly physical.",
+            "effects": [
+              "rep -2",
+              "region pressure +1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "care",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_regional_boom",
-    "locations": ["city", "tavern", "road", "coast"],
+    "locations": [
+      "city",
+      "tavern",
+      "road",
+      "coast"
+    ],
     "weight": 22,
     "family": "regional_change",
-    "tags": ["regional", "economy", "absurd"],
-    "when": ["region thriving"],
-    "text": "Prosperity has arrived and immediately opened a themed restaurant about hardship. Nobody working there has experienced any, but the turnip famine platter is expensive.",
+    "tags": [
+      "regional",
+      "economy",
+      "absurd",
+      "liberalism",
+      "voice_7"
+    ],
+    "when": [
+      "region thriving"
+    ],
+    "text": "Prosperity has arrived and immediately opened a themed restaurant about hardship. Nobody working there has experienced any, but the turnip famine platter is expensive.\n\nThe official lesson of \"Regional Boom\" is complicated; the useful lesson is that the council agrees something must be done after a respectful period of doing nothing.",
     "choices": [
-      {"text": "Invest before taste returns", "approach": "greed", "requires": {"money": 8}, "outcomes": [{"weight": 100, "text": "The restaurant expands into three cities and a cave. Your dividend arrives wrapped in edible paperwork.", "effects": ["money +18", "region prosperity +1"]}]},
-      {"text": "Tell them what hardship actually tastes like", "approach": "honesty", "outcomes": [{"weight": 100, "text": "You improve the recipes and ruin the marketing. The staff listens. The owner does not, which is why the staff quietly gives you the till key.", "effects": ["money +6", "rep +3", "region unrest +1"]}]},
-      {"text": "Order the commemorative empty plate", "approach": "absurd", "outcomes": [{"weight": 100, "text": "It costs four gold and arrives with a moving speech. You eat nothing beautifully and leave somehow nourished.", "effects": ["money -4", "hp +4", "stat cha +1"]}]}
-    ]
+      {
+        "text": "Invest before taste returns",
+        "approach": "greed",
+        "requires": {
+          "money": 8
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The restaurant expands into three cities and a cave. Your dividend arrives wrapped in edible paperwork.",
+            "effects": [
+              "money +18",
+              "region prosperity +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Tell them what hardship actually tastes like",
+        "approach": "honesty",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You improve the recipes and ruin the marketing. The staff listens. The owner does not, which is why the staff quietly gives you the till key.",
+            "effects": [
+              "money +6",
+              "rep +3",
+              "region unrest +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Order the commemorative empty plate",
+        "approach": "absurd",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "It costs four gold and arrives with a moving speech. You eat nothing beautifully and leave somehow nourished.",
+            "effects": [
+              "money -4",
+              "hp +4",
+              "stat cha +1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "liberalism",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_regional_unrest",
-    "locations": ["city", "tavern", "road"],
+    "locations": [
+      "city",
+      "tavern",
+      "road"
+    ],
     "weight": 28,
     "family": "regional_crisis",
-    "tags": ["regional", "social", "danger"],
-    "when": ["region volatile"],
-    "text": "Two crowds occupy the same square with incompatible banners and one shared snack vendor. A single badly chosen sentence could become next year's era name.",
+    "tags": [
+      "regional",
+      "social",
+      "danger",
+      "capital",
+      "voice_9"
+    ],
+    "when": [
+      "region volatile"
+    ],
+    "text": "Two crowds occupy the same square with incompatible banners and one shared snack vendor. A single badly chosen sentence could become next year's era name.\n\nThe argument around \"Regional Unrest\" ends wherever someone finally admits that the market is invisible except when it needs guards, roads, courts, or lunch.",
     "choices": [
-      {"text": "Negotiate a temporary truce", "approach": "mercy", "check": {"stat": "cha", "dc": 14}, "success": [{"weight": 100, "text": "You discover both crowds hate the tax office more than each other. Unity arrives carrying forms and a battering ram.", "effects": ["region unrest -3", "rep +6", "stat cha +1"]}], "fail": [{"weight": 100, "text": "You pronounce one banner slogan in the opposing dialect. The snack vendor pulls you under the cart until history calms down.", "effects": ["hp -5", "region unrest +1"]}]},
-      {"text": "Sell helmets to both sides", "approach": "greed", "outcomes": [{"weight": 100, "text": "Commerce remains neutral and extremely profitable. You leave before anyone asks why both helmet straps break left-handed.", "effects": ["money +20", "region unrest +2", "trait +wanted"]}]},
-      {"text": "Steal both banners", "approach": "wit", "check": {"stat": "dex", "dc": 13}, "success": [{"weight": 100, "text": "Without symbols, everyone notices they have been yelling at neighbors. The argument shrinks back to ordinary local resentment.", "effects": ["region unrest -2", "stat dex +1"]}], "fail": [{"weight": 100, "text": "You become the only visible symbol. Both crowds unite around chasing it.", "effects": ["hp -4", "trait +famous"]}]}
-    ]
+      {
+        "text": "Negotiate a temporary truce",
+        "approach": "mercy",
+        "check": {
+          "stat": "cha",
+          "dc": 14
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You discover both crowds hate the tax office more than each other. Unity arrives carrying forms and a battering ram.",
+            "effects": [
+              "region unrest -3",
+              "rep +6",
+              "stat cha +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You pronounce one banner slogan in the opposing dialect. The snack vendor pulls you under the cart until history calms down.",
+            "effects": [
+              "hp -5",
+              "region unrest +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sell helmets to both sides",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Commerce remains neutral and extremely profitable. You leave before anyone asks why both helmet straps break left-handed.",
+            "effects": [
+              "money +20",
+              "region unrest +2",
+              "trait +wanted"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Steal both banners",
+        "approach": "wit",
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Without symbols, everyone notices they have been yelling at neighbors. The argument shrinks back to ordinary local resentment.",
+            "effects": [
+              "region unrest -2",
+              "stat dex +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You become the only visible symbol. Both crowds unite around chasing it.",
+            "effects": [
+              "hp -4",
+              "trait +famous"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "capital",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_haunted_tax",
-    "locations": ["city", "tavern", "road", "dungeon"],
+    "locations": [
+      "city",
+      "tavern",
+      "road",
+      "dungeon"
+    ],
     "weight": 20,
     "family": "regional_haunting",
-    "tags": ["regional", "legacy", "absurd"],
-    "when": ["region haunted"],
-    "text": "The regional ghost has begun collecting taxes from the living. Its receipts are flawless, translucent, and legally binding under a statute nobody remembers passing.",
+    "tags": [
+      "regional",
+      "legacy",
+      "absurd",
+      "capital",
+      "voice_9"
+    ],
+    "when": [
+      "region haunted"
+    ],
+    "text": "The regional ghost has begun collecting taxes from the living. Its receipts are flawless, translucent, and legally binding under a statute nobody remembers passing.\n\nThe argument around \"Haunted Tax\" ends wherever someone finally admits that a merchant has found a way to own the risk while renting it back to everyone in danger.",
     "choices": [
-      {"text": "Pay the death levy", "approach": "caution", "requires": {"money": 5}, "outcomes": [{"weight": 100, "text": "The ghost stamps your soul PAID THROUGH AUTUMN. Nearby spirits nod with bureaucratic respect.", "effects": ["money -5", "trait +blessed", "region danger -1"]}]},
-      {"text": "Challenge the ghost's jurisdiction", "approach": "law", "check": {"stat": "int", "dc": 13}, "success": [{"weight": 100, "text": "Dead citizens are exempt from residency requirements because they cannot prove occupancy. The ghost dissolves in the face of precedent.", "effects": ["region danger -3", "stat int +1", "rep +3"]}], "fail": [{"weight": 100, "text": "The ghost cites an older law written before integers. You now owe compound ectoplasm.", "effects": ["hp -4", "trait +cursed"]}]},
-      {"text": "Accept a job as deputy collector", "approach": "greed", "outcomes": [{"weight": 100, "text": "For one evening, you knock on crypts and demand proof of life. The dead are terrible tippers but excellent record keepers.", "effects": ["money +9", "region unrest +1", "stat wis +1"]}]}
-    ]
+      {
+        "text": "Pay the death levy",
+        "approach": "caution",
+        "requires": {
+          "money": 5
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The ghost stamps your soul PAID THROUGH AUTUMN. Nearby spirits nod with bureaucratic respect.",
+            "effects": [
+              "money -5",
+              "trait +blessed",
+              "region danger -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Challenge the ghost's jurisdiction",
+        "approach": "law",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Dead citizens are exempt from residency requirements because they cannot prove occupancy. The ghost dissolves in the face of precedent.",
+            "effects": [
+              "region danger -3",
+              "stat int +1",
+              "rep +3"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The ghost cites an older law written before integers. You now owe compound ectoplasm.",
+            "effects": [
+              "hp -4",
+              "trait +cursed",
+              "region pressure +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Accept a job as deputy collector",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "For one evening, you knock on crypts and demand proof of life. The dead are terrible tippers but excellent record keepers.",
+            "effects": [
+              "money +9",
+              "region unrest +1",
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "capital",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_quest_broker",
-    "locations": ["city", "tavern"],
+    "locations": [
+      "city",
+      "tavern"
+    ],
     "weight": 18,
     "family": "generated_quest",
-    "tags": ["quest", "faction", "social"],
-    "text": "A commission broker has five sealed requests and the expression of someone who knows none of them are as simple as their verbs. Recover. Survey. Reconcile. Deliver. Investigate.",
+    "tags": [
+      "quest",
+      "faction",
+      "social",
+      "liberalism",
+      "voice_0"
+    ],
+    "text": "A commission broker has five sealed requests and the expression of someone who knows none of them are as simple as their verbs. Recover. Survey. Reconcile. Deliver. Investigate.\n\nThe file titled \"Quest Broker\" makes the arrangement plain: a committee has bravely condemned the temperature of the fire while declining to inconvenience the arsonist.",
     "choices": [
-      {"text": "Take the request that mentions a person", "approach": "social", "outcomes": [{"weight": 100, "text": "The broker chooses a seal based on who already remembers you. 'Relationships,' they say, 'are contracts that forgot to list payment.'", "effects": ["contract"]}]},
-      {"text": "Take whichever pays for danger", "approach": "greed", "outcomes": [{"weight": 100, "text": "The thickest envelope growls slightly. The broker slides it over without breaking eye contact.", "effects": ["contract", "money +3"]}]},
-      {"text": "Decline until your current story is less crowded", "approach": "caution", "outcomes": [{"weight": 100, "text": "The broker respects this. Most disasters begin when someone mistakes available space for available time.", "effects": ["stat wis +1"]}]}
-    ]
+      {
+        "text": "Take the request that mentions a person",
+        "approach": "social",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The broker chooses a seal based on who already remembers you. 'Relationships,' they say, 'are contracts that forgot to list payment.'",
+            "effects": [
+              "contract"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Take whichever pays for danger",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The thickest envelope growls slightly. The broker slides it over without breaking eye contact.",
+            "effects": [
+              "contract",
+              "money +3",
+              "region solidarity -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Decline until your current story is less crowded",
+        "approach": "caution",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The broker respects this. Most disasters begin when someone mistakes available space for available time.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "liberalism",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_warded_rope",
-    "locations": ["dungeon", "cave", "forest", "swamp"],
+    "locations": [
+      "dungeon",
+      "cave",
+      "forest",
+      "swamp"
+    ],
     "weight": 24,
     "family": "crafted_solution",
-    "tags": ["item", "discovery", "divine"],
-    "when": ["has warded_rope"],
-    "text": "A doorway refuses to stay in the same wall twice. The knots in your warded rope tighten whenever it moves, as if offended by architectural dishonesty.",
+    "tags": [
+      "item",
+      "discovery",
+      "divine",
+      "antiwar",
+      "voice_4"
+    ],
+    "when": [
+      "has warded_rope"
+    ],
+    "text": "A doorway refuses to stay in the same wall twice. The knots in your warded rope tighten whenever it moves, as if offended by architectural dishonesty.\n\nPower calls \"Warded Rope\" an exception. The rule it conceals is simpler: a mapmaker has moved the border again without consulting the houses underneath the ink.",
     "choices": [
-      {"text": "Lasso the doorway", "approach": "wit", "requires": {"item": "warded_rope"}, "outcomes": [{"weight": 100, "text": "The rope catches the frame and drags the doorway into a legally stable position. Beyond it waits a room the dungeon had been hiding from itself.", "effects": ["loot fine", "stat wis +1", "region danger -1"]}]},
-      {"text": "Follow it without using the rope", "approach": "curiosity", "check": {"stat": "wis", "dc": 14}, "success": [{"weight": 100, "text": "You anticipate the next wall and step through before the doorway arrives. Cause and effect exchange worried looks.", "effects": ["money +10", "stat wis +1"]}], "fail": [{"weight": 100, "text": "The doorway closes around your coat and spends ten minutes dragging you through alternate broom closets.", "effects": ["hp -4"]}]}
-    ]
+      {
+        "text": "Lasso the doorway",
+        "approach": "wit",
+        "requires": {
+          "item": "warded_rope"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The rope catches the frame and drags the doorway into a legally stable position. Beyond it waits a room the dungeon had been hiding from itself.",
+            "effects": [
+              "loot fine",
+              "stat wis +1",
+              "region danger -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Follow it without using the rope",
+        "approach": "curiosity",
+        "check": {
+          "stat": "wis",
+          "dc": 14
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You anticipate the next wall and step through before the doorway arrives. Cause and effect exchange worried looks.",
+            "effects": [
+              "money +10",
+              "stat wis +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The doorway closes around your coat and spends ten minutes dragging you through alternate broom closets.",
+            "effects": [
+              "hp -4"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "dungeon",
+    "theme": "antiwar",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_monster_bait",
-    "locations": ["forest", "swamp", "mountains", "cave", "coast"],
+    "locations": [
+      "forest",
+      "swamp",
+      "mountains",
+      "cave",
+      "coast"
+    ],
     "weight": 26,
     "family": "crafted_solution",
-    "tags": ["item", "beast", "danger"],
-    "when": ["has monster_bait"],
-    "text": "Something enormous circles beyond sight. Your fermented monster bait starts bubbling in its jar with the confidence of a terrible idea finally receiving funding.",
+    "tags": [
+      "item",
+      "beast",
+      "danger",
+      "freedom",
+      "voice_11"
+    ],
+    "when": [
+      "has monster_bait"
+    ],
+    "text": "Something enormous circles beyond sight. Your fermented monster bait starts bubbling in its jar with the confidence of a terrible idea finally receiving funding.\n\nNothing about \"Monster Bait\" is accidental once you notice that freedom begins where someone can refuse an order without losing dinner.",
     "choices": [
-      {"text": "Set the bait far from the road", "approach": "caution", "requires": {"item": "monster_bait"}, "outcomes": [{"weight": 100, "text": "The unseen thing follows the smell into country where maps use apologetic shading. Travelers will be safer until it develops standards.", "effects": ["removeitem monster_bait", "region danger -2", "rep +4"]}]},
-      {"text": "Use it to bait an ambush", "approach": "force", "check": {"stat": "str", "dc": 14}, "success": [{"weight": 100, "text": "The beast arrives hungry and leaves educated. You keep one valuable tooth and none of the bait.", "effects": ["removeitem monster_bait", "loot fine", "region danger -2"]}], "fail": [{"weight": 100, "text": "The beast eats the bait, the trap, and the portion of your plan containing optimism.", "effects": ["removeitem monster_bait", "hp -7"]}]},
-      {"text": "Sell the recipe to local hunters", "approach": "greed", "outcomes": [{"weight": 100, "text": "They pay in advance, smell the jar, and renegotiate upward. The region's predators are about to have a confusing month.", "effects": ["money +14", "region danger -1", "region prosperity +1"]}]}
-    ]
+      {
+        "text": "Set the bait far from the road",
+        "approach": "caution",
+        "requires": {
+          "item": "monster_bait"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The unseen thing follows the smell into country where maps use apologetic shading. Travelers will be safer until it develops standards.",
+            "effects": [
+              "removeitem monster_bait",
+              "region danger -2",
+              "rep +4"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Use it to bait an ambush",
+        "approach": "force",
+        "check": {
+          "stat": "str",
+          "dc": 14
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The beast arrives hungry and leaves educated. You keep one valuable tooth and none of the bait.",
+            "effects": [
+              "removeitem monster_bait",
+              "loot fine",
+              "region danger -2"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The beast eats the bait, the trap, and the portion of your plan containing optimism.",
+            "effects": [
+              "removeitem monster_bait",
+              "hp -7",
+              "region unrest +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sell the recipe to local hunters",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "They pay in advance, smell the jar, and renegotiate upward. The region's predators are about to have a confusing month.",
+            "effects": [
+              "money +14",
+              "region danger -1",
+              "region prosperity +1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "forest",
+    "theme": "freedom",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_probability_engine",
-    "locations": ["tavern", "city", "crash"],
+    "locations": [
+      "tavern",
+      "city",
+      "crash"
+    ],
     "weight": 20,
     "family": "crafted_solution",
-    "tags": ["item", "absurd", "economy"],
-    "when": ["has probability_engine"],
-    "text": "A gambling table is running a game nobody understands. Your pocket probability engine warms whenever the dealer lies and sneezes whenever reality does.",
+    "tags": [
+      "item",
+      "absurd",
+      "economy",
+      "propaganda",
+      "voice_4"
+    ],
+    "when": [
+      "has probability_engine"
+    ],
+    "text": "A gambling table is running a game nobody understands. Your pocket probability engine warms whenever the dealer lies and sneezes whenever reality does.\n\nPower calls \"Probability Engine\" an exception. The rule it conceals is simpler: a lie has acquired a printing budget and now expects to be addressed as public information.",
     "choices": [
-      {"text": "Let the engine choose every wager", "approach": "greed", "check": {"stat": "int", "dc": 12}, "success": [{"weight": 100, "text": "The machine loses seven tiny bets to disguise one enormous certainty. The dealer applauds through professional grief.", "effects": ["money +24", "stat int +1"]}], "fail": [{"weight": 100, "text": "The engine predicts that you will ignore its warning. You do, proving it correct and yourself poorer.", "effects": ["money -10"]}]},
-      {"text": "Expose the crooked game", "approach": "law", "outcomes": [{"weight": 100, "text": "The engine demonstrates that the house wins 112 percent of all money, including money not yet minted. The crowd reacts with mathematical violence.", "effects": ["rep +5", "region unrest +1"]}]},
-      {"text": "Ask the engine whether to leave", "approach": "caution", "outcomes": [{"weight": 100, "text": "It displays YES, then NO, then a small portrait of you already outside. You follow the most flattering timeline.", "effects": ["hp +2", "stat wis +1"]}]}
-    ]
+      {
+        "text": "Let the engine choose every wager",
+        "approach": "greed",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The machine loses seven tiny bets to disguise one enormous certainty. The dealer applauds through professional grief.",
+            "effects": [
+              "money +24",
+              "stat int +1",
+              "region solidarity -1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The engine predicts that you will ignore its warning. You do, proving it correct and yourself poorer.",
+            "effects": [
+              "money -10",
+              "region solidarity -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Expose the crooked game",
+        "approach": "law",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The engine demonstrates that the house wins 112 percent of all money, including money not yet minted. The crowd reacts with mathematical violence.",
+            "effects": [
+              "rep +5",
+              "region unrest +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Ask the engine whether to leave",
+        "approach": "caution",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "It displays YES, then NO, then a small portrait of you already outside. You follow the most flattering timeline.",
+            "effects": [
+              "hp +2",
+              "stat wis +1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "tavern",
+    "theme": "propaganda",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_surveyor_hidden_road",
-    "locations": ["road", "forest", "mountains", "coast", "swamp"],
+    "locations": [
+      "road",
+      "forest",
+      "mountains",
+      "coast",
+      "swamp"
+    ],
     "weight": 22,
     "family": "crafted_solution",
-    "tags": ["item", "discovery", "regional"],
-    "when": ["has surveyor_kit"],
-    "text": "Your surveyor's kit insists the road continues through solid terrain. The lens and map agree so intensely that the landscape begins looking guilty.",
+    "tags": [
+      "item",
+      "discovery",
+      "regional",
+      "colonialism",
+      "voice_11"
+    ],
+    "when": [
+      "has surveyor_kit"
+    ],
+    "text": "Your surveyor's kit insists the road continues through solid terrain. The lens and map agree so intensely that the landscape begins looking guilty.\n\nNothing about \"Surveyor Hidden Road\" is accidental once you notice that the claim is legally ancient and the resistance is merely older.",
     "choices": [
-      {"text": "Follow the omitted road", "approach": "curiosity", "requires": {"item": "surveyor_kit"}, "outcomes": [{"weight": 100, "text": "The path appears only when viewed through the cracked lens. It reaches an abandoned toll house full of unpaid history and very paid coin.", "effects": ["money +16", "stat wis +1", "region prosperity +1"]}]},
-      {"text": "Correct the public maps", "approach": "mercy", "outcomes": [{"weight": 100, "text": "Merchants gain a week. Bandits gain an address. Progress is rarely tidy enough to travel alone.", "effects": ["rep +4", "region prosperity +2", "region danger +1"]}]},
-      {"text": "Keep the shortcut private", "approach": "greed", "outcomes": [{"weight": 100, "text": "A private road is an asset until everyone notices your impossible arrival times. For now, it pays.", "effects": ["money +9", "stat dex +1"]}]}
-    ]
+      {
+        "text": "Follow the omitted road",
+        "approach": "curiosity",
+        "requires": {
+          "item": "surveyor_kit"
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The path appears only when viewed through the cracked lens. It reaches an abandoned toll house full of unpaid history and very paid coin.",
+            "effects": [
+              "money +16",
+              "stat wis +1",
+              "region prosperity +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Correct the public maps",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Merchants gain a week. Bandits gain an address. Progress is rarely tidy enough to travel alone.",
+            "effects": [
+              "rep +4",
+              "region prosperity +2",
+              "region danger +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Keep the shortcut private",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "A private road is an asset until everyone notices your impossible arrival times. For now, it pays.",
+            "effects": [
+              "money +9",
+              "stat dex +1",
+              "region solidarity -1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "road",
+    "theme": "colonialism",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
     "id": "r12_history_dispute",
-    "locations": ["city", "tavern", "road"],
+    "locations": [
+      "city",
+      "tavern",
+      "road"
+    ],
     "weight": 18,
     "family": "history_dispute",
-    "tags": ["history", "social", "regional"],
-    "slots": {"account": "chronicle_random"},
-    "text": "Two historians are fighting over one sentence: {account} One calls it fact. The other calls it faction-sponsored decorative memory.",
+    "tags": [
+      "history",
+      "social",
+      "regional",
+      "capital",
+      "voice_9"
+    ],
+    "slots": {
+      "account": "chronicle_random"
+    },
+    "text": "Two historians are fighting over one sentence: {account} One calls it fact. The other calls it faction-sponsored decorative memory.\n\nThe argument around \"History Dispute\" ends wherever someone finally admits that a merchant has found a way to own the risk while renting it back to everyone in danger.",
     "choices": [
-      {"text": "Trace the sentence to its first witness", "approach": "curiosity", "check": {"stat": "int", "dc": 13}, "success": [{"weight": 100, "text": "The first witness copied a tavern song, which copied a tax appeal, which copied a threat. The truth survives as the only version nobody profited from.", "effects": ["stat int +1", "learn 2", "region unrest -1"]}], "fail": [{"weight": 100, "text": "You find six first witnesses and three mutually exclusive original documents. History wins by exhaustion.", "effects": ["hp -1"]}]},
-      {"text": "Publish both accounts side by side", "approach": "honesty", "outcomes": [{"weight": 100, "text": "Readers become furious at different paragraphs, which is the closest the city has come to balanced scholarship.", "effects": ["rep +3", "region unrest +1"]}]},
-      {"text": "Write a more entertaining third version", "approach": "absurd", "check": {"stat": "cha", "dc": 12}, "success": [{"weight": 100, "text": "Your version includes a talking horse and better pacing. Within a week it is the official account, proving everyone's worst point.", "effects": ["money +8", "trait +famous"]}], "fail": [{"weight": 100, "text": "The horse's dialogue lacks period authenticity. Both historians unite to destroy you academically.", "effects": ["rep -3"]}]}
-    ]
+      {
+        "text": "Trace the sentence to its first witness",
+        "approach": "curiosity",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The first witness copied a tavern song, which copied a tax appeal, which copied a threat. The truth survives as the only version nobody profited from.",
+            "effects": [
+              "stat int +1",
+              "learn 2",
+              "region unrest -1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You find six first witnesses and three mutually exclusive original documents. History wins by exhaustion.",
+            "effects": [
+              "hp -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Publish both accounts side by side",
+        "approach": "honesty",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Readers become furious at different paragraphs, which is the closest the city has come to balanced scholarship.",
+            "effects": [
+              "rep +3",
+              "region unrest +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Write a more entertaining third version",
+        "approach": "absurd",
+        "check": {
+          "stat": "cha",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Your version includes a talking horse and better pacing. Within a week it is the official account, proving everyone's worst point.",
+            "effects": [
+              "money +8",
+              "trait +famous"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The horse's dialogue lacks period authenticity. Both historians unite to destroy you academically.",
+            "effects": [
+              "rep -3"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "capital",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   }
 ]

@@ -1,132 +1,813 @@
 [
   {
-    "id": "r14_estate_vendor", "locations": ["city", "tavern"], "weight": 16,
-    "family": "crooked_inheritance_echo", "tags": ["relationship", "economy", "consequence"],
-    "when": ["echo crooked_inheritance"], "slots": {"person": "remembered_figure"},
-    "text": "{person} has turned the disputed estate into a furniture shop. Every chair comes with a legal opinion and one refuses cash from known liars.",
+    "id": "r14_estate_vendor",
+    "locations": [
+      "city",
+      "tavern"
+    ],
+    "weight": 16,
+    "family": "crooked_inheritance_echo",
+    "tags": [
+      "relationship",
+      "economy",
+      "consequence",
+      "housing",
+      "voice_3"
+    ],
+    "when": [
+      "echo crooked_inheritance"
+    ],
+    "slots": {
+      "person": "remembered_figure"
+    },
+    "text": "{person} has turned the disputed estate into a furniture shop. Every chair comes with a legal opinion and one refuses cash from known liars.\n\nThe paperwork around \"Estate Vendor\" avoids its central fact: the property office recognizes ownership more readily than occupancy, repair, or breathing.",
     "choices": [
-      {"text": "Buy the chair that remembers testimony", "approach": "curiosity", "requires": {"money": 6}, "outcomes": [{"weight": 100, "text": "It whispers three names and an upholstery complaint.", "effects": ["money -6", "npc_rel knowledge +2", "evidence +1"]}]},
-      {"text": "Offer to settle its remaining paperwork", "approach": "law", "outcomes": [{"weight": 100, "text": "The chairs vote you temporary executor. The stools abstain.", "effects": ["npc_rel trust +2", "money +5", "rep +2"]}]}
-    ]
+      {
+        "text": "Buy the chair that remembers testimony",
+        "approach": "curiosity",
+        "requires": {
+          "money": 6
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "It whispers three names and an upholstery complaint.",
+            "effects": [
+              "money -6",
+              "npc_rel knowledge +2",
+              "evidence +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Offer to settle its remaining paperwork",
+        "approach": "law",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The chairs vote you temporary executor. The stools abstain.",
+            "effects": [
+              "npc_rel trust +2",
+              "money +5",
+              "rep +2"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "housing",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r14_estate_relic", "locations": ["road", "dungeon", "cave"], "weight": 14,
-    "family": "crooked_inheritance_echo", "tags": ["artifact", "history", "consequence"],
-    "when": ["echo crooked_inheritance"], "slots": {"record": "chronicle_random"},
-    "text": "A probate courier has mistaken an old relic route for a delivery address. Their form cites this history: {record}",
+    "id": "r14_estate_relic",
+    "locations": [
+      "road",
+      "dungeon",
+      "cave"
+    ],
+    "weight": 14,
+    "family": "crooked_inheritance_echo",
+    "tags": [
+      "artifact",
+      "history",
+      "consequence",
+      "housing",
+      "voice_0"
+    ],
+    "when": [
+      "echo crooked_inheritance"
+    ],
+    "slots": {
+      "record": "chronicle_random"
+    },
+    "text": "A probate courier has mistaken an old relic route for a delivery address. Their form cites this history: {record}\n\nThe file titled \"Estate Relic\" makes the arrangement plain: someone bought the neighborhood as an investment and has not yet learned it contains people.",
     "choices": [
-      {"text": "Correct the route before the relic vanishes", "approach": "honesty", "check": {"stat": "int", "dc": 12}, "success": [{"weight": 100, "text": "The courier redraws the route and pays you in legal gratitude, which is apparently gold.", "effects": ["money +8", "rep +2"]}], "fail": [{"weight": 100, "text": "The relic is delivered to a cave with excellent standing.", "effects": ["stat wis +1"]}]},
-      {"text": "Sign as the cave", "approach": "absurd", "outcomes": [{"weight": 100, "text": "The signature is accepted. Geology has weak identity controls.", "effects": ["loot fine", "trait +famous"]}]}
-    ]
+      {
+        "text": "Correct the route before the relic vanishes",
+        "approach": "honesty",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "The courier redraws the route and pays you in legal gratitude, which is apparently gold.",
+            "effects": [
+              "money +8",
+              "rep +2"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The relic is delivered to a cave with excellent standing.",
+            "effects": [
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sign as the cave",
+        "approach": "absurd",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The signature is accepted. Geology has weak identity controls.",
+            "effects": [
+              "loot fine",
+              "trait +famous"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "road",
+    "theme": "housing",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r14_refugee_apprentice", "locations": ["city", "tavern", "coast"], "weight": 17,
-    "family": "refugee_echo", "tags": ["relationship", "regional", "craft"],
-    "when": ["echo refugee_bells"], "slots": {"person": "figure_alive"},
-    "text": "A former refugee now apprentices under {person}. Their medicine works, their paperwork does not, and the guild recognizes only one of those skills.",
+    "id": "r14_refugee_apprentice",
+    "locations": [
+      "city",
+      "tavern",
+      "coast"
+    ],
+    "weight": 17,
+    "family": "refugee_echo",
+    "tags": [
+      "relationship",
+      "regional",
+      "craft",
+      "anti_genocide",
+      "voice_9"
+    ],
+    "when": [
+      "echo refugee_bells"
+    ],
+    "slots": {
+      "person": "figure_alive"
+    },
+    "text": "A former refugee now apprentices under {person}. Their medicine works, their paperwork does not, and the guild recognizes only one of those skills.\n\nThe argument around \"Refugee Apprentice\" ends wherever someone finally admits that the refugees have been asked to prove they fled an event the authorities claim never happened.",
     "choices": [
-      {"text": "Sponsor the apprentice's examination", "approach": "mercy", "requires": {"money": 5}, "outcomes": [{"weight": 100, "text": "The practical exam saves two patients. The written exam injures a clerk.", "effects": ["money -5", "region prosperity +1", "npc_rel affection +2"]}]},
-      {"text": "Teach them to weaponize the paperwork", "approach": "wit", "outcomes": [{"weight": 100, "text": "By lunch they are licensed, tenured, and investigating the exam board.", "effects": ["stat int +1", "region unrest +1", "npc_rel respect +2"]}]}
-    ]
+      {
+        "text": "Sponsor the apprentice's examination",
+        "approach": "mercy",
+        "requires": {
+          "money": 5
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The practical exam saves two patients. The written exam injures a clerk.",
+            "effects": [
+              "money -5",
+              "region prosperity +1",
+              "npc_rel affection +2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Teach them to weaponize the paperwork",
+        "approach": "wit",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "By lunch they are licensed, tenured, and investigating the exam board.",
+            "effects": [
+              "stat int +1",
+              "region unrest +1",
+              "npc_rel respect +2"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "anti_genocide",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r14_refugee_quarter", "locations": ["city", "road"], "weight": 15,
-    "family": "refugee_echo", "tags": ["regional", "economy", "social"],
-    "when": ["echo refugee_bells"],
-    "text": "The refugee quarter has become the city's busiest market. Locals complain while standing in line for its bread.",
+    "id": "r14_refugee_quarter",
+    "locations": [
+      "city",
+      "road"
+    ],
+    "weight": 15,
+    "family": "refugee_echo",
+    "tags": [
+      "regional",
+      "economy",
+      "social",
+      "anti_genocide",
+      "voice_10"
+    ],
+    "when": [
+      "echo refugee_bells"
+    ],
+    "text": "The refugee quarter has become the city's busiest market. Locals complain while standing in line for its bread.\n\nA plaque may eventually misdescribe \"Refugee Quarter\". For now, the useful truth is that someone preserved the testimony because power was already preparing to forget.",
     "choices": [
-      {"text": "Invest in permanent stalls", "approach": "mercy", "outcomes": [{"weight": 100, "text": "Canvas becomes timber. Temporary addresses become family names.", "effects": ["money -5", "region prosperity +2", "region unrest -1"]}]},
-      {"text": "Collect the old temporary permit fees", "approach": "greed", "outcomes": [{"weight": 100, "text": "You discover the permits were printed on edible paper for a reason.", "effects": ["money +10", "region unrest +2"]}]}
-    ]
+      {
+        "text": "Invest in permanent stalls",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Canvas becomes timber. Temporary addresses become family names.",
+            "effects": [
+              "money -5",
+              "region prosperity +2",
+              "region unrest -1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Collect the old temporary permit fees",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You discover the permits were printed on edible paper for a reason.",
+            "effects": [
+              "money +10",
+              "region unrest +2"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "anti_genocide",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r14_trade_thieves", "locations": ["city", "road", "tavern"], "weight": 18,
-    "family": "trade_echo", "tags": ["economy", "danger", "consequence"],
-    "when": ["echo contagious_trade"],
-    "text": "Prosperity has attracted a professional thieves' conference. Registration includes a complimentary replacement wallet.",
+    "id": "r14_trade_thieves",
+    "locations": [
+      "city",
+      "road",
+      "tavern"
+    ],
+    "weight": 18,
+    "family": "trade_echo",
+    "tags": [
+      "economy",
+      "danger",
+      "consequence",
+      "post_scarcity",
+      "voice_9"
+    ],
+    "when": [
+      "echo contagious_trade"
+    ],
+    "text": "Prosperity has attracted a professional thieves' conference. Registration includes a complimentary replacement wallet.\n\nThe argument around \"Trade Thieves\" ends wherever someone finally admits that the technology eliminated want before a committee restored it for market stability.",
     "choices": [
-      {"text": "Attend undercover", "approach": "caution", "check": {"stat": "dex", "dc": 13}, "success": [{"weight": 100, "text": "You recover three purses, including your own future one.", "effects": ["money +12", "region danger -1"]}], "fail": [{"weight": 100, "text": "Your disguise is stolen while you are wearing it.", "effects": ["money -7", "region danger +1"]}]},
-      {"text": "Sell them better conference badges", "approach": "greed", "outcomes": [{"weight": 100, "text": "Every badge opens one door. None opens the advertised door.", "effects": ["money +14", "trait +wanted"]}]}
-    ]
+      {
+        "text": "Attend undercover",
+        "approach": "caution",
+        "check": {
+          "stat": "dex",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You recover three purses, including your own future one.",
+            "effects": [
+              "money +12",
+              "region danger -1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "Your disguise is stolen while you are wearing it.",
+            "effects": [
+              "money -7",
+              "region danger +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sell them better conference badges",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Every badge opens one door. None opens the advertised door.",
+            "effects": [
+              "money +14",
+              "trait +wanted",
+              "region solidarity -1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "post_scarcity",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r14_trade_prices", "locations": ["city", "coast", "tavern"], "weight": 15,
-    "family": "trade_echo", "tags": ["economy", "regional", "absurd"],
-    "when": ["echo contagious_trade"],
-    "text": "The strongbox boom has made locks cheap and keys speculative. A key broker offers futures in doors not yet built.",
+    "id": "r14_trade_prices",
+    "locations": [
+      "city",
+      "coast",
+      "tavern"
+    ],
+    "weight": 15,
+    "family": "trade_echo",
+    "tags": [
+      "economy",
+      "regional",
+      "absurd",
+      "housing",
+      "voice_3"
+    ],
+    "when": [
+      "echo contagious_trade"
+    ],
+    "text": "The strongbox boom has made locks cheap and keys speculative. A key broker offers futures in doors not yet built.\n\nThe paperwork around \"Trade Prices\" avoids its central fact: housing has become scarce since a distant heir discovered that doors can collect income.",
     "choices": [
-      {"text": "Buy the boring physical key", "approach": "caution", "requires": {"money": 4}, "outcomes": [{"weight": 100, "text": "It opens a nearby cupboard full of better keys.", "effects": ["money -4", "item rusty_key", "loot common"]}]},
-      {"text": "Short the door market", "approach": "greed", "check": {"stat": "int", "dc": 13}, "success": [{"weight": 100, "text": "Three doors collapse financially. You are paid not to explain.", "effects": ["money +18"]}], "fail": [{"weight": 100, "text": "You now owe rent to a doorway.", "effects": ["money -6"]}]}
-    ]
+      {
+        "text": "Buy the boring physical key",
+        "approach": "caution",
+        "requires": {
+          "money": 4
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "It opens a nearby cupboard full of better keys.",
+            "effects": [
+              "money -4",
+              "item rusty_key",
+              "loot common"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Short the door market",
+        "approach": "greed",
+        "check": {
+          "stat": "int",
+          "dc": 13
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "Three doors collapse financially. You are paid not to explain.",
+            "effects": [
+              "money +18",
+              "region solidarity -1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "You now owe rent to a doorway.",
+            "effects": [
+              "money -6",
+              "region solidarity -1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "housing",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r14_saint_followers", "locations": ["city", "road", "tavern"], "weight": 17,
-    "family": "saint_echo", "tags": ["divine", "relationship", "consequence"],
-    "when": ["echo false_saint"], "slots": {"person": "remembered_figure"},
-    "text": "The false saint's former followers have elected {person} their interim skeptic. They now require proof before breakfast.",
+    "id": "r14_saint_followers",
+    "locations": [
+      "city",
+      "road",
+      "tavern"
+    ],
+    "weight": 17,
+    "family": "saint_echo",
+    "tags": [
+      "divine",
+      "relationship",
+      "consequence",
+      "faith",
+      "voice_9"
+    ],
+    "when": [
+      "echo false_saint"
+    ],
+    "slots": {
+      "person": "remembered_figure"
+    },
+    "text": "The false saint's former followers have elected {person} their interim skeptic. They now require proof before breakfast.\n\nThe argument around \"Saint Followers\" ends wherever someone finally admits that the temple owns gold cups while its god keeps asking why the neighbors are hungry.",
     "choices": [
-      {"text": "Help write a doctrine of reasonable doubt", "approach": "wisdom", "outcomes": [{"weight": 100, "text": "The first commandment is a footnote asking for sources.", "effects": ["npc_rel respect +2", "doubt -1", "stat wis +1"]}]},
-      {"text": "Sell authenticated pieces of the old halo", "approach": "greed", "outcomes": [{"weight": 100, "text": "Each piece is authentic. The halo was mostly pieces.", "effects": ["money +12", "npc_rel trust -2"]}]}
-    ]
+      {
+        "text": "Help write a doctrine of reasonable doubt",
+        "approach": "wisdom",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The first commandment is a footnote asking for sources.",
+            "effects": [
+              "npc_rel respect +2",
+              "doubt -1",
+              "stat wis +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sell authenticated pieces of the old halo",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Each piece is authentic. The halo was mostly pieces.",
+            "effects": [
+              "money +12",
+              "npc_rel trust -2"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "faith",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r14_saint_shrine", "locations": ["forest", "swamp", "mountains"], "weight": 14,
-    "family": "saint_echo", "tags": ["divine", "regional", "history"],
-    "when": ["echo false_saint"], "slots": {"god": "god"},
-    "text": "A roadside shrine now honors honest mistakes. Someone has left {god} a confession, two onions, and a forged receipt for both onions.",
+    "id": "r14_saint_shrine",
+    "locations": [
+      "forest",
+      "swamp",
+      "mountains"
+    ],
+    "weight": 14,
+    "family": "saint_echo",
+    "tags": [
+      "divine",
+      "regional",
+      "history",
+      "faith",
+      "voice_3"
+    ],
+    "when": [
+      "echo false_saint"
+    ],
+    "slots": {
+      "god": "god"
+    },
+    "text": "A roadside shrine now honors honest mistakes. Someone has left {god} a confession, two onions, and a forged receipt for both onions.\n\nThe paperwork around \"Saint Shrine\" avoids its central fact: the demon has a mother, a lunch break, and a complaint about unsafe summoning circles.",
     "choices": [
-      {"text": "Add a mistake of your own", "approach": "honesty", "outcomes": [{"weight": 100, "text": "The shrine accepts it without improvement.", "effects": ["favor +1", "trait -wanted"]}]},
-      {"text": "Correct the receipt", "approach": "law", "outcomes": [{"weight": 100, "text": "The onions are innocent. The handwriting is not.", "effects": ["evidence +1", "stat int +1"]}]}
-    ]
+      {
+        "text": "Add a mistake of your own",
+        "approach": "honesty",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The shrine accepts it without improvement.",
+            "effects": [
+              "favor +1",
+              "trait -wanted"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Correct the receipt",
+        "approach": "law",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The onions are innocent. The handwriting is not.",
+            "effects": [
+              "evidence +1",
+              "stat int +1",
+              "region pressure +1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "forest",
+    "theme": "faith",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r14_guild_vendor", "locations": ["city", "tavern"], "weight": 17,
-    "family": "guild_echo", "tags": ["economy", "relationship", "social"],
-    "when": ["echo guild_schism"], "slots": {"person": "figure_alive"},
-    "text": "Under the reformed charter, {person} has opened a cooperative shop where every price includes the argument that produced it.",
+    "id": "r14_guild_vendor",
+    "locations": [
+      "city",
+      "tavern"
+    ],
+    "weight": 17,
+    "family": "guild_echo",
+    "tags": [
+      "economy",
+      "relationship",
+      "social",
+      "capital",
+      "voice_6"
+    ],
+    "when": [
+      "echo guild_schism"
+    ],
+    "slots": {
+      "person": "figure_alive"
+    },
+    "text": "Under the reformed charter, {person} has opened a cooperative shop where every price includes the argument that produced it.\n\nNobody affected by \"Guild Vendor\" was consulted. The part authority avoids is that the ledger reports excellent health and requests that nobody examine the patient.",
     "choices": [
-      {"text": "Buy without reopening negotiations", "approach": "mercy", "outcomes": [{"weight": 100, "text": "The staff applaud your restraint and quietly lower the price.", "effects": ["money -4", "loot fine", "npc_rel trust +2"]}]},
-      {"text": "Audit the cooperative books", "approach": "law", "check": {"stat": "int", "dc": 12}, "success": [{"weight": 100, "text": "You find one error and seventeen democratic explanations.", "effects": ["money +7", "region prosperity +1"]}], "fail": [{"weight": 100, "text": "The books elect not to balance today.", "effects": ["stat wis +1"]}]}
-    ]
+      {
+        "text": "Buy without reopening negotiations",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The staff applaud your restraint and quietly lower the price.",
+            "effects": [
+              "money -4",
+              "loot fine",
+              "npc_rel trust +2"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Audit the cooperative books",
+        "approach": "law",
+        "check": {
+          "stat": "int",
+          "dc": 12
+        },
+        "success": [
+          {
+            "weight": 100,
+            "text": "You find one error and seventeen democratic explanations.",
+            "effects": [
+              "money +7",
+              "region prosperity +1"
+            ]
+          }
+        ],
+        "fail": [
+          {
+            "weight": 100,
+            "text": "The books elect not to balance today.",
+            "effects": [
+              "stat wis +1",
+              "region pressure +1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "city",
+    "theme": "capital",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r14_guild_protege", "locations": ["road", "city", "coast"], "weight": 15,
-    "family": "guild_echo", "tags": ["relationship", "quest", "consequence"],
-    "when": ["echo guild_schism"], "slots": {"pair": "social_pair"},
-    "text": "The new guild sends {pair} and {pair_other} to recruit beyond the city. Their {pair_kind} arrangement was not covered by the travel policy.",
+    "id": "r14_guild_protege",
+    "locations": [
+      "road",
+      "city",
+      "coast"
+    ],
+    "weight": 15,
+    "family": "guild_echo",
+    "tags": [
+      "relationship",
+      "quest",
+      "consequence",
+      "kindness",
+      "voice_2"
+    ],
+    "when": [
+      "echo guild_schism"
+    ],
+    "slots": {
+      "pair": "social_pair"
+    },
+    "text": "The new guild sends {pair} and {pair_other} to recruit beyond the city. Their {pair_kind} arrangement was not covered by the travel policy.\n\nAsk who pays for \"Guild Protege\" and the answer begins here: a small mercy cannot repair the system, but it can keep one person alive to organize tomorrow.",
     "choices": [
-      {"text": "Teach them how to share credit", "approach": "mercy", "outcomes": [{"weight": 100, "text": "They split the credit unevenly but admit it in writing.", "effects": ["network +2", "region prosperity +1"]}]},
-      {"text": "Make it a recruitment contest", "approach": "authority", "outcomes": [{"weight": 100, "text": "They recruit everyone, including each other's witnesses.", "effects": ["network -2", "rep +4", "region pressure +1"]}]}
-    ]
+      {
+        "text": "Teach them how to share credit",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "They split the credit unevenly but admit it in writing.",
+            "effects": [
+              "network +2",
+              "region prosperity +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Make it a recruitment contest",
+        "approach": "authority",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "They recruit everyone, including each other's witnesses.",
+            "effects": [
+              "network -2",
+              "rep +4",
+              "region pressure +1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "road",
+    "theme": "kindness",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r14_walking_post", "locations": ["road", "forest", "coast"], "weight": 17,
-    "family": "walking_echo", "tags": ["regional", "history", "absurd"],
-    "when": ["echo walking_town"],
-    "text": "Mail from the walking town arrives before the town does. The postmark lists a latitude, a mood, and 'probably Tuesday.'",
+    "id": "r14_walking_post",
+    "locations": [
+      "road",
+      "forest",
+      "coast"
+    ],
+    "weight": 17,
+    "family": "walking_echo",
+    "tags": [
+      "regional",
+      "history",
+      "absurd",
+      "freedom",
+      "voice_10"
+    ],
+    "when": [
+      "echo walking_town"
+    ],
+    "text": "Mail from the walking town arrives before the town does. The postmark lists a latitude, a mood, and 'probably Tuesday.'\n\nA plaque may eventually misdescribe \"Walking Post\". For now, the useful truth is that the authorities call this smuggling because rescue would imply a duty.",
     "choices": [
-      {"text": "Carry the mail toward its predicted route", "approach": "mercy", "outcomes": [{"weight": 100, "text": "You meet the town halfway. It claims this counts as municipal efficiency.", "effects": ["money +7", "region pressure -1", "rep +3"]}]},
-      {"text": "Open the letter addressed to the road", "approach": "curiosity", "outcomes": [{"weight": 100, "text": "The road is invited to a bridge opening and has nothing suitable to wear.", "effects": ["stat wis +1", "region prosperity +1"]}]}
-    ]
+      {
+        "text": "Carry the mail toward its predicted route",
+        "approach": "mercy",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "You meet the town halfway. It claims this counts as municipal efficiency.",
+            "effects": [
+              "money +7",
+              "region pressure -1",
+              "rep +3"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Open the letter addressed to the road",
+        "approach": "curiosity",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The road is invited to a bridge opening and has nothing suitable to wear.",
+            "effects": [
+              "stat wis +1",
+              "region prosperity +1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "road",
+    "theme": "freedom",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r14_walking_vendor", "locations": ["mountains", "road", "city"], "weight": 15,
-    "family": "walking_echo", "tags": ["economy", "regional", "absurd"],
-    "when": ["echo walking_town"],
-    "text": "A vendor sells souvenirs from neighborhoods that have not arrived yet. The snow globe contains tomorrow's weather and a tiny tax collector chasing it.",
+    "id": "r14_walking_vendor",
+    "locations": [
+      "mountains",
+      "road",
+      "city"
+    ],
+    "weight": 15,
+    "family": "walking_echo",
+    "tags": [
+      "economy",
+      "regional",
+      "absurd",
+      "capital",
+      "voice_6"
+    ],
+    "when": [
+      "echo walking_town"
+    ],
+    "text": "A vendor sells souvenirs from neighborhoods that have not arrived yet. The snow globe contains tomorrow's weather and a tiny tax collector chasing it.\n\nNobody affected by \"Walking Vendor\" was consulted. The part authority avoids is that the ledger reports excellent health and requests that nobody examine the patient.",
     "choices": [
-      {"text": "Buy tomorrow's weather", "approach": "curiosity", "requires": {"money": 5}, "outcomes": [{"weight": 100, "text": "Tomorrow is damp, embarrassed, and nonrefundable.", "effects": ["money -5", "loot fine"]}]},
-      {"text": "Sell the vendor your current address", "approach": "greed", "outcomes": [{"weight": 100, "text": "They pay well. By evening, your address has moved without you.", "effects": ["money +11", "region unrest +1"]}]}
-    ]
+      {
+        "text": "Buy tomorrow's weather",
+        "approach": "curiosity",
+        "requires": {
+          "money": 5
+        },
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Tomorrow is damp, embarrassed, and nonrefundable.",
+            "effects": [
+              "money -5",
+              "loot fine"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Sell the vendor your current address",
+        "approach": "greed",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "They pay well. By evening, your address has moved without you.",
+            "effects": [
+              "money +11",
+              "region unrest +1"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "mountains",
+    "theme": "capital",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   },
   {
-    "id": "r14_wrong_verdict_returns", "locations": [], "weight": 1,
-    "family": "wrong_verdict", "tags": ["mystery", "relationship", "consequence"],
-    "slots": {"person": "remembered_figure"},
-    "text": "{person}, once named by your failed verdict, returns with witnesses, documents, and the calm of someone who has rehearsed this meeting for days.",
+    "id": "r14_wrong_verdict_returns",
+    "locations": [],
+    "weight": 1,
+    "family": "wrong_verdict",
+    "tags": [
+      "mystery",
+      "relationship",
+      "consequence",
+      "liberalism",
+      "voice_3"
+    ],
+    "slots": {
+      "person": "remembered_figure"
+    },
+    "text": "{person}, once named by your failed verdict, returns with witnesses, documents, and the calm of someone who has rehearsed this meeting for days.\n\nThe paperwork around \"Wrong Verdict Returns\" avoids its central fact: the council agrees something must be done after a respectful period of doing nothing.",
     "choices": [
-      {"text": "Hear the appeal in full", "approach": "justice", "outcomes": [{"weight": 100, "text": "The record bends back toward truth. It does not erase the cell door.", "effects": ["npc_rel trust +2", "npc_rel grudge -3", "evidence +1", "doubt +1"]}]},
-      {"text": "Insist the old verdict was close enough", "approach": "authority", "outcomes": [{"weight": 100, "text": "Close enough becomes the first line of their campaign against you.", "effects": ["npc_rel grudge +3", "trait +wanted", "region unrest +2"]}]}
-    ]
+      {
+        "text": "Hear the appeal in full",
+        "approach": "justice",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "The record bends back toward truth. It does not erase the cell door.",
+            "effects": [
+              "npc_rel trust +2",
+              "npc_rel grudge -3",
+              "evidence +1",
+              "doubt +1"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Insist the old verdict was close enough",
+        "approach": "authority",
+        "outcomes": [
+          {
+            "weight": 100,
+            "text": "Close enough becomes the first line of their campaign against you.",
+            "effects": [
+              "npc_rel grudge +3",
+              "trait +wanted",
+              "region unrest +2"
+            ]
+          }
+        ]
+      }
+    ],
+    "primary": "special",
+    "theme": "liberalism",
+    "remaster": "v17",
+    "remaster_layout": "suffix"
   }
 ]
