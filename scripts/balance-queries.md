@@ -62,3 +62,29 @@ DELETE FROM deaths WHERE day < CAST(strftime('%s','now')/86400 AS INT) - 60
 DELETE FROM deeds WHERE day < CAST(strftime('%s','now')/86400 AS INT) - 60
   AND day < 7000000;
 ```
+
+## Release 14 aggregate tuning
+
+The game now exposes the same privacy-safe rollup inside Options under Balance
+Dashboard. These queries remain useful for a deeper pass.
+
+```sql
+-- Choices with a meaningful sample that almost nobody takes.
+WITH totals AS (
+  SELECT event, SUM(n) AS event_n FROM telemetry_rollup GROUP BY event
+)
+SELECT r.event, r.choice, SUM(r.n) AS choice_n, t.event_n,
+       ROUND(100.0 * SUM(r.n) / t.event_n, 1) AS choice_pct
+FROM telemetry_rollup r JOIN totals t ON t.event = r.event
+GROUP BY r.event, r.choice HAVING t.event_n >= 20 AND choice_pct < 8
+ORDER BY choice_pct, t.event_n DESC;
+```
+
+```sql
+-- Cards associated with run endings or suspiciously short repeat gaps.
+SELECT event, SUM(n) AS shown, SUM(run_ends) AS endings,
+       ROUND(1.0 * SUM(gap_total) / SUM(n), 1) AS average_gap
+FROM telemetry_rollup GROUP BY event
+HAVING shown >= 10
+ORDER BY endings DESC, average_gap ASC LIMIT 30;
+```

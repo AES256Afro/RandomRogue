@@ -37,7 +37,8 @@ public:
 private:
     enum Screen { TITLE, CLASSPICK, AMBITION, TRAVEL, EVENT, OUTCOME, DEATH,
                   INVENTORY, INFO, VENDOR, WORLDMAP, CHRONICLE, SAGA, REPLAY,
-                  OPTIONS, CRAFT, JOURNAL, DIRECTOR };
+                  OPTIONS, CRAFT, JOURNAL, DIRECTOR, INVESTIGATION, NETWORK,
+                  BALANCE };
 
     // A hired sword, a talking badger, a disgraced accountant (P5).
     struct Companion {
@@ -90,6 +91,7 @@ private:
     };
     struct Mystery {
         bool active = false, solved = false, tried = false, correctVerdict = false;
+        bool appealed = false;
         int culprit = -1, victim = -1, site = -1, artifact = -1, decoy = -1;
         int clues = 0, evidence = 0, doubt = 0, accused = -1;
         std::string title, secret, publicStory;
@@ -148,6 +150,9 @@ private:
     void queueConsequence(int days, const std::string& eventId,
                           const std::string& summary);
     void activateDueConsequence();
+    void resolveStaleConsequences();
+    void convergeStory(const std::string& family);
+    std::set<std::string> activeStoryFamilies() const;
     NpcRelation& relation(int figure);
     const NpcRelation* relationIfKnown(int figure) const;
     const SocialTie* socialTieFor(int figure) const;
@@ -167,6 +172,9 @@ private:
     void drawCraft(Vector2 mouse);
     void drawJournal(Vector2 mouse);
     void drawDirector(Vector2 mouse);
+    void drawInvestigation(Vector2 mouse);
+    void drawNetwork(Vector2 mouse);
+    void drawBalance(Vector2 mouse);
     bool craftRecipe(const ItemRecipe& recipe);
     void drawIntro(Vector2 mouse); // first-run how-to cards (R7)
     // Shared worlds (R7): daily and weekly seeds and their board keys.
@@ -254,6 +262,8 @@ private:
     int scheduledRegion_ = -1;
     std::vector<RegionState> regionStates_;
     Mystery mystery_;
+    std::set<std::string> storyEchoes_;
+    std::map<std::string, int> storyEchoRegions_;
     int eventSerial_ = 0;
     std::map<std::string, int> lastEventSerial_;
     int currentDirectorScore_ = 100;
@@ -365,6 +375,11 @@ private:
     int lastBoardKey_ = -2; // refetch scores/ghosts/deeds when this changes
 
     int textScroll_ = 0; // line offset of the scrollable reader (R9b)
+    int networkPage_ = 0;
+    int networkSelected_ = -1;
+    std::string balanceJson_;
+    bool balanceRequested_ = false;
+    int autonomousArcResolutions_ = 0;
 
     // audio / juice / meta
     AudioBank audio_;

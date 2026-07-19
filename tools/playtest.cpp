@@ -34,7 +34,9 @@ struct BotState {
     int clues = 0;
     int evidence = 0, doubt = 0;
     bool accused = false, tried = false, correctVerdict = false;
+    bool appealed = false;
     bool mysterySolved = false;
+    std::set<std::string> echoes;
     std::vector<std::pair<int, std::string>> scheduled;
 };
 
@@ -69,10 +71,12 @@ static bool botCond(BotState& s, const std::string& cond) {
     if (a == "mystery_active") return !s.mysterySolved;
     if (a == "mystery_solved") return s.mysterySolved;
     if (a == "mystery_tried") return s.tried;
+    if (a == "mystery_appealed") return s.appealed;
     if (a == "verdict_correct") return s.correctVerdict;
     if (a == "accused") return s.accused;
     if (a == "region") return s.rng.chance(22);
     if (a == "neighbor") return s.rng.chance(22);
+    if (a == "echo") return s.echoes.count(b) > 0;
     auto cmp = [&](int lhs) {
         int rhs = atoi(cc.c_str());
         if (b == ">") return lhs > rhs;
@@ -274,6 +278,10 @@ int main(int argc, char** argv) {
                             s.tried = true;
                             s.correctVerdict = s.accused && s.evidence >= 2 && s.evidence > s.doubt;
                             s.mysterySolved = s.correctVerdict;
+                        }
+                        else if (verb == "converge") {
+                            std::string family; fs >> family;
+                            if (!family.empty()) s.echoes.insert(family);
                         }
                         else if (verb == "die") { s.c.dead = true; }
                         else if (verb == "finish") { s.c.dead = true; s.finishedWell = true; finishEvents[ev->id]++; }

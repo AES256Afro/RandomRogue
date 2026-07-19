@@ -80,6 +80,10 @@ int main(int argc, char** argv) {
     int neutral = director.score(unrelated, story);
     ok &= expect(connected > neutral,
                  "known NPCs must raise relationship event relevance");
+    story.activeFamilies.insert("meeting");
+    story.arcBeatDue = true;
+    ok &= expect(director.score(relationship, story) > connected + 20,
+                 "a due active arc must reserve strong Director priority");
     std::vector<std::string> explanation = director.explain(relationship, story);
     bool explainsScore = false, explainsContext = false;
     for (const std::string& line : explanation) {
@@ -88,6 +92,8 @@ int main(int argc, char** argv) {
     }
     ok &= expect(explainsScore && explainsContext,
                  "Director diagnostics must explain score and context without outcomes");
+    story.activeFamilies.clear();
+    story.arcBeatDue = false;
     director.record(relationship, &relationship.choices[0], 2);
     ok &= expect(director.score(relationship, story) < director.score(unrelated, story),
                  "recent event families must cool down below fresh material");

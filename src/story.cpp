@@ -121,6 +121,7 @@ int StoryDirector::score(const Event& event, const StoryContext& ctx) const {
     if (recentCount(recentIds_, event.id, 20) > 0) result = 8;
 
     const std::string family = familyFor(event);
+    if (ctx.activeFamilies.count(family)) result += ctx.arcBeatDue ? 95 : 38;
     int familyHeat = recentCount(recentFamilies_, family, 8);
     if (familyHeat > 0) result = result * (familyHeat >= 2 ? 35 : 62) / 100;
 
@@ -175,6 +176,9 @@ std::vector<std::string> StoryDirector::explain(const Event& event,
                     std::to_string(score(event, ctx)) + "%");
     lines.push_back("FAMILY " + family + "  RECENT " +
                     std::to_string(recentCount(recentFamilies_, family, 8)));
+    if (ctx.activeFamilies.count(family))
+        lines.push_back(std::string("ACTIVE ARC ") +
+                        (ctx.arcBeatDue ? "+reserved beat" : "+continuity"));
     std::string tagLine = "TAGS";
     for (const std::string& tag : tags) tagLine += " " + tag;
     lines.push_back(tagLine);

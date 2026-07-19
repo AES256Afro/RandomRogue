@@ -1,4 +1,4 @@
-// Random Rogue — entry point. Owns the window and the 320x180 virtual canvas;
+// Random Rogue - entry point. Owns the window and the 320x180 virtual canvas;
 // the Game class does everything else.
 
 #include <cmath>
@@ -20,7 +20,7 @@ Game gGame;
 
 #if defined(PLATFORM_WEB)
 // The GLFW mouse path is unreliable under emscripten, and touch needs first-
-// class handling for iPad anyway — so the web build listens to the canvas
+// class handling for iPad anyway, so the web build listens to the canvas
 // directly and feeds the game one unified pointer.
 float gPtrX = 0.0f, gPtrY = 0.0f; // canvas CSS coords
 bool gPtrPressed = false;         // edge: a press happened since last frame

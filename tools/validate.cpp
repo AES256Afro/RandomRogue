@@ -32,7 +32,7 @@ static const std::set<std::string> kVerbs = {
     "slay_beast", "legacy_bless", "learn", "npc_unmark", "rival_dies", "favor",
     "schedule", "npc_rel", "npc_know", "clue", "mystery_clue", "mystery_solve",
     "region", "region_flag", "region_spread", "network", "network_rel",
-    "evidence", "doubt", "mystery_accuse", "mystery_trial"};
+    "evidence", "doubt", "mystery_accuse", "mystery_trial", "converge"};
 static const std::set<std::string> kSlotQueries = {
     "chronicle_random", "chronicle_news", "artifact_here", "figure_alive",
     "figure_dead", "god", "beast_here", "stranger_here", "ghost_here",
@@ -61,9 +61,10 @@ static bool validWhen(const std::string& w) {
                                                 "ship", "!ship"};
     if (a == "mystery_active" || a == "mystery_solved" ||
         a == "mystery_tried" || a == "verdict_correct" || a == "accused" ||
-        a == "social_known") return true;
+        a == "social_known" || a == "mystery_appealed") return true;
     static const std::set<std::string> named = {"trait", "!trait", "has", "!has", "npc",
-                                                "season", "region", "neighbor", "network"};
+                                                "season", "region", "neighbor", "network",
+                                                "echo"};
     static const std::set<std::string> cmp = {"rep", "money", "credits", "hp", "day",
                                               "contracts", "clues", "evidence", "doubt"};
     static const std::set<std::string> ops = {">", "<", ">=", "<=", "=="};

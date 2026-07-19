@@ -23,16 +23,26 @@
     }
     #canvas {
       display: block;
-      width: 100vw;
-      height: 100vh;
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: min(100vw, calc(100vh * 16 / 9));
+      height: min(100vh, calc(100vw * 9 / 16));
       image-rendering: pixelated;
       image-rendering: crisp-edges;
       touch-action: none;
+    }
+    #status-note {
+      display: none; position: fixed; z-index: 5; left: 50%; bottom: 10px;
+      transform: translateX(-50%); padding: 9px 12px; border: 2px solid #ffcd75;
+      background: #181425; color: #ffcd75; font: 12px monospace; cursor: pointer;
+      max-width: calc(100vw - 24px); text-align: center;
     }
   </style>
 </head>
 <body>
   <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+  <div id="status-note" role="status" aria-live="polite"></div>
   <script>
     // Browsers suspend AudioContexts created before a user gesture, which
     // silenced the whole soundtrack. Capture every context the engine makes
@@ -78,9 +88,35 @@
     // PWA: offline play after the first visit (R5).
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
-        navigator.serviceWorker.register('sw.js').catch(function () {});
+        navigator.serviceWorker.register('sw.js').then(function (registration) {
+          registration.addEventListener('updatefound', function () {
+            var worker = registration.installing;
+            if (!worker) return;
+            worker.addEventListener('statechange', function () {
+              if (worker.state === 'installed' && navigator.serviceWorker.controller) {
+                var note = document.getElementById('status-note');
+                note.textContent = 'A new version is ready. Tap to reload.';
+                note.style.display = 'block';
+                note.onclick = function () { location.reload(); };
+              }
+            });
+          });
+        }).catch(function () {});
       });
     }
+    function showConnectionState() {
+      var note = document.getElementById('status-note');
+      if (!navigator.onLine) {
+        note.textContent = 'Offline mode. Your run is still saved on this device.';
+        note.style.display = 'block';
+        note.onclick = null;
+      } else if (note.textContent.indexOf('Offline mode') === 0) {
+        note.style.display = 'none';
+      }
+    }
+    window.addEventListener('offline', showConnectionState);
+    window.addEventListener('online', showConnectionState);
+    showConnectionState();
   </script>
   {{{ SCRIPT }}}
 </body>

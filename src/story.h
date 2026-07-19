@@ -2,6 +2,7 @@
 
 #include <deque>
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -21,6 +22,8 @@ struct StoryContext {
     bool war = false;
     bool plague = false;
     bool mystery = false;
+    std::set<std::string> activeFamilies;
+    bool arcBeatDue = false;
 };
 
 class StoryDirector {

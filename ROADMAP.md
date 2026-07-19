@@ -439,3 +439,31 @@ The audit's design program, executed:
 - **Private balance tuning** - optional browser telemetry is aggregated at
   ingestion in Cloudflare D1. It stores no name, seed, free text, address, or
   individual play record, and can be switched off in Options.
+
+---
+
+## Release 14 - Endings Leak
+
+- **Consequence convergence** - the six connected stories now leave persistent
+  echoes. Refugees become apprentices and merchants, prosperity attracts
+  thieves, false faith reorganizes believers, guild reform changes vendors,
+  the walking town leaves mail and migrants, and inheritance disputes move
+  furniture, money, and relics through the wider game.
+- **Arc pacing** - the Director recognizes active families and reserves extra
+  priority for a due story beat. Multiple arcs can run together. The Ledger
+  shows vague progress without spoiling the next card. Threads ignored for
+  twelve days resolve on their own and enter the Chronicle.
+- **Investigation Board** - suspects now have inspectable motives, alibis, and
+  deterministic testimony reliability. Players can mark either suspect, see
+  case strength, and appeal a failed verdict. Wrongly accused people remember,
+  build grudges, recruit allies, and return later.
+- **People and Connections** - the Story Ledger opens a dedicated browser for
+  known NPCs, opinions, debts, grudges, and social ties. Unknown connections
+  remain hidden until the player learns enough about that person.
+- **Balance Dashboard** - local run diagnostics and privacy-safe D1 aggregate
+  counters expose repetition gaps, death association, location pressure, arc
+  backlog, and story-echo reach without storing individual play records.
+- **Reliability and access** - autosaves keep a last-known-good backup and
+  recover it when the newest save is damaged. Reader text has a larger mode,
+  buttons have a high-contrast mode, music remains muted by default, and long
+  readers remain scrollable on touch screens.

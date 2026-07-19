@@ -81,6 +81,17 @@ EM_JS(void, rr_queue_telemetry, (const char* json, int flush), {
     } catch (e) {}
 });
 EM_JS(void, rr_clear_telemetry, (), { window.__rrTelemetry = []; });
+EM_JS(void, rr_fetch_balance, (), {
+    window.__rrBalance = "";
+    try { fetch('https://random-rogue.com/__telemetry_stats').then(function(r){ return r.text(); }).then(function(t){ window.__rrBalance = t; }).catch(function(){ window.__rrBalance = "[]"; }); } catch (e) { window.__rrBalance = "[]"; }
+});
+EM_JS(char*, rr_get_balance, (), {
+    var s = window.__rrBalance || "";
+    var len = lengthBytesUTF8(s) + 1;
+    var buf = _malloc(len);
+    stringToUTF8(s, buf, len);
+    return buf;
+});
 #endif
 
 namespace {
@@ -98,8 +109,7 @@ const Color PAL_ROW   = {38, 33, 55, 255};
 
 // Word-wrap into lines without drawing; honors '\n'. The measuring half of
 // DrawTextWrapped, shared by the scrollable readers (R9b).
-std::vector<std::string> WrapLines(const std::string& text, int width) {
-    const int fs = 10;
+std::vector<std::string> WrapLines(const std::string& text, int width, int fs = 10) {
     std::vector<std::string> lines;
     std::string line, word;
     for (size_t i = 0; i <= text.size(); i++) {
@@ -323,6 +333,12 @@ std::string Game::RegionState::description() const {
     if (flags.count("refugees")) out += " while sheltering displaced neighbors";
     if (flags.count("trade_boom")) out += " amid a contagious trade boom";
     if (flags.count("spillover")) out += " under pressure from nearby trouble";
+    if (flags.count("refugee_quarter")) out += " around a permanent refugee quarter";
+    if (flags.count("faith_divided")) out += " amid a public crisis of faith";
+    if (flags.count("guild_reformed")) out += " under a newly reformed guild";
+    if (flags.count("walking_citizens")) out += " while hosting citizens of a moving town";
+    if (flags.count("disputed_estate")) out += " beside an estate with legal opinions";
+    if (flags.count("story_moved_on")) out += " after a crisis resolved without you";
     return out;
 }
 
@@ -369,6 +385,8 @@ StoryContext Game::storyContext(const std::string& location) const {
     ctx.quest = contract_.active;
     ctx.knownNpc = !npcRelations_.empty();
     ctx.mystery = mystery_.active && !mystery_.solved;
+    ctx.activeFamilies = activeStoryFamilies();
+    ctx.arcBeatDue = !scheduledNextId_.empty();
     for (const ItemInstance& item : ch_.pack)
         if (item.artifactId >= 0) ctx.artifact = true;
     ctx.plague = history_.plaguedRegions.count(currentRegion_) > 0;
@@ -376,6 +394,17 @@ StoryContext Game::storyContext(const std::string& location) const {
     for (const LiveWar& war : history_.liveWars)
         if (war.a == owner || war.b == owner) ctx.war = true;
     return ctx;
+}
+
+std::set<std::string> Game::activeStoryFamilies() const {
+    std::set<std::string> out;
+    auto add = [&](const std::string& id) {
+        const Event* event = deck_.find(id);
+        if (event && !event->family.empty()) out.insert(event->family);
+    };
+    add(scheduledNextId_);
+    for (const PendingConsequence& value : consequences_) add(value.eventId);
+    return out;
 }
 
 void Game::offerContract() {
@@ -586,7 +615,7 @@ void Game::saveRun() {
         sites.push_back({{"name", s.name}, {"type", s.type}, {"deck", s.deck},
                          {"region", s.region}});
     nlohmann::json j = {
-        {"schema", 4},
+        {"schema", 5},
         {"seed", masterSeed_}, {"gen", pendingLegacy_.size()},
         {"name", ch_.name.conlang}, {"meaning", ch_.name.meaning},
         {"stats", std::vector<int>(ch_.stats, ch_.stats + STAT_COUNT)},
@@ -686,6 +715,7 @@ void Game::saveRun() {
     j["regionState"] = regionState;
     j["mystery"] = {{"active", mystery_.active}, {"solved", mystery_.solved},
                      {"tried", mystery_.tried}, {"correct", mystery_.correctVerdict},
+                     {"appealed", mystery_.appealed},
                      {"culprit", mystery_.culprit}, {"victim", mystery_.victim},
                      {"site", mystery_.site}, {"artifact", mystery_.artifact},
                      {"decoy", mystery_.decoy}, {"accused", mystery_.accused},
@@ -697,14 +727,26 @@ void Game::saveRun() {
         social.push_back({{"a", tie.a}, {"b", tie.b}, {"affinity", tie.affinity},
                           {"kind", tie.kind}});
     j["social"] = social;
+    j["storyEchoes"] = std::vector<std::string>(storyEchoes_.begin(), storyEchoes_.end());
+    j["storyEchoRegions"] = storyEchoRegions_;
+    j["autonomousArcs"] = autonomousArcResolutions_;
     j["eventSerial"] = eventSerial_;
     j["lastEvents"] = lastEventSerial_;
     SaveRawRun(j.dump());
 }
 
 bool Game::loadRun() {
-    nlohmann::json j = nlohmann::json::parse(LoadRawRun(), nullptr, false);
-    if (j.is_discarded() || !j.contains("seed")) return false;
+    std::string raw = LoadRawRun();
+    nlohmann::json j = nlohmann::json::parse(raw, nullptr, false);
+    if (j.is_discarded() || !j.contains("seed")) {
+        raw = LoadBackupRun();
+        j = nlohmann::json::parse(raw, nullptr, false);
+        if (!j.is_discarded() && j.contains("seed")) SaveRawRun(raw);
+    }
+    if (j.is_discarded() || !j.contains("seed")) {
+        SaveRawRun("");
+        return false;
+    }
     int schema = j.value("schema", 1);
     nextSeed_ = j["seed"].get<uint64_t>();
     // Rebuild the world exactly as the save knew it.
@@ -933,6 +975,9 @@ bool Game::loadRun() {
                           d.value("counts", std::map<std::string, int>{}));
     }
     consequences_.clear();
+    storyEchoes_.clear();
+    storyEchoRegions_.clear();
+    autonomousArcResolutions_ = 0;
     if (j.contains("consequences") && j["consequences"].is_array())
         for (auto& value : j["consequences"]) {
             PendingConsequence pending;
@@ -970,6 +1015,7 @@ bool Game::loadRun() {
         mystery_.solved = value.value("solved", false);
         mystery_.tried = value.value("tried", false);
         mystery_.correctVerdict = value.value("correct", false);
+        mystery_.appealed = value.value("appealed", false);
         mystery_.culprit = value.value("culprit", -1);
         mystery_.victim = value.value("victim", -1);
         mystery_.site = value.value("site", -1);
@@ -993,6 +1039,11 @@ bool Game::loadRun() {
             if (tie.a >= 0 && tie.b >= 0) socialTies_.push_back(tie);
         }
     }
+    storyEchoes_.clear();
+    for (const std::string& family : j.value("storyEchoes", std::vector<std::string>{}))
+        storyEchoes_.insert(family);
+    storyEchoRegions_ = j.value("storyEchoRegions", std::map<std::string, int>{});
+    autonomousArcResolutions_ = j.value("autonomousArcs", 0);
     eventSerial_ = j.value("eventSerial", 0);
     lastEventSerial_ = j.value("lastEvents", std::map<std::string, int>{});
     history_.liveWars.clear();
@@ -1174,6 +1225,7 @@ bool Game::evalCond(const std::string& cond) const {
     if (a == "mystery_active") return mystery_.active && !mystery_.solved;
     if (a == "mystery_solved") return mystery_.solved;
     if (a == "mystery_tried") return mystery_.tried;
+    if (a == "mystery_appealed") return mystery_.appealed;
     if (a == "verdict_correct") return mystery_.tried && mystery_.correctVerdict;
     if (a == "accused") return mystery_.accused >= 0;
     if (a == "social_known") return socialTieFor(slotFigure_) != nullptr;
@@ -1181,6 +1233,7 @@ bool Game::evalCond(const std::string& cond) const {
         const SocialTie* tie = socialTieFor(slotFigure_);
         return tie && (b.empty() || tie->kind == b);
     }
+    if (a == "echo") return storyEchoes_.count(b) > 0;
     if (a == "region") {
         return currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size() &&
                regionStates_[currentRegion_].flags.count(b) > 0;
@@ -1657,12 +1710,18 @@ int Game::localRep() const {
 int Game::buyPrice(const ItemInstance& item) const {
     int rep = localRep();
     int price = item.value * (135 - rep * 2) / 100;
+    if (currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size() &&
+        regionStates_[currentRegion_].flags.count("trade_boom"))
+        price = price * 85 / 100;
     return price < 1 ? 1 : price;
 }
 
 int Game::sellPrice(const ItemInstance& item) const {
     int rep = localRep();
     int price = item.value * (40 + rep) / 100;
+    if (currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size() &&
+        regionStates_[currentRegion_].flags.count("trade_boom"))
+        price = price * 115 / 100;
     return price < 1 ? 1 : price;
 }
 
@@ -1763,8 +1822,9 @@ void Game::queueConsequence(int days, const std::string& eventId,
 void Game::activateDueConsequence() {
     if (!scheduledNextId_.empty()) return;
     int due = -1;
+    int reserveWindow = eventSerial_ > 0 && eventSerial_ % 3 == 0 ? 1 : 0;
     for (int i = 0; i < (int)consequences_.size(); i++)
-        if (consequences_[i].dueDay <= ch_.day &&
+        if (consequences_[i].dueDay <= ch_.day + reserveWindow &&
             (due < 0 || consequences_[i].dueDay < consequences_[due].dueDay))
             due = i;
     if (due < 0) return;
@@ -1774,6 +1834,97 @@ void Game::activateDueConsequence() {
     if (!consequences_[due].summary.empty())
         newsLine_ = "AN OLD CHOICE RETURNS: " + consequences_[due].summary;
     consequences_.erase(consequences_.begin() + due);
+}
+
+void Game::resolveStaleConsequences() {
+    // A story can continue without the player, but only after a generous
+    // window. This prevents four simultaneous arcs from clogging the road.
+    for (int i = 0; i < (int)consequences_.size(); i++) {
+        PendingConsequence& value = consequences_[i];
+        if (value.dueDay + 12 > ch_.day) continue;
+        const Event* event = deck_.find(value.eventId);
+        std::string family = event ? event->family : std::string();
+        int region = value.region >= 0 ? value.region : currentRegion_;
+        if (region >= 0 && region < (int)regionStates_.size()) {
+            regionStates_[region].unrest = std::min(5, regionStates_[region].unrest + 1);
+            regionStates_[region].flags.insert("story_moved_on");
+        }
+        if (!family.empty()) {
+            storyEchoes_.insert(family);
+            storyEchoRegions_[family] = region;
+        }
+        ChronEntry entry;
+        entry.id = (int)history_.chron.size();
+        entry.year = history_.presentYear;
+        entry.type = "region_shift";
+        entry.site = currentSite_;
+        entry.extra = "While " + ch_.name.conlang + " was elsewhere, " +
+                      (value.summary.empty() ? value.source : value.summary) +
+                      " resolved without permission.";
+        history_.chron.push_back(entry);
+        newsLine_ = entry.extra;
+        autonomousArcResolutions_++;
+        consequences_.erase(consequences_.begin() + i);
+        return;
+    }
+}
+
+void Game::convergeStory(const std::string& family) {
+    if (family.empty()) return;
+    storyEchoes_.insert(family);
+    storyEchoRegions_[family] = currentRegion_;
+    RegionState* region = currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size()
+        ? &regionStates_[currentRegion_] : nullptr;
+    if (region) {
+        if (family == "refugee_bells") {
+            region->flags.insert("refugee_quarter");
+            region->prosperity = std::min(5, region->prosperity + 1);
+        } else if (family == "contagious_trade") {
+            region->flags.insert("trade_boom");
+            region->danger = std::min(5, region->danger + 1);
+        } else if (family == "false_saint") {
+            region->flags.insert("faith_divided");
+            region->unrest = std::min(5, region->unrest + 1);
+        } else if (family == "guild_schism") {
+            region->flags.insert("guild_reformed");
+            region->prosperity = std::min(5, region->prosperity + 1);
+        } else if (family == "walking_town") {
+            region->flags.insert("walking_citizens");
+            region->pressure = std::min(5, region->pressure + 2);
+        } else if (family == "crooked_inheritance") {
+            region->flags.insert("disputed_estate");
+        }
+    }
+
+    int known = slotFigure_;
+    if (known < 0 && !npcRelations_.empty()) known = npcRelations_.begin()->first;
+    if (known >= 0 && known < (int)history_.figures.size()) {
+        NpcRelation& rel = relation(known);
+        rel.knowledge = std::min(10, rel.knowledge + 1);
+        npcMarks_[known].insert("story_witness");
+    }
+
+    // Artifacts keep moving through the social and regional systems. A
+    // completed arc can relocate one unclaimed object to a neighboring site.
+    std::vector<int> movable;
+    for (int i = 0; i < (int)history_.artifacts.size(); i++)
+        if (!history_.artifacts[i].claimed) movable.push_back(i);
+    if (!movable.empty() && !world_.sites.empty()) {
+        int artifactPick = runRng_.range(0, (int)movable.size() - 1);
+        int sitePick = runRng_.range(0, (int)world_.sites.size() - 1);
+        history_.artifacts[movable[artifactPick]].restingSite = sitePick;
+    }
+
+    ChronEntry entry;
+    entry.id = (int)history_.chron.size();
+    entry.year = history_.presentYear;
+    entry.type = "region_shift";
+    entry.actor = known;
+    entry.site = currentSite_;
+    entry.extra = "The consequences of " + family +
+                  " escaped their ending and entered ordinary life.";
+    history_.chron.push_back(entry);
+    newsLine_ = entry.extra;
 }
 
 void Game::updateRegionState() {
@@ -1955,6 +2106,22 @@ void Game::dailyTick() {
     if (season_ == "winter") { if (roll <= 35) weather_ = "snowing"; }
     else if (roll <= 25) weather_ = "raining";
     updateRegionState();
+    if (ch_.day % 7 == 0 && currentRegion_ >= 0 &&
+        currentRegion_ < (int)regionStates_.size() &&
+        regionStates_[currentRegion_].unrest >= 3) {
+        for (const SocialTie& tie : socialTies_) {
+            if (tie.affinity > -3) continue;
+            if (npcRelations_.count(tie.a)) {
+                NpcRelation& rel = relation(tie.a);
+                rel.grudge = std::min(10, rel.grudge + 1);
+            }
+            if (npcRelations_.count(tie.b)) {
+                NpcRelation& rel = relation(tie.b);
+                rel.grudge = std::min(10, rel.grudge + 1);
+            }
+        }
+    }
+    resolveStaleConsequences();
     activateDueConsequence();
 }
 
@@ -2473,6 +2640,10 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
                 else if (field == "grudge") value = &rel.grudge;
                 if (value) *value = std::max(-10, std::min(10, *value + amount));
             }
+        } else if (verb == "converge") {
+            std::string family;
+            ss >> family;
+            convergeStory(family);
         } else if (verb == "npc_unmark") {
             // A grudge, formally retired. The family will find a new hobby.
             std::string mark; ss >> mark;
@@ -2538,6 +2709,20 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
                 mystery_.correctVerdict = mystery_.accused == mystery_.culprit &&
                     mystery_.evidence >= 2 && mystery_.evidence > mystery_.doubt;
                 mystery_.solved = mystery_.correctVerdict;
+                if (mystery_.accused >= 0) {
+                    if (mystery_.correctVerdict) {
+                        npcMarks_[mystery_.accused].insert("convicted");
+                        relation(mystery_.accused).fear =
+                            std::min(10, relation(mystery_.accused).fear + 2);
+                    } else {
+                        npcMarks_[mystery_.accused].insert("wrongly_accused");
+                        NpcRelation& wronged = relation(mystery_.accused);
+                        wronged.grudge = std::min(10, wronged.grudge + 5);
+                        wronged.trust = std::max(-10, wronged.trust - 4);
+                        queueConsequence(5, "r14_wrong_verdict_returns",
+                                         "The person you accused has found allies.");
+                    }
+                }
                 ChronEntry entry;
                 entry.id = (int)history_.chron.size();
                 entry.year = history_.presentYear;
@@ -2831,13 +3016,17 @@ void Game::frame(Vector2 mouse, bool pressed) {
         case CRAFT:     drawCraft(mouse); break;
         case JOURNAL:   drawJournal(mouse); break;
         case DIRECTOR:  drawDirector(mouse); break;
+        case INVESTIGATION: drawInvestigation(mouse); break;
+        case NETWORK:   drawNetwork(mouse); break;
+        case BALANCE:   drawBalance(mouse); break;
     }
 }
 
 bool Game::uiButton(Rectangle r, const char* label, Vector2 mouse) {
     bool hover = CheckCollisionPointRec(mouse, r);
     DrawRectangleRec(r, hover ? PAL_ROW : Color{31, 27, 46, 255});
-    DrawRectangleLinesEx(r, 1, PAL_DARK);
+    DrawRectangleLinesEx(r, profile_.highContrast ? 2 : 1,
+                         profile_.highContrast ? PAL_INK : PAL_DARK);
     int w = MeasureText(label, 10);
     DrawText(label, (int)(r.x + (r.width - w) / 2), (int)(r.y + (r.height - 10) / 2), 10,
              hover ? PAL_GOLD : PAL_DIM);
@@ -2848,10 +3037,10 @@ bool Game::uiButton(Rectangle r, const char* label, Vector2 mouse) {
     return false;
 }
 
-// A row gets a second line when its label needs one (R9b) — no more choice
-// text vanishing behind "..". Two lines is the cap; beyond that we trim.
+// A row gets a second line when its label needs one (R9b), preventing choice
+// text from vanishing behind "..". Two lines is the cap; beyond that we trim.
 static std::vector<std::string> rowLines(const std::string& label) {
-    std::vector<std::string> lines = WrapLines(label, kW - 16);
+    std::vector<std::string> lines = WrapLines(label, kW - 16, 10);
     if (lines.size() > 2) {
         lines.resize(2);
         while (!lines[1].empty() &&
@@ -2900,7 +3089,8 @@ int Game::optionRows(const std::vector<std::string>& rows,
 // once follow is off, the ^ / v buttons page through at the reader's pace.
 bool Game::drawScrollText(const std::vector<std::string>& lines, int x, int yTop,
                           int maxY, Color color, Vector2 mouse, bool follow) {
-    const int lineH = 11;
+    const int fontSize = profile_.largeText ? 12 : 10;
+    const int lineH = fontSize + 1;
     int rowsFit = (maxY - yTop) / lineH;
     if (rowsFit < 1) rowsFit = 1;
     int total = (int)lines.size();
@@ -2910,7 +3100,7 @@ bool Game::drawScrollText(const std::vector<std::string>& lines, int x, int yTop
     if (textScroll_ < 0) textScroll_ = 0;
     int y = yTop;
     for (int i = textScroll_; i < total && i < textScroll_ + rowsFit; i++) {
-        DrawText(lines[i].c_str(), x, y, 10, color);
+        DrawText(lines[i].c_str(), x, y, fontSize, color);
         y += lineH;
     }
     bool consumed = false;
@@ -2918,13 +3108,15 @@ bool Game::drawScrollText(const std::vector<std::string>& lines, int x, int yTop
         // Slim page controls on the right edge; keys work too.
         if (textScroll_ > 0 &&
             (uiButton({(float)(kW - 16), (float)yTop, 14, 14}, "^", mouse) ||
-             IsKeyPressed(KEY_UP))) {
+             IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_K) || IsKeyPressed(KEY_W) ||
+             IsKeyPressed(KEY_PAGE_UP))) {
             textScroll_ -= rowsFit > 1 ? rowsFit - 1 : 1;
             consumed = true;
         }
         if (textScroll_ < maxScroll &&
             (uiButton({(float)(kW - 16), (float)(maxY - 16), 14, 14}, "v", mouse) ||
-             IsKeyPressed(KEY_DOWN))) {
+             IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_J) || IsKeyPressed(KEY_S) ||
+             IsKeyPressed(KEY_PAGE_DOWN))) {
             textScroll_ += rowsFit > 1 ? rowsFit - 1 : 1;
             consumed = true;
         }
@@ -2958,7 +3150,7 @@ void Game::drawTitle(Vector2 mouse) {
     }
     const char* title = "RANDOM ROGUE";
     DrawText(title, (kW - MeasureText(title, 20)) / 2, 38, 20, PAL_GOLD);
-    DrawText("v13", 4, kH - 10, 10, PAL_DARK); // release stamp for bug reports
+    DrawText("v14", 4, kH - 10, 10, PAL_DARK); // release stamp for bug reports
     if (!dataError_.empty()) {
         DrawTextWrapped(dataError_, 20, 90, kW - 40, PAL_RED);
         return;
@@ -3027,7 +3219,7 @@ void Game::drawTitle(Vector2 mouse) {
         nextSeed_ = weeklySeed();
         return;
     }
-    bool hasSave = !LoadRawRun().empty();
+    bool hasSave = !LoadRawRun().empty() || !LoadBackupRun().empty();
     if (hasSave && uiButton({8, 139, 72, 18}, "CONTINUE", mouse)) {
         audio_.blip();
         if (loadRun()) return;
@@ -3207,47 +3399,66 @@ void Game::drawOptions(Vector2 mouse) {
     std::string r3 = std::string("Music: ") + (profile_.musicOff ? "off" : "on");
     std::string r4 = std::string("Screen motion: ") +
                      (profile_.reducedMotion ? "reduced" : "full");
-    if (uiButton({8, 48, 148, 18}, r1.c_str(), mouse)) {
+    if (uiButton({8, 44, 148, 18}, r1.c_str(), mouse)) {
         profile_.textSpeed = (profile_.textSpeed + 1) % 4;
         SaveProfile(profile_);
     }
-    if (uiButton({164, 48, 148, 18}, r2.c_str(), mouse)) {
+    if (uiButton({164, 44, 148, 18}, r2.c_str(), mouse)) {
         profile_.volume = (profile_.volume + 1) % 3;
         SetMasterVolume(0.35f + 0.3f * profile_.volume);
         SaveProfile(profile_);
         audio_.coin(); // hear the new level immediately
     }
-    if (uiButton({8, 72, 148, 18}, r3.c_str(), mouse)) {
+    if (uiButton({8, 66, 148, 18}, r3.c_str(), mouse)) {
         profile_.musicOff = !profile_.musicOff;
         if (profile_.musicOff != audio_.musicMuted()) audio_.toggleMusic();
         SaveProfile(profile_);
     }
-    if (uiButton({164, 72, 148, 18}, r4.c_str(), mouse)) {
+    if (uiButton({164, 66, 148, 18}, r4.c_str(), mouse)) {
         profile_.reducedMotion = !profile_.reducedMotion;
         shake_ = 0.0f;
         SaveProfile(profile_);
     }
     std::string privacy = std::string("Anonymous tuning: ") +
                           (profile_.analyticsOff ? "off" : "on");
-    if (uiButton({8, 96, 148, 18}, privacy.c_str(), mouse)) {
+    std::string reading = std::string("Reader text: ") +
+                          (profile_.largeText ? "large" : "standard");
+    std::string contrast = std::string("Contrast: ") +
+                           (profile_.highContrast ? "high" : "standard");
+    if (uiButton({8, 88, 148, 18}, reading.c_str(), mouse)) {
+        profile_.largeText = !profile_.largeText;
+        SaveProfile(profile_);
+    }
+    if (uiButton({164, 88, 148, 18}, contrast.c_str(), mouse)) {
+        profile_.highContrast = !profile_.highContrast;
+        SaveProfile(profile_);
+    }
+    if (uiButton({8, 110, 148, 18}, privacy.c_str(), mouse)) {
         profile_.analyticsOff = !profile_.analyticsOff;
 #if defined(__EMSCRIPTEN__)
         if (profile_.analyticsOff) rr_clear_telemetry();
 #endif
         SaveProfile(profile_);
     }
-    if (uiButton({164, 96, 148, 18}, "DIRECTOR DIAGNOSTICS", mouse)) {
+    if (uiButton({164, 110, 148, 18}, "DIRECTOR DIAGNOSTICS", mouse)) {
         returnScreen_ = OPTIONS;
         textScroll_ = 0;
         screen_ = DIRECTOR;
         return;
     }
-    if (uiButton({kW / 2 - 74, 124, 148, 18}, "REPLAY THE HOW-TO", mouse)) {
+    if (uiButton({8, 132, 148, 18}, "BALANCE DASHBOARD", mouse)) {
+        balanceRequested_ = false;
+        balanceJson_.clear();
+        textScroll_ = 0;
+        screen_ = BALANCE;
+        return;
+    }
+    if (uiButton({164, 132, 148, 18}, "REPLAY THE HOW-TO", mouse)) {
         screen_ = TITLE;
         introPage_ = 0;
         return;
     }
-    if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
+    if (uiButton({(float)(kW - 52), (float)(kH - 18), 48, 14}, "BACK", mouse) ||
         IsKeyPressed(KEY_TAB) || IsKeyPressed(KEY_ESCAPE))
         screen_ = TITLE;
 }
@@ -3481,8 +3692,9 @@ void Game::drawEvent(Vector2 mouse) {
     int textBottom = compLine_.empty() ? choicesTop : choicesTop - 13;
     // The reader: long cards scroll instead of clipping (R9b). While the
     // typewriter runs it follows the newest line; afterwards ^ / v page it.
+    int readerSize = profile_.largeText ? 12 : 10;
     std::vector<std::string> lines =
-        WrapLines(currentText_.substr(0, (size_t)reveal_), kW - 24);
+        WrapLines(currentText_.substr(0, (size_t)reveal_), kW - 24, readerSize);
     drawScrollText(lines, 8, 22, textBottom, PAL_INK, mouse, !done);
     if (!compLine_.empty() && done) {
         std::string cl = compLine_;
@@ -3517,7 +3729,8 @@ void Game::drawOutcome(Vector2 mouse) {
     if (!fx.empty()) body += "\n" + fx;
     if (blessingSpent_)
         body += "\nThe blessing spends itself. You live. Somewhere, a ledger updates.";
-    bool scrolled = drawScrollText(WrapLines(body, kW - 24), 8, y, kH - 18,
+    int readerSize = profile_.largeText ? 12 : 10;
+    bool scrolled = drawScrollText(WrapLines(body, kW - 24, readerSize), 8, y, kH - 18,
                                    PAL_INK, mouse, false);
 
     const char* prompt = "[tap or Enter to continue]";
@@ -3819,6 +4032,39 @@ void Game::drawJournal(Vector2 mouse) {
                 (value.summary.empty() ? value.source : value.summary) + "\n";
     if (!scheduledNextId_.empty()) text += "Now: an old decision has caught up.\n";
 
+    std::set<std::string> activeFamilies = activeStoryFamilies();
+    text += "\nACTIVE STORY THREADS\n";
+    if (activeFamilies.empty()) text += "No long thread currently has hold of your sleeve.\n";
+    for (const std::string& family : activeFamilies) {
+        std::string label = family;
+        std::replace(label.begin(), label.end(), '_', ' ');
+        int beats = 0;
+        int nearest = 9999;
+        for (const PendingConsequence& value : consequences_) {
+            const Event* event = deck_.find(value.eventId);
+            if (event && event->family == family) {
+                beats++;
+                nearest = std::min(nearest, std::max(0, value.dueDay - ch_.day));
+            }
+        }
+        const Event* scheduled = deck_.find(scheduledNextId_);
+        int scheduledBeat = scheduled && scheduled->family == family ? 1 : 0;
+        int totalBeats = beats + scheduledBeat;
+        text += label + ": " + std::to_string(totalBeats) + " unresolved beat" +
+                (totalBeats == 1 ? "" : "s") +
+                (nearest < 9999 ? ", stirring in about " + std::to_string(nearest) +
+                                   " day" + (nearest == 1 ? "" : "s") : "") + ".\n";
+    }
+
+    if (!storyEchoes_.empty()) {
+        text += "\nSTORIES NOW LIVING IN THE WORLD\n";
+        for (const std::string& family : storyEchoes_) {
+            std::string label = family;
+            std::replace(label.begin(), label.end(), '_', ' ');
+            text += label + " now affects ordinary people, prices, rumors, and roads.\n";
+        }
+    }
+
     text += "\nPEOPLE WHO REMEMBER YOU\n";
     int shown = 0;
     for (auto& pair : npcRelations_) {
@@ -3846,12 +4092,164 @@ void Game::drawJournal(Vector2 mouse) {
     }
     if (!tiesShown) text += "You have not learned enough to draw the lines yet.\n";
 
-    drawScrollText(WrapLines(text, kW - 24), 8, 20, kH - 20, PAL_INK, mouse, false);
+    int readerSize = profile_.largeText ? 12 : 10;
+    drawScrollText(WrapLines(text, kW - 24, readerSize), 8, 20, kH - 20,
+                   PAL_INK, mouse, false);
+    if (mystery_.active && uiButton({4, (float)(kH - 20), 58, 16}, "CASE", mouse)) {
+        textScroll_ = 0;
+        screen_ = INVESTIGATION;
+        return;
+    }
+    if (uiButton({66, (float)(kH - 20), 64, 16}, "PEOPLE", mouse)) {
+        networkPage_ = 0;
+        networkSelected_ = -1;
+        screen_ = NETWORK;
+        return;
+    }
     if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
         IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_TAB)) {
         textScroll_ = 0;
         screen_ = TRAVEL;
     }
+}
+
+void Game::drawInvestigation(Vector2 mouse) {
+    drawTopBar();
+    DrawText("INVESTIGATION BOARD", 8, 20, 10, PAL_GOLD);
+    if (!mystery_.active) {
+        DrawTextWrapped("There is no open case. This is probably temporary.", 8, 40,
+                        kW - 16, PAL_DIM);
+    } else {
+        std::string text = mystery_.title + "\n" + mystery_.publicStory + "\n\n";
+        text += "Evidence " + std::to_string(mystery_.evidence) +
+                "  Doubt " + std::to_string(mystery_.doubt) +
+                "  Leads " + std::to_string(mystery_.clues) + "/3\n";
+        int strength = mystery_.evidence * 2 + mystery_.clues - mystery_.doubt * 2;
+        text += "Case strength: " + std::string(strength >= 6 ? "strong" :
+                    strength >= 3 ? "contested" : "fragile") + ".\n";
+        if (mystery_.artifact >= 0 && mystery_.artifact < (int)history_.artifacts.size())
+            text += "Object: " + history_.artifacts[mystery_.artifact].display() + "\n";
+        if (mystery_.site >= 0 && mystery_.site < (int)world_.sites.size())
+            text += "Scene: " + world_.sites[mystery_.site].name + "\n";
+        // Keep the truthful suspect from occupying a learnable button position.
+        // The order is stable for a saved case, but changes between world seeds.
+        bool swapSuspects = ((masterSeed_ + (uint64_t)(mystery_.site + 1) * 97ULL) & 1ULL) != 0;
+        int suspects[2] = {
+            swapSuspects ? mystery_.decoy : mystery_.culprit,
+            swapSuspects ? mystery_.culprit : mystery_.decoy
+        };
+        for (int i = 0; i < 2; i++) {
+            int fi = suspects[i];
+            if (fi < 0 || fi >= (int)history_.figures.size()) continue;
+            const Figure& f = history_.figures[fi];
+            int reliability = 35 + (int)((masterSeed_ + (uint64_t)fi * 37ULL) % 61ULL);
+            text += "\n" + std::string(i == 0 ? "A: " : "B: ") + f.name +
+                    ", " + f.profession + ".\n";
+            text += "Testimony reliability " + std::to_string(reliability) +
+                    "%. Motive: " + (f.trait.empty() ? "unclear" : f.trait) +
+                    ". Alibi: " + (reliability >= 70 ? "corroborated" :
+                                    reliability >= 50 ? "partial" : "contradictory") + ".\n";
+        }
+        if (mystery_.accused >= 0 && mystery_.accused < (int)history_.figures.size())
+            text += "\nMarked for accusation: " + history_.figures[mystery_.accused].name + ".";
+        if (mystery_.tried)
+            text += mystery_.correctVerdict ? "\nThe verdict held." :
+                    "\nThe verdict failed. An appeal can reopen the record.";
+        int readerSize = profile_.largeText ? 12 : 10;
+        drawScrollText(WrapLines(text, kW - 24, readerSize), 8, 34, kH - 42,
+                       PAL_INK, mouse, false);
+
+        if (!mystery_.tried) {
+            if (uiButton({4, (float)(kH - 39), 70, 16}, "MARK A", mouse))
+                mystery_.accused = suspects[0];
+            if (uiButton({78, (float)(kH - 39), 70, 16}, "MARK B", mouse))
+                mystery_.accused = suspects[1];
+        } else if (!mystery_.correctVerdict && !mystery_.appealed && ch_.money >= 8 &&
+                   uiButton({4, (float)(kH - 39), 144, 16}, "APPEAL: 8 GOLD", mouse)) {
+            ch_.money -= 8;
+            mystery_.appealed = true;
+            mystery_.tried = false;
+            mystery_.accused = -1;
+            mystery_.doubt = std::min(9, mystery_.doubt + 1);
+            queueConsequence(2, "r12_mystery_second",
+                             "An appeal has forced another witness to speak.");
+            saveRun();
+        }
+    }
+    if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
+        IsKeyPressed(KEY_ESCAPE)) {
+        textScroll_ = 0;
+        screen_ = JOURNAL;
+    }
+}
+
+void Game::drawNetwork(Vector2 mouse) {
+    drawTopBar();
+    DrawText("PEOPLE AND CONNECTIONS", 8, 20, 10, PAL_GOLD);
+    std::vector<int> known;
+    for (const auto& pair : npcRelations_)
+        if (pair.first >= 0 && pair.first < (int)history_.figures.size())
+            known.push_back(pair.first);
+    if (networkSelected_ >= 0 && networkSelected_ < (int)history_.figures.size()) {
+        int fi = networkSelected_;
+        const Figure& person = history_.figures[fi];
+        const NpcRelation* rel = relationIfKnown(fi);
+        std::string text = person.name + "\n" + person.trait + " " + person.profession + "\n";
+        if (rel) text += "Trust " + std::to_string(rel->trust) + "  respect " +
+            std::to_string(rel->respect) + "  fear " + std::to_string(rel->fear) +
+            "\nDebt " + std::to_string(rel->debt) + "  affection " +
+            std::to_string(rel->affection) + "  grudge " + std::to_string(rel->grudge) +
+            "\nKnowledge " + std::to_string(rel->knowledge) + "/10\n\n";
+        text += "KNOWN CONNECTIONS\n";
+        int links = 0;
+        for (const SocialTie& tie : socialTies_) {
+            if (tie.a != fi && tie.b != fi) continue;
+            int other = tie.a == fi ? tie.b : tie.a;
+            if (other < 0 || other >= (int)history_.figures.size()) continue;
+            bool visible = npcRelations_.count(other) || (rel && rel->knowledge >= 2);
+            text += visible ? history_.figures[other].name + ": " + tie.kind +
+                                ", affinity " + std::to_string(tie.affinity) + "\n"
+                            : "Unknown person: hidden connection\n";
+            links++;
+        }
+        if (!links) text += "No lines have been drawn yet.\n";
+        int readerSize = profile_.largeText ? 12 : 10;
+        drawScrollText(WrapLines(text, kW - 24, readerSize), 8, 36, kH - 20,
+                       PAL_INK, mouse, false);
+        if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "LIST", mouse) ||
+            IsKeyPressed(KEY_ESCAPE)) {
+            networkSelected_ = -1;
+            textScroll_ = 0;
+        }
+        return;
+    }
+
+    if (known.empty())
+        DrawTextWrapped("Nobody knows you well enough to become a diagram yet.", 8, 42,
+                        kW - 16, PAL_DIM);
+    const int perPage = 5;
+    int pages = std::max(1, ((int)known.size() + perPage - 1) / perPage);
+    networkPage_ = std::max(0, std::min(pages - 1, networkPage_));
+    for (int row = 0; row < perPage; row++) {
+        int pos = networkPage_ * perPage + row;
+        if (pos >= (int)known.size()) break;
+        int fi = known[pos];
+        const NpcRelation& rel = npcRelations_.at(fi);
+        std::string label = history_.figures[fi].name + "  K" +
+                            std::to_string(rel.knowledge) + " G" +
+                            std::to_string(rel.grudge);
+        if (uiButton({8, (float)(42 + row * 22), 304, 18}, label.c_str(), mouse)) {
+            networkSelected_ = fi;
+            textScroll_ = 0;
+            return;
+        }
+    }
+    if (networkPage_ > 0 && uiButton({4, (float)(kH - 20), 48, 16}, "< PREV", mouse))
+        networkPage_--;
+    if (networkPage_ + 1 < pages && uiButton({56, (float)(kH - 20), 48, 16}, "NEXT >", mouse))
+        networkPage_++;
+    if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
+        IsKeyPressed(KEY_ESCAPE)) screen_ = JOURNAL;
 }
 
 void Game::drawDirector(Vector2 mouse) {
@@ -3879,7 +4277,9 @@ void Game::drawDirector(Vector2 mouse) {
     text += "\n\nRUN CARDS " + std::to_string(eventSerial_) +
             "  UNIQUE " + std::to_string(lastEventSerial_.size()) +
             "  PENDING CONSEQUENCES " + std::to_string(consequences_.size());
-    drawScrollText(WrapLines(text, kW - 24), 8, 22, kH - 20, PAL_INK, mouse, false);
+    int readerSize = profile_.largeText ? 12 : 10;
+    drawScrollText(WrapLines(text, kW - 24, readerSize), 8, 22, kH - 20,
+                   PAL_INK, mouse, false);
     if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
         IsKeyPressed(KEY_ESCAPE)) {
         textScroll_ = 0;
@@ -3887,10 +4287,84 @@ void Game::drawDirector(Vector2 mouse) {
     }
 }
 
+void Game::drawBalance(Vector2 mouse) {
+    DrawText("BALANCE DASHBOARD", 8, 6, 10, PAL_GOLD);
+#if defined(__EMSCRIPTEN__)
+    if (!balanceRequested_) {
+        rr_fetch_balance();
+        balanceRequested_ = true;
+    }
+    if (balanceJson_.empty()) {
+        char* raw = rr_get_balance();
+        balanceJson_ = raw ? raw : "";
+        free(raw);
+    }
+#endif
+    std::string text = "LOCAL RUN\n";
+    text += "Cards shown " + std::to_string(eventSerial_) +
+            ", unique " + std::to_string(lastEventSerial_.size()) +
+            ", deck used " + std::to_string(deck_.used().size()) + "/" +
+            std::to_string(deck_.size()) + ".\n";
+    text += "Active arcs " + std::to_string(activeStoryFamilies().size()) +
+            ", pending beats " + std::to_string(consequences_.size()) +
+            ", autonomous endings " + std::to_string(autonomousArcResolutions_) + ".\n";
+    text += "Story echoes " + std::to_string(storyEchoes_.size()) +
+            ", known people " + std::to_string(npcRelations_.size()) + ".\n\n";
+
+    text += "LOCATION PRESSURE\n";
+    std::map<std::string, int> seenByDeck;
+    for (const auto& pair : lastEventSerial_) {
+        const Event* event = deck_.find(pair.first);
+        if (!event) continue;
+        for (const std::string& location : event->locations) seenByDeck[location]++;
+    }
+    for (const auto& pair : seenByDeck)
+        text += pair.first + " " + std::to_string(pair.second) + " seen\n";
+
+    text += "\nANONYMOUS GLOBAL TUNING\n";
+#if defined(__EMSCRIPTEN__)
+    nlohmann::json rows = nlohmann::json::parse(balanceJson_, nullptr, false);
+    if (balanceJson_.empty()) {
+        text += "Fetching aggregated counters...\n";
+    } else if (rows.is_discarded() || !rows.is_array() || rows.empty()) {
+        text += "No aggregate sample is available yet.\n";
+    } else {
+        std::vector<nlohmann::json> values;
+        for (auto& row : rows) values.push_back(row);
+        std::sort(values.begin(), values.end(), [](const auto& a, const auto& b) {
+            int ae = a.value("run_ends", 0), be = b.value("run_ends", 0);
+            if (ae != be) return ae > be;
+            return a.value("avg_gap", 999.0) < b.value("avg_gap", 999.0);
+        });
+        text += "Watch list: death association, then short repeat gaps.\n";
+        for (int i = 0; i < (int)values.size() && i < 8; i++) {
+            const auto& row = values[i];
+            text += row.value("event", "unknown") + " choice " +
+                    std::to_string(row.value("choice", 0) + 1) + ": n " +
+                    std::to_string(row.value("n", 0)) + ", ends " +
+                    std::to_string(row.value("run_ends", 0)) + ", gap " +
+                    std::to_string((int)row.value("avg_gap", 999.0)) + ".\n";
+        }
+    }
+#else
+    text += "Global counters are available in the browser build.\n";
+#endif
+    text += "\nThis screen contains aggregate card IDs and counters only. It has no names, seeds, free text, or individual runs.";
+    int readerSize = profile_.largeText ? 12 : 10;
+    drawScrollText(WrapLines(text, kW - 24, readerSize), 8, 22, kH - 20,
+                   PAL_INK, mouse, false);
+    if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
+        IsKeyPressed(KEY_ESCAPE)) {
+        textScroll_ = 0;
+        screen_ = OPTIONS;
+    }
+}
+
 void Game::drawInfo(Vector2 mouse) {
     drawTopBar();
     // Books, contracts, and long excerpts scroll instead of clipping (R9b).
-    bool scrolled = drawScrollText(WrapLines(infoText_, kW - 24), 8, 22, kH - 18,
+    int readerSize = profile_.largeText ? 12 : 10;
+    bool scrolled = drawScrollText(WrapLines(infoText_, kW - 24, readerSize), 8, 22, kH - 18,
                                    PAL_INK, mouse, false);
     const char* prompt = "[Enter]";
     DrawText(prompt, kW - MeasureText(prompt, 10) - 6, kH - 13, 10, PAL_DIM);

@@ -29,6 +29,8 @@ std::string Profile::toJson() const {
               {"musicOff", musicOff},
               {"reducedMotion", reducedMotion},
               {"analyticsOff", analyticsOff},
+              {"largeText", largeText},
+              {"highContrast", highContrast},
               {"seenIntro", seenIntro}};
     return j.dump();
 }
@@ -54,6 +56,8 @@ Profile Profile::fromJson(const std::string& text) {
     p.musicOff = j.value("musicOff", true);
     p.reducedMotion = j.value("reducedMotion", false);
     p.analyticsOff = j.value("analyticsOff", false);
+    p.largeText = j.value("largeText", false);
+    p.highContrast = j.value("highContrast", false);
     p.seenIntro = j.value("seenIntro", false);
     return p;
 }
@@ -145,7 +149,17 @@ std::vector<std::pair<uint64_t, LegacyRecord>> LoadAllLegacy() {
 }
 
 std::string LoadRawRun() { return loadRawStore("random_rogue_run"); }
-void SaveRawRun(const std::string& text) { saveRawStore("random_rogue_run", text); }
+std::string LoadBackupRun() { return loadRawStore("random_rogue_run_backup"); }
+void SaveRawRun(const std::string& text) {
+    std::string current = loadRawStore("random_rogue_run");
+    if (!text.empty() && !current.empty()) {
+        json old = json::parse(current, nullptr, false);
+        if (!old.is_discarded() && old.is_object())
+            saveRawStore("random_rogue_run_backup", current);
+    }
+    saveRawStore("random_rogue_run", text);
+    if (text.empty()) saveRawStore("random_rogue_run_backup", "");
+}
 
 std::string LoadMarks(uint64_t seed) {
     json j = json::parse(loadRawStore("random_rogue_marks"), nullptr, false);

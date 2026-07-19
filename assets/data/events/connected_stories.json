@@ -41,8 +41,8 @@
     "slots": {"pair": "social_pair"},
     "text": "The estate serves a final feast. {pair} and {pair_other} sit together beneath a portrait whose painted eyes keep changing sides.",
     "choices": [
-      {"text": "Toast the living instead of the estate", "approach": "mercy", "outcomes": [{"weight": 100, "text": "The toast is short. The peace is not perfect, which may be why it lasts.", "effects": ["network +4", "npc_rel affection +2", "region prosperity +1"]}]},
-      {"text": "Accept the chair as your fee", "approach": "absurd", "outcomes": [{"weight": 100, "text": "The chair objects, then follows you anyway. It knows too much to remain furniture.", "effects": ["money +15", "trait +famous", "network -1"]}]}
+      {"text": "Toast the living instead of the estate", "approach": "mercy", "outcomes": [{"weight": 100, "text": "The toast is short. The peace is not perfect, which may be why it lasts.", "effects": ["network +4", "npc_rel affection +2", "region prosperity +1", "converge crooked_inheritance"]}]},
+      {"text": "Accept the chair as your fee", "approach": "absurd", "outcomes": [{"weight": 100, "text": "The chair objects, then follows you anyway. It knows too much to remain furniture.", "effects": ["money +15", "trait +famous", "network -1", "converge crooked_inheritance"]}]}
     ]
   },
 
@@ -84,8 +84,8 @@
     "id": "r13_refugee_home", "locations": [], "weight": 1, "family": "refugee_bells", "tags": ["regional", "history", "consequence"],
     "text": "Word arrives that the bells have stopped. Some families want to return. Others have planted gardens and named the drainage ditch.",
     "choices": [
-      {"text": "Finance anyone who chooses to return", "approach": "mercy", "outcomes": [{"weight": 100, "text": "Half go home. Half stay. Both groups begin writing each other about what the other is missing.", "effects": ["money -8", "region pressure -3", "region_spread prosperity +1", "rep +5"]}]},
-      {"text": "Declare the camp a permanent quarter", "approach": "authority", "outcomes": [{"weight": 100, "text": "A neighborhood appears on the map before the cartographer approves it.", "effects": ["region prosperity +3", "region unrest -1", "region_flag trade_boom"]}]}
+      {"text": "Finance anyone who chooses to return", "approach": "mercy", "outcomes": [{"weight": 100, "text": "Half go home. Half stay. Both groups begin writing each other about what the other is missing.", "effects": ["money -8", "region pressure -3", "region_spread prosperity +1", "rep +5", "converge refugee_bells"]}]},
+      {"text": "Declare the camp a permanent quarter", "approach": "authority", "outcomes": [{"weight": 100, "text": "A neighborhood appears on the map before the cartographer approves it.", "effects": ["region prosperity +3", "region unrest -1", "region_flag trade_boom", "converge refugee_bells"]}]}
     ]
   },
 
@@ -127,8 +127,8 @@
     "id": "r13_trade_fair", "locations": [], "weight": 1, "family": "contagious_trade", "tags": ["regional", "economy", "history"],
     "text": "The first Interregional Strongbox Fair opens. Farmers, thieves, bankers, and one confused beekeeper share a ribbon.",
     "choices": [
-      {"text": "Make the trade charter public", "approach": "honesty", "outcomes": [{"weight": 100, "text": "The boom survives because nobody owns all of it. This disappoints several excellent villains.", "effects": ["region prosperity +2", "region_spread prosperity +2", "region unrest -1", "trait +famous"]}]},
-      {"text": "Sell your stake at the opening bell", "approach": "greed", "outcomes": [{"weight": 100, "text": "You leave rich before the beekeeper asks what strongboxes do to honey.", "effects": ["money +28", "region prosperity -1"]}]}
+      {"text": "Make the trade charter public", "approach": "honesty", "outcomes": [{"weight": 100, "text": "The boom survives because nobody owns all of it. This disappoints several excellent villains.", "effects": ["region prosperity +2", "region_spread prosperity +2", "region unrest -1", "trait +famous", "converge contagious_trade"]}]},
+      {"text": "Sell your stake at the opening bell", "approach": "greed", "outcomes": [{"weight": 100, "text": "You leave rich before the beekeeper asks what strongboxes do to honey.", "effects": ["money +28", "region prosperity -1", "converge contagious_trade"]}]}
     ]
   },
 
@@ -174,8 +174,8 @@
     "slots": {"suspect": "mystery_suspect"},
     "text": "At the hearing, {suspect} waits beneath the squeaking halo. You have evidence, doubts, and one chance to put a name into history.",
     "choices": [
-      {"text": "Accuse the person before you", "approach": "law", "outcomes": [{"weight": 100, "text": "You make the accusation and submit the full chain of evidence. The verdict will have to survive the facts.", "effects": ["mystery_accuse suspect", "mystery_trial", "rep +4"]}]},
-      {"text": "Refuse a verdict built on doubt", "approach": "caution", "outcomes": [{"weight": 100, "text": "The hearing adjourns. The saint flees, but an innocent name remains unbroken.", "effects": ["doubt -2", "stat wis +1", "region unrest -1"]}]}
+      {"text": "Accuse the person before you", "approach": "law", "outcomes": [{"weight": 100, "text": "You make the accusation and submit the full chain of evidence. The verdict will have to survive the facts.", "effects": ["mystery_accuse suspect", "mystery_trial", "rep +4", "converge false_saint"]}]},
+      {"text": "Refuse a verdict built on doubt", "approach": "caution", "outcomes": [{"weight": 100, "text": "The hearing adjourns. The saint flees, but an innocent name remains unbroken.", "effects": ["doubt -2", "stat wis +1", "region unrest -1", "converge false_saint"]}]}
     ]
   },
 
@@ -221,8 +221,8 @@
     "slots": {"pair": "social_pair"},
     "text": "{pair} and {pair_other} present a joint charter. It bans hereditary chairs, recognizes apprentices, and requires soup labels.",
     "choices": [
-      {"text": "Witness the charter", "approach": "law", "outcomes": [{"weight": 100, "text": "The guild reunites around rules broad enough to include its arguments.", "effects": ["network +4", "region prosperity +2", "region unrest -2", "rep +6"]}]},
-      {"text": "Demand a consulting fee", "approach": "greed", "outcomes": [{"weight": 100, "text": "They pay you in stamped invoices redeemable after the next schism.", "effects": ["money +18", "network +1", "trait +agent"]}]}
+      {"text": "Witness the charter", "approach": "law", "outcomes": [{"weight": 100, "text": "The guild reunites around rules broad enough to include its arguments.", "effects": ["network +4", "region prosperity +2", "region unrest -2", "rep +6", "converge guild_schism"]}]},
+      {"text": "Demand a consulting fee", "approach": "greed", "outcomes": [{"weight": 100, "text": "They pay you in stamped invoices redeemable after the next schism.", "effects": ["money +18", "network +1", "trait +agent", "converge guild_schism"]}]}
     ]
   },
 
@@ -263,8 +263,8 @@
     "id": "r13_walking_choice", "locations": [], "weight": 1, "family": "walking_town", "tags": ["regional", "history", "absurd"],
     "text": "The town reaches an empty valley and asks whether it should finally stop. Its oldest resident cannot remember a floor that stayed beneath breakfast.",
     "choices": [
-      {"text": "Help it put down foundations", "approach": "mercy", "outcomes": [{"weight": 100, "text": "The legs fold beneath new streets. For the first time, the clock tower knows tomorrow's location.", "effects": ["region prosperity +3", "region pressure -2", "rep +6"]}]},
-      {"text": "Convince it to keep wandering", "approach": "curiosity", "outcomes": [{"weight": 100, "text": "The town turns toward the horizon. Years from now, maps will mark its migrations like weather.", "effects": ["region_spread prosperity +1", "trait +famous", "stat cha +1"]}]}
+      {"text": "Help it put down foundations", "approach": "mercy", "outcomes": [{"weight": 100, "text": "The legs fold beneath new streets. For the first time, the clock tower knows tomorrow's location.", "effects": ["region prosperity +3", "region pressure -2", "rep +6", "converge walking_town"]}]},
+      {"text": "Convince it to keep wandering", "approach": "curiosity", "outcomes": [{"weight": 100, "text": "The town turns toward the horizon. Years from now, maps will mark its migrations like weather.", "effects": ["region_spread prosperity +1", "trait +famous", "stat cha +1", "converge walking_town"]}]}
     ]
   }
 ]

@@ -25,6 +25,8 @@ struct Profile {
     bool musicOff = true;
     bool reducedMotion = false;
     bool analyticsOff = false;
+    bool largeText = false;
+    bool highContrast = false;
     bool seenIntro = false;
 
     std::string toJson() const;
@@ -55,6 +57,7 @@ std::vector<std::pair<uint64_t, LegacyRecord>> LoadAllLegacy();
 // Mid-run autosave: an opaque JSON blob owned by the Game (R3).
 std::string LoadRawRun();
 void SaveRawRun(const std::string& text); // "" clears
+std::string LoadBackupRun();
 
 // NPC memory that outlives you: marks persist per world seed (R3).
 std::string LoadMarks(uint64_t seed);
