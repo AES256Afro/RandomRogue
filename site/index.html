@@ -243,7 +243,7 @@
       <div class="bridge-arrow">&gt;</div>
       <div class="bridge-node"><b>2. The Chronicle keeps it</b>Cloudflare stores shared deeds, fallen characters, epitaphs, relics, and replayable journeys.<span class="status live">LIVE NOW</span></div>
       <div class="bridge-arrow">&gt;</div>
-      <div class="bridge-node"><b>3. The MUD embodies it</b>Unfinished lives already cross over as ghosts. Major deeds, institutions, artifacts, and regional consequences will follow through the versioned world bridge.<span class="status next">NEXT BRIDGE</span></div>
+      <div class="bridge-node"><b>3. The MUD embodies it</b>Deaths cross through a versioned, duplicate-safe bridge. Each new ghost keeps the source event that explains why it exists. Deeds, institutions, artifacts, and regional consequences come next.<span class="status live">LIVE CORE</span><span class="status next">NEXT BRIDGE: DEEDS + INSTITUTIONS</span></div>
     </div>
   </div>
 </section>
@@ -329,7 +329,17 @@
   <p class="lead">Clean notes for people who would like to know what changed before trusting another suspicious frog.</p>
   <div class="patch-list">
     <article class="patch-release">
-      <div class="patch-head"><h3>v19: The World Answers Back</h3><time datetime="2026-07-19">July 19, 2026</time></div>
+      <div class="patch-head"><h3>Chronicle Bridge M1</h3><time datetime="2026-07-19">July 19, 2026</time></div>
+      <ul>
+        <li>Added the versioned <code>rr.chronicle.v1</code> event contract and stable shared identifiers.</li>
+        <li>Made Wide World death delivery idempotent, so retries create one MUD ghost.</li>
+        <li>Linked each new imported ghost to an inspectable source event.</li>
+        <li>Added canonical Cloudflare event storage, MUD projection records, compatibility tests, and guarded restore documentation.</li>
+        <li>Kept the original death bridge available during the migration.</li>
+      </ul>
+    </article>
+    <details class="patch-release older" open>
+      <summary>v19: The World Answers Back</summary>
       <ul>
         <li>Added remembered campaign choices, witnesses, outcomes, and public world responses.</li>
         <li>Made ten institutions playable through membership, standing, tendencies, office, and internal conflict.</li>
@@ -338,7 +348,7 @@
         <li>Added three reader sizes, separate sound controls, larger touch targets, background autosave, and browser save transfer.</li>
         <li>Music remains muted by default.</li>
       </ul>
-    </article>
+    </details>
     <details class="patch-release older">
       <summary>v18: Living Politics</summary>
       <ul>

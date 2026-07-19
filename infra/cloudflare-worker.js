@@ -40,6 +40,56 @@ function validKey(day) {
   return Math.abs(day - Math.floor(now / 86400000)) <= 1;
 }
 
+function worldIdentity(day) {
+  if (day >= 7000000) {
+    const number = day - 7000000;
+    return { kind: "weekly", number, key: "weekly:" + number };
+  }
+  return { kind: "daily", number: day, key: "daily:" + day };
+}
+
+function publicChronicleEvent(event) {
+  return {
+    schema: event.schema,
+    event_id: event.event_id,
+    event_type: event.event_type,
+    source: event.source,
+    world_key: event.world_key,
+    occurred_at: event.occurred_at,
+    subject: event.subject,
+    ...(event.place ? { place: event.place } : {}),
+    tags: event.tags || [],
+    effects: event.effects || {},
+    payload: event.payload || {},
+    visibility: event.visibility,
+  };
+}
+
+async function storeChronicleEvent(env, deathId, event) {
+  const canonical = publicChronicleEvent(event);
+  await env.DB.prepare(
+    "INSERT OR IGNORE INTO chronicle_events " +
+    "(event_id,death_id,schema_name,event_type,source,world_key,occurred_at,subject_json,place_json,tags_json,effects_json,payload_json,visibility,raw_json) " +
+    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+  ).bind(
+    canonical.event_id,
+    deathId,
+    canonical.schema,
+    canonical.event_type,
+    canonical.source,
+    canonical.world_key,
+    canonical.occurred_at,
+    JSON.stringify(canonical.subject),
+    JSON.stringify(canonical.place || {}),
+    JSON.stringify(canonical.tags),
+    JSON.stringify(canonical.effects),
+    JSON.stringify(canonical.payload),
+    canonical.visibility,
+    JSON.stringify(canonical)
+  ).run();
+  return canonical;
+}
+
 // Strip control characters from player-supplied strings (R10).
 function clean(s) { return String(s).replace(/[\u0000-\u001f\u007f]/g, " "); }
 async function validSecret(provided, expected) {
@@ -126,19 +176,77 @@ export default {
         journey = JSON.stringify(j.map(s => ({ d: parseInt(s.d) || 0, s: String(s.s || "").slice(0, 40), c: String(s.c || "").slice(0, 70), o: String(s.o || "").slice(0, 110) })));
         if (journey.length > 80000) journey = "[]";
       } catch (e) {}
-      await env.DB.prepare(
+      const inserted = await env.DB.prepare(
         "INSERT INTO deaths (day, name, meaning, days, epitaph, site, relics, finished, journey) VALUES (?,?,?,?,?,?,?,?,?)"
       ).bind(day, name, meaning, days, epitaph, site, relics, finished, journey).run();
       // The Confluence: fallen runs cross over to the MUD as ghosts.
-      // Fire and forget; the afterlife does not do retries.
+      // M1 stores a canonical source event first, then projects it into the
+      // MUD. The legacy route remains the fallback during rolling deploys.
       if (!finished && ctx) {
-        ctx.waitUntil(fetch("https://mud.random-rogue.com/api/legacy/death", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ name, meaning, epitaph, days, cause: site ? "fell at " + site : "fell somewhere in the Wide World" }),
-        }).catch(() => {}));
+        const deathId = Number(inserted.meta && inserted.meta.last_row_id);
+        if (deathId > 0) {
+          const world = worldIdentity(day);
+          const cause = site ? "fell at " + site : "fell somewhere in the Wide World";
+          const event = await storeChronicleEvent(env, deathId, {
+            schema: "rr.chronicle.v1",
+            event_id: "wide:evt:" + world.kind + ":" + world.number + ":death:" + deathId,
+            event_type: "wide_world.death",
+            source: "wide_world",
+            world_key: world.key,
+            occurred_at: new Date().toISOString(),
+            subject: {
+              kind: "character",
+              id: "wide:character:" + world.kind + ":" + world.number + ":" + deathId,
+              name,
+            },
+            ...(site ? { place: { name: site } } : {}),
+            tags: ["death", world.kind],
+            effects: {},
+            payload: { meaning, epitaph, cause, days },
+            visibility: "public",
+          });
+          const forwardedFor = req.headers.get("cf-connecting-ip") || "";
+          ctx.waitUntil(fetch("https://mud.random-rogue.com/api/chronicle/v1/events", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              ...(forwardedFor ? { "x-forwarded-for": forwardedFor } : {}),
+            },
+            body: JSON.stringify(event),
+          }).then((response) => {
+            if (response.ok) return;
+            return fetch("https://mud.random-rogue.com/api/legacy/death", {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+                ...(forwardedFor ? { "x-forwarded-for": forwardedFor } : {}),
+              },
+              body: JSON.stringify({ name, meaning, epitaph, days, cause }),
+            }).then(() => undefined);
+          }).catch(() => {}));
+        } else {
+          const cause = site ? "fell at " + site : "fell somewhere in the Wide World";
+          ctx.waitUntil(fetch("https://mud.random-rogue.com/api/legacy/death", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ name, meaning, epitaph, days, cause }),
+          }).catch(() => {}));
+        }
       }
       return new Response("ok", { headers: CORS });
+    }
+    if (p === "__chronicle" && req.method === "GET") {
+      const eventId = String(url.searchParams.get("id") || "").slice(0, 160);
+      if (!/^(wide|mud):evt:[A-Za-z0-9:_-]{8,120}$/.test(eventId)) {
+        return Response.json({ error: "invalid event id" }, { status: 400, headers: CORS });
+      }
+      const row = await env.DB.prepare(
+        "SELECT raw_json, created_at FROM chronicle_events WHERE event_id = ? AND visibility = 'public'"
+      ).bind(eventId).first();
+      if (!row) return Response.json({ error: "chronicle event not found" }, { status: 404, headers: CORS });
+      return new Response(row.raw_json, {
+        headers: { "content-type": "application/json", "cache-control": "public, max-age=60", ...CORS },
+      });
     }
     if (p === "__scores") {
       const day = parseInt(url.searchParams.get("day")) || Math.floor(Date.now() / 86400000);

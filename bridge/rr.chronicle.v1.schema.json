@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://random-rogue.com/schemas/rr.chronicle.v1.json",
+  "title": "Random Rogue Chronicle event envelope v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "event_id",
+    "event_type",
+    "source",
+    "world_key",
+    "occurred_at",
+    "subject",
+    "payload",
+    "visibility"
+  ],
+  "properties": {
+    "schema": { "const": "rr.chronicle.v1" },
+    "event_id": {
+      "type": "string",
+      "pattern": "^(wide|mud):evt:[A-Za-z0-9:_-]{8,120}$"
+    },
+    "event_type": {
+      "enum": [
+        "wide_world.death",
+        "wide_world.deed",
+        "wide_world.ending",
+        "wide_world.institution_changed",
+        "wide_world.artifact_legacy",
+        "wide_world.region_changed",
+        "mud.death",
+        "mud.deed",
+        "mud.institution_changed",
+        "mud.artifact_changed"
+      ]
+    },
+    "source": { "enum": ["wide_world", "mud"] },
+    "world_key": {
+      "type": "string",
+      "pattern": "^(daily|weekly|persistent):[A-Za-z0-9:_-]{1,80}$"
+    },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "subject": { "$ref": "#/$defs/subject" },
+    "place": { "$ref": "#/$defs/place" },
+    "tags": {
+      "type": "array",
+      "maxItems": 12,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,31}$" }
+    },
+    "effects": {
+      "type": "object",
+      "maxProperties": 16,
+      "propertyNames": { "pattern": "^[a-z][a-z0-9_]{0,31}$" },
+      "additionalProperties": { "type": "integer", "minimum": -10, "maximum": 10 }
+    },
+    "payload": {
+      "type": "object",
+      "maxProperties": 32
+    },
+    "visibility": { "enum": ["public", "private", "moderated"] }
+  },
+  "$defs": {
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "name"],
+      "properties": {
+        "kind": { "enum": ["character", "institution", "artifact", "region", "site"] },
+        "id": { "type": "string", "pattern": "^(wide|mud):[A-Za-z0-9:_-]{3,120}$" },
+        "name": { "type": "string", "minLength": 2, "maxLength": 80 }
+      }
+    },
+    "place": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "region_id": { "type": "string", "pattern": "^(wide|mud):region:[A-Za-z0-9:_-]{1,100}$" },
+        "site_id": { "type": "string", "pattern": "^(wide|mud):site:[A-Za-z0-9:_-]{1,100}$" },
+        "name": { "type": "string", "maxLength": 80 }
+      }
+    }
+  }
+}

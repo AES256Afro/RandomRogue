@@ -1,0 +1,27 @@
+{
+  "schema": "rr.chronicle.v1",
+  "event_id": "wide:evt:daily:20653:death:42",
+  "event_type": "wide_world.death",
+  "source": "wide_world",
+  "world_key": "daily:20653",
+  "occurred_at": "2026-07-19T18:30:00.000Z",
+  "subject": {
+    "kind": "character",
+    "id": "wide:character:daily:20653:42",
+    "name": "Kazak Urdim"
+  },
+  "place": {
+    "region_id": "wide:region:17",
+    "site_id": "wide:site:44",
+    "name": "The Municipal Teeth Mine"
+  },
+  "tags": ["death", "labor", "dungeon"],
+  "effects": {},
+  "payload": {
+    "meaning": "Hammercoin",
+    "epitaph": "Cause of death: optimism with a clipboard.",
+    "cause": "trusted a privatized safety railing",
+    "days": 31
+  },
+  "visibility": "public"
+}

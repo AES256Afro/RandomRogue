@@ -7,6 +7,19 @@ Single-player baseline: Release 19, commit `e788474`
 Last updated: 2026-07-19
 Owners: Random Rogue project and Random Rogue MUD project
 
+## Implementation status
+
+- Phase M0: complete. Runtime, persistence, network, moderation, deployment,
+  backup, and restore boundaries are audited in the MUD repository. The legacy
+  death crossing remains covered by compatibility tests.
+- Phase M1: complete. `rr.chronicle.v1`, stable identifiers, Cloudflare D1
+  canonical event storage, MUD imported-event storage, atomic death projection,
+  duplicate protection, source links, HTTP inspection, and admin inspection are
+  implemented and acceptance-tested.
+- Phase M2: next. Refactor the compatibility route onto the common application
+  service and add projector interfaces for rumors, institutions, regions, and
+  artifact echoes.
+
 ## 1. Purpose
 
 This is the evolving build plan for connecting Random Rogue's single-player
@@ -190,7 +203,7 @@ without replaying ordinary player commands.
 
 ## 8. Build phases
 
-### Phase M0: Audit and safety boundary
+### Phase M0: Audit and safety boundary [COMPLETE]
 
 Goal: Understand the MUD before restructuring it.
 
@@ -207,7 +220,7 @@ Acceptance:
 - A clean MUD restore can be performed from backup.
 - No restructuring begins before the current behavior is captured.
 
-### Phase M1: Canonical identities and Chronicle core
+### Phase M1: Canonical identities and Chronicle core [COMPLETE]
 
 Goal: Give shared history stable names.
 
@@ -445,3 +458,9 @@ feature handoff target is the end of Phase M3.
 - Separated live shared deeds from planned MUD deed projection.
 - Defined the event envelope, MUD restructure, build phases, release
   synchronization checklist, and hard stopping point.
+- Completed M0 with a system inventory, legacy fixture boundary, guarded restore
+  procedure, and full MUD regression run.
+- Completed M1 with the canonical JSON Schema and fixture, stable event and
+  entity IDs, D1 source-event storage, MUD idempotency ledger, atomic ghost
+  projector, public source inspection, and admin inspection.
+- Verified 100 deliveries of one fixture produce one source event and one ghost.
