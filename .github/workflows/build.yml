@@ -35,6 +35,8 @@ jobs:
         run: cmake --build build
       - name: Validate content
         run: ./build/validate assets
+      - name: Narrative coverage report
+        run: ./build/analyze assets
       - name: Determinism gate (chronicle must generate)
         run: ./build/chronicle_dump 90210 assets | head -5
       - name: Monte Carlo balance smoke test

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(RandomRogue VERSION 0.11.0 LANGUAGES C CXX)
+project(RandomRogue VERSION 0.12.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -37,6 +37,7 @@ add_executable(random_rogue
     src/items.cpp
     src/audio.cpp
     src/save.cpp
+    src/story.cpp
 )
 
 # ---- chronicle_dump: worldgen dev tool (native only, no raylib) -------------
@@ -55,6 +56,10 @@ if(NOT EMSCRIPTEN)
     add_executable(validate tools/validate.cpp)
     target_link_libraries(validate PRIVATE nlohmann_json::nlohmann_json)
 
+    # Narrative coverage and structural similarity report for content authors.
+    add_executable(analyze tools/analyze.cpp)
+    target_link_libraries(analyze PRIVATE nlohmann_json::nlohmann_json)
+
     # Monte-Carlo balance bot: thousands of headless runs, data over vibes.
     add_executable(playtest
         tools/playtest.cpp
@@ -71,6 +76,8 @@ if(NOT EMSCRIPTEN)
         src/grammar.cpp
         src/language.cpp
         src/world.cpp
+        src/events.cpp
+        src/story.cpp
     )
     target_link_libraries(regression PRIVATE nlohmann_json::nlohmann_json)
     target_include_directories(regression PRIVATE src)

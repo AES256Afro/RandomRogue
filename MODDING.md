@@ -15,7 +15,9 @@ tools that gate the official content.
    under node). Fix anything it flags.
 4. (Optional) Balance-check: `playtest 3000 assets` runs three thousand bot
    runs and reports if your event murders everyone.
-5. Play. On desktop, edit the files next to the exe. For the web build,
+5. Run `analyze assets` to see location coverage, semantic coverage, delayed
+   callbacks, relationship usage, repeated openings, and choice skeletons.
+6. Play. On desktop, edit the files next to the exe. For the web build,
    rebuild the bundle (assets are baked in at link time).
 
 ## Event schema
@@ -27,12 +29,15 @@ tools that gate the official content.
                                     // road crash dungeon_finale; [] = only
                                     // reachable via goto
   "weight": 10,                     // draw weight within its deck (default 10)
+  "family": "tavern_argument",      // optional structural cooldown group
+  "tags": ["social", "absurd"],     // optional Story Director ingredients
   "when": ["trait cursed"],         // optional gate: all must hold to deal
   "slots": { "npc": "figure_alive" }, // optional chronicle bindings, see below
   "text": "Card text. {npc} and {site} interpolate. Grammar keys too.",
   "choices": [                      // 1-4 choices
     {
       "text": "Do the thing",
+      "approach": "mercy",          // optional choice behavior for pacing
       "requires": { "money": 5 },   // gates: money, credits, stat+gte,
                                     // item, trait, nottrait
       "outcomes": [                 // weighted pool (no dice check)
@@ -64,6 +69,9 @@ stat <s> ±N    trait +id       trait -id       item <template_id>
 loot common    loot fine       removeitem <id> rep ±N
 shop           contract        goto <event_id> take_artifact
 companion <id> companion_leave companion_dies  npc_mark <tag>
+npc_rel <field> +/-N   npc_know N    schedule <days> <event_id> <summary>
+mystery_clue N         mystery_solve region prosperity|danger|unrest +/-N
+region_flag <tag>      clue
 die <epitaph…> finish <epitaph…>   (finish = end the run ALIVE, in gold)
 ```
 
@@ -74,6 +82,8 @@ trait X / !trait X      has <item> / !has <item>   carrying_artifact
 money|credits|hp|day|rep  <op>  N     stat <s> <op> N
 companion / !companion  vehicle / !vehicle
 war_here  plague_here   raining  snowing   season <name>   npc <tag>
+npc_rel <field> <op> N  clues <op> N  mystery_active  mystery_solved
+region plagued|at_war|thriving|impoverished|perilous|volatile|haunted
 ```
 
 ## Slots (chronicle bindings)
@@ -86,6 +96,9 @@ war_here  plague_here   raining  snowing   season <name>   npc <tag>
 | `figure_dead`      | `{name}`, `{name}_trait`, `{name}_year` |
 | `artifact_here`    | `{name}`, `{name}_material` — binds for `take_artifact` |
 | `god`              | `{name}`, `{name}_domain`, `{name}_mood` |
+| `remembered_figure` | a recurring NPC plus relationship values |
+| `mystery_clue`      | a clue and the generated case name |
+| `mystery_culprit`   | the culprit fixed during world creation |
 
 If a slot can't be satisfied where the card is dealt, the event is skipped —
 so slot events are automatically situational.
@@ -93,6 +106,7 @@ so slot events are automatically situational.
 ## Other moddable data
 
 - `assets/data/items.json` — item templates (types: weapon, armor, food,
+- `assets/data/recipes/items.json` - two-item field recipes and their results
   drink, med, book, bag, misc, vehicle; `use` effects; `passive` bonuses)
 - `assets/data/quirks.json` — quirk texts + hidden passive pools
 - `assets/data/traits.json` — trait id → display name

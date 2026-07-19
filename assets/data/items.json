@@ -43,5 +43,14 @@
   { "id": "dune_buggy",    "name": "Sky-Metal Dune Buggy", "type": "vehicle", "value": 45, "passive": "check dex +1" },
   { "id": "sloop",         "name": "Deed to a Sloop",     "type": "ship",    "value": 55 },
   { "id": "incense",       "name": "Temple Incense",     "type": "misc",   "value": 4,  "use": ["hp +2"] },
-  { "id": "dice_set",      "name": "Suspiciously Nice Dice", "type": "misc", "value": 6 }
+  { "id": "dice_set",      "name": "Suspiciously Nice Dice", "type": "misc", "value": 6 },
+  { "id": "reinforced_satchel", "name": "Reinforced Satchel", "type": "bag", "value": 18 },
+  { "id": "honey_rations", "name": "Honeyed Road Rations", "type": "food", "value": 7, "use": ["hp +6"] },
+  { "id": "antiseptic_kit", "name": "Questionable Antiseptic Kit", "type": "med", "value": 10, "use": ["hp +7"] },
+  { "id": "warded_rope", "name": "Warded Rope", "type": "misc", "value": 12, "passive": "check wis +2" },
+  { "id": "evidence_dossier", "name": "Cross-Referenced Dossier", "type": "book", "value": 16, "use": ["clue"] },
+  { "id": "surveyor_kit", "name": "Surveyor's Field Kit", "type": "misc", "value": 18, "passive": "check wis +2" },
+  { "id": "probability_engine", "name": "Pocket Probability Engine", "type": "misc", "value": 22, "passive": "check int +2" },
+  { "id": "monster_bait", "name": "Fermented Monster Bait", "type": "misc", "value": 8 },
+  { "id": "saintly_charm", "name": "Dubiously Saintly Charm", "type": "misc", "value": 14, "passive": "check cha +2" }
 ]

@@ -64,7 +64,10 @@ struct Character {
     }
 
     // Effective pack space: a satchel earns its slot back and then some (R10).
-    int capacity() const { return packMax + (hasItem("satchel") ? 2 : 0); }
+    int capacity() const {
+        return packMax + (hasItem("reinforced_satchel") ? 4
+                         : (hasItem("satchel") ? 2 : 0));
+    }
 
     // Best-in-kind equipment (R10): you fight with ONE weapon and wear ONE
     // suit of armor, so only the best of each counts toward a given check.

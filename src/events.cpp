@@ -88,7 +88,9 @@ void EventDeck::loadJsonText(const char* jsonText) {
         Event ev;
         ev.id = e.value("id", "");
         ev.weight = e.value("weight", 10);
+        ev.family = e.value("family", "");
         ev.text = e.value("text", "");
+        if (e.contains("tags")) ev.tags = parseStringArray(e["tags"]);
         if (e.contains("locations") && e["locations"].is_array())
             for (auto& l : e["locations"])
                 if (l.is_string()) ev.locations.push_back(l.get<std::string>());
@@ -100,6 +102,7 @@ void EventDeck::loadJsonText(const char* jsonText) {
             for (auto& c : e["choices"]) {
                 Choice ch;
                 ch.text = c.value("text", "");
+                ch.approach = c.value("approach", "");
                 if (c.contains("requires") && c["requires"].is_object()) {
                     const json& r = c["requires"];
                     ch.requires_.stat = r.value("stat", "");
@@ -133,7 +136,8 @@ const Event* EventDeck::find(const std::string& id) const {
 }
 
 const Event* EventDeck::draw(Rng& rng, const std::string& location,
-                             const std::set<std::string>* exclude) {
+                             const std::set<std::string>* exclude,
+                             const EventScore& score) {
     for (int pass = 0; pass < 2; pass++) {
         std::vector<const Event*> pool;
         int total = 0;
@@ -142,8 +146,10 @@ const Event* EventDeck::draw(Rng& rng, const std::string& location,
             if (exclude && exclude->count(e.id)) continue;
             for (auto& l : e.locations) {
                 if (l == location) {
+                    int multiplier = score ? score(e) : 100;
+                    if (multiplier <= 0) break;
                     pool.push_back(&e);
-                    total += e.weight;
+                    total += std::max(1, e.weight * multiplier / 100);
                     break;
                 }
             }
@@ -167,7 +173,8 @@ const Event* EventDeck::draw(Rng& rng, const std::string& location,
         }
         int roll = rng.range(1, total > 0 ? total : 1);
         for (auto* e : pool) {
-            roll -= e->weight;
+            int multiplier = score ? score(*e) : 100;
+            roll -= std::max(1, e->weight * multiplier / 100);
             if (roll <= 0) return e; // caller marks used when actually shown
         }
     }

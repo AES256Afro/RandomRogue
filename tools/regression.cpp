@@ -7,6 +7,7 @@
 #include "../src/character.h"
 #include "../src/grammar.h"
 #include "../src/language.h"
+#include "../src/story.h"
 #include "../src/world.h"
 
 static std::string readFile(const std::string& path) {
@@ -51,6 +52,50 @@ int main(int argc, char** argv) {
                  "only the best weapon plus trinkets may affect a check");
     ok &= expect(c.capacity() == c.packMax + 2,
                  "a satchel must increase carrying capacity");
+    ItemInstance reinforced;
+    reinforced.templateId = "reinforced_satchel";
+    reinforced.type = "bag";
+    c.pack = {reinforced};
+    ok &= expect(c.capacity() == c.packMax + 4,
+                 "a reinforced satchel must increase carrying capacity by four");
+
+    Event relationship;
+    relationship.id = "relationship_test";
+    relationship.locations = {"city"};
+    relationship.tags = {"relationship", "social"};
+    relationship.family = "meeting";
+    Choice mercy;
+    mercy.approach = "mercy";
+    relationship.choices.push_back(mercy);
+    Event unrelated;
+    unrelated.id = "unrelated_test";
+    unrelated.locations = {"city"};
+    unrelated.tags = {"economy"};
+    unrelated.family = "market";
+    unrelated.choices.push_back(Choice{});
+    StoryDirector director;
+    StoryContext story;
+    story.knownNpc = true;
+    int connected = director.score(relationship, story);
+    int neutral = director.score(unrelated, story);
+    ok &= expect(connected > neutral,
+                 "known NPCs must raise relationship event relevance");
+    director.record(relationship, &relationship.choices[0], 2);
+    ok &= expect(director.score(relationship, story) < director.score(unrelated, story),
+                 "recent event families must cool down below fresh material");
+
+    EventDeck directedDeck;
+    directedDeck.loadJsonText(
+        "[{\"id\":\"a\",\"locations\":[\"road\"],\"choices\":[{\"text\":\"a\","
+        "\"outcomes\":[{\"text\":\"a\"}]}]},"
+        "{\"id\":\"b\",\"locations\":[\"road\"],\"choices\":[{\"text\":\"b\","
+        "\"outcomes\":[{\"text\":\"b\"}]}]}]");
+    Rng directedRng(12, 34);
+    const Event* directed = directedDeck.draw(
+        directedRng, "road", nullptr,
+        [](const Event& event) { return event.id == "b" ? 100 : 0; });
+    ok &= expect(directed && directed->id == "b",
+                 "the event deck must honor director eligibility scores");
 
     static const std::set<std::string> required = {
         "plains", "coast", "forest", "mountains", "swamp", "desert"
@@ -68,6 +113,6 @@ int main(int argc, char** argv) {
     }
 
     if (!ok) return 1;
-    std::printf("regression: character math, equipment, bags, and 5000 worlds pass\n");
+    std::printf("regression: character math, equipment, story direction, and 5000 worlds pass\n");
     return 0;
 }

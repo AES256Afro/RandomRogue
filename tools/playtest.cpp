@@ -31,6 +31,8 @@ struct BotState {
     bool finishedWell = false;
     int foodEaten = 0;
     int contracts = 0; // completed contracts (career ladder)
+    int clues = 0;
+    bool mysterySolved = false;
 };
 
 // A pared-down mirror of Game::evalCond — world conditions get coin flips.
@@ -59,6 +61,10 @@ static bool botCond(BotState& s, const std::string& cond) {
         return s.rng.chance(12);
     if (a == "season") return s.rng.chance(25);
     if (a == "npc") return false;
+    if (a == "npc_rel") return s.rng.chance(45);
+    if (a == "mystery_active") return !s.mysterySolved;
+    if (a == "mystery_solved") return s.mysterySolved;
+    if (a == "region") return s.rng.chance(22);
     auto cmp = [&](int lhs) {
         int rhs = atoi(cc.c_str());
         if (b == ">") return lhs > rhs;
@@ -69,6 +75,7 @@ static bool botCond(BotState& s, const std::string& cond) {
     };
     if (a == "rep") return cmp(0);
     if (a == "contracts") return cmp(s.contracts);
+    if (a == "clues") return cmp(s.clues);
     if (a == "money") return cmp(s.c.money);
     if (a == "credits") return cmp(s.c.credits);
     if (a == "hp") return cmp(s.c.hp);
@@ -233,6 +240,10 @@ int main(int argc, char** argv) {
                         // Taken contracts complete about half the time in
                         // real play; approximate the career ladder.
                         else if (verb == "contract") { if (s.rng.chance(50)) s.contracts++; }
+                        else if (verb == "clue" || verb == "mystery_clue") {
+                            int v = 1; fs >> v; s.clues = std::min(3, s.clues + v);
+                        }
+                        else if (verb == "mystery_solve") { s.mysterySolved = true; }
                         else if (verb == "die") { s.c.dead = true; }
                         else if (verb == "finish") { s.c.dead = true; s.finishedWell = true; finishEvents[ev->id]++; }
                     }

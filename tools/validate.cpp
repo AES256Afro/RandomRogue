@@ -29,11 +29,14 @@ static const std::set<std::string> kVerbs = {
     "hp", "maxhp", "money", "credits", "stat", "item", "loot", "removeitem",
     "rep", "shop", "goto", "take_artifact", "die", "trait", "npc_mark",
     "companion", "companion_leave", "companion_dies", "contract", "finish",
-    "slay_beast", "legacy_bless", "learn", "npc_unmark", "rival_dies", "favor"};
+    "slay_beast", "legacy_bless", "learn", "npc_unmark", "rival_dies", "favor",
+    "schedule", "npc_rel", "npc_know", "clue", "mystery_clue", "mystery_solve",
+    "region", "region_flag"};
 static const std::set<std::string> kSlotQueries = {
     "chronicle_random", "chronicle_news", "artifact_here", "figure_alive",
     "figure_dead", "god", "beast_here", "stranger_here", "ghost_here",
-    "rival", "wronged_figure"};
+    "rival", "wronged_figure", "remembered_figure", "mystery_clue",
+    "mystery_culprit"};
 static const std::set<std::string> kDecks = {
     "city", "tavern", "dungeon", "dungeon_finale", "cave", "forest", "road",
     "crash", "swamp", "mountains", "coast", "sea"};
@@ -55,10 +58,11 @@ static bool validWhen(const std::string& w) {
                                                 "companion", "!companion",
                                                 "vehicle", "!vehicle",
                                                 "ship", "!ship"};
+    if (a == "mystery_active" || a == "mystery_solved") return true;
     static const std::set<std::string> named = {"trait", "!trait", "has", "!has", "npc",
-                                                "season"};
+                                                "season", "region"};
     static const std::set<std::string> cmp = {"rep", "money", "credits", "hp", "day",
-                                              "contracts"};
+                                              "contracts", "clues"};
     static const std::set<std::string> ops = {">", "<", ">=", "<=", "=="};
     if (unary.count(a)) return true;
     if (named.count(a)) return !b.empty();
@@ -67,6 +71,14 @@ static bool validWhen(const std::string& w) {
         std::string d;
         ss >> d;
         return kStats.count(b) && ops.count(c) && !d.empty();
+    }
+    if (a == "npc_rel") {
+        std::string d;
+        ss >> d;
+        static const std::set<std::string> fields = {
+            "trust", "fear", "respect", "debt", "affection", "grudge", "knowledge"
+        };
+        return fields.count(b) && ops.count(c) && !d.empty();
     }
     return false;
 }
@@ -79,11 +91,14 @@ int main(int argc, char** argv) {
     json lang = json::parse(readFile(assets + "/data/recipes/language.json"), nullptr, false);
     json quirks = json::parse(readFile(assets + "/data/quirks.json"), nullptr, false);
     json traits = json::parse(readFile(assets + "/data/traits.json"), nullptr, false);
+    json itemRecipes = json::parse(readFile(assets + "/data/recipes/items.json"), nullptr, false);
     if (items.is_discarded()) fail("items.json", "does not parse");
     if (prose.is_discarded()) fail("prose.json", "does not parse");
     if (lang.is_discarded()) fail("language.json", "does not parse");
     if (quirks.is_discarded()) fail("quirks.json", "does not parse");
     if (traits.is_discarded()) fail("traits.json", "does not parse");
+    if (itemRecipes.is_discarded() || !itemRecipes.is_array())
+        fail("recipes/items.json", "does not parse as an array");
 
     // Events assemble from the manifest's per-deck files.
     json manifest = json::parse(readFile(assets + "/data/events/manifest.json"), nullptr, false);
@@ -116,7 +131,7 @@ int main(int argc, char** argv) {
     std::set<std::string> grammarKeys;
     for (auto& [k, v] : prose.items()) grammarKeys.insert(k);
 
-    std::set<std::string> eventIds, gotoTargets;
+    std::set<std::string> eventIds, gotoTargets, scheduledTargets;
     for (auto& e : events) {
         std::string id = e.value("id", "");
         if (!eventIds.insert(id).second) fail(id, "duplicate event id");
@@ -152,6 +167,22 @@ int main(int argc, char** argv) {
             if (verb == "stat" && !kStats.count(a)) fail(id, "unknown stat: " + a);
             if (verb == "loot" && a != "common" && a != "fine") fail(id, "unknown loot tier: " + a);
             if (verb == "goto") gotoTargets.insert(a);
+            if (verb == "schedule") {
+                std::string target;
+                ss >> target;
+                if (target.empty()) fail(id, "schedule is missing an event id");
+                else scheduledTargets.insert(target);
+            }
+            if (verb == "npc_rel") {
+                static const std::set<std::string> fields = {
+                    "trust", "fear", "respect", "debt", "affection", "grudge", "knowledge"
+                };
+                if (!fields.count(a)) fail(id, "unknown NPC relationship field: " + a);
+            }
+            if (verb == "region") {
+                static const std::set<std::string> fields = {"prosperity", "danger", "unrest"};
+                if (!fields.count(a)) fail(id, "unknown regional field: " + a);
+            }
         }
     };
 
@@ -196,6 +227,7 @@ int main(int argc, char** argv) {
     for (auto& e : events) {
         std::string id = e.value("id", "");
         std::set<std::string> slots;
+        if (e.contains("tags") && !e["tags"].is_array()) fail(id, "tags must be an array");
         if (e.contains("slots"))
             for (auto& [name, q] : e["slots"].items()) {
                 slots.insert(name);
@@ -213,6 +245,8 @@ int main(int argc, char** argv) {
             fail(id, "events need 1-4 choices, has " +
                          std::to_string(choices.is_array() ? choices.size() : 0));
         for (auto& c : choices) {
+            if (c.contains("approach") && !c["approach"].is_string())
+                fail(id, "choice approach must be a string");
             checkTokens(id, c.value("text", ""), slots);
             if (c.contains("requires")) {
                 const json& r = c["requires"];
@@ -240,6 +274,21 @@ int main(int argc, char** argv) {
 
     for (auto& target : gotoTargets)
         if (!eventIds.count(target)) fail("goto", "target event does not exist: " + target);
+    for (auto& target : scheduledTargets)
+        if (!eventIds.count(target)) fail("schedule", "target event does not exist: " + target);
+
+    std::set<std::string> recipeIds;
+    for (auto& recipe : itemRecipes) {
+        std::string id = recipe.value("id", "");
+        if (id.empty()) fail("recipes/items.json", "recipe without id");
+        if (!recipeIds.insert(id).second) fail(id, "duplicate item recipe id");
+        for (const char* key : {"first", "second", "result"}) {
+            std::string item = recipe.value(key, "");
+            if (!item.empty() && !itemIds.count(item))
+                fail(id, std::string("recipe ") + key + " references unknown item: " + item);
+        }
+        checkEffects(id, recipe.value("effects", json::array()));
+    }
 
     // Grammar self-check: every {token} inside grammar rules must resolve.
     for (auto& [key, variants] : prose.items()) {
@@ -259,9 +308,9 @@ int main(int argc, char** argv) {
         }
     }
 
-    printf("validate: %d events (%d files), %d items, %d grammar keys, %d traits\n",
+    printf("validate: %d events (%d files), %d items, %d recipes, %d grammar keys, %d traits\n",
            (int)events.size(), (int)manifest["files"].size(), (int)itemIds.size(),
-           (int)grammarKeys.size(), (int)traitIds.size());
+           (int)recipeIds.size(), (int)grammarKeys.size(), (int)traitIds.size());
     printf("variance: %d conditional outcomes, %d trait-touching effects\n",
            conditionalOutcomes, traitTouches);
     printf("-> %s\n", errors ? "FAILED" : "all good");

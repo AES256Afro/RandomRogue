@@ -2,7 +2,7 @@
 // Network-first so updates land immediately; cache answers when the road
 // has no signal. Leaderboard/ghost calls (__*) are never cached.
 const CACHE_PREFIX = 'random-rogue-';
-const CACHE = CACHE_PREFIX + 'v11';
+const CACHE = CACHE_PREFIX + 'v12';
 const CORE = ['./', 'index.html', 'random_rogue.js', 'random_rogue.wasm',
               'random_rogue.data', 'manifest.webmanifest', 'icon-192.png',
               'icon-512.png'];

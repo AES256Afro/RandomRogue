@@ -1,0 +1,82 @@
+[
+  {
+    "id": "repair_rusty_blade",
+    "name": "Rebuild the Rusty Sword",
+    "first": "rusty_sword",
+    "second": "repair_kit",
+    "result": "decent_sword",
+    "text": "You replace three bad rivets and one load-bearing superstition. The sword becomes respectable enough to resent its old name."
+  },
+  {
+    "id": "reinforce_satchel",
+    "name": "Reinforce the Satchel",
+    "first": "satchel",
+    "second": "sewing_kit",
+    "result": "reinforced_satchel",
+    "text": "You add hidden seams, doubled straps, and a pocket whose geometry would upset a surveyor."
+  },
+  {
+    "id": "honey_rations",
+    "name": "Pack Honeyed Rations",
+    "first": "bread",
+    "second": "honeycomb",
+    "result": "honey_rations",
+    "text": "The result is sticky, durable, and capable of surviving a minor dynasty."
+  },
+  {
+    "id": "field_antiseptic",
+    "name": "Make Field Antiseptic",
+    "first": "ale",
+    "second": "bandages",
+    "result": "antiseptic_kit",
+    "text": "Half the ale goes into the bandages. The other half assists the manufacturing staff."
+  },
+  {
+    "id": "ward_rope",
+    "name": "Ward the Rope",
+    "first": "rope",
+    "second": "incense",
+    "result": "warded_rope",
+    "text": "Every knot now resembles a tiny legal objection to the supernatural."
+  },
+  {
+    "id": "cross_reference_evidence",
+    "name": "Cross-Reference the Evidence",
+    "first": "recording",
+    "second": "treasure_map",
+    "result": "evidence_dossier",
+    "text": "The voice on the crystal mentions a road absent from the map. The omission is more useful than either object was alone."
+  },
+  {
+    "id": "surveyor_kit",
+    "name": "Build a Surveyor's Kit",
+    "first": "spyglass",
+    "second": "treasure_map",
+    "result": "surveyor_kit",
+    "text": "You align the map to the cracked lens. Every old error points toward something deliberately hidden."
+  },
+  {
+    "id": "probability_engine",
+    "name": "Assemble a Probability Engine",
+    "first": "credit_chip",
+    "second": "dice_set",
+    "result": "probability_engine",
+    "text": "The chip predicts the dice perfectly, except when observed, wagered upon, or needed. It still improves your planning."
+  },
+  {
+    "id": "monster_bait",
+    "name": "Ferment Monster Bait",
+    "first": "jerky",
+    "second": "swamp_wine",
+    "result": "monster_bait",
+    "text": "It smells like a tavern floor acquired legal personhood. Large predators should adore it."
+  },
+  {
+    "id": "saintly_charm",
+    "name": "Consecrate the Lucky Rock",
+    "first": "lucky_rock",
+    "second": "incense",
+    "result": "saintly_charm",
+    "text": "The rock accepts sainthood immediately and with suspicious confidence."
+  }
+]

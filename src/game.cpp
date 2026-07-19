@@ -167,6 +167,8 @@ bool Game::init() {
     loadText("assets/data/recipes/language.json", [&](const char* t) { forge_.loadJsonText(t); });
     loadText("assets/data/items.json", [&](const char* t) { items_.loadItemsJsonText(t); });
     loadText("assets/data/quirks.json", [&](const char* t) { items_.loadQuirksJsonText(t); });
+    loadText("assets/data/recipes/items.json",
+             [&](const char* t) { items_.loadRecipesJsonText(t); });
     items_.generateFamilies();
     // Events live in per-deck files listed by a manifest.
     loadText("assets/data/events/manifest.json", [&](const char* t) {
@@ -292,28 +294,120 @@ void Game::dismissCompanion(bool died) {
     ch_.packMax = 9;
 }
 
+std::string Game::RegionState::description() const {
+    std::string out;
+    if (prosperity >= 3) out = "thriving";
+    else if (prosperity <= -3) out = "impoverished";
+    else out = "holding together";
+    if (danger >= 3) out += ", perilous";
+    else if (danger <= -2) out += ", unusually safe";
+    if (unrest >= 3) out += ", and close to revolt";
+    else if (unrest <= -2) out += ", and politically sleepy";
+    if (flags.count("plagued")) out += " under quarantine";
+    if (flags.count("at_war")) out += " behind wartime checkpoints";
+    if (flags.count("haunted")) out += " with a documented haunting";
+    return out;
+}
+
+Game::NpcRelation& Game::relation(int figure) {
+    NpcRelation& value = npcRelations_[figure];
+    value.lastSeen = ch_.day;
+    return value;
+}
+
+const Game::NpcRelation* Game::relationIfKnown(int figure) const {
+    auto found = npcRelations_.find(figure);
+    return found == npcRelations_.end() ? nullptr : &found->second;
+}
+
+StoryContext Game::storyContext(const std::string& location) const {
+    StoryContext ctx;
+    ctx.day = ch_.day;
+    ctx.location = location;
+    ctx.weather = weather_;
+    ctx.companion = comp_.active;
+    ctx.quest = contract_.active;
+    ctx.knownNpc = !npcRelations_.empty();
+    ctx.mystery = mystery_.active && !mystery_.solved;
+    for (const ItemInstance& item : ch_.pack)
+        if (item.artifactId >= 0) ctx.artifact = true;
+    ctx.plague = history_.plaguedRegions.count(currentRegion_) > 0;
+    int owner = regionOwner(currentRegion_);
+    for (const LiveWar& war : history_.liveWars)
+        if (war.a == owner || war.b == owner) ctx.war = true;
+    return ctx;
+}
+
 void Game::offerContract() {
     if (contract_.active || history_.factions.empty()) return;
     contract_ = Contract{};
     contract_.faction = runRng_.range(0, (int)history_.factions.size() - 1);
     const std::string& patron = history_.factions[contract_.faction].name;
+    contract_.acceptedDay = ch_.day;
     std::vector<int> resting;
     for (int i = 0; i < (int)history_.artifacts.size(); i++)
         if (!history_.artifacts[i].claimed && history_.artifacts[i].restingSite >= 0)
             resting.push_back(i);
-    if (!resting.empty() && runRng_.chance(60)) {
+    std::vector<int> beasts;
+    for (int i = 0; i < (int)history_.beasts.size(); i++)
+        if (history_.beasts[i].died < 0) beasts.push_back(i);
+    std::vector<int> known;
+    for (auto& pair : npcRelations_)
+        if (pair.first >= 0 && pair.first < (int)history_.figures.size() &&
+            history_.figures[pair.first].died < 0)
+            known.push_back(pair.first);
+
+    int kind = runRng_.range(0, 4);
+    if (kind == 0 && !resting.empty()) {
         int ai = resting[runRng_.range(0, (int)resting.size() - 1)];
+        contract_.kind = "artifact";
         contract_.artifactId = ai;
-        contract_.reward = 22;
+        contract_.reward = 24;
         contract_.desc = "Recover " + history_.artifacts[ai].display() + " (rests at " +
                          world_.sites[history_.artifacts[ai].restingSite].name +
                          ") for " + patron;
+    } else if (kind == 1 && !beasts.empty()) {
+        int bi = beasts[runRng_.range(0, (int)beasts.size() - 1)];
+        contract_.kind = "hunt";
+        contract_.beastId = bi;
+        contract_.reward = 30;
+        contract_.desc = "End the career of " + history_.beasts[bi].name + " for " + patron;
+    } else if (kind == 2 && !known.empty()) {
+        int fi = known[runRng_.range(0, (int)known.size() - 1)];
+        contract_.kind = "reconcile";
+        contract_.figureId = fi;
+        contract_.reward = 18;
+        contract_.desc = "Earn the trust of " + history_.figures[fi].name + " for " + patron;
+    } else if (kind == 3) {
+        static const char* goods[] = {"bread", "rope", "recording", "incense", "monster_bait"};
+        int gi = runRng_.range(0, 4);
+        int s = runRng_.range(0, (int)world_.sites.size() - 1);
+        contract_.kind = "delivery";
+        contract_.requiredItem = goods[gi];
+        contract_.siteId = s;
+        contract_.reward = 16;
+        contract_.desc = "Deliver " + contract_.requiredItem + " to " + world_.sites[s].name +
+                         " for " + patron;
+    } else if (kind == 4 && mystery_.active && !mystery_.solved) {
+        contract_.kind = "mystery";
+        contract_.reward = 28;
+        contract_.desc = "Resolve " + mystery_.title + " for " + patron;
     } else {
         int s = runRng_.range(0, (int)world_.sites.size() - 1);
+        contract_.kind = "survey";
         contract_.siteId = s;
         contract_.reward = 12;
         contract_.desc = "Survey " + world_.sites[s].name + " for " + patron;
     }
+    static const char* twists[] = {
+        "The patron wants proof, not confidence.",
+        "Your rival has heard about the same fee.",
+        "Payment includes a favor nobody has priced yet.",
+        "The request was filed under a false name."
+    };
+    int twist = runRng_.range(0, 3);
+    contract_.twist = twists[twist];
+    contract_.desc += ". " + contract_.twist;
     contract_.active = true;
 }
 
@@ -325,8 +419,21 @@ void Game::checkPurposes() {
         if (contract_.artifactId >= 0)
             for (auto& item : ch_.pack)
                 if (item.artifactId == contract_.artifactId) done = true;
-        if (contract_.siteId >= 0 && currentSite_ == contract_.siteId) done = true;
+        if (contract_.kind == "survey" && contract_.siteId >= 0 &&
+            currentSite_ == contract_.siteId) done = true;
+        if (contract_.kind == "hunt" && contract_.beastId >= 0 &&
+            contract_.beastId < (int)history_.beasts.size() &&
+            history_.beasts[contract_.beastId].died >= 0) done = true;
+        if (contract_.kind == "reconcile" && contract_.figureId >= 0) {
+            const NpcRelation* rel = relationIfKnown(contract_.figureId);
+            done = rel && rel->trust >= 3 && rel->grudge <= 1;
+        }
+        if (contract_.kind == "delivery" && currentSite_ == contract_.siteId &&
+            ch_.day > contract_.acceptedDay && ch_.hasItem(contract_.requiredItem))
+            done = true;
+        if (contract_.kind == "mystery" && mystery_.solved) done = true;
         if (done) {
+            if (contract_.kind == "delivery") ch_.removeItem(contract_.requiredItem);
             ch_.money += contract_.reward;
             contractsDone_++;
             if (contract_.faction >= 0 && contract_.faction < (int)rep_.size()) {
@@ -334,6 +441,14 @@ void Game::checkPurposes() {
                 if (rep_[contract_.faction] > 50) rep_[contract_.faction] = 50;
             }
             audio_.coin();
+            ChronEntry deed;
+            deed.id = (int)history_.chron.size();
+            deed.year = history_.presentYear;
+            deed.type = "pc_contract";
+            deed.faction = contract_.faction;
+            deed.site = currentSite_;
+            deed.extra = ch_.name.conlang + " completed a " + contract_.kind + " commission";
+            history_.chron.push_back(deed);
             Screen back = screen_;
             showInfo("CONTRACT COMPLETE\n\n" + contract_.desc +
                      ".\n\nA courier finds you within the hour. " +
@@ -431,7 +546,7 @@ void Game::saveRun() {
         sites.push_back({{"name", s.name}, {"type", s.type}, {"deck", s.deck},
                          {"region", s.region}});
     nlohmann::json j = {
-        {"schema", 2},
+        {"schema", 3},
         {"seed", masterSeed_}, {"gen", pendingLegacy_.size()},
         {"name", ch_.name.conlang}, {"meaning", ch_.name.meaning},
         {"stats", std::vector<int>(ch_.stats, ch_.stats + STAT_COUNT)},
@@ -445,8 +560,12 @@ void Game::saveRun() {
         {"liveRng", {liveRng_.state, liveRng_.inc}},
         {"ambId", ambition_.id}, {"ambDone", ambition_.done},
         {"contract", {{"active", contract_.active}, {"desc", contract_.desc},
+                      {"kind", contract_.kind}, {"twist", contract_.twist},
                       {"aid", contract_.artifactId}, {"sid", contract_.siteId},
-                      {"fac", contract_.faction}, {"rw", contract_.reward}}},
+                      {"figure", contract_.figureId}, {"beast", contract_.beastId},
+                      {"fac", contract_.faction}, {"rw", contract_.reward},
+                      {"accepted", contract_.acceptedDay},
+                      {"required", contract_.requiredItem}}},
         {"comp", {{"id", comp_.id}, {"name", comp_.name}, {"kind", comp_.kind},
                   {"trait", comp_.trait}, {"passive", comp_.passive},
                   {"pb", comp_.packBonus}, {"active", comp_.active},
@@ -496,6 +615,40 @@ void Game::saveRun() {
     for (auto& [fi, tags] : npcMarks_)
         marks[std::to_string(fi)] = std::vector<std::string>(tags.begin(), tags.end());
     j["npcMarks"] = marks;
+    nlohmann::json relations = nlohmann::json::object();
+    for (auto& [fi, rel] : npcRelations_)
+        relations[std::to_string(fi)] = {
+            {"trust", rel.trust}, {"fear", rel.fear}, {"respect", rel.respect},
+            {"debt", rel.debt}, {"affection", rel.affection},
+            {"grudge", rel.grudge}, {"knowledge", rel.knowledge},
+            {"lastSeen", rel.lastSeen}};
+    j["npcRelations"] = relations;
+    j["director"] = {
+        {"ids", std::vector<std::string>(director_.recentIds().begin(), director_.recentIds().end())},
+        {"tags", std::vector<std::string>(director_.recentTags().begin(), director_.recentTags().end())},
+        {"families", std::vector<std::string>(director_.recentFamilies().begin(), director_.recentFamilies().end())},
+        {"approaches", std::vector<std::string>(director_.recentApproaches().begin(), director_.recentApproaches().end())},
+        {"counts", director_.tagCounts()}};
+    nlohmann::json consequences = nlohmann::json::array();
+    for (auto& value : consequences_)
+        consequences.push_back({{"event", value.eventId}, {"source", value.source},
+                                {"summary", value.summary}, {"day", value.dueDay},
+                                {"figure", value.figure}, {"region", value.region}});
+    j["consequences"] = consequences;
+    j["scheduled"] = {{"event", scheduledNextId_}, {"figure", scheduledFigure_},
+                       {"region", scheduledRegion_}};
+    nlohmann::json regionState = nlohmann::json::array();
+    for (auto& state : regionStates_)
+        regionState.push_back({{"prosperity", state.prosperity}, {"danger", state.danger},
+                               {"unrest", state.unrest},
+                               {"flags", std::vector<std::string>(state.flags.begin(),
+                                                                  state.flags.end())}});
+    j["regionState"] = regionState;
+    j["mystery"] = {{"active", mystery_.active}, {"solved", mystery_.solved},
+                     {"culprit", mystery_.culprit}, {"victim", mystery_.victim},
+                     {"site", mystery_.site}, {"artifact", mystery_.artifact},
+                     {"clues", mystery_.clues}, {"title", mystery_.title},
+                     {"secret", mystery_.secret}, {"public", mystery_.publicStory}};
     SaveRawRun(j.dump());
 }
 
@@ -660,10 +813,18 @@ bool Game::loadRun() {
         auto& c = j["contract"];
         contract_.active = c.value("active", false);
         contract_.desc = c.value("desc", "");
+        contract_.kind = c.value("kind", "");
+        contract_.twist = c.value("twist", "");
         contract_.artifactId = c.value("aid", -1);
         contract_.siteId = c.value("sid", -1);
+        contract_.figureId = c.value("figure", -1);
+        contract_.beastId = c.value("beast", -1);
         contract_.faction = c.value("fac", -1);
         contract_.reward = c.value("rw", 0);
+        contract_.acceptedDay = c.value("accepted", 0);
+        contract_.requiredItem = c.value("required", "");
+        if (contract_.kind.empty() && contract_.active)
+            contract_.kind = contract_.artifactId >= 0 ? "artifact" : "survey";
     }
     if (j.contains("comp")) {
         auto& c = j["comp"];
@@ -699,6 +860,72 @@ bool Game::loadRun() {
         for (auto& [fi, tags] : j["npcMarks"].items())
             for (auto& tag : tags)
                 if (tag.is_string()) npcMarks_[atoi(fi.c_str())].insert(tag.get<std::string>());
+    npcRelations_.clear();
+    if (j.contains("npcRelations") && j["npcRelations"].is_object())
+        for (auto& [fi, value] : j["npcRelations"].items()) {
+            NpcRelation rel;
+            rel.trust = value.value("trust", 0);
+            rel.fear = value.value("fear", 0);
+            rel.respect = value.value("respect", 0);
+            rel.debt = value.value("debt", 0);
+            rel.affection = value.value("affection", 0);
+            rel.grudge = value.value("grudge", 0);
+            rel.knowledge = value.value("knowledge", 0);
+            rel.lastSeen = value.value("lastSeen", 0);
+            npcRelations_[atoi(fi.c_str())] = rel;
+        }
+    if (j.contains("director") && j["director"].is_object()) {
+        auto& d = j["director"];
+        director_.restore(d.value("ids", std::vector<std::string>{}),
+                          d.value("tags", std::vector<std::string>{}),
+                          d.value("families", std::vector<std::string>{}),
+                          d.value("approaches", std::vector<std::string>{}),
+                          d.value("counts", std::map<std::string, int>{}));
+    }
+    consequences_.clear();
+    if (j.contains("consequences") && j["consequences"].is_array())
+        for (auto& value : j["consequences"]) {
+            PendingConsequence pending;
+            pending.eventId = value.value("event", "");
+            pending.source = value.value("source", "");
+            pending.summary = value.value("summary", "");
+            pending.dueDay = value.value("day", 0);
+            pending.figure = value.value("figure", -1);
+            pending.region = value.value("region", -1);
+            if (!pending.eventId.empty()) consequences_.push_back(pending);
+        }
+    if (j.contains("scheduled") && j["scheduled"].is_object()) {
+        scheduledNextId_ = j["scheduled"].value("event", "");
+        scheduledFigure_ = j["scheduled"].value("figure", -1);
+        scheduledRegion_ = j["scheduled"].value("region", -1);
+    }
+    if (j.contains("regionState") && j["regionState"].is_array()) {
+        regionStates_.clear();
+        for (auto& value : j["regionState"]) {
+            RegionState state;
+            state.prosperity = value.value("prosperity", 0);
+            state.danger = value.value("danger", 0);
+            state.unrest = value.value("unrest", 0);
+            for (auto& flag : value.value("flags", std::vector<std::string>{}))
+                state.flags.insert(flag);
+            regionStates_.push_back(state);
+        }
+        if (regionStates_.size() != world_.regions.size())
+            regionStates_.resize(world_.regions.size());
+    }
+    if (j.contains("mystery") && j["mystery"].is_object()) {
+        auto& value = j["mystery"];
+        mystery_.active = value.value("active", false);
+        mystery_.solved = value.value("solved", false);
+        mystery_.culprit = value.value("culprit", -1);
+        mystery_.victim = value.value("victim", -1);
+        mystery_.site = value.value("site", -1);
+        mystery_.artifact = value.value("artifact", -1);
+        mystery_.clues = value.value("clues", 0);
+        mystery_.title = value.value("title", "");
+        mystery_.secret = value.value("secret", "");
+        mystery_.publicStory = value.value("public", "");
+    }
     history_.liveWars.clear();
     if (j.contains("wars"))
         for (auto& w : j["wars"])
@@ -819,6 +1046,27 @@ bool Game::evalCond(const std::string& cond) const {
         auto it = npcMarks_.find(slotFigure_);
         return it != npcMarks_.end() && it->second.count(b) > 0;
     }
+    if (a == "npc_rel") {
+        std::string valueText;
+        ss >> valueText;
+        const NpcRelation* rel = relationIfKnown(slotFigure_);
+        if (!rel) return false;
+        int lhs = 0;
+        if (b == "trust") lhs = rel->trust;
+        else if (b == "fear") lhs = rel->fear;
+        else if (b == "respect") lhs = rel->respect;
+        else if (b == "debt") lhs = rel->debt;
+        else if (b == "affection") lhs = rel->affection;
+        else if (b == "grudge") lhs = rel->grudge;
+        else if (b == "knowledge") lhs = rel->knowledge;
+        else return false;
+        int rhs = atoi(valueText.c_str());
+        if (c == ">") return lhs > rhs;
+        if (c == "<") return lhs < rhs;
+        if (c == ">=") return lhs >= rhs;
+        if (c == "<=") return lhs <= rhs;
+        return lhs == rhs;
+    }
     auto cmp = [&](int lhs) {
         int rhs = atoi(c.c_str());
         if (b == ">") return lhs > rhs;
@@ -854,7 +1102,14 @@ bool Game::evalCond(const std::string& cond) const {
     if (a == "raining") return weather_ == "raining";
     if (a == "snowing") return weather_ == "snowing";
     if (a == "season") return season_ == b;
+    if (a == "mystery_active") return mystery_.active && !mystery_.solved;
+    if (a == "mystery_solved") return mystery_.solved;
+    if (a == "region") {
+        return currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size() &&
+               regionStates_[currentRegion_].flags.count(b) > 0;
+    }
     if (a == "contracts") return cmp(contractsDone_);
+    if (a == "clues") return cmp(mystery_.clues);
     if (a == "rep") return cmp(localRep());
     if (a == "money") return cmp(ch_.money);
     if (a == "credits") return cmp(ch_.credits);
@@ -1091,10 +1346,16 @@ void Game::newRun(int classIdx) {
             break;
     }
     deck_.resetUsed();
+    director_.reset();
     pendingArtifact_ = -1;
     pendingShop_ = false;
     forcedNextId_.clear();
+    scheduledNextId_.clear();
+    scheduledFigure_ = -1;
+    scheduledRegion_ = -1;
+    consequences_.clear();
     npcMarks_.clear();
+    npcRelations_.clear();
     slotFigure_ = -1;
     blessingSpent_ = false;
     comp_ = Companion{};
@@ -1119,6 +1380,8 @@ void Game::newRun(int classIdx) {
     wordsThisRun_ = 0;
     landfalls_ = 0;
     settledThisRun_ = false;
+    regionStates_.assign(world_.regions.size(), RegionState{});
+    generateMystery();
     // Class kits that touch post-reset state land here (R7).
     if (classIdx == 7 && !history_.gods.empty())
         favor_[runRng_.range(0, (int)history_.gods.size() - 1)] = 2;
@@ -1127,10 +1390,29 @@ void Game::newRun(int classIdx) {
     npcMarks_.clear();
     {
         nlohmann::json m = nlohmann::json::parse(LoadMarks(masterSeed_), nullptr, false);
-        if (!m.is_discarded() && m.is_object())
-            for (auto& [fig, tags] : m.items())
-                for (auto& t : tags)
-                    npcMarks_[atoi(fig.c_str())].insert(t.get<std::string>());
+        if (!m.is_discarded() && m.is_object()) {
+            nlohmann::json marks = m.contains("marks") ? m["marks"] : m;
+            if (marks.is_object())
+                for (auto& [fig, tags] : marks.items()) {
+                    if (fig == "relations" || fig == "marks") continue;
+                    if (!tags.is_array()) continue;
+                    for (auto& t : tags)
+                        if (t.is_string()) npcMarks_[atoi(fig.c_str())].insert(t.get<std::string>());
+                }
+            if (m.contains("relations") && m["relations"].is_object())
+                for (auto& [fig, value] : m["relations"].items()) {
+                    NpcRelation rel;
+                    rel.trust = value.value("trust", 0);
+                    rel.fear = value.value("fear", 0);
+                    rel.respect = value.value("respect", 0);
+                    rel.debt = value.value("debt", 0);
+                    rel.affection = value.value("affection", 0);
+                    rel.grudge = value.value("grudge", 0);
+                    rel.knowledge = value.value("knowledge", 0);
+                    rel.lastSeen = value.value("lastSeen", 0);
+                    npcRelations_[atoi(fig.c_str())] = rel;
+                }
+        }
     }
     if (classIdx == 5 && !pendingLegacy_.empty() && pendingLegacy_.back().blessing)
         ch_.traits.insert("blessed"); // the afterlife bargain, honored
@@ -1307,6 +1589,122 @@ std::string Game::randomRumor() {
     return rumor;
 }
 
+void Game::generateMystery() {
+    mystery_ = Mystery{};
+    if (history_.figures.size() < 2 || world_.sites.empty()) return;
+    Rng plot(masterSeed_ ^ ((pendingLegacy_.size() + 1) * 0x9e3779b97f4a7c15ULL), 109);
+    std::vector<int> alive, dead;
+    for (int i = 0; i < (int)history_.figures.size(); i++) {
+        if (history_.figures[i].died < 0) alive.push_back(i);
+        else dead.push_back(i);
+    }
+    if (alive.empty()) return;
+    mystery_.culprit = alive[plot.range(0, (int)alive.size() - 1)];
+    if (!dead.empty()) mystery_.victim = dead[plot.range(0, (int)dead.size() - 1)];
+    else {
+        mystery_.victim = plot.range(0, (int)history_.figures.size() - 1);
+        if (mystery_.victim == mystery_.culprit)
+            mystery_.victim = (mystery_.victim + 1) % (int)history_.figures.size();
+    }
+    mystery_.site = plot.range(0, (int)world_.sites.size() - 1);
+    if (!history_.artifacts.empty() && plot.chance(70))
+        mystery_.artifact = plot.range(0, (int)history_.artifacts.size() - 1);
+    const Figure& culprit = history_.figures[mystery_.culprit];
+    const Figure& victim = history_.figures[mystery_.victim];
+    std::string object = mystery_.artifact >= 0
+        ? history_.artifacts[mystery_.artifact].display()
+        : "a sealed page removed from the Chronicle";
+    mystery_.title = "The " + victim.name + " Contradiction";
+    mystery_.publicStory = victim.name + " vanished after carrying " + object +
+                           " through " + world_.sites[mystery_.site].name + ".";
+    mystery_.secret = culprit.name + ", the " + culprit.trait + " " +
+                      culprit.profession + ", rewrote the record to conceal it.";
+    mystery_.active = true;
+}
+
+void Game::queueConsequence(int days, const std::string& eventId,
+                            const std::string& summary) {
+    if (eventId.empty()) return;
+    PendingConsequence value;
+    value.eventId = eventId;
+    value.source = current_ ? current_->id : "world";
+    value.summary = summary;
+    value.dueDay = ch_.day + std::max(1, days);
+    value.figure = slotFigure_;
+    value.region = currentRegion_;
+    consequences_.push_back(value);
+}
+
+void Game::activateDueConsequence() {
+    if (!scheduledNextId_.empty()) return;
+    int due = -1;
+    for (int i = 0; i < (int)consequences_.size(); i++)
+        if (consequences_[i].dueDay <= ch_.day &&
+            (due < 0 || consequences_[i].dueDay < consequences_[due].dueDay))
+            due = i;
+    if (due < 0) return;
+    scheduledNextId_ = consequences_[due].eventId;
+    scheduledFigure_ = consequences_[due].figure;
+    scheduledRegion_ = consequences_[due].region;
+    if (!consequences_[due].summary.empty())
+        newsLine_ = "AN OLD CHOICE RETURNS: " + consequences_[due].summary;
+    consequences_.erase(consequences_.begin() + due);
+}
+
+void Game::updateRegionState() {
+    if (regionStates_.size() != world_.regions.size())
+        regionStates_.assign(world_.regions.size(), RegionState{});
+    for (int r = 0; r < (int)regionStates_.size(); r++) {
+        RegionState& state = regionStates_[r];
+        std::string before = state.description();
+        bool plagued = history_.plaguedRegions.count(r) > 0;
+        bool war = false;
+        int owner = regionOwner(r);
+        for (const LiveWar& live : history_.liveWars)
+            if (live.a == owner || live.b == owner) war = true;
+        bool beast = false;
+        for (const Beast& value : history_.beasts)
+            if (value.died < 0 && value.region == r) beast = true;
+
+        if (ch_.day % 7 == 0) {
+            if (plagued) { state.prosperity--; state.danger++; state.unrest++; }
+            if (war) { state.prosperity--; state.danger++; state.unrest += 2; }
+            if (beast) state.danger++;
+            if (!plagued && !war && !beast) {
+                if ((ch_.day / 7 + r) % 2 == 0) state.prosperity++;
+                if (state.danger > 0) state.danger--;
+                if (state.unrest > 0) state.unrest--;
+            }
+        }
+        state.prosperity = std::max(-5, std::min(5, state.prosperity));
+        state.danger = std::max(-5, std::min(5, state.danger));
+        state.unrest = std::max(-5, std::min(5, state.unrest));
+        if (plagued) state.flags.insert("plagued"); else state.flags.erase("plagued");
+        if (war) state.flags.insert("at_war"); else state.flags.erase("at_war");
+        if (state.danger >= 4 && !beast) state.flags.insert("haunted");
+        if (state.prosperity >= 3) state.flags.insert("thriving");
+        else state.flags.erase("thriving");
+        if (state.prosperity <= -3) state.flags.insert("impoverished");
+        else state.flags.erase("impoverished");
+        if (state.danger >= 3) state.flags.insert("perilous");
+        else state.flags.erase("perilous");
+        if (state.unrest >= 3) state.flags.insert("volatile");
+        else state.flags.erase("volatile");
+
+        std::string after = state.description();
+        if (r == currentRegion_ && ch_.day % 7 == 0 && before != after) {
+            ChronEntry entry;
+            entry.id = (int)history_.chron.size();
+            entry.year = history_.presentYear;
+            entry.type = "region_shift";
+            entry.extra = world_.regions[r].name + " became " + after +
+                          " while the roads were busy elsewhere.";
+            history_.chron.push_back(entry);
+            newsLine_ = entry.extra;
+        }
+    }
+}
+
 // One day passes: the world does not wait for you.
 void Game::dailyTick() {
     ch_.day++;
@@ -1403,6 +1801,8 @@ void Game::dailyTick() {
     weather_ = "clear";
     if (season_ == "winter") { if (roll <= 35) weather_ = "snowing"; }
     else if (roll <= 25) weather_ = "raining";
+    updateRegionState();
+    activateDueConsequence();
 }
 
 std::string Game::chronicleExcerpt(int entries) {
@@ -1443,12 +1843,24 @@ bool Game::resolveSlots(const Event& e, Grammar::Ctx& ctx) {
             for (int i = 0; i < (int)history_.figures.size(); i++)
                 if (history_.figures[i].died < 0) pool.push_back(i);
             if (pool.empty()) return false;
-            int fi = pool[runRng_.range(0, (int)pool.size() - 1)];
+            std::vector<int> familiar;
+            for (int fi : pool)
+                if (npcRelations_.count(fi)) familiar.push_back(fi);
+            int fi = -1;
+            bool recur = !familiar.empty() && runRng_.chance(65);
+            if (recur) fi = familiar[runRng_.range(0, (int)familiar.size() - 1)];
+            else fi = pool[runRng_.range(0, (int)pool.size() - 1)];
             slotFigure_ = fi;
             const Figure& f = history_.figures[fi];
+            NpcRelation& rel = relation(fi);
             ctx[name] = f.name;
             ctx[name + "_trait"] = f.trait;
             ctx[name + "_prof"] = f.profession;
+            ctx[name + "_trust"] = std::to_string(rel.trust);
+            ctx[name + "_fear"] = std::to_string(rel.fear);
+            ctx[name + "_respect"] = std::to_string(rel.respect);
+            ctx[name + "_debt"] = std::to_string(rel.debt);
+            ctx[name + "_grudge"] = std::to_string(rel.grudge);
             if (f.faction >= 0) ctx[name + "_faction"] = history_.factions[f.faction].name;
         } else if (query == "beast_here") {
             // A living named beast lairing in THIS region: huntable.
@@ -1517,6 +1929,58 @@ bool Game::resolveSlots(const Event& e, Grammar::Ctx& ctx) {
             slotFigure_ = found;
             ctx[name] = history_.figures[found].name;
             ctx[name + "_prof"] = history_.figures[found].profession;
+        } else if (query == "remembered_figure") {
+            int found = scheduledFigure_;
+            if (found < 0 || found >= (int)history_.figures.size() ||
+                history_.figures[found].died >= 0) {
+                int best = -1, bestScore = -1000;
+                for (auto& pair : npcRelations_) {
+                    int fi = pair.first;
+                    if (fi < 0 || fi >= (int)history_.figures.size() ||
+                        history_.figures[fi].died >= 0) continue;
+                    const NpcRelation& rel = pair.second;
+                    int score = std::abs(rel.trust) + std::abs(rel.fear) +
+                                std::abs(rel.respect) + std::abs(rel.grudge) + rel.knowledge;
+                    if (score > bestScore) { best = fi; bestScore = score; }
+                }
+                found = best;
+            }
+            if (found < 0) return false;
+            slotFigure_ = found;
+            const Figure& f = history_.figures[found];
+            NpcRelation& rel = relation(found);
+            ctx[name] = f.name;
+            ctx[name + "_trait"] = f.trait;
+            ctx[name + "_prof"] = f.profession;
+            ctx[name + "_trust"] = std::to_string(rel.trust);
+            ctx[name + "_fear"] = std::to_string(rel.fear);
+            ctx[name + "_respect"] = std::to_string(rel.respect);
+            ctx[name + "_debt"] = std::to_string(rel.debt);
+            ctx[name + "_grudge"] = std::to_string(rel.grudge);
+        } else if (query == "mystery_clue") {
+            if (!mystery_.active || mystery_.solved || mystery_.culprit < 0 ||
+                mystery_.culprit >= (int)history_.figures.size()) return false;
+            const Figure& culprit = history_.figures[mystery_.culprit];
+            if (mystery_.clues <= 0)
+                ctx[name] = "The altered ink was mixed by someone trained as a " +
+                            culprit.profession + ".";
+            else if (mystery_.clues == 1)
+                ctx[name] = "A witness remembers the culprit as " + culprit.trait +
+                            ", and remembers being paid to forget.";
+            else
+                ctx[name] = "The hidden signature spells " + culprit.name +
+                            ". At last, the lie has a name.";
+            ctx[name + "_case"] = mystery_.title;
+            ctx[name + "_site"] = world_.sites[mystery_.site].name;
+        } else if (query == "mystery_culprit") {
+            if (!mystery_.active || mystery_.solved || mystery_.culprit < 0 ||
+                mystery_.culprit >= (int)history_.figures.size()) return false;
+            slotFigure_ = mystery_.culprit;
+            const Figure& culprit = history_.figures[mystery_.culprit];
+            ctx[name] = culprit.name;
+            ctx[name + "_trait"] = culprit.trait;
+            ctx[name + "_prof"] = culprit.profession;
+            ctx[name + "_case"] = mystery_.title;
         } else {
             return false; // unknown query: skip the event, loudly absent
         }
@@ -1524,8 +1988,49 @@ bool Game::resolveSlots(const Event& e, Grammar::Ctx& ctx) {
     return true;
 }
 
+bool Game::presentEvent(const Event* event, bool markUsed) {
+    if (!event) return false;
+    current_ = event;
+    Grammar::Ctx ctx = {{"site", siteName_}, {"world", world_.name.conlang}};
+    pendingArtifact_ = -1;
+    slotFigure_ = -1;
+    slotBeast_ = -1;
+    slotGod_ = -1;
+    if (!resolveSlots(*event, ctx)) return false;
+    for (const std::string& condition : event->when)
+        if (!evalCond(condition)) return false;
+
+    if (markUsed) deck_.markUsed(event->id);
+    currentCtx_ = ctx;
+    currentText_ = grammar_.expand(event->text, runRng_, ctx);
+    choiceTexts_.clear();
+    for (const Choice& choice : event->choices)
+        choiceTexts_.push_back(choice.requires_.label() +
+                               grammar_.expand(choice.text, runRng_, ctx));
+    reveal_ = 0.0f;
+    textScroll_ = 0;
+    for (const std::string& location : event->locations)
+        if (location == "dungeon_finale") finalesSeen_++;
+
+    compLine_.clear();
+    if (comp_.active && runRng_.chance(35)) {
+        std::string line = grammar_.expand("{comp_" + comp_.trait + "}", runRng_,
+                                           {{"comp", comp_.name}});
+        compLine_ = comp_.name + ": \"" + line + "\"";
+    }
+    screen_ = EVENT;
+    return true;
+}
+
 void Game::dealEvent() {
     audio_.playMusicFor(deckTag_, masterSeed_);
+    if (!scheduledNextId_.empty()) {
+        const Event* scheduled = deck_.find(scheduledNextId_);
+        scheduledNextId_.clear();
+        if (presentEvent(scheduled, false)) return;
+        scheduledFigure_ = -1;
+        scheduledRegion_ = -1;
+    }
     // Dungeons escalate: the last event of a visit draws from the finale deck.
     std::string tag = deckTag_;
     if ((deckTag_ == "dungeon" || deckTag_ == "crash") && eventsLeftHere_ == 1)
@@ -1533,8 +2038,12 @@ void Game::dealEvent() {
     // Ineligible draws (failed gates/slots) return to the pool unseen; the
     // tried-set stops this loop from redrawing them within one deal (R9).
     std::set<std::string> tried;
+    StoryContext context = storyContext(tag);
     for (int attempt = 0; attempt < 12; attempt++) {
-        current_ = deck_.draw(runRng_, tag, &tried);
+        current_ = deck_.draw(runRng_, tag, &tried,
+                              [&](const Event& event) {
+                                  return director_.score(event, context);
+                              });
         if (!current_ && tag == "dungeon_finale") { tag = "dungeon"; continue; }
         if (!current_ && tag == "crash") { tag = "dungeon"; continue; }
         // Biome decks are smaller; when one runs dry the land defaults.
@@ -1543,34 +2052,7 @@ void Game::dealEvent() {
         if (!current_ && tag == "sea") { tag = "coast"; continue; }
         if (!current_) { enterTravel(); return; }
         tried.insert(current_->id);
-        // Event-level gate: "trait wanted" events only find the wanted.
-        bool gated = false;
-        for (auto& w : current_->when)
-            if (!evalCond(w)) { gated = true; break; }
-        if (gated) continue;
-        Grammar::Ctx ctx = {{"site", siteName_}, {"world", world_.name.conlang}};
-        pendingArtifact_ = -1;
-        slotFigure_ = -1;
-        if (!resolveSlots(*current_, ctx)) continue;
-        deck_.markUsed(current_->id); // only genuinely-seen cards leave the pool
-        currentCtx_ = ctx;
-        currentText_ = grammar_.expand(current_->text, runRng_, ctx);
-        choiceTexts_.clear();
-        for (auto& c : current_->choices)
-            choiceTexts_.push_back(c.requires_.label() +
-                                   grammar_.expand(c.text, runRng_, ctx));
-        reveal_ = 0.0f;
-        textScroll_ = 0;
-        if (tag == "dungeon_finale") finalesSeen_++;
-        // The company keeps its own commentary.
-        compLine_.clear();
-        if (comp_.active && runRng_.chance(35)) {
-            std::string line = grammar_.expand("{comp_" + comp_.trait + "}", runRng_,
-                                               {{"comp", comp_.name}});
-            compLine_ = comp_.name + ": \"" + line + "\"";
-        }
-        screen_ = EVENT;
-        return;
+        if (presentEvent(current_)) return;
     }
     enterTravel();
 }
@@ -1669,6 +2151,13 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
             dismissCompanion(true);
         } else if (verb == "contract") {
             offerContract();
+        } else if (verb == "schedule") {
+            int days = 1;
+            std::string eventId, summary;
+            ss >> days >> eventId;
+            std::getline(ss, summary);
+            if (!summary.empty() && summary[0] == ' ') summary.erase(0, 1);
+            queueConsequence(days, eventId, summary);
         } else if (verb == "slay_beast") {
             // You did what three armies couldn't. The Chronicle takes note.
             if (slotBeast_ >= 0 && slotBeast_ < (int)history_.beasts.size()) {
@@ -1742,6 +2231,29 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
         } else if (verb == "npc_mark") {
             std::string mark; ss >> mark;
             if (slotFigure_ >= 0) npcMarks_[slotFigure_].insert(mark);
+        } else if (verb == "npc_rel") {
+            std::string field;
+            int amount = 0;
+            ss >> field >> amount;
+            if (slotFigure_ >= 0) {
+                NpcRelation& rel = relation(slotFigure_);
+                int* value = nullptr;
+                if (field == "trust") value = &rel.trust;
+                else if (field == "fear") value = &rel.fear;
+                else if (field == "respect") value = &rel.respect;
+                else if (field == "debt") value = &rel.debt;
+                else if (field == "affection") value = &rel.affection;
+                else if (field == "grudge") value = &rel.grudge;
+                else if (field == "knowledge") value = &rel.knowledge;
+                if (value) *value = std::max(-10, std::min(10, *value + amount));
+            }
+        } else if (verb == "npc_know") {
+            int amount = 1;
+            ss >> amount;
+            if (slotFigure_ >= 0) {
+                NpcRelation& rel = relation(slotFigure_);
+                rel.knowledge = std::max(0, std::min(10, rel.knowledge + amount));
+            }
         } else if (verb == "npc_unmark") {
             // A grudge, formally retired. The family will find a new hobby.
             std::string mark; ss >> mark;
@@ -1774,6 +2286,54 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
                     favor_[slotGod_] = 0;
                 }
             }
+        } else if (verb == "clue" || verb == "mystery_clue") {
+            int amount = 1;
+            ss >> amount;
+            if (mystery_.active && !mystery_.solved) {
+                int before = mystery_.clues;
+                mystery_.clues = std::max(0, std::min(3, mystery_.clues + amount));
+                if (before < 3 && mystery_.clues >= 3)
+                    queueConsequence(1, "r12_mystery_reckoning",
+                                     "The final signature has been authenticated.");
+                else if (before == 0 && mystery_.clues >= 1)
+                    queueConsequence(2, "r12_mystery_second",
+                                     "A witness has reconsidered their silence.");
+                else if (before == 1 && mystery_.clues >= 2)
+                    queueConsequence(2, "r12_mystery_second",
+                                     "A second copy of the altered record has surfaced.");
+            }
+        } else if (verb == "mystery_solve") {
+            if (mystery_.active && !mystery_.solved) {
+                mystery_.solved = true;
+                ChronEntry entry;
+                entry.id = (int)history_.chron.size();
+                entry.year = history_.presentYear;
+                entry.type = "pc_mystery";
+                entry.actor = mystery_.culprit;
+                entry.site = mystery_.site;
+                entry.artifact = mystery_.artifact;
+                entry.extra = ch_.name.conlang + " exposed " + mystery_.title;
+                history_.chron.push_back(entry);
+                newsLine_ = mystery_.title + " is solved. " + mystery_.secret;
+                audio_.fanfare();
+            }
+        } else if (verb == "region") {
+            std::string field;
+            int amount = 0;
+            ss >> field >> amount;
+            if (currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size()) {
+                RegionState& state = regionStates_[currentRegion_];
+                int* value = nullptr;
+                if (field == "prosperity") value = &state.prosperity;
+                else if (field == "danger") value = &state.danger;
+                else if (field == "unrest") value = &state.unrest;
+                if (value) *value = std::max(-5, std::min(5, *value + amount));
+            }
+        } else if (verb == "region_flag") {
+            std::string flag;
+            ss >> flag;
+            if (currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size())
+                regionStates_[currentRegion_].flags.insert(flag);
         } else if (verb == "die") {
             std::string rest;
             std::getline(ss, rest);
@@ -1846,7 +2406,10 @@ void Game::chooseOption(int idx) {
     outcome_ = EventDeck::resolve(choice, ch_, runRng_,
                                   [this](const std::string& c) { return evalCond(c); });
     outcome_.text = grammar_.expand(outcome_.text, runRng_, currentCtx_);
+    director_.record(*current_, &choice, ch_.day);
     applyEffects(outcome_.effects);
+    scheduledFigure_ = -1;
+    scheduledRegion_ = -1;
     ch_.eventsSurvived++;
     if (ch_.dead && ch_.epitaph.empty())
         ch_.epitaph = grammar_.expand("{epitaph}", runRng_, currentCtx_);
@@ -1986,6 +2549,8 @@ void Game::frame(Vector2 mouse, bool pressed) {
         case SAGA:      drawSaga(mouse); break;
         case REPLAY:    drawReplay(mouse); break;
         case OPTIONS:   drawOptions(mouse); break;
+        case CRAFT:     drawCraft(mouse); break;
+        case JOURNAL:   drawJournal(mouse); break;
     }
 }
 
@@ -2113,7 +2678,7 @@ void Game::drawTitle(Vector2 mouse) {
     }
     const char* title = "RANDOM ROGUE";
     DrawText(title, (kW - MeasureText(title, 20)) / 2, 38, 20, PAL_GOLD);
-    DrawText("v11", 4, kH - 10, 10, PAL_DARK); // release stamp for bug reports
+    DrawText("v12", 4, kH - 10, 10, PAL_DARK); // release stamp for bug reports
     if (!dataError_.empty()) {
         DrawTextWrapped(dataError_, 20, 90, kW - 40, PAL_RED);
         return;
@@ -2212,6 +2777,7 @@ void Game::drawTitle(Vector2 mouse) {
         chronCachedPage_ = -1;
         chronDetail_ = -1;
         chronFilterActor_ = chronFilterFaction_ = -1;
+        chronFilterSite_ = chronFilterArtifact_ = chronFilterBeast_ = -1;
         chronFilterList_.clear();
         screen_ = CHRONICLE;
         return;
@@ -2390,14 +2956,27 @@ void Game::drawClassPick(Vector2 mouse) {
     DrawText(head, (kW - MeasureText(head, 10)) / 2, 24, 10, PAL_GOLD);
 
     auto classes = startClasses();
-    std::vector<std::string> rows;
-    std::vector<bool> ok;
-    for (auto& c : classes) {
-        if (c.unlocked) rows.push_back(std::string(c.name) + " - " + c.blurb);
-        else rows.push_back(std::string(c.name) + " (locked: " + c.lockHint + ")");
-        ok.push_back(c.unlocked);
+    const int perPage = 4;
+    int pages = std::max(1, ((int)classes.size() + perPage - 1) / perPage);
+    classPage_ = std::max(0, std::min(pages - 1, classPage_));
+    int first = classPage_ * perPage;
+    int pick = -1;
+    for (int row = 0; row < perPage && first + row < (int)classes.size(); row++) {
+        int ci = first + row;
+        const StartClass& value = classes[ci];
+        std::string label = std::to_string(row + 1) + ") " + value.name +
+            (value.unlocked ? " - " + value.blurb : " (locked: " + value.lockHint + ")");
+        std::vector<std::string> lines = rowLines(label);
+        int y = 52 + row * 25;
+        Rectangle box{4, (float)y, kW - 8.0f, 22};
+        bool hover = value.unlocked && CheckCollisionPointRec(mouse, box);
+        if (hover) DrawRectangleRec(box, PAL_ROW);
+        Color color = value.unlocked ? (hover ? PAL_GOLD : PAL_INK) : PAL_DARK;
+        DrawText(lines[0].c_str(), 8, y + 1, 10, color);
+        if (lines.size() > 1) DrawText(lines[1].c_str(), 18, y + 11, 10, color);
+        if (hover && pressed_) pick = ci;
+        if (IsKeyPressed(KEY_ONE + row) && value.unlocked) pick = ci;
     }
-    int pick = optionRows(rows, ok, mouse);
     if (pick >= 0) {
         audio_.blip();
         pendingClass_ = pick;
@@ -2413,6 +2992,12 @@ void Game::drawClassPick(Vector2 mouse) {
         }
         screen_ = AMBITION;
     }
+    if (classPage_ > 0 &&
+        (uiButton({56, (float)(kH - 20), 48, 16}, "< PREV", mouse) ||
+         IsKeyPressed(KEY_LEFT))) classPage_--;
+    if (classPage_ < pages - 1 &&
+        (uiButton({108, (float)(kH - 20), 48, 16}, "NEXT >", mouse) ||
+         IsKeyPressed(KEY_RIGHT))) classPage_++;
     if (uiButton({4, (float)(kH - 20), 48, 16}, "BACK", mouse) ||
         IsKeyPressed(KEY_ESCAPE)) {
         audio_.blip();
@@ -2434,7 +3019,20 @@ void Game::drawAmbitionPick(Vector2 mouse) {
     }
     rows.push_back("No ambition - pure wandering");
     ok.push_back(true);
-    int pick = optionRows(rows, ok, mouse);
+    int pick = -1;
+    for (int i = 0; i < (int)rows.size(); i++) {
+        std::string label = std::to_string(i + 1) + ") " + rows[i];
+        std::vector<std::string> lines = rowLines(label);
+        int y = 54 + i * 25;
+        Rectangle box{4, (float)y, kW - 8.0f, 22};
+        bool hover = CheckCollisionPointRec(mouse, box);
+        if (hover) DrawRectangleRec(box, PAL_ROW);
+        DrawText(lines[0].c_str(), 8, y + 1, 10, hover ? PAL_GOLD : PAL_INK);
+        if (lines.size() > 1) DrawText(lines[1].c_str(), 18, y + 11, 10,
+                                      hover ? PAL_GOLD : PAL_INK);
+        if (hover && pressed_) pick = i;
+        if (IsKeyPressed(KEY_ONE + i)) pick = i;
+    }
     if (pick >= 0) {
         audio_.blip();
         if (pick < (int)ambitionChoices_.size()) {
@@ -2511,6 +3109,11 @@ void Game::drawTravel(Vector2 mouse) {
     if (uiButton({(float)(kW - 104), (float)(y + 1), 48, 16}, "MAP", mouse)) {
         returnScreen_ = TRAVEL;
         screen_ = WORLDMAP;
+        return;
+    }
+    if (uiButton({(float)(kW - 156), (float)(y + 1), 48, 16}, "JOURNAL", mouse)) {
+        textScroll_ = 0;
+        screen_ = JOURNAL;
         return;
     }
 
@@ -2704,6 +3307,11 @@ void Game::drawInventory(Vector2 mouse) {
             screen_ = returnScreen_;
             return;
         }
+        if (uiButton({(float)(kW - 108), 20, 50, 15}, "CRAFT", mouse)) {
+            craftScroll_ = 0;
+            screen_ = CRAFT;
+            return;
+        }
         if (IsKeyPressed(KEY_TAB) || IsKeyPressed(KEY_ESCAPE)) screen_ = returnScreen_;
         return;
     }
@@ -2806,6 +3414,123 @@ void Game::drawInventory(Vector2 mouse) {
     }
 }
 
+bool Game::craftRecipe(const ItemRecipe& recipe) {
+    int first = -1, second = -1;
+    for (int i = 0; i < (int)ch_.pack.size(); i++) {
+        if (first < 0 && ch_.pack[i].templateId == recipe.first) first = i;
+        else if (second < 0 && ch_.pack[i].templateId == recipe.second) second = i;
+    }
+    if (first < 0 || second < 0) return false;
+    if (first < second) std::swap(first, second);
+    ch_.pack.erase(ch_.pack.begin() + first);
+    ch_.pack.erase(ch_.pack.begin() + second);
+    outcome_.text.clear();
+    std::string resultName;
+    if (!recipe.result.empty()) {
+        ItemInstance made = makeItem(recipe.result);
+        resultName = made.name;
+        takeItem(made);
+    }
+    applyEffects(recipe.effects);
+    saveRun();
+    std::string result = recipe.text;
+    if (!resultName.empty()) result += "\n\nCreated: " + resultName + ".";
+    showInfo(result);
+    infoBack_ = CRAFT;
+    return true;
+}
+
+void Game::drawCraft(Vector2 mouse) {
+    siteName_ = "your workbench";
+    drawTopBar();
+    DrawText("FIELD RECIPES", 8, 22, 10, PAL_GOLD);
+    DrawText("Every result keeps both ingredients' story moving.", 8, 34, 10, PAL_DIM);
+    const std::vector<ItemRecipe>& recipes = items_.recipes();
+    const int perPage = 5;
+    int pages = std::max(1, ((int)recipes.size() + perPage - 1) / perPage);
+    if (craftScroll_ >= pages) craftScroll_ = pages - 1;
+    int start = craftScroll_ * perPage;
+    int y = 49;
+    for (int i = start; i < (int)recipes.size() && i < start + perPage; i++) {
+        const ItemRecipe& recipe = recipes[i];
+        bool ready = ch_.hasItem(recipe.first) && ch_.hasItem(recipe.second);
+        Rectangle row{4, (float)y, kW - 8.0f, 18};
+        bool hover = ready && CheckCollisionPointRec(mouse, row);
+        DrawRectangleRec(row, hover ? PAL_ROW : Color{31, 27, 46, 255});
+        DrawRectangleLinesEx(row, 1, PAL_DARK);
+        std::string label = recipe.name + (ready ? "  [READY]" : "");
+        DrawText(label.c_str(), 8, y + 2, 10, ready ? (hover ? PAL_GOLD : PAL_INK) : PAL_DARK);
+        if (hover && pressed_) {
+            audio_.chime();
+            craftRecipe(recipe);
+            return;
+        }
+        y += 20;
+    }
+    std::string page = std::to_string(craftScroll_ + 1) + "/" + std::to_string(pages);
+    DrawText(page.c_str(), (kW - MeasureText(page.c_str(), 10)) / 2, kH - 16, 10, PAL_DIM);
+    if (craftScroll_ > 0 && uiButton({4, (float)(kH - 20), 48, 16}, "< PREV", mouse))
+        craftScroll_--;
+    if (craftScroll_ < pages - 1 &&
+        uiButton({56, (float)(kH - 20), 48, 16}, "NEXT >", mouse))
+        craftScroll_++;
+    if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
+        IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_TAB)) {
+        invSelected_ = -1;
+        screen_ = INVENTORY;
+    }
+}
+
+void Game::drawJournal(Vector2 mouse) {
+    siteName_ = "the story ledger";
+    drawTopBar();
+    std::string text = "STORY LEDGER\n\n";
+    if (contract_.active)
+        text += "CURRENT COMMISSION\n" + contract_.desc + "\n\n";
+    else
+        text += "CURRENT COMMISSION\nNone. Your schedule is insultingly available.\n\n";
+
+    if (mystery_.active) {
+        text += "OPEN MYSTERY: " + mystery_.title + "\n" + mystery_.publicStory + "\n";
+        if (mystery_.solved)
+            text += "SOLVED: " + mystery_.secret + "\n\n";
+        else
+            text += "Clues assembled: " + std::to_string(mystery_.clues) + "/3\n\n";
+    }
+
+    if (currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size())
+        text += "CURRENT REGION\n" + world_.regions[currentRegion_].name + " is " +
+                regionStates_[currentRegion_].description() + ".\n\n";
+
+    text += "CHOICES WAITING TO RETURN\n";
+    if (consequences_.empty() && scheduledNextId_.empty()) text += "None that admit it.\n";
+    for (const PendingConsequence& value : consequences_)
+        text += "Day " + std::to_string(value.dueDay) + ": " +
+                (value.summary.empty() ? value.source : value.summary) + "\n";
+    if (!scheduledNextId_.empty()) text += "Now: an old decision has caught up.\n";
+
+    text += "\nPEOPLE WHO REMEMBER YOU\n";
+    int shown = 0;
+    for (auto& pair : npcRelations_) {
+        int fi = pair.first;
+        if (fi < 0 || fi >= (int)history_.figures.size() || shown++ >= 10) continue;
+        const NpcRelation& rel = pair.second;
+        text += history_.figures[fi].name + ": trust " + std::to_string(rel.trust) +
+                ", respect " + std::to_string(rel.respect) +
+                ", fear " + std::to_string(rel.fear) +
+                ", debt " + std::to_string(rel.debt) +
+                ", grudge " + std::to_string(rel.grudge) + ".\n";
+    }
+    if (npcRelations_.empty()) text += "Nobody yet. Give it time.\n";
+
+    drawScrollText(WrapLines(text, kW - 24), 8, 20, kH - 20, PAL_INK, mouse, false);
+    if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
+        IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_TAB)) {
+        textScroll_ = 0;
+        screen_ = TRAVEL;
+    }
+}
+
 void Game::drawInfo(Vector2 mouse) {
     drawTopBar();
     // Books, contracts, and long excerpts scroll instead of clipping (R9b).
@@ -2887,10 +3612,13 @@ void Game::drawWorldMap(Vector2 mouse) {
         DrawText(line.c_str(), (kW - MeasureText(line.c_str(), 10)) / 2, kH - 30, 10,
                  PAL_INK);
         // Second line: the sites you know of there (R8).
-        if (seen && !r.sites.empty()) {
+        if (seen) {
             std::string sl;
+            if (label < (int)regionStates_.size())
+                sl = regionStates_[label].description() + ". ";
+            if (!r.sites.empty()) sl += "Sites: ";
             for (int si : r.sites) {
-                if (!sl.empty()) sl += ", ";
+                if (sl.size() >= 2 && sl.substr(sl.size() - 2) != ": ") sl += ", ";
                 sl += world_.sites[si].name;
             }
             while (!sl.empty() && MeasureText((sl + "..").c_str(), 10) > kW - 12)
@@ -2915,7 +3643,9 @@ void Game::drawWorldMap(Vector2 mouse) {
 // and follow-the-thread filters by figure or faction (R3, R10).
 void Game::drawChronicle(Vector2 mouse) {
     const int kPerPage = 8;
-    bool filtered = chronFilterActor_ >= 0 || chronFilterFaction_ >= 0;
+    bool filtered = chronFilterActor_ >= 0 || chronFilterFaction_ >= 0 ||
+                    chronFilterSite_ >= 0 || chronFilterArtifact_ >= 0 ||
+                    chronFilterBeast_ >= 0;
     int total = filtered ? (int)chronFilterList_.size() : (int)history_.chron.size();
     auto entryAt = [&](int i) -> int {
         return filtered ? chronFilterList_[i] : i;
@@ -2946,18 +3676,27 @@ void Game::drawChronicle(Vector2 mouse) {
     if (chronDetail_ >= 0 && chronDetail_ < (int)chronLines_.size()) {
         DrawTextWrapped(chronLines_[chronDetail_], 12, 30, kW - 24, PAL_INK, kH - 40);
         const ChronEntry& de = history_.chron[chronIdx_[chronDetail_]];
-        if (!filtered && (de.actor >= 0 || de.faction >= 0) &&
+        if (!filtered && (de.actor >= 0 || de.faction >= 0 || de.site >= 0 ||
+                          de.artifact >= 0 || de.beast >= 0) &&
             uiButton({(float)(kW / 2 - 52), (float)(kH - 22), 104, 18},
                      "FOLLOW THIS THREAD", mouse)) {
             chronFilterActor_ = de.actor;
-            chronFilterFaction_ = de.actor >= 0 ? -1 : de.faction;
+            chronFilterArtifact_ = de.actor < 0 ? de.artifact : -1;
+            chronFilterBeast_ = de.actor < 0 && de.artifact < 0 ? de.beast : -1;
+            chronFilterSite_ = de.actor < 0 && de.artifact < 0 && de.beast < 0
+                ? de.site : -1;
+            chronFilterFaction_ = de.actor < 0 && de.artifact < 0 && de.beast < 0 &&
+                                  de.site < 0 ? de.faction : -1;
             chronFilterList_.clear();
             for (int i = 0; i < (int)history_.chron.size(); i++) {
                 const ChronEntry& e = history_.chron[i];
                 bool hit = (chronFilterActor_ >= 0 && e.actor == chronFilterActor_) ||
                            (chronFilterFaction_ >= 0 &&
                             (e.faction == chronFilterFaction_ ||
-                             e.faction2 == chronFilterFaction_));
+                             e.faction2 == chronFilterFaction_)) ||
+                           (chronFilterSite_ >= 0 && e.site == chronFilterSite_) ||
+                           (chronFilterArtifact_ >= 0 && e.artifact == chronFilterArtifact_) ||
+                           (chronFilterBeast_ >= 0 && e.beast == chronFilterBeast_);
                 if (hit) chronFilterList_.push_back(i);
             }
             chronPage_ = 0;
@@ -2973,9 +3712,12 @@ void Game::drawChronicle(Vector2 mouse) {
     std::string era;
     if (!chronLines_.empty()) {
         if (filtered) {
-            std::string who = chronFilterActor_ >= 0
-                ? history_.figures[chronFilterActor_].name
-                : history_.factions[chronFilterFaction_].name;
+            std::string who;
+            if (chronFilterActor_ >= 0) who = history_.figures[chronFilterActor_].name;
+            else if (chronFilterFaction_ >= 0) who = history_.factions[chronFilterFaction_].name;
+            else if (chronFilterSite_ >= 0) who = world_.sites[chronFilterSite_].name;
+            else if (chronFilterArtifact_ >= 0) who = history_.artifacts[chronFilterArtifact_].display();
+            else if (chronFilterBeast_ >= 0) who = history_.beasts[chronFilterBeast_].name;
             era = "the thread of " + who + "  -  " + std::to_string(total) + " entries";
         } else {
             era = std::string(EraName(history_.chron[entryAt(chronPage_ * kPerPage)].year)) +
@@ -3015,7 +3757,8 @@ void Game::drawChronicle(Vector2 mouse) {
         if (clipped) l += "..";
         Rectangle row{4, (float)(y - 1), kW - 8, 12};
         bool hover = CheckCollisionPointRec(mouse, row);
-        DrawText(l.c_str(), 6, y, 10, hover ? PAL_GOLD : PAL_INK);
+        bool playerMade = history_.chron[chronIdx_[i]].type.rfind("pc_", 0) == 0;
+        DrawText(l.c_str(), 6, y, 10, hover ? PAL_GOLD : (playerMade ? PAL_GREEN : PAL_INK));
         if (hover && pressed_) {
             audio_.blip();
             chronDetail_ = i;
@@ -3039,6 +3782,7 @@ void Game::drawChronicle(Vector2 mouse) {
         if (filtered) {
             // Leave the thread, back to the whole book.
             chronFilterActor_ = chronFilterFaction_ = -1;
+            chronFilterSite_ = chronFilterArtifact_ = chronFilterBeast_ = -1;
             chronFilterList_.clear();
             chronPage_ = 0;
             chronCachedPage_ = -1;
@@ -3236,7 +3980,15 @@ void Game::drawDeath(Vector2 mouse) {
             for (auto& [fig, tags] : npcMarks_)
                 marks[std::to_string(fig)] =
                     std::vector<std::string>(tags.begin(), tags.end());
-            SaveMarks(masterSeed_, marks.dump());
+            nlohmann::json relations = nlohmann::json::object();
+            for (auto& [fig, rel] : npcRelations_)
+                relations[std::to_string(fig)] = {
+                    {"trust", rel.trust}, {"fear", rel.fear},
+                    {"respect", rel.respect}, {"debt", rel.debt},
+                    {"affection", rel.affection}, {"grudge", rel.grudge},
+                    {"knowledge", rel.knowledge}, {"lastSeen", rel.lastSeen}};
+            SaveMarks(masterSeed_, nlohmann::json{{"marks", marks},
+                                                   {"relations", relations}}.dump());
             clearRun();
 #if defined(__EMSCRIPTEN__)
             // Shared world? Your epitaph joins the fallen.

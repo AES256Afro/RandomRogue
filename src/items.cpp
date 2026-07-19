@@ -78,6 +78,26 @@ void ItemDb::loadQuirksJsonText(const char* jsonText) {
                 quirkPairs_.emplace_back(p.value("text", ""), p.value("passive", ""));
 }
 
+void ItemDb::loadRecipesJsonText(const char* jsonText) {
+    if (!jsonText) return;
+    json j = json::parse(jsonText, nullptr, false);
+    if (j.is_discarded() || !j.is_array()) return;
+    for (auto& value : j) {
+        ItemRecipe recipe;
+        recipe.id = value.value("id", "");
+        recipe.name = value.value("name", "");
+        recipe.first = value.value("first", "");
+        recipe.second = value.value("second", "");
+        recipe.result = value.value("result", "");
+        recipe.text = value.value("text", "");
+        if (value.contains("effects") && value["effects"].is_array())
+            for (auto& fx : value["effects"])
+                if (fx.is_string()) recipe.effects.push_back(fx.get<std::string>());
+        if (!recipe.id.empty() && !recipe.first.empty() && !recipe.second.empty())
+            recipes_.push_back(recipe);
+    }
+}
+
 ItemInstance ItemDb::make(const std::string& id, Rng& rng) const {
     ItemInstance item;
     auto it = templates_.find(id);

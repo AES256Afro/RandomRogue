@@ -679,6 +679,18 @@
     "Year {year}: {extra} ended {beast}. The bounty board kept the poster up for a month, framed.",
     "The kill count of {beast} stopped in year {year}. The reason signs their name {extra}."
   ],
+  "chron_pc_contract": [
+    "In year {year}, {extra} for {faction}. The fee was paid and the consequences were not.",
+    "{extra} for {faction} in year {year}. The guild called it complete. History remained undecided."
+  ],
+  "chron_pc_mystery": [
+    "In year {year}, {extra}. The hidden record named {actor} and the public record finally blinked.",
+    "{extra} in year {year}. {actor} entered the honest version of history shortly afterward."
+  ],
+  "chron_region_shift": [
+    "{extra}",
+    "The regional ledgers for year {year} agree on one unusual fact: {extra}"
+  ],
   "epitaph": [
     "Died as they lived: confused.",
     "The paperwork was fatal.",

@@ -28,10 +28,16 @@ struct ItemInstance {
     }
 };
 
+struct ItemRecipe {
+    std::string id, name, first, second, result, text;
+    std::vector<std::string> effects;
+};
+
 class ItemDb {
 public:
     void loadItemsJsonText(const char* jsonText);
     void loadQuirksJsonText(const char* jsonText);
+    void loadRecipesJsonText(const char* jsonText);
     // Weapon/armor families from material x type x tier tables — the recipe
     // philosophy applied to gear (ROADMAP P4).
     void generateFamilies();
@@ -43,6 +49,7 @@ public:
     // Random item by tier: "common" (value <= 8) or "fine" (value > 8).
     ItemInstance loot(Rng& rng, const std::string& tier) const;
     size_t size() const { return templates_.size(); }
+    const std::vector<ItemRecipe>& recipes() const { return recipes_; }
 
     const std::vector<std::string>& quirkTexts() const { return quirkTexts_; }
     const std::vector<std::string>& goodPassives() const { return goodPassives_; }
@@ -59,4 +66,5 @@ private:
     std::vector<std::string> quirkTexts_;
     std::vector<std::string> goodPassives_, badPassives_;
     std::vector<std::pair<std::string, std::string>> quirkPairs_;
+    std::vector<ItemRecipe> recipes_;
 };

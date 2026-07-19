@@ -12,6 +12,7 @@
 #include "items.h"
 #include "language.h"
 #include "save.h"
+#include "story.h"
 #include "world.h"
 
 class Game {
@@ -36,7 +37,7 @@ public:
 private:
     enum Screen { TITLE, CLASSPICK, AMBITION, TRAVEL, EVENT, OUTCOME, DEATH,
                   INVENTORY, INFO, VENDOR, WORLDMAP, CHRONICLE, SAGA, REPLAY,
-                  OPTIONS };
+                  OPTIONS, CRAFT, JOURNAL };
 
     // A hired sword, a talking badger, a disgraced accountant (P5).
     struct Companion {
@@ -53,11 +54,39 @@ private:
     };
     struct Contract {
         std::string desc;
+        std::string kind;
+        std::string twist;
         int artifactId = -1; // fetch this artifact...
         int siteId = -1;     // ...or visit this site
+        int figureId = -1;
+        int beastId = -1;
         int faction = -1;
         int reward = 0;
+        int acceptedDay = 0;
+        std::string requiredItem;
         bool active = false;
+    };
+    struct NpcRelation {
+        int trust = 0, fear = 0, respect = 0, debt = 0;
+        int affection = 0, grudge = 0, knowledge = 0;
+        int lastSeen = 0;
+    };
+    struct PendingConsequence {
+        std::string eventId, source, summary;
+        int dueDay = 0;
+        int figure = -1;
+        int region = -1;
+    };
+    struct RegionState {
+        int prosperity = 0, danger = 0, unrest = 0;
+        std::set<std::string> flags;
+        std::string description() const;
+    };
+    struct Mystery {
+        bool active = false, solved = false;
+        int culprit = -1, victim = -1, site = -1, artifact = -1;
+        int clues = 0;
+        std::string title, secret, publicStory;
     };
 
     struct StartClass {
@@ -84,6 +113,8 @@ private:
     void enterTravel();
     void dealEvent();
     bool resolveSlots(const Event& e, Grammar::Ctx& ctx);
+    StoryContext storyContext(const std::string& location) const;
+    bool presentEvent(const Event* event, bool markUsed = true);
     void chooseOption(int idx);
     void applyEffects(const std::vector<std::string>& effects);
     void continueAfterOutcome();
@@ -105,6 +136,13 @@ private:
     void dismissCompanion(bool died);
     void offerContract();
     void checkPurposes(); // ambition + contract completion
+    void generateMystery();
+    void updateRegionState();
+    void queueConsequence(int days, const std::string& eventId,
+                          const std::string& summary);
+    void activateDueConsequence();
+    NpcRelation& relation(int figure);
+    const NpcRelation* relationIfKnown(int figure) const;
     void drawEvent(Vector2 mouse);
     void drawOutcome(Vector2 mouse);
     void drawDeath(Vector2 mouse);
@@ -117,6 +155,9 @@ private:
     void drawSaga(Vector2 mouse);
     void drawReplay(Vector2 mouse);
     void drawOptions(Vector2 mouse);
+    void drawCraft(Vector2 mouse);
+    void drawJournal(Vector2 mouse);
+    bool craftRecipe(const ItemRecipe& recipe);
     void drawIntro(Vector2 mouse); // first-run how-to cards (R7)
     // Shared worlds (R7): daily and weekly seeds and their board keys.
     // Weekly board keys live in the 7,000,000+ namespace so the two
@@ -153,6 +194,7 @@ private:
     Grammar grammar_;
     NameForge forge_;
     EventDeck deck_;
+    StoryDirector director_;
     ItemDb items_;
     World world_;
     History history_;
@@ -189,14 +231,23 @@ private:
     bool blessingSpent_ = false;  // a blessed trait absorbed death this outcome
     // Per-run NPC memory: chronicle figure index -> marks ("robbed", ...)
     std::map<int, std::set<std::string>> npcMarks_;
+    std::map<int, NpcRelation> npcRelations_;
     std::map<std::string, std::string> traitNames_; // id -> display name
     bool pendingShop_ = false;    // "shop" effect fired this outcome
     std::string forcedNextId_;    // "goto <id>" effect: chain to this event
+    std::vector<PendingConsequence> consequences_;
+    std::string scheduledNextId_;
+    int scheduledFigure_ = -1;
+    int scheduledRegion_ = -1;
+    std::vector<RegionState> regionStates_;
+    Mystery mystery_;
 
     // inventory / info
     Screen returnScreen_ = TRAVEL;
     Screen infoBack_ = INVENTORY;
     int invSelected_ = -1;
+    int craftScroll_ = 0;
+    int classPage_ = 0;
     std::string infoText_;
 
     // vendor
@@ -241,6 +292,9 @@ private:
     std::vector<int> chronIdx_;      // chron entry index per cached line (R10)
     int chronFilterActor_ = -1;      // following one figure's thread
     int chronFilterFaction_ = -1;    // ...or one faction's
+    int chronFilterSite_ = -1;
+    int chronFilterArtifact_ = -1;
+    int chronFilterBeast_ = -1;
     std::vector<int> chronFilterList_;
     std::string scoresJson_;     // today's fallen (web leaderboard)
     bool scoresRequested_ = false;

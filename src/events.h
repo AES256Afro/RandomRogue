@@ -39,6 +39,7 @@ struct Check {
 
 struct Choice {
     std::string text;
+    std::string approach; // force, wit, mercy, greed, caution, curiosity, faith...
     Requirement requires_;
     Check check;
     std::vector<Outcome> outcomes;        // weighted (no check)
@@ -50,6 +51,8 @@ struct Event {
     std::string id;
     std::vector<std::string> locations;
     int weight = 10;
+    std::vector<std::string> tags; // semantic ingredients used by the director
+    std::string family;            // structural cooldown group
     std::string text;
     std::vector<Choice> choices;
     // Chronicle slot queries: name -> query ("chronicle_random",
@@ -69,6 +72,7 @@ struct ResolvedOutcome {
 
 class EventDeck {
 public:
+    using EventScore = std::function<int(const Event&)>;
     void loadJsonText(const char* jsonText);
     // Draws a weighted random unused event for a location. Does NOT mark it
     // used — call markUsed once the event is actually shown; gated or
@@ -76,7 +80,8 @@ public:
     // and cause early repeats (R9). `exclude` skips ids already tried this
     // deal so the retry loop can't spin on the same ineligible card.
     const Event* draw(Rng& rng, const std::string& location,
-                      const std::set<std::string>* exclude = nullptr);
+                      const std::set<std::string>* exclude = nullptr,
+                      const EventScore& score = EventScore{});
     void markUsed(const std::string& id) { used_.insert(id); }
     const Event* find(const std::string& id) const;
     void resetUsed() { used_.clear(); }
