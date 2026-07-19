@@ -37,6 +37,7 @@ struct BotState {
     bool appealed = false;
     bool mysterySolved = false;
     std::set<std::string> echoes;
+    int rumors = 2, collective = 0;
     std::vector<std::pair<int, std::string>> scheduled;
 };
 
@@ -68,6 +69,7 @@ static bool botCond(BotState& s, const std::string& cond) {
     if (a == "npc") return false;
     if (a == "npc_rel") return s.rng.chance(45);
     if (a == "social_known" || a == "network") return s.rng.chance(65);
+    if (a == "nemesis" || a == "agenda") return s.rng.chance(35);
     if (a == "mystery_active") return !s.mysterySolved;
     if (a == "mystery_solved") return s.mysterySolved;
     if (a == "mystery_tried") return s.tried;
@@ -87,6 +89,10 @@ static bool botCond(BotState& s, const std::string& cond) {
     };
     if (a == "rep") return cmp(0);
     if (a == "contracts") return cmp(s.contracts);
+    if (a == "rumors") return cmp(s.rumors);
+    if (a == "collective") return cmp(s.collective);
+    if (a == "solidarity" || a == "pollution" || a == "rent" || a == "supply")
+        return cmp(s.rng.range(-3, 4));
     if (a == "clues") return cmp(s.clues);
     if (a == "evidence") return cmp(s.evidence);
     if (a == "doubt") return cmp(s.doubt);
@@ -263,6 +269,18 @@ int main(int argc, char** argv) {
                             fs >> days >> target;
                             if (!target.empty())
                                 s.scheduled.push_back({s.c.day + std::max(1, days), target});
+                        }
+                        else if (verb == "foreshadow") {
+                            int days = 1; std::string target;
+                            fs >> days >> target;
+                            if (!target.empty())
+                                s.scheduled.push_back({s.c.day + std::max(1, days), target});
+                            s.rumors++;
+                        }
+                        else if (verb == "rumor") { s.rumors++; }
+                        else if (verb == "collective") {
+                            int v = 1; fs >> v;
+                            s.collective = std::max(0, s.collective + v);
                         }
                         // Taken contracts complete about half the time in
                         // real play; approximate the career ladder.

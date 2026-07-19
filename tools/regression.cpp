@@ -91,7 +91,25 @@ int main(int argc, char** argv) {
         if (line.find("+relationship") != std::string::npos) explainsContext = true;
     }
     ok &= expect(explainsScore && explainsContext,
-                 "Director diagnostics must explain score and context without outcomes");
+                  "Director diagnostics must explain score and context without outcomes");
+    Event labor = unrelated;
+    labor.id = "labor_test";
+    labor.family = "organizing";
+    labor.tags = {"labor", "solidarity"};
+    StoryContext political;
+    int laborBase = director.score(labor, political);
+    political.solidarity = true;
+    ok &= expect(director.score(labor, political) >= laborBase + 30,
+                 "organized regions must raise the relevance of labor stories");
+    Event ecology = unrelated;
+    ecology.id = "ecology_test";
+    ecology.family = "pollution";
+    ecology.tags = {"ecology"};
+    StoryContext environmental;
+    int ecologyBase = director.score(ecology, environmental);
+    environmental.pollution = true;
+    ok &= expect(director.score(ecology, environmental) >= ecologyBase + 38,
+                 "polluted regions must raise the relevance of ecology stories");
     story.activeFamilies.clear();
     story.arcBeatDue = false;
     director.record(relationship, &relationship.choices[0], 2);

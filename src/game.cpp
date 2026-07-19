@@ -275,7 +275,7 @@ std::vector<Game::StartClass> Game::startClasses() const {
 // ---- company & purpose (P5) -------------------------------------------------
 
 struct AmbDef { const char* name; const char* desc; };
-static const AmbDef kAmbitions[11] = {
+static const AmbDef kAmbitions[12] = {
     {"Strike It Rich", "hold 120 gold at once"},
     {"Delver", "reach 3 dungeon finales"},
     {"Bookworm", "read 3 things in one life"},
@@ -287,6 +287,7 @@ static const AmbDef kAmbitions[11] = {
     {"Mariner", "make landfall on 3 shores"},
     {"Peacemaker", "settle an old grudge"},
     {"Devout", "reach 5 favor with one god"},
+    {"Common Cause", "win 3 victories no one could win alone"},
 };
 
 void Game::setCompanion(const std::string& id) {
@@ -339,6 +340,16 @@ std::string Game::RegionState::description() const {
     if (flags.count("walking_citizens")) out += " while hosting citizens of a moving town";
     if (flags.count("disputed_estate")) out += " beside an estate with legal opinions";
     if (flags.count("story_moved_on")) out += " after a crisis resolved without you";
+    if (flags.count("tenants_union")) out += " with an organized tenants union";
+    if (flags.count("worker_coop")) out += " around a worker-owned district";
+    if (flags.count("public_clinic")) out += " with a public clinic refusing invoices";
+    if (flags.count("clean_power")) out += " under a stubbornly clean power grid";
+    if (flags.count("commons")) out += " beside land held in common";
+    if (flags.count("mutual_aid")) out += " around a busy mutual-aid table";
+    if (flags.count("company_town")) out += " under company-town contracts";
+    if (flags.count("evictions")) out += " amid organized evictions";
+    if (flags.count("toxic_zone")) out += " beneath a profitable brown cloud";
+    if (flags.count("militarized")) out += " under armed administrative concern";
     return out;
 }
 
@@ -385,6 +396,7 @@ StoryContext Game::storyContext(const std::string& location) const {
     ctx.quest = contract_.active;
     ctx.knownNpc = !npcRelations_.empty();
     ctx.mystery = mystery_.active && !mystery_.solved;
+    ctx.rumors = !rumors_.empty();
     ctx.activeFamilies = activeStoryFamilies();
     ctx.arcBeatDue = !scheduledNextId_.empty();
     for (const ItemInstance& item : ch_.pack)
@@ -393,6 +405,12 @@ StoryContext Game::storyContext(const std::string& location) const {
     int owner = regionOwner(currentRegion_);
     for (const LiveWar& war : history_.liveWars)
         if (war.a == owner || war.b == owner) ctx.war = true;
+    if (currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size()) {
+        const RegionState& state = regionStates_[currentRegion_];
+        ctx.solidarity = state.solidarity >= 2;
+        ctx.pollution = state.pollution >= 2;
+        ctx.scarcity = state.supply <= -2 || state.rent >= 3;
+    }
     return ctx;
 }
 
@@ -426,7 +444,7 @@ void Game::offerContract() {
             history_.figures[pair.first].died < 0)
             known.push_back(pair.first);
 
-    int kind = runRng_.range(0, 4);
+    int kind = runRng_.range(0, 5);
     if (kind == 0 && !resting.empty()) {
         int ai = resting[runRng_.range(0, (int)resting.size() - 1)];
         contract_.kind = "artifact";
@@ -461,6 +479,16 @@ void Game::offerContract() {
         contract_.kind = "mystery";
         contract_.reward = 28;
         contract_.desc = "Resolve " + mystery_.title + " for " + patron;
+    } else if (kind == 5) {
+        static const char* aid[] = {"bread", "rations", "repair_kit", "sewing_kit"};
+        int ai = runRng_.range(0, 3);
+        int s = runRng_.range(0, (int)world_.sites.size() - 1);
+        contract_.kind = "mutual_aid";
+        contract_.requiredItem = aid[ai];
+        contract_.siteId = s;
+        contract_.reward = 8;
+        contract_.desc = "Bring " + contract_.requiredItem + " to the mutual-aid table at " +
+                         world_.sites[s].name + ". The people there are the patron";
     } else {
         int s = runRng_.range(0, (int)world_.sites.size() - 1);
         contract_.kind = "survey";
@@ -497,12 +525,25 @@ void Game::checkPurposes() {
             const NpcRelation* rel = relationIfKnown(contract_.figureId);
             done = rel && rel->trust >= 3 && rel->grudge <= 1;
         }
-        if (contract_.kind == "delivery" && currentSite_ == contract_.siteId &&
+        if ((contract_.kind == "delivery" || contract_.kind == "mutual_aid") &&
+            currentSite_ == contract_.siteId &&
             ch_.day > contract_.acceptedDay && ch_.hasItem(contract_.requiredItem))
             done = true;
         if (contract_.kind == "mystery" && mystery_.solved) done = true;
         if (done) {
-            if (contract_.kind == "delivery") ch_.removeItem(contract_.requiredItem);
+            if (contract_.kind == "delivery" || contract_.kind == "mutual_aid")
+                ch_.removeItem(contract_.requiredItem);
+            if (contract_.kind == "mutual_aid") {
+                collectiveVictories_++;
+                if (currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size()) {
+                    regionStates_[currentRegion_].solidarity = std::min(
+                        5, regionStates_[currentRegion_].solidarity + 2);
+                    regionStates_[currentRegion_].supply = std::min(
+                        5, regionStates_[currentRegion_].supply + 1);
+                    regionStates_[currentRegion_].flags.insert("mutual_aid");
+                }
+                audio_.solidarity();
+            }
             ch_.money += contract_.reward;
             contractsDone_++;
             if (contract_.faction >= 0 && contract_.faction < (int)rep_.size()) {
@@ -550,6 +591,7 @@ void Game::checkPurposes() {
                 for (auto& [gi, f] : favor_)
                     if (f >= 5) done = true;
                 break;
+            case 11: done = collectiveVictories_ >= 3; break;
         }
         if (done) {
             ambition_.done = true;
@@ -615,7 +657,7 @@ void Game::saveRun() {
         sites.push_back({{"name", s.name}, {"type", s.type}, {"deck", s.deck},
                          {"region", s.region}});
     nlohmann::json j = {
-        {"schema", 5},
+        {"schema", 6},
         {"seed", masterSeed_}, {"gen", pendingLegacy_.size()},
         {"name", ch_.name.conlang}, {"meaning", ch_.name.meaning},
         {"stats", std::vector<int>(ch_.stats, ch_.stats + STAT_COUNT)},
@@ -710,6 +752,9 @@ void Game::saveRun() {
     for (auto& state : regionStates_)
         regionState.push_back({{"prosperity", state.prosperity}, {"danger", state.danger},
                                {"unrest", state.unrest}, {"pressure", state.pressure},
+                               {"supply", state.supply}, {"rent", state.rent},
+                               {"pollution", state.pollution},
+                               {"solidarity", state.solidarity},
                                {"flags", std::vector<std::string>(state.flags.begin(),
                                                                   state.flags.end())}});
     j["regionState"] = regionState;
@@ -730,6 +775,25 @@ void Game::saveRun() {
     j["storyEchoes"] = std::vector<std::string>(storyEchoes_.begin(), storyEchoes_.end());
     j["storyEchoRegions"] = storyEchoRegions_;
     j["autonomousArcs"] = autonomousArcResolutions_;
+    nlohmann::json rumorState = nlohmann::json::array();
+    for (const Rumor& value : rumors_)
+        rumorState.push_back({{"id", value.id}, {"text", value.text},
+                              {"truth", value.truth}, {"origin", value.origin},
+                              {"region", value.region}, {"figure", value.figure},
+                              {"age", value.age}, {"reach", value.reach},
+                              {"planted", value.planted},
+                              {"event", value.foreshadowEvent}, {"due", value.dueDay}});
+    j["rumors"] = rumorState;
+    j["verifiedRumors"] = std::vector<int>(verifiedRumors_.begin(), verifiedRumors_.end());
+    nlohmann::json agendaState = nlohmann::json::array();
+    for (const Agenda& value : agendas_)
+        agendaState.push_back({{"figure", value.figure}, {"region", value.region},
+                               {"progress", value.progress}, {"kind", value.kind},
+                               {"active", value.active}});
+    j["agendas"] = agendaState;
+    j["nextRumor"] = nextRumorId_;
+    j["nemesis"] = nemesisFigure_;
+    j["collectiveVictories"] = collectiveVictories_;
     j["eventSerial"] = eventSerial_;
     j["lastEvents"] = lastEventSerial_;
     SaveRawRun(j.dump());
@@ -757,9 +821,11 @@ bool Game::loadRun() {
     ambition_ = Ambition{};
     ambition_.id = j.value("ambId", -1);
     ambition_.done = j.value("ambDone", false);
-    if (ambition_.id >= 0) {
+    if (ambition_.id >= 0 && ambition_.id < 12) {
         ambition_.name = kAmbitions[ambition_.id].name;
         ambition_.desc = kAmbitions[ambition_.id].desc;
+    } else if (ambition_.id >= 12) {
+        ambition_ = Ambition{};
     }
     suppressStrangers_ = true; // the save knows its own ghosts
     loadingRun_ = true;
@@ -1002,6 +1068,10 @@ bool Game::loadRun() {
             state.danger = value.value("danger", 0);
             state.unrest = value.value("unrest", 0);
             state.pressure = value.value("pressure", 0);
+            state.supply = value.value("supply", 0);
+            state.rent = value.value("rent", 0);
+            state.pollution = value.value("pollution", 0);
+            state.solidarity = value.value("solidarity", 0);
             for (auto& flag : value.value("flags", std::vector<std::string>{}))
                 state.flags.insert(flag);
             regionStates_.push_back(state);
@@ -1044,6 +1114,42 @@ bool Game::loadRun() {
         storyEchoes_.insert(family);
     storyEchoRegions_ = j.value("storyEchoRegions", std::map<std::string, int>{});
     autonomousArcResolutions_ = j.value("autonomousArcs", 0);
+    if (j.contains("rumors") && j["rumors"].is_array()) {
+        rumors_.clear();
+        for (auto& value : j["rumors"]) {
+            Rumor rumor;
+            rumor.id = value.value("id", 0);
+            rumor.text = value.value("text", "");
+            rumor.truth = value.value("truth", 50);
+            rumor.origin = value.value("origin", -1);
+            rumor.region = value.value("region", -1);
+            rumor.figure = value.value("figure", -1);
+            rumor.age = value.value("age", 0);
+            rumor.reach = value.value("reach", 1);
+            rumor.planted = value.value("planted", false);
+            rumor.foreshadowEvent = value.value("event", "");
+            rumor.dueDay = value.value("due", 0);
+            if (!rumor.text.empty()) rumors_.push_back(rumor);
+        }
+    }
+    verifiedRumors_.clear();
+    for (int id : j.value("verifiedRumors", std::vector<int>{}))
+        verifiedRumors_.insert(id);
+    if (j.contains("agendas") && j["agendas"].is_array()) {
+        agendas_.clear();
+        for (auto& value : j["agendas"]) {
+            Agenda agenda;
+            agenda.figure = value.value("figure", -1);
+            agenda.region = value.value("region", -1);
+            agenda.progress = value.value("progress", 0);
+            agenda.kind = value.value("kind", "");
+            agenda.active = value.value("active", true);
+            if (agenda.figure >= 0 && !agenda.kind.empty()) agendas_.push_back(agenda);
+        }
+    }
+    nextRumorId_ = j.value("nextRumor", nextRumorId_);
+    nemesisFigure_ = j.value("nemesis", -1);
+    collectiveVictories_ = j.value("collectiveVictories", 0);
     eventSerial_ = j.value("eventSerial", 0);
     lastEventSerial_ = j.value("lastEvents", std::map<std::string, int>{});
     history_.liveWars.clear();
@@ -1229,6 +1335,12 @@ bool Game::evalCond(const std::string& cond) const {
     if (a == "verdict_correct") return mystery_.tried && mystery_.correctVerdict;
     if (a == "accused") return mystery_.accused >= 0;
     if (a == "social_known") return socialTieFor(slotFigure_) != nullptr;
+    if (a == "nemesis") return nemesisFigure_ >= 0 &&
+        (slotFigure_ < 0 || slotFigure_ == nemesisFigure_);
+    if (a == "agenda") {
+        const Agenda* agenda = agendaFor(slotFigure_);
+        return agenda && (b.empty() || agenda->kind == b);
+    }
     if (a == "network") {
         const SocialTie* tie = socialTieFor(slotFigure_);
         return tie && (b.empty() || tie->kind == b);
@@ -1246,6 +1358,16 @@ bool Game::evalCond(const std::string& cond) const {
         return false;
     }
     if (a == "contracts") return cmp(contractsDone_);
+    if (a == "rumors") return cmp((int)rumors_.size());
+    if (a == "collective") return cmp(collectiveVictories_);
+    if (a == "solidarity" || a == "pollution" || a == "rent" || a == "supply") {
+        if (currentRegion_ < 0 || currentRegion_ >= (int)regionStates_.size()) return false;
+        const RegionState& state = regionStates_[currentRegion_];
+        if (a == "solidarity") return cmp(state.solidarity);
+        if (a == "pollution") return cmp(state.pollution);
+        if (a == "rent") return cmp(state.rent);
+        return cmp(state.supply);
+    }
     if (a == "clues") return cmp(mystery_.clues);
     if (a == "evidence") return cmp(mystery_.evidence);
     if (a == "doubt") return cmp(mystery_.doubt);
@@ -1522,6 +1644,7 @@ void Game::newRun(int classIdx) {
     regionStates_.assign(world_.regions.size(), RegionState{});
     generateMystery();
     generateSocialWeb();
+    seedLivingPolitics();
     eventSerial_ = 0;
     lastEventSerial_.clear();
     currentDirectorScore_ = 100;
@@ -1710,22 +1833,37 @@ int Game::localRep() const {
 int Game::buyPrice(const ItemInstance& item) const {
     int rep = localRep();
     int price = item.value * (135 - rep * 2) / 100;
-    if (currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size() &&
-        regionStates_[currentRegion_].flags.count("trade_boom"))
-        price = price * 85 / 100;
+    if (currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size()) {
+        const RegionState& state = regionStates_[currentRegion_];
+        if (state.flags.count("trade_boom")) price = price * 85 / 100;
+        price = price * (100 + state.rent * 5 - state.supply * 4) / 100;
+        if (state.flags.count("worker_coop")) price = price * 88 / 100;
+        if (state.flags.count("company_town")) price = price * 120 / 100;
+    }
     return price < 1 ? 1 : price;
 }
 
 int Game::sellPrice(const ItemInstance& item) const {
     int rep = localRep();
     int price = item.value * (40 + rep) / 100;
-    if (currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size() &&
-        regionStates_[currentRegion_].flags.count("trade_boom"))
-        price = price * 115 / 100;
+    if (currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size()) {
+        const RegionState& state = regionStates_[currentRegion_];
+        if (state.flags.count("trade_boom")) price = price * 115 / 100;
+        if (state.supply <= -2) price = price * 110 / 100;
+        if (state.flags.count("worker_coop")) price = price * 108 / 100;
+        if (state.flags.count("company_town")) price = price * 75 / 100;
+    }
     return price < 1 ? 1 : price;
 }
 
 std::string Game::randomRumor() {
+    if (!rumors_.empty() && runRng_.chance(65)) {
+        const Rumor& value = rumors_[runRng_.range(0, (int)rumors_.size() - 1)];
+        std::string where;
+        if (value.region >= 0 && value.region < (int)world_.regions.size())
+            where = " Heard near " + world_.regions[value.region].name + ".";
+        return value.text + where;
+    }
     if (history_.chron.empty()) return "Nobody is talking. Suspicious, honestly.";
     // Fresh news travels faster than old history.
     int lo = 0;
@@ -1803,6 +1941,210 @@ void Game::generateSocialWeb() {
             tie.affinity = std::max(1, tie.affinity);
         if (tie.kind == "rival") tie.affinity = std::min(-1, tie.affinity);
         socialTies_.push_back(tie);
+    }
+}
+
+std::string Game::agendaName(const std::string& kind) const {
+    if (kind == "organize") return "building worker power";
+    if (kind == "mutual_aid") return "expanding mutual aid";
+    if (kind == "expose") return "documenting hidden harm";
+    if (kind == "liberate") return "opening land and borders";
+    if (kind == "profiteer") return "extracting emergency profit";
+    if (kind == "pollute") return "externalizing industrial waste";
+    if (kind == "militarize") return "turning fear into armed authority";
+    if (kind == "displace") return "converting homes into assets";
+    return "pursuing an undisclosed objective";
+}
+
+const Game::Agenda* Game::agendaFor(int figure) const {
+    for (const Agenda& agenda : agendas_)
+        if (agenda.active && agenda.figure == figure) return &agenda;
+    return nullptr;
+}
+
+void Game::addRumor(const std::string& text, int truth, int region, int figure,
+                    bool planted, const std::string& foreshadowEvent, int dueDay) {
+    if (text.empty()) return;
+    Rumor value;
+    value.id = nextRumorId_++;
+    value.text = text.substr(0, 240);
+    value.truth = std::max(0, std::min(100, truth));
+    value.origin = region;
+    value.region = region;
+    value.figure = figure;
+    value.planted = planted;
+    value.foreshadowEvent = foreshadowEvent;
+    value.dueDay = dueDay;
+    rumors_.push_back(value);
+    while (rumors_.size() > 48) rumors_.erase(rumors_.begin());
+}
+
+void Game::seedLivingPolitics() {
+    rumors_.clear();
+    verifiedRumors_.clear();
+    agendas_.clear();
+    nextRumorId_ = 1;
+    nemesisFigure_ = -1;
+    collectiveVictories_ = 0;
+    if (world_.regions.empty()) return;
+
+    std::vector<int> alive;
+    for (int i = 0; i < (int)history_.figures.size(); i++)
+        if (history_.figures[i].died < 0) alive.push_back(i);
+    static const char* kinds[] = {
+        "organize", "mutual_aid", "expose", "liberate",
+        "profiteer", "pollute", "militarize", "displace"
+    };
+    int count = std::min(16, (int)alive.size());
+    for (int i = 0; i < count; i++) {
+        int pick = runRng_.range(0, (int)alive.size() - 1);
+        Agenda agenda;
+        agenda.figure = alive[pick];
+        alive.erase(alive.begin() + pick);
+        agenda.region = runRng_.range(0, (int)world_.regions.size() - 1);
+        agenda.kind = kinds[runRng_.range(0, 7)];
+        agenda.progress = runRng_.range(0, 4);
+        agendas_.push_back(agenda);
+    }
+
+    static const char* initial[] = {
+        "Dockworkers have begun comparing pay slips. Management calls this theft of proprietary sadness.",
+        "A housing fund is buying whole streets and promising to improve them by removing the residents.",
+        "Someone has measured the river downstream from the refinery. The refinery has measured the someone.",
+        "A free kitchen keeps appearing one block ahead of the officials assigned to close it."
+    };
+    for (int i = 0; i < 4; i++) {
+        int region = runRng_.range(0, (int)world_.regions.size() - 1);
+        addRumor(initial[i], 55 + i * 10, region, -1, i == 1);
+    }
+}
+
+void Game::applyAgenda(Agenda& agenda) {
+    if (!agenda.active || agenda.region < 0 ||
+        agenda.region >= (int)regionStates_.size()) return;
+    RegionState& state = regionStates_[agenda.region];
+    int fi = agenda.figure;
+    std::string who = fi >= 0 && fi < (int)history_.figures.size()
+        ? history_.figures[fi].name : "Someone with excellent stationery";
+    std::string report;
+
+    if (agenda.kind == "organize") {
+        state.solidarity++;
+        state.unrest++;
+        if (state.solidarity >= 3) state.flags.insert("tenants_union");
+        report = who + " helped workers form a council before anyone could appoint its chair.";
+    } else if (agenda.kind == "mutual_aid") {
+        state.supply++;
+        state.prosperity++;
+        state.solidarity++;
+        if (state.solidarity >= 2) state.flags.insert("public_clinic");
+        report = who + " expanded a mutual-aid route. Three neighborhoods now share one impossible pantry.";
+    } else if (agenda.kind == "expose") {
+        state.pollution--;
+        state.solidarity++;
+        report = who + " published records that were confidential only because they were damning.";
+    } else if (agenda.kind == "liberate") {
+        state.rent--;
+        state.solidarity++;
+        if (state.solidarity >= 3) state.flags.insert("commons");
+        report = who + " opened fenced land and discovered the fence had no argument without guards.";
+    } else if (agenda.kind == "profiteer") {
+        state.rent++;
+        state.supply--;
+        state.flags.insert("company_town");
+        report = who + " acquired the local shortage and began charging it rent.";
+    } else if (agenda.kind == "pollute") {
+        state.pollution++;
+        state.prosperity++;
+        report = who + " moved industrial waste off the balance sheet and into the drinking water.";
+    } else if (agenda.kind == "militarize") {
+        state.danger++;
+        state.unrest++;
+        state.flags.insert("militarized");
+        report = who + " answered public fear with uniforms, checkpoints, and a private invoice.";
+    } else if (agenda.kind == "displace") {
+        state.rent++;
+        state.pressure++;
+        state.flags.insert("evictions");
+        report = who + " converted occupied homes into vacant investment opportunities.";
+    }
+    state.prosperity = std::max(-5, std::min(5, state.prosperity));
+    state.danger = std::max(-5, std::min(5, state.danger));
+    state.unrest = std::max(-5, std::min(5, state.unrest));
+    state.pressure = std::max(-5, std::min(5, state.pressure));
+    state.supply = std::max(-5, std::min(5, state.supply));
+    state.rent = std::max(-5, std::min(5, state.rent));
+    state.pollution = std::max(-5, std::min(5, state.pollution));
+    state.solidarity = std::max(-5, std::min(5, state.solidarity));
+    addRumor(report, 78, agenda.region, fi, false);
+
+    ChronEntry entry;
+    entry.id = (int)history_.chron.size();
+    entry.year = history_.presentYear;
+    entry.type = "region_shift";
+    entry.actor = fi;
+    entry.extra = report;
+    history_.chron.push_back(entry);
+    if (agenda.region == currentRegion_) newsLine_ = report;
+}
+
+void Game::advanceRumorsAndAgendas() {
+    if (world_.regions.empty()) return;
+    for (Rumor& rumor : rumors_) {
+        rumor.age++;
+        if (rumor.region >= 0 && rumor.region < (int)world_.regions.size() &&
+            !world_.regions[rumor.region].neighbors.empty() && liveRng_.chance(22)) {
+            const auto& neighbors = world_.regions[rumor.region].neighbors;
+            rumor.region = neighbors[liveRng_.range(0, (int)neighbors.size() - 1)];
+            rumor.reach++;
+            int drift = liveRng_.range(-7, 5);
+            rumor.truth = std::max(0, std::min(100, rumor.truth + drift));
+        }
+        if (!rumor.foreshadowEvent.empty() && rumor.dueDay == ch_.day) {
+            newsLine_ = "THE WARNING COMES DUE: " + rumor.text;
+            audio_.warning();
+        }
+    }
+
+    for (Agenda& agenda : agendas_) {
+        if (!agenda.active) continue;
+        agenda.progress += liveRng_.chance(35) ? 2 : 1;
+        if (agenda.progress >= 7) {
+            applyAgenda(agenda);
+            agenda.progress = liveRng_.range(0, 2);
+        }
+    }
+
+    int strongest = -1;
+    for (const auto& pair : npcRelations_)
+        if (pair.second.grudge >= 6 &&
+            (strongest < 0 || pair.second.grudge > npcRelations_.at(strongest).grudge))
+            strongest = pair.first;
+    if (strongest >= 0) nemesisFigure_ = strongest;
+    if (nemesisFigure_ >= 0 && nemesisFigure_ < (int)history_.figures.size() &&
+        ch_.day % 8 == 0) {
+        RegionState& state = regionStates_[currentRegion_];
+        state.unrest = std::min(5, state.unrest + 1);
+        state.flags.insert("blacklisted");
+        std::string warning = history_.figures[nemesisFigure_].name +
+            " has been telling employers, guards, and one unusually political horse about you.";
+        addRumor(warning, 92, currentRegion_, nemesisFigure_, true);
+        newsLine_ = warning;
+    }
+
+    if (ch_.day % 4 == 0) {
+        const RegionState& state = regionStates_[currentRegion_];
+        std::string text;
+        int truth = 70;
+        if (state.pollution >= 3)
+            text = "Children are drawing the refinery smoke with colors the refinery says do not exist.";
+        else if (state.rent >= 3)
+            text = "The rent rose again. The building has not, although the landlord's confidence has.";
+        else if (state.supply <= -2)
+            text = "Merchants deny a shortage while standing in front of several locked warehouses.";
+        else if (state.solidarity >= 3)
+            text = "A neighborhood assembly solved in an afternoon what officials had studied for eleven years.";
+        if (!text.empty()) addRumor(text, truth, currentRegion_);
     }
 }
 
@@ -1956,8 +2298,14 @@ void Game::updateRegionState() {
             if (value.died < 0 && value.region == r) beast = true;
 
         if (ch_.day % 7 == 0) {
-            if (plagued) { state.prosperity--; state.danger++; state.unrest++; }
-            if (war) { state.prosperity--; state.danger++; state.unrest += 2; }
+            if (plagued) {
+                state.prosperity--; state.danger++; state.unrest++;
+                state.supply--;
+            }
+            if (war) {
+                state.prosperity--; state.danger++; state.unrest += 2;
+                state.supply--; state.pollution++;
+            }
             if (beast) state.danger++;
             if (!plagued && !war && !beast) {
                 if ((ch_.day / 7 + r) % 2 == 0) state.prosperity++;
@@ -1978,11 +2326,27 @@ void Game::updateRegionState() {
             if (state.prosperity >= 3 && exportedProsperity[r] > 0)
                 state.flags.insert("trade_boom");
             else state.flags.erase("trade_boom");
+            if (state.flags.count("trade_boom") && !state.flags.count("tenants_union"))
+                state.rent++;
+            if (state.solidarity >= 2) {
+                if (state.rent > -3) state.rent--;
+                if (state.supply < 3) state.supply++;
+            }
+            if (state.flags.count("clean_power") && state.pollution > -3)
+                state.pollution--;
+            if (state.pollution >= 3) {
+                state.danger++;
+                state.unrest++;
+            }
         }
         state.prosperity = std::max(-5, std::min(5, state.prosperity));
         state.danger = std::max(-5, std::min(5, state.danger));
         state.unrest = std::max(-5, std::min(5, state.unrest));
         state.pressure = std::max(-5, std::min(5, state.pressure));
+        state.supply = std::max(-5, std::min(5, state.supply));
+        state.rent = std::max(-5, std::min(5, state.rent));
+        state.pollution = std::max(-5, std::min(5, state.pollution));
+        state.solidarity = std::max(-5, std::min(5, state.solidarity));
         if (plagued) state.flags.insert("plagued"); else state.flags.erase("plagued");
         if (war) state.flags.insert("at_war"); else state.flags.erase("at_war");
         if (state.danger >= 4 && !beast) state.flags.insert("haunted");
@@ -1994,6 +2358,13 @@ void Game::updateRegionState() {
         else state.flags.erase("perilous");
         if (state.unrest >= 3) state.flags.insert("volatile");
         else state.flags.erase("volatile");
+        if (state.pollution >= 3) state.flags.insert("toxic_zone");
+        else if (state.pollution <= 0) state.flags.erase("toxic_zone");
+        if (state.rent >= 3) state.flags.insert("evictions");
+        else if (state.rent <= 0) state.flags.erase("evictions");
+        if (state.solidarity >= 4) state.flags.insert("worker_coop");
+        if (state.solidarity >= 3 && state.supply >= 1) state.flags.insert("public_clinic");
+        if (state.solidarity >= 4 && state.rent <= 0) state.flags.insert("commons");
 
         std::string after = state.description();
         if (r == currentRegion_ && ch_.day % 7 == 0 && before != after) {
@@ -2106,6 +2477,7 @@ void Game::dailyTick() {
     if (season_ == "winter") { if (roll <= 35) weather_ = "snowing"; }
     else if (roll <= 25) weather_ = "raining";
     updateRegionState();
+    advanceRumorsAndAgendas();
     if (ch_.day % 7 == 0 && currentRegion_ >= 0 &&
         currentRegion_ < (int)regionStates_.size() &&
         regionStates_[currentRegion_].unrest >= 3) {
@@ -2140,6 +2512,18 @@ bool Game::resolveSlots(const Event& e, Grammar::Ctx& ctx) {
     for (auto& [name, query] : e.slots) {
         if (query == "chronicle_random") {
             ctx[name] = randomRumor();
+        } else if (query == "rumor_active") {
+            if (rumors_.empty()) return false;
+            std::vector<int> local;
+            for (int i = 0; i < (int)rumors_.size(); i++)
+                if (rumors_[i].region == currentRegion_) local.push_back(i);
+            int ri = local.empty()
+                ? runRng_.range(0, (int)rumors_.size() - 1)
+                : local[runRng_.range(0, (int)local.size() - 1)];
+            const Rumor& rumor = rumors_[ri];
+            ctx[name] = rumor.text;
+            ctx[name + "_age"] = std::to_string(rumor.age);
+            ctx[name + "_reach"] = std::to_string(rumor.reach);
         } else if (query == "chronicle_news") {
             // Only satisfiable when something has actually HAPPENED lately.
             int liveCount = (int)history_.chron.size() - history_.liveStartId;
@@ -2640,6 +3024,49 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
                 else if (field == "grudge") value = &rel.grudge;
                 if (value) *value = std::max(-10, std::min(10, *value + amount));
             }
+        } else if (verb == "rumor") {
+            int truth = 50;
+            ss >> truth;
+            std::string text;
+            std::getline(ss, text);
+            if (!text.empty() && text[0] == ' ') text.erase(0, 1);
+            addRumor(text, truth, currentRegion_, slotFigure_, truth < 35);
+        } else if (verb == "foreshadow") {
+            int days = 1;
+            std::string eventId;
+            ss >> days >> eventId;
+            std::string text;
+            std::getline(ss, text);
+            if (!text.empty() && text[0] == ' ') text.erase(0, 1);
+            queueConsequence(days, eventId, text);
+            addRumor(text, 72, currentRegion_, slotFigure_, false,
+                     eventId, ch_.day + std::max(1, days));
+        } else if (verb == "agenda") {
+            std::string kind;
+            ss >> kind;
+            if (slotFigure_ >= 0 && !kind.empty()) {
+                bool found = false;
+                for (Agenda& agenda : agendas_)
+                    if (agenda.figure == slotFigure_) {
+                        agenda.kind = kind;
+                        agenda.region = currentRegion_;
+                        agenda.progress = 0;
+                        agenda.active = true;
+                        found = true;
+                    }
+                if (!found) agendas_.push_back({slotFigure_, currentRegion_, 0, kind, true});
+            }
+        } else if (verb == "nemesis") {
+            if (slotFigure_ >= 0) {
+                nemesisFigure_ = slotFigure_;
+                relation(slotFigure_).grudge = std::max(6, relation(slotFigure_).grudge);
+                npcMarks_[slotFigure_].insert("nemesis");
+            }
+        } else if (verb == "collective") {
+            int amount = 1;
+            ss >> amount;
+            collectiveVictories_ = std::max(0, collectiveVictories_ + amount);
+            if (amount > 0) audio_.solidarity();
         } else if (verb == "converge") {
             std::string family;
             ss >> family;
@@ -2764,6 +3191,10 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
                 else if (field == "danger") value = &state.danger;
                 else if (field == "unrest") value = &state.unrest;
                 else if (field == "pressure") value = &state.pressure;
+                else if (field == "supply") value = &state.supply;
+                else if (field == "rent") value = &state.rent;
+                else if (field == "pollution") value = &state.pollution;
+                else if (field == "solidarity") value = &state.solidarity;
                 if (value) *value = std::max(-5, std::min(5, *value + amount));
             }
         } else if (verb == "region_spread") {
@@ -2779,14 +3210,24 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
                     else if (field == "danger") value = &state.danger;
                     else if (field == "unrest") value = &state.unrest;
                     else if (field == "pressure") value = &state.pressure;
+                    else if (field == "supply") value = &state.supply;
+                    else if (field == "rent") value = &state.rent;
+                    else if (field == "pollution") value = &state.pollution;
+                    else if (field == "solidarity") value = &state.solidarity;
                     if (value) *value = std::max(-5, std::min(5, *value + amount));
                     state.flags.insert("spillover");
                 }
         } else if (verb == "region_flag") {
             std::string flag;
             ss >> flag;
-            if (currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size())
-                regionStates_[currentRegion_].flags.insert(flag);
+            if (currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size()) {
+                if (!flag.empty() && flag[0] == '-')
+                    regionStates_[currentRegion_].flags.erase(flag.substr(1));
+                else {
+                    if (!flag.empty() && flag[0] == '+') flag.erase(0, 1);
+                    if (!flag.empty()) regionStates_[currentRegion_].flags.insert(flag);
+                }
+            }
         } else if (verb == "die") {
             std::string rest;
             std::getline(ss, rest);
@@ -3019,6 +3460,7 @@ void Game::frame(Vector2 mouse, bool pressed) {
         case INVESTIGATION: drawInvestigation(mouse); break;
         case NETWORK:   drawNetwork(mouse); break;
         case BALANCE:   drawBalance(mouse); break;
+        case RUMORS:    drawRumors(mouse); break;
     }
 }
 
@@ -3150,7 +3592,7 @@ void Game::drawTitle(Vector2 mouse) {
     }
     const char* title = "RANDOM ROGUE";
     DrawText(title, (kW - MeasureText(title, 20)) / 2, 38, 20, PAL_GOLD);
-    DrawText("v14", 4, kH - 10, 10, PAL_DARK); // release stamp for bug reports
+    DrawText("v15", 4, kH - 10, 10, PAL_DARK); // release stamp for bug reports
     if (!dataError_.empty()) {
         DrawTextWrapped(dataError_, 20, 90, kW - 40, PAL_RED);
         return;
@@ -3354,7 +3796,7 @@ void Game::drawTitle(Vector2 mouse) {
 
 // The how-to cards: everything a first life needs, nothing more (R7).
 void Game::drawIntro(Vector2 mouse) {
-    static const char* kCards[3] = {
+    static const char* kCards[4] = {
         "HOW TO BE BRIEFLY ALIVE\n\nTravel between places. Each place deals "
         "event cards; every card offers choices, and some choices roll dice "
         "against your stats.\n\nYou will die. That is not failure - your name, "
@@ -3365,6 +3807,11 @@ void Game::drawIntro(Vector2 mouse) {
         "findable relics, and the folk you wronged hold grudges against your "
         "heirs.\n\nDAILY and WEEKLY worlds are shared with every other player "
         "alive right now - their graves, deeds, and falls appear in yours.",
+        "POWER HAS A MEMORY\n\nRegions track rent, supply, pollution, and "
+        "solidarity. Named people pursue agendas whether you help them or not. "
+        "Rumors travel, mutate, and sometimes warn you about what comes next.\n\n"
+        "Open the Story Journal to inspect people, rumors, investigations, and "
+        "the material condition of the place you are standing in.",
         "THE LONG GAME\n\nTraits change which cards find you. Gods bank favor "
         "and may catch you when you fall - once. Contracts build careers, "
         "words of the old tongue accumulate forever, and ships cross to other "
@@ -3373,13 +3820,13 @@ void Game::drawIntro(Vector2 mouse) {
     };
     if (introPage_ < 0) introPage_ = 0;
     DrawTextWrapped(kCards[introPage_], 16, 24, kW - 32, PAL_INK, kH - 26);
-    std::string pg = std::to_string(introPage_ + 1) + "/3";
+    std::string pg = std::to_string(introPage_ + 1) + "/4";
     DrawText(pg.c_str(), 8, kH - 16, 10, PAL_DARK);
-    const char* label = introPage_ < 2 ? "NEXT" : "BEGIN";
+    const char* label = introPage_ < 3 ? "NEXT" : "BEGIN";
     if (uiButton({(float)(kW - 56), (float)(kH - 22), 52, 18}, label, mouse) ||
         IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
         introPage_++;
-        if (introPage_ >= 3) {
+        if (introPage_ >= 4) {
             introPage_ = -1;
             profile_.seenIntro = true;
             SaveProfile(profile_);
@@ -3496,7 +3943,7 @@ void Game::drawClassPick(Vector2 mouse) {
         Rng ambRng(nextSeed_ ^ (pendingLegacy_.size() * 8191ULL), 99);
         ambitionChoices_.clear();
         while ((int)ambitionChoices_.size() < 3) {
-            int a = ambRng.range(0, 10);
+            int a = ambRng.range(0, 11);
             bool dup = false;
             for (int c : ambitionChoices_)
                 if (c == a) dup = true;
@@ -4021,9 +4468,14 @@ void Game::drawJournal(Vector2 mouse) {
         }
     }
 
-    if (currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size())
+    if (currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size()) {
+        const RegionState& state = regionStates_[currentRegion_];
         text += "CURRENT REGION\n" + world_.regions[currentRegion_].name + " is " +
-                regionStates_[currentRegion_].description() + ".\n\n";
+                state.description() + ".\nSupply " + std::to_string(state.supply) +
+                ", rent burden " + std::to_string(state.rent) +
+                ", pollution " + std::to_string(state.pollution) +
+                ", solidarity " + std::to_string(state.solidarity) + ".\n\n";
+    }
 
     text += "CHOICES WAITING TO RETURN\n";
     if (consequences_.empty() && scheduledNextId_.empty()) text += "None that admit it.\n";
@@ -4104,6 +4556,12 @@ void Game::drawJournal(Vector2 mouse) {
         networkPage_ = 0;
         networkSelected_ = -1;
         screen_ = NETWORK;
+        return;
+    }
+    if (uiButton({134, (float)(kH - 20), 64, 16}, "RUMORS", mouse)) {
+        rumorPage_ = 0;
+        rumorDetail_ = -1;
+        screen_ = RUMORS;
         return;
     }
     if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
@@ -4200,6 +4658,18 @@ void Game::drawNetwork(Vector2 mouse) {
             "\nDebt " + std::to_string(rel->debt) + "  affection " +
             std::to_string(rel->affection) + "  grudge " + std::to_string(rel->grudge) +
             "\nKnowledge " + std::to_string(rel->knowledge) + "/10\n\n";
+        const Agenda* agenda = agendaFor(fi);
+        if (agenda) {
+            if (rel && rel->knowledge >= 3) {
+                text += "AGENDA: " + agendaName(agenda->kind) + ".\n";
+                if (agenda->region >= 0 && agenda->region < (int)world_.regions.size())
+                    text += "Operating near " + world_.regions[agenda->region].name + ".\n";
+            } else {
+                text += "AGENDA: not yet understood.\n";
+            }
+        }
+        if (fi == nemesisFigure_) text += "STATUS: PERSONAL NEMESIS. This is now a project.\n";
+        text += "\n";
         text += "KNOWN CONNECTIONS\n";
         int links = 0;
         for (const SocialTie& tie : socialTies_) {
@@ -4248,6 +4718,99 @@ void Game::drawNetwork(Vector2 mouse) {
         networkPage_--;
     if (networkPage_ + 1 < pages && uiButton({56, (float)(kH - 20), 48, 16}, "NEXT >", mouse))
         networkPage_++;
+    if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
+        IsKeyPressed(KEY_ESCAPE)) screen_ = JOURNAL;
+}
+
+void Game::drawRumors(Vector2 mouse) {
+    drawTopBar();
+    DrawText("RUMOR EXCHANGE", 8, 20, 10, PAL_GOLD);
+    if (rumorDetail_ >= 0 && rumorDetail_ < (int)rumors_.size()) {
+        int id = rumors_[rumorDetail_].id;
+        const Rumor& value = rumors_[rumorDetail_];
+        std::string text = value.text + "\n\n";
+        text += "Age " + std::to_string(value.age) + " days. Reach " +
+                std::to_string(value.reach) + " regions.\n";
+        if (value.origin >= 0 && value.origin < (int)world_.regions.size())
+            text += "First heard near " + world_.regions[value.origin].name + ".\n";
+        if (value.figure >= 0 && value.figure < (int)history_.figures.size() &&
+            relationIfKnown(value.figure))
+            text += "Associated with " + history_.figures[value.figure].name + ".\n";
+        if (verifiedRumors_.count(id)) {
+            const char* assessment = value.truth >= 70 ? "well supported" :
+                value.truth >= 40 ? "contested" : "manufactured or badly distorted";
+            text += "\nYour investigation: " + std::string(assessment) + ".";
+        } else {
+            text += "\nIts reliability is unknown. Confidence is not evidence.";
+        }
+        if (!value.foreshadowEvent.empty())
+            text += "\nThis rumor sounds less like gossip than a warning.";
+        int readerSize = profile_.largeText ? 12 : 10;
+        drawScrollText(WrapLines(text, kW - 24, readerSize), 8, 36, kH - 42,
+                       PAL_INK, mouse, false);
+
+        if (!verifiedRumors_.count(id) &&
+            uiButton({4, (float)(kH - 39), 60, 16}, "VERIFY", mouse)) {
+            verifiedRumors_.insert(id);
+            dailyTick();
+            saveRun();
+            return;
+        }
+        if (uiButton({68, (float)(kH - 39), 60, 16}, "AMPLIFY", mouse)) {
+            for (Rumor& rumor : rumors_)
+                if (rumor.id == id) {
+                    rumor.reach += 2;
+                    if (currentRegion_ >= 0 && currentRegion_ < (int)regionStates_.size()) {
+                        if (rumor.truth < 35) regionStates_[currentRegion_].unrest++;
+                        if (rumor.truth >= 70) regionStates_[currentRegion_].solidarity++;
+                    }
+                    break;
+                }
+            saveRun();
+        }
+        if (ch_.money >= 4 && uiButton({132, (float)(kH - 39), 60, 16}, "BURY 4G", mouse)) {
+            ch_.money -= 4;
+            for (auto it = rumors_.begin(); it != rumors_.end(); ++it)
+                if (it->id == id) {
+                    rumors_.erase(it);
+                    break;
+                }
+            rumorDetail_ = -1;
+            saveRun();
+            return;
+        }
+        if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "LIST", mouse) ||
+            IsKeyPressed(KEY_ESCAPE)) {
+            rumorDetail_ = -1;
+            textScroll_ = 0;
+        }
+        return;
+    }
+
+    const int perPage = 5;
+    int pages = std::max(1, ((int)rumors_.size() + perPage - 1) / perPage);
+    rumorPage_ = std::max(0, std::min(pages - 1, rumorPage_));
+    if (rumors_.empty())
+        DrawTextWrapped("Nobody is talking. Either peace has arrived or counsel has advised silence.",
+                        8, 44, kW - 16, PAL_DIM);
+    for (int row = 0; row < perPage; row++) {
+        int reversePos = rumorPage_ * perPage + row;
+        int index = (int)rumors_.size() - 1 - reversePos;
+        if (index < 0) break;
+        const Rumor& value = rumors_[index];
+        std::string label = verifiedRumors_.count(value.id) ? "V " : "? ";
+        label += value.text;
+        while (!label.empty() && MeasureText(label.c_str(), 10) > 296) label.pop_back();
+        if (uiButton({8, (float)(42 + row * 22), 304, 18}, label.c_str(), mouse)) {
+            rumorDetail_ = index;
+            textScroll_ = 0;
+            return;
+        }
+    }
+    if (rumorPage_ > 0 && uiButton({4, (float)(kH - 20), 48, 16}, "< PREV", mouse))
+        rumorPage_--;
+    if (rumorPage_ + 1 < pages && uiButton({56, (float)(kH - 20), 48, 16}, "NEXT >", mouse))
+        rumorPage_++;
     if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16}, "BACK", mouse) ||
         IsKeyPressed(KEY_ESCAPE)) screen_ = JOURNAL;
 }
@@ -4473,9 +5036,11 @@ void Game::drawWorldMap(Vector2 mouse) {
 // and follow-the-thread filters by figure or faction (R3, R10).
 void Game::drawChronicle(Vector2 mouse) {
     const int kPerPage = 8;
-    bool filtered = chronFilterActor_ >= 0 || chronFilterFaction_ >= 0 ||
-                    chronFilterSite_ >= 0 || chronFilterArtifact_ >= 0 ||
-                    chronFilterBeast_ >= 0;
+    bool entityFiltered = chronFilterActor_ >= 0 || chronFilterFaction_ >= 0 ||
+                          chronFilterSite_ >= 0 || chronFilterArtifact_ >= 0 ||
+                          chronFilterBeast_ >= 0;
+    bool topicFiltered = chronTopic_ > 0;
+    bool filtered = entityFiltered || topicFiltered;
     int total = filtered ? (int)chronFilterList_.size() : (int)history_.chron.size();
     auto entryAt = [&](int i) -> int {
         return filtered ? chronFilterList_[i] : i;
@@ -4498,9 +5063,15 @@ void Game::drawChronicle(Vector2 mouse) {
         }
         chronCachedPage_ = chronPage_;
     }
-    std::string head = "THE CHRONICLE OF " + world_.name.conlang;
+    std::string head = "CHRONICLE: " + world_.name.conlang;
     for (auto& c : head) c = (char)toupper((unsigned char)c);
-    DrawText(head.c_str(), (kW - MeasureText(head.c_str(), 10)) / 2, 6, 10, PAL_GOLD);
+    bool headCut = false;
+    while (!head.empty() && MeasureText((head + "..").c_str(), 10) > kW - 160) {
+        head.pop_back();
+        headCut = true;
+    }
+    if (headCut) head += "..";
+    DrawText(head.c_str(), 4, 6, 10, PAL_GOLD);
     // A tapped line opens the whole entry, unclipped (R9), with a THREAD
     // button that filters the whole book to that figure or faction (R10).
     if (chronDetail_ >= 0 && chronDetail_ < (int)chronLines_.size()) {
@@ -4511,6 +5082,7 @@ void Game::drawChronicle(Vector2 mouse) {
             uiButton({(float)(kW / 2 - 52), (float)(kH - 22), 104, 18},
                      "FOLLOW THIS THREAD", mouse)) {
             chronFilterActor_ = de.actor;
+            chronTopic_ = 0;
             chronFilterArtifact_ = de.actor < 0 ? de.artifact : -1;
             chronFilterBeast_ = de.actor < 0 && de.artifact < 0 ? de.beast : -1;
             chronFilterSite_ = de.actor < 0 && de.artifact < 0 && de.beast < 0
@@ -4534,7 +5106,7 @@ void Game::drawChronicle(Vector2 mouse) {
             chronDetail_ = -1;
             return;
         }
-        const char* hint = "tap elsewhere to go back";
+        const char* hint = "tap to return";
         DrawText(hint, 8, kH - 16, 10, PAL_DARK);
         if (pressed_ || GetKeyPressed() != 0) chronDetail_ = -1;
         return;
@@ -4543,12 +5115,18 @@ void Game::drawChronicle(Vector2 mouse) {
     if (!chronLines_.empty()) {
         if (filtered) {
             std::string who;
-            if (chronFilterActor_ >= 0) who = history_.figures[chronFilterActor_].name;
+            if (topicFiltered) {
+                static const char* kTopicNames[4] = {
+                    "all history", "player lives", "conflict", "civic change"};
+                era = std::string("topic: ") + kTopicNames[chronTopic_] + "  -  " +
+                      std::to_string(total) + " entries";
+            } else if (chronFilterActor_ >= 0) who = history_.figures[chronFilterActor_].name;
             else if (chronFilterFaction_ >= 0) who = history_.factions[chronFilterFaction_].name;
             else if (chronFilterSite_ >= 0) who = world_.sites[chronFilterSite_].name;
             else if (chronFilterArtifact_ >= 0) who = history_.artifacts[chronFilterArtifact_].display();
             else if (chronFilterBeast_ >= 0) who = history_.beasts[chronFilterBeast_].name;
-            era = "the thread of " + who + "  -  " + std::to_string(total) + " entries";
+            if (!topicFiltered)
+                era = "the thread of " + who + "  -  " + std::to_string(total) + " entries";
         } else {
             era = std::string(EraName(history_.chron[entryAt(chronPage_ * kPerPage)].year)) +
                   "  -  page " + std::to_string(chronPage_ + 1) + "/" + std::to_string(pages);
@@ -4606,6 +5184,38 @@ void Game::drawChronicle(Vector2 mouse) {
         (uiButton({56, (float)(kH - 20), 48, 16}, "NEXT >", mouse) ||
          IsKeyPressed(KEY_RIGHT)))
         chronPage_++;
+    static const char* kTopicButtons[4] = {"TOPIC: ALL", "TOPIC: YOU", "TOPIC: WAR", "TOPIC: CIVIC"};
+    if (!entityFiltered && uiButton({108, (float)(kH - 20), 100, 16},
+                                    kTopicButtons[chronTopic_], mouse)) {
+        chronTopic_ = (chronTopic_ + 1) % 4;
+        chronFilterList_.clear();
+        if (chronTopic_ > 0) {
+            for (int i = 0; i < (int)history_.chron.size(); i++) {
+                const std::string& type = history_.chron[i].type;
+                bool hit = false;
+                if (chronTopic_ == 1)
+                    hit = type.rfind("pc_", 0) == 0 || type.find("companion") != std::string::npos;
+                else if (chronTopic_ == 2)
+                    hit = type.find("war") != std::string::npos ||
+                          type.find("battle") != std::string::npos ||
+                          type.find("siege") != std::string::npos ||
+                          type.find("killed") != std::string::npos ||
+                          type.find("slain") != std::string::npos;
+                else if (chronTopic_ == 3)
+                    hit = type == "region_shift" || type.find("agenda_") == 0 ||
+                          type.find("founded") != std::string::npos ||
+                          type.find("reform") != std::string::npos ||
+                          type.find("trade") != std::string::npos ||
+                          type.find("refugee") != std::string::npos ||
+                          type.find("plague") != std::string::npos;
+                if (hit) chronFilterList_.push_back(i);
+            }
+        }
+        chronPage_ = 0;
+        chronCachedPage_ = -1;
+        chronDetail_ = -1;
+        return;
+    }
     if (uiButton({(float)(kW - 52), (float)(kH - 20), 48, 16},
                  filtered ? "ALL" : "BACK", mouse) ||
         IsKeyPressed(KEY_TAB) || IsKeyPressed(KEY_ESCAPE)) {
@@ -4613,6 +5223,7 @@ void Game::drawChronicle(Vector2 mouse) {
             // Leave the thread, back to the whole book.
             chronFilterActor_ = chronFilterFaction_ = -1;
             chronFilterSite_ = chronFilterArtifact_ = chronFilterBeast_ = -1;
+            chronTopic_ = 0;
             chronFilterList_.clear();
             chronPage_ = 0;
             chronCachedPage_ = -1;

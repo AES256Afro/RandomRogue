@@ -32,12 +32,13 @@ static const std::set<std::string> kVerbs = {
     "slay_beast", "legacy_bless", "learn", "npc_unmark", "rival_dies", "favor",
     "schedule", "npc_rel", "npc_know", "clue", "mystery_clue", "mystery_solve",
     "region", "region_flag", "region_spread", "network", "network_rel",
-    "evidence", "doubt", "mystery_accuse", "mystery_trial", "converge"};
+    "evidence", "doubt", "mystery_accuse", "mystery_trial", "converge",
+    "rumor", "foreshadow", "agenda", "nemesis", "collective"};
 static const std::set<std::string> kSlotQueries = {
     "chronicle_random", "chronicle_news", "artifact_here", "figure_alive",
     "figure_dead", "god", "beast_here", "stranger_here", "ghost_here",
     "rival", "wronged_figure", "remembered_figure", "mystery_clue",
-    "mystery_culprit", "social_pair", "mystery_suspect"};
+    "mystery_culprit", "social_pair", "mystery_suspect", "rumor_active"};
 static const std::set<std::string> kDecks = {
     "city", "tavern", "dungeon", "dungeon_finale", "cave", "forest", "road",
     "crash", "swamp", "mountains", "coast", "sea"};
@@ -61,12 +62,14 @@ static bool validWhen(const std::string& w) {
                                                 "ship", "!ship"};
     if (a == "mystery_active" || a == "mystery_solved" ||
         a == "mystery_tried" || a == "verdict_correct" || a == "accused" ||
-        a == "social_known" || a == "mystery_appealed") return true;
+        a == "social_known" || a == "mystery_appealed" || a == "nemesis") return true;
     static const std::set<std::string> named = {"trait", "!trait", "has", "!has", "npc",
                                                 "season", "region", "neighbor", "network",
-                                                "echo"};
+                                                "echo", "agenda"};
     static const std::set<std::string> cmp = {"rep", "money", "credits", "hp", "day",
-                                              "contracts", "clues", "evidence", "doubt"};
+                                              "contracts", "clues", "evidence", "doubt",
+                                              "rumors", "collective", "solidarity",
+                                              "pollution", "rent", "supply"};
     static const std::set<std::string> ops = {">", "<", ">=", "<=", "=="};
     if (unary.count(a)) return true;
     if (named.count(a)) return !b.empty();
@@ -171,11 +174,17 @@ int main(int argc, char** argv) {
             if (verb == "stat" && !kStats.count(a)) fail(id, "unknown stat: " + a);
             if (verb == "loot" && a != "common" && a != "fine") fail(id, "unknown loot tier: " + a);
             if (verb == "goto") gotoTargets.insert(a);
-            if (verb == "schedule") {
+            if (verb == "schedule" || verb == "foreshadow") {
                 std::string target;
                 ss >> target;
-                if (target.empty()) fail(id, "schedule is missing an event id");
+                if (target.empty()) fail(id, verb + " is missing an event id");
                 else scheduledTargets.insert(target);
+            }
+            if (verb == "agenda") {
+                static const std::set<std::string> agendas = {
+                    "organize", "mutual_aid", "expose", "liberate",
+                    "profiteer", "pollute", "militarize", "displace"};
+                if (!agendas.count(a)) fail(id, "unknown agenda: " + a);
             }
             if (verb == "npc_rel" || verb == "network_rel") {
                 static const std::set<std::string> fields = {
@@ -185,7 +194,8 @@ int main(int argc, char** argv) {
             }
             if (verb == "region" || verb == "region_spread") {
                 static const std::set<std::string> fields = {
-                    "prosperity", "danger", "unrest", "pressure"};
+                    "prosperity", "danger", "unrest", "pressure", "supply",
+                    "rent", "pollution", "solidarity"};
                 if (!fields.count(a)) fail(id, "unknown regional field: " + a);
             }
         }

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(RandomRogue VERSION 0.14.0 LANGUAGES C CXX)
+project(RandomRogue VERSION 0.15.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -59,6 +59,10 @@ if(NOT EMSCRIPTEN)
     # Narrative coverage and structural similarity report for content authors.
     add_executable(analyze tools/analyze.cpp)
     target_link_libraries(analyze PRIVATE nlohmann_json::nlohmann_json)
+
+    # Print a schema-correct scenario skeleton for content authors.
+    add_executable(scaffold tools/scaffold.cpp)
+    target_link_libraries(scaffold PRIVATE nlohmann_json::nlohmann_json)
 
     # Monte-Carlo balance bot: thousands of headless runs, data over vibes.
     add_executable(playtest

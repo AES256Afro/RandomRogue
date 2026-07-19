@@ -25,6 +25,8 @@ public:
     void chime();  // item gained
     void dirge();   // death / the afterlife gate
     void fanfare(); // triumph: beast slain, career crowned
+    void solidarity(); // collective victory, warmer than individual triumph
+    void warning();    // an omen or organized threat becomes immediate
 
 private:
     Sound generateTrack(const std::string& tag, uint64_t seed);
@@ -39,6 +41,7 @@ private:
     bool hasTrack_ = false;
     Sound sBlip_{}, sCoin_{}, sThud_{}, sDice_{}, sChime_{};
     Sound sDirge_{}, sFanfare_{};
+    Sound sSolidarity_{}, sWarning_{};
     bool ready_ = false;
     bool musicMuted_ = true;
 };

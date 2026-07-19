@@ -17,6 +17,8 @@ constexpr int kVirtualH = 180;
 
 RenderTexture2D gCanvas;
 Game gGame;
+Vector2 gPadCursor{160.0f, 90.0f};
+bool gPadActive = false;
 
 #if defined(PLATFORM_WEB)
 // The GLFW mouse path is unreliable under emscripten, and touch needs first-
@@ -109,9 +111,31 @@ void UpdateDrawFrame() {
     bool pressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 #endif
     Vector2 vm = {(m.x - offX) / scale, (m.y - offY) / scale};
+    if (IsGamepadAvailable(0)) {
+        float dx = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X);
+        float dy = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y);
+        if (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT)) dx = -1.0f;
+        if (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT)) dx = 1.0f;
+        if (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_UP)) dy = -1.0f;
+        if (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN)) dy = 1.0f;
+        if (fabsf(dx) > 0.18f || fabsf(dy) > 0.18f) {
+            gPadActive = true;
+            gPadCursor.x = fmaxf(0.0f, fminf((float)kVirtualW - 1,
+                gPadCursor.x + dx * 150.0f * GetFrameTime()));
+            gPadCursor.y = fmaxf(0.0f, fminf((float)kVirtualH - 1,
+                gPadCursor.y + dy * 150.0f * GetFrameTime()));
+        }
+        if (gPadActive) vm = gPadCursor;
+        if (IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) pressed = true;
+    }
 
     BeginTextureMode(gCanvas);
     gGame.frame(vm, pressed);
+    if (gPadActive) {
+        DrawCircleLines((int)gPadCursor.x, (int)gPadCursor.y, 3.0f,
+                        Color{255, 205, 117, 255});
+        DrawPixel((int)gPadCursor.x, (int)gPadCursor.y, WHITE);
+    }
     EndTextureMode();
 
     // The frame the player asked to keep (death card) is now in the texture.

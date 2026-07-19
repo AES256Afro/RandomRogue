@@ -87,6 +87,10 @@ std::vector<std::string> StoryDirector::tagsFor(const Event& event) {
                 if (fx.rfind("schedule ", 0) == 0) unique.insert("consequence");
                 if (fx.rfind("mystery_", 0) == 0) unique.insert("mystery");
                 if (fx.rfind("region ", 0) == 0) unique.insert("regional");
+                if (fx.rfind("rumor ", 0) == 0 || fx.rfind("foreshadow ", 0) == 0)
+                    unique.insert("rumor");
+                if (fx.rfind("agenda ", 0) == 0 || fx.rfind("collective ", 0) == 0)
+                    unique.insert("politics");
             }
         }
     };
@@ -143,6 +147,10 @@ int StoryDirector::score(const Event& event, const StoryContext& ctx) const {
         if (tag == "weather" && ctx.weather != "clear") result += 24;
         if (tag == "mystery" && ctx.mystery) result += 40;
         if (tag == "companion" && ctx.companion) result += 20;
+        if (tag == "rumor" && ctx.rumors) result += 24;
+        if ((tag == "labor" || tag == "solidarity") && ctx.solidarity) result += 30;
+        if (tag == "ecology" && ctx.pollution) result += 38;
+        if ((tag == "rent" || tag == "economy") && ctx.scarcity) result += 32;
     }
     result += std::min(45, novelty);
     result -= std::min(55, heat * 7);
@@ -199,6 +207,10 @@ std::vector<std::string> StoryDirector::explain(const Event& event,
     add("weather", ctx.weather != "clear");
     add("mystery", ctx.mystery);
     add("companion", ctx.companion);
+    add("rumor", ctx.rumors);
+    add("solidarity", ctx.solidarity);
+    add("ecology", ctx.pollution);
+    add("rent", ctx.scarcity);
     if (!any) reasons += " neutral";
     lines.push_back(reasons);
 

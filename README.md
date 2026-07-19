@@ -1,16 +1,18 @@
 Ôªø# Random Rogue
 
 A lofi-pixel, Reigns-style roguelike where every world is generated from a
-seed: geography, factions, 1,000 years of simulated history across five eras, and every rumor,
-book, artifact, and item quirk ties back to that history. Dungeon Crawler
-Carl energy throughout.
+seed: geography, factions, 1,000 years of simulated history across five eras,
+and every rumor, book, artifact, and item quirk ties back to that history.
+Regions have political economies. Named people pursue agendas. Solidarity,
+rent, supply, pollution, and power continue moving without the player.
 
-- **Design docs:** [PLAN.md](PLAN.md) - [WORLDGEN.md](WORLDGEN.md)
+- **Design docs:** [PLAN.md](PLAN.md) - [WORLDGEN.md](WORLDGEN.md) - [NARRATIVE.md](NARRATIVE.md)
+- **Content guide:** [AUTHORING.md](AUTHORING.md)
 - **Targets:** Windows, Linux, macOS, Browser (desktop + iPad)
 
 ## Play
 
-- **1-ú9 / tap**: choose
+- **1-9 / tap**: choose
 - **Tab / PACK button**: inventory
 - **Enter / tap**: continue
 - **S**: enter a seed - **M**: mute
@@ -51,13 +53,13 @@ build/windows/chronicle_dump.exe <seed> assets
 
 Prints a world's full simulated history as readable text. If the dump is fun
 to read, the game is working. Native and WASM dumps are byte-identical for
-the same seed -ù that's load-bearing; see the determinism note in
+the same seed. That is load-bearing; see the determinism note in
 src/language.cpp before touching RNG call sites.
 
 ## Hosting (random-rogue.com)
 
 The domain is served by a Cloudflare Worker (`random-rogue-site`) that reads
-the landing page + game from a KV namespace -ù independent of GitHub, so repo
+the landing page + game from a KV namespace, independent of GitHub, so repo
 visibility never affects the site. Zone routes: `random-rogue.com/*` and
 `www.random-rogue.com/*`.
 

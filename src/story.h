@@ -22,6 +22,10 @@ struct StoryContext {
     bool war = false;
     bool plague = false;
     bool mystery = false;
+    bool rumors = false;
+    bool solidarity = false;
+    bool pollution = false;
+    bool scarcity = false;
     std::set<std::string> activeFamilies;
     bool arcBeatDue = false;
 };

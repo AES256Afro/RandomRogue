@@ -38,7 +38,7 @@ private:
     enum Screen { TITLE, CLASSPICK, AMBITION, TRAVEL, EVENT, OUTCOME, DEATH,
                   INVENTORY, INFO, VENDOR, WORLDMAP, CHRONICLE, SAGA, REPLAY,
                   OPTIONS, CRAFT, JOURNAL, DIRECTOR, INVESTIGATION, NETWORK,
-                  BALANCE };
+                  BALANCE, RUMORS };
 
     // A hired sword, a talking badger, a disgraced accountant (P5).
     struct Companion {
@@ -86,8 +86,24 @@ private:
     struct RegionState {
         int prosperity = 0, danger = 0, unrest = 0;
         int pressure = 0;
+        int supply = 0, rent = 0, pollution = 0, solidarity = 0;
         std::set<std::string> flags;
         std::string description() const;
+    };
+    struct Rumor {
+        int id = 0;
+        std::string text;
+        int truth = 50;
+        int origin = -1, region = -1, figure = -1;
+        int age = 0, reach = 1;
+        bool planted = false;
+        std::string foreshadowEvent;
+        int dueDay = 0;
+    };
+    struct Agenda {
+        int figure = -1, region = -1, progress = 0;
+        std::string kind;
+        bool active = true;
     };
     struct Mystery {
         bool active = false, solved = false, tried = false, correctVerdict = false;
@@ -152,6 +168,14 @@ private:
     void activateDueConsequence();
     void resolveStaleConsequences();
     void convergeStory(const std::string& family);
+    void seedLivingPolitics();
+    void advanceRumorsAndAgendas();
+    void addRumor(const std::string& text, int truth, int region,
+                  int figure = -1, bool planted = false,
+                  const std::string& foreshadowEvent = "", int dueDay = 0);
+    void applyAgenda(Agenda& agenda);
+    const Agenda* agendaFor(int figure) const;
+    std::string agendaName(const std::string& kind) const;
     std::set<std::string> activeStoryFamilies() const;
     NpcRelation& relation(int figure);
     const NpcRelation* relationIfKnown(int figure) const;
@@ -175,6 +199,7 @@ private:
     void drawInvestigation(Vector2 mouse);
     void drawNetwork(Vector2 mouse);
     void drawBalance(Vector2 mouse);
+    void drawRumors(Vector2 mouse);
     bool craftRecipe(const ItemRecipe& recipe);
     void drawIntro(Vector2 mouse); // first-run how-to cards (R7)
     // Shared worlds (R7): daily and weekly seeds and their board keys.
@@ -261,6 +286,12 @@ private:
     int scheduledFigure_ = -1;
     int scheduledRegion_ = -1;
     std::vector<RegionState> regionStates_;
+    std::vector<Rumor> rumors_;
+    std::set<int> verifiedRumors_;
+    std::vector<Agenda> agendas_;
+    int nextRumorId_ = 1;
+    int nemesisFigure_ = -1;
+    int collectiveVictories_ = 0;
     Mystery mystery_;
     std::set<std::string> storyEchoes_;
     std::map<std::string, int> storyEchoRegions_;
@@ -322,6 +353,7 @@ private:
     int chronFilterArtifact_ = -1;
     int chronFilterBeast_ = -1;
     std::vector<int> chronFilterList_;
+    int chronTopic_ = 0;             // all, player lives, conflict, civic change
     std::string scoresJson_;     // today's fallen (web leaderboard)
     bool scoresRequested_ = false;
     bool scoreSubmitted_ = false;
@@ -377,6 +409,8 @@ private:
     int textScroll_ = 0; // line offset of the scrollable reader (R9b)
     int networkPage_ = 0;
     int networkSelected_ = -1;
+    int rumorPage_ = 0;
+    int rumorDetail_ = -1;
     std::string balanceJson_;
     bool balanceRequested_ = false;
     int autonomousArcResolutions_ = 0;

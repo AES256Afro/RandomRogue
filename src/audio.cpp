@@ -62,6 +62,10 @@ void AudioBank::init() {
     sDirge_ = makeStinger(dirge, 6, 0.28f);
     float fanfare[] = {262.0f, 330.0f, 392.0f, 523.0f, 523.0f};
     sFanfare_ = makeStinger(fanfare, 5, 0.14f);
+    float solidarity[] = {196.0f, 247.0f, 294.0f, 247.0f, 330.0f, 392.0f};
+    sSolidarity_ = makeStinger(solidarity, 6, 0.13f);
+    float warning[] = {220.0f, 220.0f, 156.0f, 110.0f};
+    sWarning_ = makeStinger(warning, 4, 0.16f);
 }
 
 void AudioBank::shutdown() {
@@ -70,6 +74,7 @@ void AudioBank::shutdown() {
     UnloadSound(sBlip_); UnloadSound(sCoin_); UnloadSound(sThud_);
     UnloadSound(sDice_); UnloadSound(sChime_);
     UnloadSound(sDirge_); UnloadSound(sFanfare_);
+    UnloadSound(sSolidarity_); UnloadSound(sWarning_);
     CloseAudioDevice();
 }
 
@@ -167,3 +172,5 @@ void AudioBank::dice()  { if (ready_) PlaySound(sDice_); }
 void AudioBank::chime() { if (ready_) PlaySound(sChime_); }
 void AudioBank::dirge()   { if (ready_) PlaySound(sDirge_); }
 void AudioBank::fanfare() { if (ready_) PlaySound(sFanfare_); }
+void AudioBank::solidarity() { if (ready_) PlaySound(sSolidarity_); }
+void AudioBank::warning() { if (ready_) PlaySound(sWarning_); }

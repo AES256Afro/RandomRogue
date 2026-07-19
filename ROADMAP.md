@@ -467,3 +467,31 @@ The audit's design program, executed:
   recover it when the newest save is damaged. Reader text has a larger mode,
   buttons have a high-contrast mode, music remains muted by default, and long
   readers remain scrollable on touch screens.
+
+---
+
+## Release 15 - Power Has a Memory
+
+- **Living political economy** - every region now tracks supply, rent,
+  pollution, and solidarity alongside danger, prosperity, and unrest. Tenant
+  unions, company towns, public clinics, clean power, commons, and mutual aid
+  alter prices and future events.
+- **NPC agendas** - named historical figures organize, expose, liberate,
+  displace, pollute, militarize, provide care, or profiteer without waiting for
+  the player. Their work changes regions and enters the Chronicle.
+- **Rumor ecology** - reports travel between neighboring regions, change in
+  reliability, warn about scheduled events, and can be verified, amplified, or
+  buried from the Story Journal.
+- **Political choice language** - thirty new authored scenarios center labor,
+  housing, anti-fascism, anti-war resistance, refugees, public care, ecology,
+  common ownership, post-scarcity freedom, and the cost of kindness.
+- **Collective progression** - mutual-aid contracts improve local supply and
+  solidarity. The Common Cause ambition rewards victories achieved together.
+- **Better history browsing** - Chronicle topics isolate player lives,
+  conflict, and civic change while retaining full-entry and entity-thread views.
+- **Authoring discipline** - a narrative constitution, content guide, scenario
+  scaffolder, semantic coverage report, validator, and simulation gates keep
+  future additions politically coherent and mechanically connected.
+- **Access and atmosphere** - controller navigation, political audio stingers,
+  a four-card onboarding sequence, and a refreshed presentation site explain
+  the deeper world without changing the muted-by-default music policy.
