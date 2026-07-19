@@ -25,7 +25,7 @@ for (const [text, label] of [
   ['https://mud.random-rogue.com', 'MUD link'],
   ['https://theencryptedafro.itch.io/random-rogue', 'itch.io link'],
   ['LIVE NOW', 'live bridge label'],
-  ['NEXT BRIDGE', 'planned bridge label'],
+  ['NEXT: SHARED HISTORY BECOMES GAMEPLAY', 'next bridge milestone'],
   ['PATCH NOTES', 'patch notes navigation'],
   ['DEAL ANOTHER CARD', 'random card control'],
 ]) requireText(text, label);

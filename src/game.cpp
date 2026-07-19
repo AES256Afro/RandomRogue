@@ -1870,6 +1870,39 @@ void Game::injectStrangers(const std::string& json) {
     }
 }
 
+void Game::submitSharedEvent(const std::string& type,
+                             const std::string& entityKey,
+                             const std::string& entityName,
+                             const std::string& title,
+                             const std::string& text,
+                             const std::string& description,
+                             const std::string& provenance) const {
+#if defined(__EMSCRIPTEN__)
+    int bk = boardKeyFor(masterSeed_);
+    if (bk < 0) return;
+    nlohmann::json event = {{"day", bk},
+                            {"type", type},
+                            {"name", ch_.name.conlang},
+                            {"entity_key", entityKey},
+                            {"entity_name", entityName},
+                            {"title", title},
+                            {"text", text}};
+    if (!description.empty()) event["description"] = description;
+    if (!provenance.empty()) event["provenance"] = provenance;
+    if (currentSite_ >= 0 && currentSite_ < (int)world_.sites.size())
+        event["site"] = world_.sites[currentSite_].name;
+    rr_submit_deed(event.dump().c_str());
+#else
+    (void)type;
+    (void)entityKey;
+    (void)entityName;
+    (void)title;
+    (void)text;
+    (void)description;
+    (void)provenance;
+#endif
+}
+
 void Game::newRun(int classIdx) {
     masterSeed_ = nextSeed_;
     runCounter_++;
@@ -3582,16 +3615,10 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
                 beastSlainThisRun_ = true;
                 profile_.beastsSlain++;
                 SaveProfile(profile_);
-#if defined(__EMSCRIPTEN__)
-                // Shared world? The other players hear about this.
-                int bk = boardKeyFor(masterSeed_);
-                if (bk >= 0) {
-                    nlohmann::json d = {{"day", bk},
-                                        {"text", ch_.name.conlang + " slew " + b.name +
-                                                 " on day " + std::to_string(ch_.day) + "."}};
-                    rr_submit_deed(d.dump().c_str());
-                }
-#endif
+                submitSharedEvent("deed", "beast_" + std::to_string(slotBeast_),
+                                  ch_.name.conlang, "A beast fell",
+                                  ch_.name.conlang + " slew " + b.name +
+                                  " on day " + std::to_string(ch_.day) + ".");
             }
         } else if (verb == "legacy_bless") {
             heirBlessing_ = true;
@@ -3630,6 +3657,10 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
                                                    grammar_, runRng_);
                 item.provenance = prov;
                 ch_.pack.push_back(item);
+                submitSharedEvent("artifact", "artifact_" + std::to_string(pendingArtifact_),
+                                  item.name, "An artifact changed hands",
+                                  ch_.name.conlang + " recovered " + item.name + ".",
+                                  "A recovered artifact from the Wide World.", prov);
             }
         } else if (verb == "trait") {
             std::string t; ss >> t;
@@ -3874,6 +3905,8 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
                     history_.chron.push_back(entry);
                     collectiveVictories_++;
                     audio_.solidarity();
+                    submitSharedEvent("institution", target->id, target->name,
+                                      "A public force endured", newsLine_);
                 }
             }
         } else if (verb == "join") {
@@ -3950,7 +3983,19 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
                 else if (field == "rent") value = &state.rent;
                 else if (field == "pollution") value = &state.pollution;
                 else if (field == "solidarity") value = &state.solidarity;
-                if (value) *value = std::max(-5, std::min(5, *value + amount));
+                if (value) {
+                    int before = *value;
+                    *value = std::max(-5, std::min(5, *value + amount));
+                    bool becameNotable = (before < 3 && *value >= 3) ||
+                                         (before > -3 && *value <= -3);
+                    if (becameNotable && currentRegion_ < (int)world_.regions.size()) {
+                        const std::string& regionName = world_.regions[currentRegion_].name;
+                        submitSharedEvent("region", "region_" + std::to_string(currentRegion_),
+                                          regionName, "A region changed",
+                                          regionName + " reached " + field + " " +
+                                          std::to_string(*value) + " after public choices.");
+                    }
+                }
             }
         } else if (verb == "region_spread") {
             std::string field;
@@ -4006,16 +4051,10 @@ void Game::applyEffects(const std::vector<std::string>& effects) {
                 if (current_->id == "guildmaster_offer") profile_.guildmaster++;
                 SaveProfile(profile_);
             }
-#if defined(__EMSCRIPTEN__)
-            // A completed life is front-page news in a shared world.
-            int bk = boardKeyFor(masterSeed_);
-            if (bk >= 0) {
-                nlohmann::json d = {{"day", bk},
-                                    {"text", ch_.name.conlang + " finished their story on day " +
-                                             std::to_string(ch_.day) + ", alive."}};
-                rr_submit_deed(d.dump().c_str());
-            }
-#endif
+            submitSharedEvent("ending", "ending_" + std::to_string(ch_.day),
+                              ch_.name.conlang, "A life completed",
+                              ch_.name.conlang + " finished their story on day " +
+                              std::to_string(ch_.day) + ", alive.");
         }
     }
     if (ch_.hp <= 0) ch_.dead = true;
@@ -5728,6 +5767,8 @@ void Game::drawInstitutions(Vector2 mouse) {
                 value.bureaucracy = std::min(6, value.bureaucracy + 1);
                 institutionMessage_ = "You accept office and discover that accountability has a calendar.";
                 newsLine_ = ch_.name.conlang + " took responsibility inside " + value.name + ".";
+                submitSharedEvent("institution", value.id, value.name,
+                                  "Responsibility changed hands", newsLine_);
                 saveRun();
                 return;
             }

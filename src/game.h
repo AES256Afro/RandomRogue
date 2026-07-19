@@ -258,6 +258,13 @@ private:
     void drawInstitutions(Vector2 mouse);
     bool craftRecipe(const ItemRecipe& recipe);
     void drawIntro(Vector2 mouse); // first-run how-to cards (R7)
+    void submitSharedEvent(const std::string& type,
+                           const std::string& entityKey,
+                           const std::string& entityName,
+                           const std::string& title,
+                           const std::string& text,
+                           const std::string& description = "",
+                           const std::string& provenance = "") const;
     // Shared worlds (R7): daily and weekly seeds and their board keys.
     // Weekly board keys live in the 7,000,000+ namespace so the two
     // leaderboards never collide in D1.

@@ -78,6 +78,8 @@ jobs:
         run: node tools/check_site.mjs site/index.html
       - name: Chronicle bridge contract
         run: node tools/check_bridge.mjs
+      - name: Chronicle delivery contract
+        run: node tools/check_delivery.mjs
       - name: Service worker syntax
         run: node --check site/play/sw.js
       - name: Exact native versus WASM determinism

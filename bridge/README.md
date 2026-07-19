@@ -20,16 +20,17 @@ cannot make an event authoritative by choosing an ID.
 
 - `GET /__chronicle?id=<event-id>` reads a public canonical source event from
   Cloudflare D1.
-- `POST /api/chronicle/v1/events` lets the Cloudflare bridge deliver a bounded
-  Wide World death to the MUD.
+- `POST /api/chronicle/v1/events` receives signed, bounded Wide World events
+  from Cloudflare.
 - `GET /api/chronicle/v1/events/<event-id>` shows the MUD's stored source event
   and its projection.
 - `POST /api/legacy/death` remains available as the compatibility path.
 
-The public MUD route accepts only `wide_world.death`. It remains bounded,
-sanitized, rate limited, and idempotent.
+Unsigned public requests can only report `wide_world.death`. Cloudflare signs
+all six event types with an Ed25519 private key. The MUD verifies the matching
+public key, timestamp, event ID, and exact body before broader admission.
 
-## Phase M2 projectors
+## Phase M3 delivery and projectors
 
 The MUD application core now understands six typed Wide World events:
 
@@ -46,6 +47,11 @@ Players can read delivered projections with `chronicle` or `worldnews`. The
 legacy death route and canonical route use the same application service. All
 views can be rebuilt from the immutable event ledger.
 
-Only deaths may cross the unauthenticated public route today. Authentication,
-the transactional delivery outbox, and automatic retries are Phase M3 work.
-Broader delivery must not be advertised as live before that boundary ships.
+Cloudflare D1 stores the source event and outbox job together. Immediate
+delivery is backed by a minute scheduler, bounded retries, attempt history,
+dead letters, replay controls, per-type kill switches, and a 5,000-event daily
+cost guard. A MUD outage never blocks the single-player run.
+
+The game emits only notable facts: deaths, major deeds, completed lives,
+durable institution changes, notable regional thresholds, and recovered
+artifacts. Routine clicks remain local.

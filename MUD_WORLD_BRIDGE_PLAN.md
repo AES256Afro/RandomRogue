@@ -19,8 +19,11 @@ Owners: Random Rogue project and Random Rogue MUD project
 - Phase M2: complete. Canonical and compatibility death ingestion now share one
   application service. Typed, rebuildable projectors exist for ghosts, rumors,
   institutions, regions, and artifact echoes, with player and admin views.
-- Phase M3: next. Add signed Worker delivery, the transactional outbox, bounded
-  retries, dead letters, and broader one-way event delivery.
+- Phase M3: complete. Signed Worker delivery, the transactional D1 outbox,
+  bounded retries, attempt logs, dead letters, replay controls, per-type kill
+  switches, a daily cost guard, and broader one-way event delivery are built.
+- Phase M4: next. Turn imported Chronicle projections into capped MUD gameplay
+  effects rather than informational views alone.
 
 ## 1. Purpose
 
@@ -49,17 +52,18 @@ The current live bridge is intentionally narrow.
 2. Cloudflare D1 stores shared deaths and deeds.
 3. Other single-player runs can encounter shared graves, ghosts, relics, deeds,
    leaderboards, and replayable final journeys.
-4. Unfinished single-player deaths are forwarded to
-   `https://mud.random-rogue.com/api/legacy/death` as MUD ghosts.
-5. The MUD can present those ghosts and list them on its Wall of the Fallen.
+4. Cloudflare signs and reliably delivers notable events to the MUD through
+   `https://mud.random-rogue.com/api/chronicle/v1/events`.
+5. The MUD projects deaths, deeds, endings, institution changes, regional
+   changes, and artifact legacies into rebuildable Chronicle views.
 
 ### Not live yet
 
-- General single-player deeds do not yet become MUD rumors or room events.
-- Single-player institution changes do not yet change MUD factions.
+- Imported rumors and summaries do not yet alter MUD rooms, vendors, hazards,
+  meetings, or faction behavior.
 - Artifacts do not yet move safely between games.
 - MUD actions do not yet return consequences to the single-player Chronicle.
-- The stable identifier contract exists, but broad signed delivery is not live.
+- MUD actions do not yet write events back to the Wide World.
 
 The website must continue to label these as planned until acceptance tests pass.
 
@@ -251,17 +255,18 @@ Acceptance:
 - Existing rooms, accounts, inventory, and commands continue working.
 - The legacy death endpoint calls the same tested projector as the new bridge.
 
-### Phase M3: Reliable one-way bridge
+### Phase M3: Reliable one-way bridge [COMPLETE]
 
 Goal: Bring more Wide World history into the MUD.
 
 - Add D1 tables for canonical events, outbox delivery, delivery attempts, and
   dead letters.
-- Sign Worker-to-MUD messages with timestamped HMAC authentication.
+- Sign Worker-to-MUD messages with timestamped Ed25519 authentication.
 - Retry transient failures with bounded exponential backoff.
 - Deliver deeds, endings, institution changes, and regional changes.
 - Add rate limits and payload size limits at both ends.
-- Add a MUD admin view for pending, delivered, rejected, and dead-letter events.
+- Add a Cloudflare operator view for pending, delivered, rejected, and
+  dead-letter events.
 
 Acceptance:
 
@@ -362,8 +367,9 @@ identity and audit state.
 
 ## 10. Security contract
 
-- MUD delivery uses a dedicated secret, never the site deployment secret.
-- Sign timestamp, event ID, and raw body.
+- Cloudflare holds a dedicated Ed25519 private key. The MUD ships only the
+  corresponding public verification key.
+- Sign the timestamp, event ID, and exact raw body.
 - Reject timestamps outside a short replay window.
 - Store processed event IDs before projecting effects.
 - Limit accepted event types per authenticated source.
@@ -447,8 +453,8 @@ This plan is ready to hand to the MUD project when the following package exists:
 - One end-to-end test proving a single-player event appears in the MUD exactly
   once and remains inspectable
 
-The practical M2 handoff is complete. The first broad public feature handoff
-target remains the end of Phase M3.
+The practical M3 handoff is complete. The next gameplay handoff target is the
+end of Phase M4.
 
 ## 14. Change log
 
@@ -471,3 +477,9 @@ target remains the end of Phase M3.
 - Added stale-state protection so delayed older events remain auditable without
   replacing newer institution, region, or artifact projections.
 - Kept non-death HTTP delivery closed until the signed Phase M3 transport.
+- Completed M3 with Ed25519 delivery, a transactional D1 outbox, immediate and
+  scheduled delivery, bounded retries, attempt history, dead letters, replay,
+  per-type kill switches, and a 5,000-event daily cost guard.
+- Wired notable deeds, endings, institution milestones, regional thresholds,
+  and recovered artifacts into the canonical bridge without letting clients
+  choose authoritative event IDs or effects.

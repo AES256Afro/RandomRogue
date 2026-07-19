@@ -23,6 +23,9 @@
       "migrations_dir": "./migrations"
     }
   ],
+  "triggers": {
+    "crons": ["* * * * *"]
+  },
   "observability": {
     "enabled": true,
     "logs": { "head_sampling_rate": 1 },

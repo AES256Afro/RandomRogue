@@ -30,6 +30,18 @@ const FILES = {
 // can't be the origin.)
 const ORIGIN = "https://raw.githubusercontent.com/AES256Afro/RandomRogue/site-dist/";
 const CORS = { "access-control-allow-origin": "*", "access-control-allow-methods": "GET,POST,OPTIONS", "access-control-allow-headers": "content-type" };
+const CHRONICLE_DESTINATION = "https://mud.random-rogue.com/api/chronicle/v1/events";
+const CHRONICLE_TYPES = new Set([
+  "wide_world.death",
+  "wide_world.deed",
+  "wide_world.ending",
+  "wide_world.institution_changed",
+  "wide_world.region_changed",
+  "wide_world.artifact_legacy",
+]);
+const RETRY_DELAYS_MS = [15000, 60000, 300000, 900000, 3600000, 21600000, 43200000, 86400000];
+const MAX_DELIVERY_ATTEMPTS = RETRY_DELAYS_MS.length;
+const MAX_CHRONICLE_EVENTS_PER_DAY = 5000;
 
 // Board keys (R7): plain day numbers for daily worlds; 7000000+week for
 // weekly worlds, so the two leaderboards never collide.
@@ -58,20 +70,23 @@ function publicChronicleEvent(event) {
     occurred_at: event.occurred_at,
     subject: event.subject,
     ...(event.place ? { place: event.place } : {}),
-    tags: event.tags || [],
+    tags: [...(event.tags || [])].sort(),
     effects: event.effects || {},
     payload: event.payload || {},
     visibility: event.visibility,
   };
 }
 
-async function storeChronicleEvent(env, deathId, event) {
+async function storeChronicleEvent(env, deathId, event, extraStatements = []) {
   const canonical = publicChronicleEvent(event);
-  await env.DB.prepare(
+  const raw = JSON.stringify(canonical);
+  const now = Date.now();
+  await env.DB.batch([
+    env.DB.prepare(
     "INSERT OR IGNORE INTO chronicle_events " +
     "(event_id,death_id,schema_name,event_type,source,world_key,occurred_at,subject_json,place_json,tags_json,effects_json,payload_json,visibility,raw_json) " +
     "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-  ).bind(
+    ).bind(
     canonical.event_id,
     deathId,
     canonical.schema,
@@ -85,9 +100,225 @@ async function storeChronicleEvent(env, deathId, event) {
     JSON.stringify(canonical.effects),
     JSON.stringify(canonical.payload),
     canonical.visibility,
-    JSON.stringify(canonical)
-  ).run();
+    raw
+    ),
+    env.DB.prepare(
+      "INSERT OR IGNORE INTO chronicle_outbox " +
+      "(event_id,status,attempt_count,next_attempt_at,created_at,updated_at) VALUES (?,'queued',0,?,?,?)"
+    ).bind(canonical.event_id, now, now, now),
+    ...extraStatements,
+  ]);
   return canonical;
+}
+
+function bridgeError(value) {
+  return clean(value instanceof Error ? value.message : String(value)).slice(0, 300);
+}
+
+function base64Bytes(value) {
+  const binary = atob(value);
+  return Uint8Array.from(binary, (character) => character.charCodeAt(0));
+}
+
+function bytesBase64(value) {
+  const bytes = new Uint8Array(value);
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary);
+}
+
+async function chronicleSignature(privateKeyBase64, timestamp, eventId, rawBody) {
+  if (!privateKeyBase64) throw new Error("Chronicle bridge private key is not configured");
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "pkcs8", base64Bytes(privateKeyBase64), { name: "Ed25519" }, false, ["sign"]
+  );
+  const signature = await crypto.subtle.sign(
+    "Ed25519", key, encoder.encode(timestamp + "." + eventId + "." + rawBody)
+  );
+  return "v1=" + bytesBase64(signature);
+}
+
+async function recordDeadLetter(env, row, attempt, reason, status, duration) {
+  const now = Date.now();
+  await env.DB.batch([
+    env.DB.prepare(
+      "INSERT INTO chronicle_delivery_attempts " +
+      "(event_id,attempted_at,outcome,http_status,error,duration_ms) VALUES (?,?,'dead',?,?,?)"
+    ).bind(row.event_id, now, status, reason, duration),
+    env.DB.prepare(
+      "UPDATE chronicle_outbox SET status='dead',last_http_status=?,last_error=?,locked_at=NULL,updated_at=? WHERE event_id=?"
+    ).bind(status, reason, now, row.event_id),
+    env.DB.prepare(
+      "INSERT INTO chronicle_dead_letters(event_id,reason,raw_json,failed_at,attempts) VALUES (?,?,?,?,?) " +
+      "ON CONFLICT(event_id) DO UPDATE SET reason=excluded.reason,raw_json=excluded.raw_json," +
+      "failed_at=excluded.failed_at,attempts=excluded.attempts"
+    ).bind(row.event_id, reason, row.raw_json, now, attempt),
+  ]);
+}
+
+async function deliverOneChronicleEvent(env, row) {
+  const claimTime = Date.now();
+  const claim = await env.DB.prepare(
+    "UPDATE chronicle_outbox SET status='delivering',attempt_count=attempt_count+1,locked_at=?,updated_at=? " +
+    "WHERE event_id=? AND ((status IN ('queued','retrying') AND next_attempt_at<=?) " +
+    "OR (status='delivering' AND locked_at<=?))"
+  ).bind(claimTime, claimTime, row.event_id, claimTime, claimTime - 300000).run();
+  if (!claim.meta || Number(claim.meta.changes || 0) !== 1) return false;
+
+  const attempt = Number(row.attempt_count || 0) + 1;
+  const started = Date.now();
+  let response;
+  let failure = "";
+  try {
+    const timestamp = String(Math.floor(started / 1000));
+    const signature = await chronicleSignature(
+      env.CHRONICLE_BRIDGE_PRIVATE_KEY, timestamp, row.event_id, row.raw_json
+    );
+    response = await fetch(CHRONICLE_DESTINATION, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-rr-timestamp": timestamp,
+        "x-rr-event-id": row.event_id,
+        "x-rr-signature": signature,
+      },
+      body: row.raw_json,
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!response.ok) failure = "MUD returned HTTP " + response.status;
+  } catch (error) {
+    failure = bridgeError(error);
+  }
+  const duration = Date.now() - started;
+  const status = response ? response.status : null;
+  if (response && response.ok) {
+    const now = Date.now();
+    await env.DB.batch([
+      env.DB.prepare(
+        "INSERT INTO chronicle_delivery_attempts " +
+        "(event_id,attempted_at,outcome,http_status,error,duration_ms) VALUES (?,?,'delivered',?,'',?)"
+      ).bind(row.event_id, now, status, duration),
+      env.DB.prepare(
+        "UPDATE chronicle_outbox SET status='delivered',delivered_at=?,last_http_status=?," +
+        "last_error=NULL,locked_at=NULL,updated_at=? WHERE event_id=?"
+      ).bind(now, status, now, row.event_id),
+      env.DB.prepare("DELETE FROM chronicle_dead_letters WHERE event_id=?").bind(row.event_id),
+    ]);
+    return true;
+  }
+
+  const retryable = !response || status === 408 || status === 429 || status >= 500;
+  if (!retryable || attempt >= MAX_DELIVERY_ATTEMPTS) {
+    await recordDeadLetter(env, row, attempt, failure || "permanent delivery failure", status, duration);
+    return false;
+  }
+  const now = Date.now();
+  const nextAttempt = now + RETRY_DELAYS_MS[Math.min(attempt - 1, RETRY_DELAYS_MS.length - 1)];
+  await env.DB.batch([
+    env.DB.prepare(
+      "INSERT INTO chronicle_delivery_attempts " +
+      "(event_id,attempted_at,outcome,http_status,error,duration_ms) VALUES (?,?,'retry',?,?,?)"
+    ).bind(row.event_id, now, status, failure, duration),
+    env.DB.prepare(
+      "UPDATE chronicle_outbox SET status='retrying',next_attempt_at=?,last_http_status=?," +
+      "last_error=?,locked_at=NULL,updated_at=? WHERE event_id=?"
+    ).bind(nextAttempt, status, failure, now, row.event_id),
+  ]);
+  return false;
+}
+
+async function deliverChronicleOutbox(env, limit = 10, prune = false) {
+  const now = Date.now();
+  const due = await env.DB.prepare(
+    "SELECT o.event_id,o.attempt_count,e.raw_json FROM chronicle_outbox o " +
+    "JOIN chronicle_events e ON e.event_id=o.event_id " +
+    "JOIN chronicle_delivery_policy p ON p.event_type=e.event_type AND p.enabled=1 " +
+    "WHERE ((o.status IN ('queued','retrying') AND o.next_attempt_at<=?) " +
+    "OR (o.status='delivering' AND o.locked_at<=?)) ORDER BY o.next_attempt_at LIMIT ?"
+  ).bind(now, now - 300000, Math.max(1, Math.min(50, limit))).all();
+  let delivered = 0;
+  for (const row of due.results || []) {
+    if (await deliverOneChronicleEvent(env, row)) delivered++;
+  }
+  if (prune) {
+    await env.DB.prepare(
+      "DELETE FROM chronicle_delivery_attempts WHERE attempted_at < ?"
+    ).bind(now - 30 * 86400000).run();
+    await env.DB.prepare(
+      "DELETE FROM ratelimit WHERE win < ?"
+    ).bind(Math.floor(now / 3600000) - 48).run();
+  }
+  return { due: (due.results || []).length, delivered };
+}
+
+function queueChronicleDelivery(ctx, env) {
+  if (ctx) ctx.waitUntil(deliverChronicleOutbox(env, 5).catch((error) => {
+    console.error(JSON.stringify({ message: "Chronicle delivery failed", error: bridgeError(error) }));
+  }));
+}
+
+function slug(value, fallback) {
+  const out = clean(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 60);
+  return out || fallback;
+}
+
+function sharedEventFromClient(body, day) {
+  const world = worldIdentity(day);
+  const kind = String(body.type || "deed").toLowerCase();
+  const eventTypes = {
+    deed: "wide_world.deed",
+    ending: "wide_world.ending",
+    institution: "wide_world.institution_changed",
+    region: "wide_world.region_changed",
+    artifact: "wide_world.artifact_legacy",
+  };
+  const eventType = eventTypes[kind];
+  if (!eventType || !CHRONICLE_TYPES.has(eventType)) return null;
+  const token = crypto.randomUUID().replaceAll("-", "");
+  const text = clean(body.text || "").replace(/\s+/g, " ").trim().slice(0, 280);
+  const title = clean(body.title || "").replace(/\s+/g, " ").trim().slice(0, 80);
+  const playerName = clean(body.name || "An unnamed traveler").replace(/\s+/g, " ").trim().slice(0, 80);
+  const entityName = clean(body.entity_name || body.name || "An unnamed public thing").replace(/\s+/g, " ").trim().slice(0, 80);
+  const entityKey = slug(body.entity_key || entityName, kind);
+  let subject = { kind: "character", id: "wide:character:" + world.kind + ":" + world.number + ":" + token, name: playerName };
+  let payload;
+  if (kind === "deed" || kind === "ending") {
+    if (text.length < 2) return null;
+    payload = { text, ...(title.length >= 2 ? { title } : {}) };
+  } else if (kind === "institution") {
+    if (text.length < 2) return null;
+    const id = "wide:institution:" + world.kind + ":" + world.number + ":" + entityKey;
+    subject = { kind: "institution", id, name: entityName };
+    payload = { institution_id: id, name: entityName, summary: text };
+  } else if (kind === "region") {
+    if (text.length < 2) return null;
+    const id = "wide:region:" + world.kind + ":" + world.number + ":" + entityKey;
+    subject = { kind: "region", id, name: entityName };
+    payload = { region_id: id, name: entityName, notice: text };
+  } else {
+    const description = clean(body.description || text).replace(/\s+/g, " ").trim().slice(0, 280);
+    const provenance = clean(body.provenance || text).replace(/\s+/g, " ").trim().slice(0, 280);
+    if (description.length < 2 || provenance.length < 2) return null;
+    const id = "wide:artifact:" + world.kind + ":" + world.number + ":" + entityKey;
+    subject = { kind: "artifact", id, name: entityName };
+    payload = { artifact_id: id, name: entityName, description, provenance };
+  }
+  const site = clean(body.site || "").replace(/\s+/g, " ").trim().slice(0, 80);
+  return publicChronicleEvent({
+    schema: "rr.chronicle.v1",
+    event_id: "wide:evt:" + world.kind + ":" + world.number + ":" + kind + ":" + token,
+    event_type: eventType,
+    source: "wide_world",
+    world_key: world.key,
+    occurred_at: new Date().toISOString(),
+    subject,
+    ...(site ? { place: { name: site } } : {}),
+    tags: [kind, world.kind].sort(),
+    effects: {},
+    payload,
+    visibility: "public",
+  });
 }
 
 // Strip control characters from player-supplied strings (R10).
@@ -106,6 +337,12 @@ async function readJson(req) {
   if (declared > 100000) throw new Error("body too large");
   return req.json();
 }
+
+async function adminAuthorized(req, env) {
+  const auth = req.headers.get("authorization") || "";
+  const provided = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+  return validSecret(provided, env.LOAD_KEY);
+}
 // Per-IP hourly write budget via D1 (table ratelimit(ip, win, n));
 // generous for humans, dull for scripts.
 async function overLimit(env, req) {
@@ -116,6 +353,18 @@ async function overLimit(env, req) {
     const row = await env.DB.prepare("SELECT n FROM ratelimit WHERE ip = ? AND win = ?").bind(ip, win).first();
     return row && row.n > 40;
   } catch (e) { return false; }
+}
+
+async function claimChronicleBudget(env) {
+  const day = Math.floor(Date.now() / 86400000);
+  const now = Date.now();
+  await env.DB.prepare(
+    "INSERT OR IGNORE INTO chronicle_daily_budget(day,accepted,updated_at) VALUES (?,0,?)"
+  ).bind(day, now).run();
+  const result = await env.DB.prepare(
+    "UPDATE chronicle_daily_budget SET accepted=accepted+1,updated_at=? WHERE day=? AND accepted<?"
+  ).bind(now, day, MAX_CHRONICLE_EVENTS_PER_DAY).run();
+  return Boolean(result.meta && Number(result.meta.changes || 0) === 1);
 }
 
 export default {
@@ -151,6 +400,76 @@ export default {
         return Response.json({ error: "site sync failed" }, { status: 502 });
       }
     }
+    if (p === "__chronicle_admin" && req.method === "GET") {
+      if (!(await adminAuthorized(req, env))) return new Response("no", { status: 403 });
+      const statuses = await env.DB.prepare(
+        "SELECT status,COUNT(*) AS n FROM chronicle_outbox GROUP BY status ORDER BY status"
+      ).all();
+      const dead = await env.DB.prepare(
+        "SELECT event_id,reason,failed_at,attempts FROM chronicle_dead_letters ORDER BY failed_at DESC LIMIT 20"
+      ).all();
+      const attempts = await env.DB.prepare(
+        "SELECT event_id,attempted_at,outcome,http_status,error,duration_ms " +
+        "FROM chronicle_delivery_attempts ORDER BY id DESC LIMIT 30"
+      ).all();
+      const policy = await env.DB.prepare(
+        "SELECT event_type,enabled,updated_at FROM chronicle_delivery_policy ORDER BY event_type"
+      ).all();
+      const budget = await env.DB.prepare(
+        "SELECT day,accepted,updated_at FROM chronicle_daily_budget ORDER BY day DESC LIMIT 7"
+      ).all();
+      return Response.json({
+        statuses: statuses.results || [],
+        dead_letters: dead.results || [],
+        attempts: attempts.results || [],
+        policy: policy.results || [],
+        daily_budget: budget.results || [],
+        daily_limit: MAX_CHRONICLE_EVENTS_PER_DAY,
+      });
+    }
+    if (p === "__chronicle_replay" && req.method === "POST") {
+      if (!(await adminAuthorized(req, env))) return new Response("no", { status: 403 });
+      let body;
+      try { body = await readJson(req); } catch (error) { return Response.json({ error: "bad request" }, { status: 400 }); }
+      const eventId = String(body.event_id || "");
+      if (!/^wide:evt:[A-Za-z0-9:_-]{8,120}$/.test(eventId)) {
+        return Response.json({ error: "invalid event id" }, { status: 400 });
+      }
+      const now = Date.now();
+      const result = await env.DB.prepare(
+        "UPDATE chronicle_outbox SET status='queued',attempt_count=0,next_attempt_at=?,locked_at=NULL," +
+        "delivered_at=NULL,last_http_status=NULL,last_error=NULL,updated_at=? WHERE event_id=?"
+      ).bind(now, now, eventId).run();
+      await env.DB.prepare("DELETE FROM chronicle_dead_letters WHERE event_id=?").bind(eventId).run();
+      if (!result.meta || Number(result.meta.changes || 0) !== 1) {
+        return Response.json({ error: "event not found" }, { status: 404 });
+      }
+      queueChronicleDelivery(ctx, env);
+      return Response.json({ ok: true, event_id: eventId });
+    }
+    if (p === "__chronicle_policy") {
+      if (!(await adminAuthorized(req, env))) return new Response("no", { status: 403 });
+      if (req.method === "GET") {
+        const policy = await env.DB.prepare(
+          "SELECT event_type,enabled,updated_at FROM chronicle_delivery_policy ORDER BY event_type"
+        ).all();
+        return Response.json(policy.results || []);
+      }
+      if (req.method === "POST") {
+        let body;
+        try { body = await readJson(req); } catch (error) { return Response.json({ error: "bad request" }, { status: 400 }); }
+        const eventType = String(body.event_type || "");
+        if (!CHRONICLE_TYPES.has(eventType) || typeof body.enabled !== "boolean") {
+          return Response.json({ error: "invalid policy" }, { status: 400 });
+        }
+        await env.DB.prepare(
+          "INSERT INTO chronicle_delivery_policy(event_type,enabled,updated_at) VALUES (?,?,?) " +
+          "ON CONFLICT(event_type) DO UPDATE SET enabled=excluded.enabled,updated_at=excluded.updated_at"
+        ).bind(eventType, body.enabled ? 1 : 0, Date.now()).run();
+        if (body.enabled) queueChronicleDelivery(ctx, env);
+        return Response.json({ ok: true, event_type: eventType, enabled: body.enabled });
+      }
+    }
     // A daily-world death: leaderboard row, shared-graveyard ghost, and
     // replay journey, all in one insert.
     if (p === "__score" && req.method === "POST") {
@@ -179,15 +498,14 @@ export default {
       const inserted = await env.DB.prepare(
         "INSERT INTO deaths (day, name, meaning, days, epitaph, site, relics, finished, journey) VALUES (?,?,?,?,?,?,?,?,?)"
       ).bind(day, name, meaning, days, epitaph, site, relics, finished, journey).run();
-      // The Confluence: fallen runs cross over to the MUD as ghosts.
-      // M1 stores a canonical source event first, then projects it into the
-      // MUD. The legacy route remains the fallback during rolling deploys.
-      if (!finished && ctx) {
+      // The Confluence: fallen runs cross over to the MUD as ghosts. The
+      // canonical fact and its delivery job are committed before any POST.
+      if (!finished && await claimChronicleBudget(env)) {
         const deathId = Number(inserted.meta && inserted.meta.last_row_id);
         if (deathId > 0) {
           const world = worldIdentity(day);
           const cause = site ? "fell at " + site : "fell somewhere in the Wide World";
-          const event = await storeChronicleEvent(env, deathId, {
+          await storeChronicleEvent(env, deathId, {
             schema: "rr.chronicle.v1",
             event_id: "wide:evt:" + world.kind + ":" + world.number + ":death:" + deathId,
             event_type: "wide_world.death",
@@ -205,35 +523,7 @@ export default {
             payload: { meaning, epitaph, cause, days },
             visibility: "public",
           });
-          const forwardedFor = req.headers.get("cf-connecting-ip") || "";
-          ctx.waitUntil(fetch("https://mud.random-rogue.com/api/chronicle/v1/events", {
-            method: "POST",
-            headers: {
-              "content-type": "application/json",
-              ...(forwardedFor ? { "x-forwarded-for": forwardedFor } : {}),
-            },
-            body: JSON.stringify(event),
-          }).then((response) => {
-            if (response.ok) return;
-            if (response.status !== 404 && response.status !== 405) {
-              throw new Error("canonical MUD delivery rejected");
-            }
-            return fetch("https://mud.random-rogue.com/api/legacy/death", {
-              method: "POST",
-              headers: {
-                "content-type": "application/json",
-                ...(forwardedFor ? { "x-forwarded-for": forwardedFor } : {}),
-              },
-              body: JSON.stringify({ name, meaning, epitaph, days, cause }),
-            }).then(() => undefined);
-          }).catch(() => {}));
-        } else {
-          const cause = site ? "fell at " + site : "fell somewhere in the Wide World";
-          ctx.waitUntil(fetch("https://mud.random-rogue.com/api/legacy/death", {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({ name, meaning, epitaph, days, cause }),
-          }).catch(() => {}));
+          queueChronicleDelivery(ctx, env);
         }
       }
       return new Response("ok", { headers: CORS });
@@ -281,9 +571,22 @@ export default {
       try { body = await readJson(req); } catch (e) { return new Response("bad", { status: 400, headers: CORS }); }
       const day = parseInt(body.day);
       if (!validKey(day)) return new Response("stale", { status: 400, headers: CORS });
-      const text = clean(body.text || "").slice(0, 140);
-      if (!text) return new Response("bad", { status: 400, headers: CORS });
-      await env.DB.prepare("INSERT INTO deeds (day, text) VALUES (?,?)").bind(day, text).run();
+      const event = sharedEventFromClient(body, day);
+      if (!event) return new Response("bad", { status: 400, headers: CORS });
+      if (!(await claimChronicleBudget(env))) {
+        return new Response("Chronicle daily budget reached", { status: 503, headers: CORS });
+      }
+      const feedText = event.event_type === "wide_world.artifact_legacy"
+        ? event.payload.name + ": " + event.payload.description
+        : event.event_type === "wide_world.institution_changed"
+          ? event.payload.name + ": " + event.payload.summary
+          : event.event_type === "wide_world.region_changed"
+            ? event.payload.name + ": " + event.payload.notice
+            : event.payload.text;
+      await storeChronicleEvent(env, null, event, [
+        env.DB.prepare("INSERT INTO deeds (day, text) VALUES (?,?)").bind(day, feedText.slice(0, 280)),
+      ]);
+      queueChronicleDelivery(ctx, env);
       return new Response("ok", { headers: CORS });
     }
     if (p === "__deeds") {
@@ -353,5 +656,10 @@ export default {
       // each request so a browser never pairs files from different releases.
       "cache-control": "no-cache, must-revalidate"
     }});
-  }
+  },
+  async scheduled(controller, env, ctx) {
+    ctx.waitUntil(deliverChronicleOutbox(env, 25, true));
+  },
 };
+
+export { chronicleSignature, sharedEventFromClient };
