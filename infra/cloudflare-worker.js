@@ -215,6 +215,9 @@ export default {
             body: JSON.stringify(event),
           }).then((response) => {
             if (response.ok) return;
+            if (response.status !== 404 && response.status !== 405) {
+              throw new Error("canonical MUD delivery rejected");
+            }
             return fetch("https://mud.random-rogue.com/api/legacy/death", {
               method: "POST",
               headers: {
