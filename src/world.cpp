@@ -1,5 +1,6 @@
 ﻿#include "world.h"
 #include <array>
+#include <map>
 
 namespace {
 
@@ -64,6 +65,27 @@ World GenerateWorld(uint64_t seed, const Grammar& grammar, const NameForge& forg
         r.name = grammar.expand("The {adj} {noun_" + r.biome + "}", rng);
     }
 
+    // Every major deck must be reachable in every seed. In particular, a
+    // world without a coast silently locks the entire naval arc. Replace only
+    // a duplicate biome, without drawing more RNG, so established seeds that
+    // already contain all six biomes remain byte-for-byte unchanged.
+    std::map<std::string, int> biomeCounts;
+    for (auto& r : w.regions) biomeCounts[r.biome]++;
+    Rng repair(seed ^ 0xC0A57ULL, STREAM_WORLD + 600);
+    for (auto& wanted : biomes()) {
+        if (biomeCounts[wanted.biome] > 0) continue;
+        for (int i = regionCount - 1; i >= 0; i--) {
+            std::string old = w.regions[i].biome;
+            if (biomeCounts[old] > 1) {
+                biomeCounts[old]--;
+                w.regions[i].biome = wanted.biome;
+                w.regions[i].name = grammar.expand(
+                    "The {adj} {noun_" + w.regions[i].biome + "}", repair);
+                biomeCounts[wanted.biome]++;
+                break;
+            }
+        }
+    }
     // Sites: 1-2 per region, drawn from what the biome can host.
     for (int i = 0; i < regionCount; i++) {
         Region& r = w.regions[i];

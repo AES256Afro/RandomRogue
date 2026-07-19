@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(RandomRogue VERSION 0.1.0 LANGUAGES C CXX)
+project(RandomRogue VERSION 0.11.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -64,6 +64,16 @@ if(NOT EMSCRIPTEN)
     )
     target_link_libraries(playtest PRIVATE nlohmann_json::nlohmann_json)
     target_include_directories(playtest PRIVATE src)
+
+    # Fast invariants that should never depend on graphics or a live run.
+    add_executable(regression
+        tools/regression.cpp
+        src/grammar.cpp
+        src/language.cpp
+        src/world.cpp
+    )
+    target_link_libraries(regression PRIVATE nlohmann_json::nlohmann_json)
+    target_include_directories(regression PRIVATE src)
 endif()
 target_link_libraries(random_rogue PRIVATE raylib nlohmann_json::nlohmann_json)
 target_include_directories(random_rogue PRIVATE src)

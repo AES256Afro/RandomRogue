@@ -1,4 +1,5 @@
 ﻿#include "game.h"
+#include <algorithm>
 #include <cctype>
 #include <cmath>
 #include <ctime>
@@ -402,8 +403,35 @@ void Game::saveRun() {
                         {"aid", i.artifactId}, {"use", i.useEffects}});
     nlohmann::json wars = nlohmann::json::array();
     for (auto& w : history_.liveWars)
-        wars.push_back({{"a", w.a}, {"b", w.b}, {"d", w.daysLeft}});
+        wars.push_back({{"a", w.a}, {"b", w.b}, {"d", w.daysLeft},
+                        {"entry", w.declaredEntry}});
+    nlohmann::json figures = nlohmann::json::array();
+    for (auto& f : history_.figures)
+        figures.push_back({{"name", f.name}, {"fac", f.faction}, {"trait", f.trait},
+                           {"prof", f.profession}, {"born", f.born}, {"died", f.died}});
+    nlohmann::json artifacts = nlohmann::json::array();
+    for (auto& a : history_.artifacts)
+        artifacts.push_back({{"name", a.conlang}, {"meaning", a.meaning},
+                             {"mat", a.material}, {"forgedBy", a.forgedBy},
+                             {"forgedYear", a.forgedYear}, {"site", a.restingSite},
+                             {"claimed", a.claimed}, {"deeds", a.deeds}});
+    nlohmann::json beasts = nlohmann::json::array();
+    for (auto& b : history_.beasts)
+        beasts.push_back({{"name", b.name}, {"region", b.region},
+                          {"kills", b.kills}, {"died", b.died}});
+    nlohmann::json chron = nlohmann::json::array();
+    for (auto& e : history_.chron)
+        chron.push_back({{"id", e.id}, {"year", e.year}, {"type", e.type},
+                         {"actor", e.actor}, {"fac", e.faction},
+                         {"fac2", e.faction2}, {"site", e.site},
+                         {"artifact", e.artifact}, {"beast", e.beast},
+                         {"cause", e.cause}, {"extra", e.extra}});
+    nlohmann::json sites = nlohmann::json::array();
+    for (auto& s : world_.sites)
+        sites.push_back({{"name", s.name}, {"type", s.type}, {"deck", s.deck},
+                         {"region", s.region}});
     nlohmann::json j = {
+        {"schema", 2},
         {"seed", masterSeed_}, {"gen", pendingLegacy_.size()},
         {"name", ch_.name.conlang}, {"meaning", ch_.name.meaning},
         {"stats", std::vector<int>(ch_.stats, ch_.stats + STAT_COUNT)},
@@ -426,6 +454,9 @@ void Game::saveRun() {
         {"finales", finalesSeen_}, {"books", booksThisRun_},
         {"cdone", contractsDone_}, {"wars", wars},
         {"plague", history_.plaguedRegions},
+        {"figures", figures}, {"artifacts", artifacts}, {"beasts", beasts},
+        {"chron", chron}, {"sites", sites},
+        {"presentYear", history_.presentYear}, {"liveStart", history_.liveStartId},
         {"rival", {{"name", rival_.name}, {"meaning", rival_.meaning},
                    {"alive", rival_.alive}, {"deeds", rival_.deeds}}},
         {"ghosts", ghostsRaw_}};
@@ -441,12 +472,37 @@ void Game::saveRun() {
     j["usedEvents"] = std::vector<std::string>(deck_.used().begin(), deck_.used().end());
     j["season"] = season_;
     j["weather"] = weather_;
+    j["news"] = newsLine_;
+    j["beastRun"] = beastSlainThisRun_;
+    j["wordsRun"] = wordsThisRun_;
+    j["landfalls"] = landfalls_;
+    j["settledRun"] = settledThisRun_;
+    j["afterlife"] = afterlifeShown_;
+    j["heirBlessing"] = heirBlessing_;
+    j["finishedWell"] = finishedWell_;
+    j["blessingSpent"] = blessingSpent_;
+    j["pendingShop"] = pendingShop_;
+    j["forcedNext"] = forcedNextId_;
+    j["siteName"] = siteName_;
+    j["deckTag"] = deckTag_;
+    j["currentSite"] = currentSite_;
+    j["eventsLeft"] = eventsLeftHere_;
+    j["resumeOutcome"] = screen_ == OUTCOME;
+    j["outcome"] = {{"text", outcome_.text}, {"roll", outcome_.rollText},
+                    {"effects", outcome_.effects}};
+    j["dead"] = ch_.dead;
+    j["epitaph"] = ch_.epitaph;
+    nlohmann::json marks = nlohmann::json::object();
+    for (auto& [fi, tags] : npcMarks_)
+        marks[std::to_string(fi)] = std::vector<std::string>(tags.begin(), tags.end());
+    j["npcMarks"] = marks;
     SaveRawRun(j.dump());
 }
 
 bool Game::loadRun() {
     nlohmann::json j = nlohmann::json::parse(LoadRawRun(), nullptr, false);
     if (j.is_discarded() || !j.contains("seed")) return false;
+    int schema = j.value("schema", 1);
     nextSeed_ = j["seed"].get<uint64_t>();
     // Rebuild the world exactly as the save knew it.
     pendingLegacy_ = LoadLegacy(nextSeed_);
@@ -461,12 +517,74 @@ bool Game::loadRun() {
         ambition_.desc = kAmbitions[ambition_.id].desc;
     }
     suppressStrangers_ = true; // the save knows its own ghosts
+    loadingRun_ = true;
     newRun(0);
+    loadingRun_ = false;
     suppressStrangers_ = false;
     std::string gj = j.value("ghosts", std::string());
-    if (!gj.empty()) {
+    if (schema < 2 && !gj.empty()) {
         injectStrangers(gj);
-        ghostsRaw_ = gj;
+    }
+    ghostsRaw_ = gj;
+    // Schema 2 stores the mutable simulation, including appended strangers,
+    // rival deaths, relocated artifacts, ruined cities, and every live entry.
+    if (schema >= 2) {
+        if (j.contains("figures") && j["figures"].is_array()) {
+            history_.figures.clear();
+            for (auto& v : j["figures"]) {
+                Figure f;
+                f.name = v.value("name", ""); f.faction = v.value("fac", -1);
+                f.trait = v.value("trait", ""); f.profession = v.value("prof", "");
+                f.born = v.value("born", 0); f.died = v.value("died", -1);
+                history_.figures.push_back(f);
+            }
+        }
+        if (j.contains("artifacts") && j["artifacts"].is_array()) {
+            history_.artifacts.clear();
+            for (auto& v : j["artifacts"]) {
+                HArtifact a;
+                a.conlang = v.value("name", ""); a.meaning = v.value("meaning", "");
+                a.material = v.value("mat", ""); a.forgedBy = v.value("forgedBy", -1);
+                a.forgedYear = v.value("forgedYear", 0); a.restingSite = v.value("site", -1);
+                a.claimed = v.value("claimed", false);
+                a.deeds = v.value("deeds", std::vector<int>{});
+                history_.artifacts.push_back(a);
+            }
+        }
+        if (j.contains("beasts") && j["beasts"].is_array()) {
+            history_.beasts.clear();
+            for (auto& v : j["beasts"]) {
+                Beast b;
+                b.name = v.value("name", ""); b.region = v.value("region", -1);
+                b.kills = v.value("kills", 0); b.died = v.value("died", -1);
+                history_.beasts.push_back(b);
+            }
+        }
+        if (j.contains("chron") && j["chron"].is_array()) {
+            history_.chron.clear();
+            for (auto& v : j["chron"]) {
+                ChronEntry e;
+                e.id = v.value("id", (int)history_.chron.size());
+                e.year = v.value("year", 0); e.type = v.value("type", "");
+                e.actor = v.value("actor", -1); e.faction = v.value("fac", -1);
+                e.faction2 = v.value("fac2", -1); e.site = v.value("site", -1);
+                e.artifact = v.value("artifact", -1); e.beast = v.value("beast", -1);
+                e.cause = v.value("cause", -1); e.extra = v.value("extra", "");
+                history_.chron.push_back(e);
+            }
+        }
+        if (j.contains("sites") && j["sites"].is_array()) {
+            int n = std::min((int)world_.sites.size(), (int)j["sites"].size());
+            for (int i = 0; i < n; i++) {
+                auto& v = j["sites"][i];
+                world_.sites[i].name = v.value("name", world_.sites[i].name);
+                world_.sites[i].type = v.value("type", world_.sites[i].type);
+                world_.sites[i].deck = v.value("deck", world_.sites[i].deck);
+                world_.sites[i].region = v.value("region", world_.sites[i].region);
+            }
+        }
+        history_.presentYear = j.value("presentYear", history_.presentYear);
+        history_.liveStartId = j.value("liveStart", history_.liveStartId);
     }
     if (j.contains("rival")) {
         auto& r = j["rival"];
@@ -508,6 +626,8 @@ bool Game::loadRun() {
     ch_.credits = j.value("credits", 0);
     ch_.day = j.value("day", 1);
     ch_.eventsSurvived = j.value("ev", 0);
+    ch_.dead = j.value("dead", false);
+    ch_.epitaph = j.value("epitaph", std::string());
     ch_.packMax = j.value("packMax", 9);
     ch_.companionPassive = j.value("compPassive", "");
     ch_.traits.clear();
@@ -559,14 +679,44 @@ bool Game::loadRun() {
     finalesSeen_ = j.value("finales", 0);
     booksThisRun_ = j.value("books", 0);
     contractsDone_ = j.value("cdone", 0);
+    beastSlainThisRun_ = j.value("beastRun", false);
+    wordsThisRun_ = j.value("wordsRun", 0);
+    landfalls_ = j.value("landfalls", 0);
+    settledThisRun_ = j.value("settledRun", false);
+    afterlifeShown_ = j.value("afterlife", false);
+    heirBlessing_ = j.value("heirBlessing", false);
+    finishedWell_ = j.value("finishedWell", false);
+    blessingSpent_ = j.value("blessingSpent", false);
+    pendingShop_ = j.value("pendingShop", false);
+    forcedNextId_ = j.value("forcedNext", std::string());
+    newsLine_ = j.value("news", std::string());
+    siteName_ = j.value("siteName", std::string("the map"));
+    deckTag_ = j.value("deckTag", std::string("road"));
+    currentSite_ = j.value("currentSite", -1);
+    eventsLeftHere_ = j.value("eventsLeft", 0);
+    npcMarks_.clear();
+    if (j.contains("npcMarks") && j["npcMarks"].is_object())
+        for (auto& [fi, tags] : j["npcMarks"].items())
+            for (auto& tag : tags)
+                if (tag.is_string()) npcMarks_[atoi(fi.c_str())].insert(tag.get<std::string>());
     history_.liveWars.clear();
     if (j.contains("wars"))
         for (auto& w : j["wars"])
             history_.liveWars.push_back({w.value("a", 0), w.value("b", 0),
-                                         w.value("d", 5), -1});
+                                         w.value("d", 5), w.value("entry", -1)});
     if (j.contains("plague"))
         history_.plaguedRegions = j["plague"].get<std::map<int, int>>();
-    enterTravel();
+    bool resumeOutcome = j.value("resumeOutcome", false);
+    if (resumeOutcome && j.contains("outcome")) {
+        auto& o = j["outcome"];
+        outcome_.text = o.value("text", "");
+        outcome_.rollText = o.value("roll", "");
+        outcome_.effects = o.value("effects", std::vector<std::string>{});
+        textScroll_ = 0;
+        screen_ = OUTCOME;
+    } else {
+        enterTravel();
+    }
     return true;
 }
 
@@ -1041,7 +1191,8 @@ std::vector<int> Game::regionDistances() const {
 // days and supplies. A vehicle halves the road.
 void Game::enterTravel() {
     screen_ = TRAVEL;
-    if (!ch_.dead) saveRun(); // autosave: a closed tab shouldn't kill a life
+    if (!ch_.dead && !loadingRun_)
+        saveRun(); // autosave: a closed tab shouldn't kill a life
     travelOptions_.clear();
     std::vector<int> dist = regionDistances();
     bool vehicle = false;
@@ -1711,6 +1862,9 @@ void Game::chooseOption(int idx) {
     }
     textScroll_ = 0;
     screen_ = OUTCOME;
+    // Commit the resolved choice before the player can close the tab. CONTINUE
+    // returns to this outcome, so a bad roll cannot be rewound into a free retry.
+    saveRun();
 }
 
 void Game::continueAfterOutcome() {
@@ -1959,7 +2113,7 @@ void Game::drawTitle(Vector2 mouse) {
     }
     const char* title = "RANDOM ROGUE";
     DrawText(title, (kW - MeasureText(title, 20)) / 2, 38, 20, PAL_GOLD);
-    DrawText("v8", 4, kH - 10, 10, PAL_DARK); // release stamp for bug reports
+    DrawText("v11", 4, kH - 10, 10, PAL_DARK); // release stamp for bug reports
     if (!dataError_.empty()) {
         DrawTextWrapped(dataError_, 20, 90, kW - 40, PAL_RED);
         return;
@@ -2194,13 +2348,15 @@ void Game::drawIntro(Vector2 mouse) {
 void Game::drawOptions(Vector2 mouse) {
     const char* head = "OPTIONS";
     DrawText(head, (kW - MeasureText(head, 10)) / 2, 24, 10, PAL_GOLD);
-    static const char* kSpeeds[3] = {"slow", "normal", "fast"};
+    static const char* kSpeeds[4] = {"slow", "normal", "fast", "instant"};
     static const char* kVols[3] = {"quiet", "medium", "loud"};
-    std::string r1 = std::string("Text speed: ") + kSpeeds[profile_.textSpeed % 3];
+    std::string r1 = std::string("Text speed: ") + kSpeeds[profile_.textSpeed % 4];
     std::string r2 = std::string("Volume: ") + kVols[profile_.volume % 3];
     std::string r3 = std::string("Music: ") + (profile_.musicOff ? "off" : "on");
+    std::string r4 = std::string("Screen motion: ") +
+                     (profile_.reducedMotion ? "reduced" : "full");
     if (uiButton({kW / 2 - 70, 56, 140, 18}, r1.c_str(), mouse)) {
-        profile_.textSpeed = (profile_.textSpeed + 1) % 3;
+        profile_.textSpeed = (profile_.textSpeed + 1) % 4;
         SaveProfile(profile_);
     }
     if (uiButton({kW / 2 - 70, 80, 140, 18}, r2.c_str(), mouse)) {
@@ -2214,7 +2370,12 @@ void Game::drawOptions(Vector2 mouse) {
         if (profile_.musicOff != audio_.muted()) audio_.toggleMute();
         SaveProfile(profile_);
     }
-    if (uiButton({kW / 2 - 70, 134, 140, 18}, "REPLAY THE HOW-TO", mouse)) {
+    if (uiButton({kW / 2 - 70, 128, 140, 18}, r4.c_str(), mouse)) {
+        profile_.reducedMotion = !profile_.reducedMotion;
+        shake_ = 0.0f;
+        SaveProfile(profile_);
+    }
+    if (uiButton({kW / 2 - 70, 152, 140, 18}, "REPLAY THE HOW-TO", mouse)) {
         screen_ = TITLE;
         introPage_ = 0;
         return;
@@ -2252,6 +2413,11 @@ void Game::drawClassPick(Vector2 mouse) {
         }
         screen_ = AMBITION;
     }
+    if (uiButton({4, (float)(kH - 20), 48, 16}, "BACK", mouse) ||
+        IsKeyPressed(KEY_ESCAPE)) {
+        audio_.blip();
+        screen_ = TITLE;
+    }
 }
 
 void Game::drawAmbitionPick(Vector2 mouse) {
@@ -2280,6 +2446,11 @@ void Game::drawAmbitionPick(Vector2 mouse) {
             ambition_ = Ambition{};
         }
         newRun(pendingClass_);
+    }
+    if (uiButton({4, (float)(kH - 20), 48, 16}, "BACK", mouse) ||
+        IsKeyPressed(KEY_ESCAPE)) {
+        audio_.blip();
+        screen_ = CLASSPICK;
     }
 }
 
@@ -2396,8 +2567,8 @@ void Game::drawEvent(Vector2 mouse) {
     // Typewriter: text arrives like someone is telling it to you.
     bool done = reveal_ >= (float)currentText_.size();
     if (!done) {
-        static const float kRevealSpeed[3] = {60.0f, 110.0f, 240.0f};
-        reveal_ += GetFrameTime() * kRevealSpeed[profile_.textSpeed % 3];
+        static const float kRevealSpeed[4] = {60.0f, 110.0f, 240.0f, 100000.0f};
+        reveal_ += GetFrameTime() * kRevealSpeed[profile_.textSpeed % 4];
         if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE) ||
             pressed_)
             reveal_ = (float)currentText_.size();
@@ -2503,6 +2674,7 @@ void Game::drawVendor(Vector2 mouse) {
             ch_.money += sellPrice(ch_.pack[pick]);
             ch_.pack.erase(ch_.pack.begin() + pick);
         }
+        saveRun();
         return;
     }
     if (IsKeyPressed(KEY_TAB)) vendorSellMode_ = !vendorSellMode_;
@@ -2607,6 +2779,7 @@ void Game::drawInventory(Vector2 mouse) {
                 }
                 ch_.pack.erase(ch_.pack.begin() + invSelected_);
                 invSelected_ = -1;
+                saveRun();
                 showInfo(text);
                 return;
             }
@@ -2616,6 +2789,7 @@ void Game::drawInventory(Vector2 mouse) {
             std::string used = "You use the " + item.name + ". " + fxText;
             ch_.pack.erase(ch_.pack.begin() + invSelected_);
             invSelected_ = -1;
+            saveRun();
             showInfo(used);
         } else {
             showInfo("You contemplate the " + item.displayName() +
@@ -2626,6 +2800,7 @@ void Game::drawInventory(Vector2 mouse) {
     } else if (pick == 1) {
         ch_.pack.erase(ch_.pack.begin() + invSelected_);
         invSelected_ = -1;
+        saveRun();
     } else if (pick == 2 || IsKeyPressed(KEY_TAB) || IsKeyPressed(KEY_ESCAPE)) {
         invSelected_ = -1;
     }

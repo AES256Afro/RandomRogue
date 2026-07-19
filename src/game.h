@@ -23,7 +23,9 @@ public:
     // the unified click/tap edge from the platform layer.
     void frame(Vector2 mouse, bool pressed);
     // Pixels of screen shake main.cpp should apply to the canvas blit.
-    float shakeAmount() const { return shake_ > 0.0f ? shake_ : 0.0f; }
+    float shakeAmount() const {
+        return !profile_.reducedMotion && shake_ > 0.0f ? shake_ : 0.0f;
+    }
     // Death-card export: true once when the player asked for a PNG this frame.
     bool consumeCardRequest() {
         bool r = cardRequested_;
@@ -207,6 +209,7 @@ private:
     std::string seedInput_;
 
     bool pressed_ = false; // unified click/tap edge for this frame
+    bool loadingRun_ = false; // prevents a fresh newRun save overwriting CONTINUE
 
     // company & purpose (P5)
     Companion comp_;

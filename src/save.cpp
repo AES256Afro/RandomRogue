@@ -1,5 +1,7 @@
 ﻿#include "save.h"
 #include <nlohmann/json.hpp>
+#include <cstdlib>
+#include <filesystem>
 
 #if defined(__EMSCRIPTEN__)
 #include <emscripten/emscripten.h>
@@ -25,6 +27,7 @@ std::string Profile::toJson() const {
               {"textSpeed", textSpeed},
               {"volume", volume},
               {"musicOff", musicOff},
+              {"reducedMotion", reducedMotion},
               {"seenIntro", seenIntro}};
     return j.dump();
 }
@@ -48,6 +51,7 @@ Profile Profile::fromJson(const std::string& text) {
     p.textSpeed = j.value("textSpeed", 1);
     p.volume = j.value("volume", 2);
     p.musicOff = j.value("musicOff", false);
+    p.reducedMotion = j.value("reducedMotion", false);
     p.seenIntro = j.value("seenIntro", false);
     return p;
 }
@@ -95,9 +99,24 @@ void AppendLegacy(uint64_t seed, const LegacyRecord& rec) {
     std::string key = std::to_string(seed);
     if (!j.contains(key)) j[key] = json::array();
     j[key].push_back(legacyToJson(rec));
-    // Ghosts per world capped (the sim only injects so many); worlds capped too.
+    // Ghosts per world capped (the sim only injects so many). Keep worlds by
+    // actual recency, not JSON object's lexicographic seed order.
     while (j[key].size() > 12) j[key].erase(0);
-    while (j.size() > 6) j.erase(j.begin());
+    json order = j.value("__order", json::array());
+    if (!order.is_array()) order = json::array();
+    if (order.empty())
+        for (auto& [oldKey, lives] : j.items())
+            if (oldKey.rfind("__", 0) != 0 && lives.is_array()) order.push_back(oldKey);
+    for (auto it = order.begin(); it != order.end();)
+        if (it->is_string() && it->get<std::string>() == key) it = order.erase(it);
+        else ++it;
+    order.push_back(key);
+    while (order.size() > 6) {
+        std::string oldest = order.front().get<std::string>();
+        order.erase(order.begin());
+        j.erase(oldest);
+    }
+    j["__order"] = order;
     saveRawStore("random_rogue_worlds", j.dump());
 }
 
@@ -105,9 +124,20 @@ std::vector<std::pair<uint64_t, LegacyRecord>> LoadAllLegacy() {
     std::vector<std::pair<uint64_t, LegacyRecord>> out;
     json j = json::parse(loadRawStore("random_rogue_worlds"), nullptr, false);
     if (j.is_discarded() || !j.is_object()) return out;
-    for (auto& [key, lives] : j.items()) {
+    auto appendWorld = [&](const std::string& key) {
+        if (key.rfind("__", 0) == 0 || !j.contains(key) || !j[key].is_array()) return;
         uint64_t seed = strtoull(key.c_str(), nullptr, 10);
-        for (auto& r : lives) out.emplace_back(seed, legacyFromJson(r));
+        for (auto& r : j[key]) out.emplace_back(seed, legacyFromJson(r));
+    };
+    if (j.contains("__order") && j["__order"].is_array()) {
+        for (auto& key : j["__order"])
+            if (key.is_string()) appendWorld(key.get<std::string>());
+    } else {
+        // Backward-compatible import for saves written before recency metadata.
+        for (auto& [key, lives] : j.items()) {
+            (void)lives;
+            appendWorld(key);
+        }
     }
     return out;
 }
@@ -127,8 +157,23 @@ void SaveMarks(uint64_t seed, const std::string& marksJson) {
     if (j.is_discarded() || !j.is_object()) j = json::object();
     json m = json::parse(marksJson, nullptr, false);
     if (m.is_discarded()) return;
-    j[std::to_string(seed)] = m;
-    while (j.size() > 6) j.erase(j.begin());
+    std::string key = std::to_string(seed);
+    j[key] = m;
+    json order = j.value("__order", json::array());
+    if (!order.is_array()) order = json::array();
+    if (order.empty())
+        for (auto& [oldKey, oldMarks] : j.items())
+            if (oldKey.rfind("__", 0) != 0 && oldMarks.is_object()) order.push_back(oldKey);
+    for (auto it = order.begin(); it != order.end();)
+        if (it->is_string() && it->get<std::string>() == key) it = order.erase(it);
+        else ++it;
+    order.push_back(key);
+    while (order.size() > 6) {
+        std::string oldest = order.front().get<std::string>();
+        order.erase(order.begin());
+        j.erase(oldest);
+    }
+    j["__order"] = order;
     saveRawStore("random_rogue_marks", j.dump());
 }
 
@@ -186,12 +231,32 @@ void SaveProfile(const Profile& p) {
 
 #else
 
-static std::string profilePath() {
-    return std::string(GetApplicationDirectory()) + "profile.json";
+static std::string userDataDirectory() {
+    namespace fs = std::filesystem;
+    fs::path base;
+#if defined(_WIN32)
+    if (const char* p = std::getenv("LOCALAPPDATA")) base = p;
+    else if (const char* p = std::getenv("APPDATA")) base = p;
+#elif defined(__APPLE__)
+    if (const char* p = std::getenv("HOME"))
+        base = fs::path(p) / "Library" / "Application Support";
+#else
+    if (const char* p = std::getenv("XDG_DATA_HOME")) base = p;
+    else if (const char* p = std::getenv("HOME"))
+        base = fs::path(p) / ".local" / "share";
+#endif
+    if (base.empty()) base = GetApplicationDirectory();
+    fs::path dir = base / "RandomRogue";
+    std::error_code ec;
+    fs::create_directories(dir, ec);
+    return dir.string() + "/";
 }
 
-static std::string loadRawStore(const char* key) {
-    std::string path = std::string(GetApplicationDirectory()) + key + ".json";
+static std::string profilePath() {
+    return userDataDirectory() + "profile.json";
+}
+
+static std::string readTextFile(const std::string& path) {
     char* raw = LoadFileText(path.c_str());
     if (!raw) return "";
     std::string text(raw);
@@ -199,17 +264,23 @@ static std::string loadRawStore(const char* key) {
     return text;
 }
 
+static std::string loadRawStore(const char* key) {
+    std::string text = readTextFile(userDataDirectory() + key + ".json");
+    if (!text.empty()) return text;
+    // One-time compatibility with portable builds that wrote beside the exe.
+    return readTextFile(std::string(GetApplicationDirectory()) + key + ".json");
+}
+
 static void saveRawStore(const char* key, const std::string& text) {
-    std::string path = std::string(GetApplicationDirectory()) + key + ".json";
+    std::string path = userDataDirectory() + key + ".json";
     SaveFileText(path.c_str(), (char*)text.c_str());
 }
 
 Profile LoadProfile() {
-    char* raw = LoadFileText(profilePath().c_str());
-    if (!raw) return Profile{};
-    Profile p = Profile::fromJson(raw);
-    UnloadFileText(raw);
-    return p;
+    std::string text = readTextFile(profilePath());
+    if (text.empty())
+        text = readTextFile(std::string(GetApplicationDirectory()) + "profile.json");
+    return text.empty() ? Profile{} : Profile::fromJson(text);
 }
 
 void SaveProfile(const Profile& p) {

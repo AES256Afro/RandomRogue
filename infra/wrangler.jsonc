@@ -1,0 +1,31 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "random-rogue-site",
+  "main": "./cloudflare-worker.js",
+  "workers_dev": false,
+  "compatibility_date": "2026-07-18",
+  "compatibility_flags": ["nodejs_compat"],
+  "routes": [
+    { "pattern": "random-rogue.com/*", "zone_name": "random-rogue.com" },
+    { "pattern": "www.random-rogue.com/*", "zone_name": "random-rogue.com" }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "SITE",
+      "id": "3a6ee10b605147fbaeff9c1f8cba0e3f"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "random-rogue",
+      "database_id": "6c93123a-db1e-497c-93c3-718a6b5a9f91",
+      "migrations_dir": "./migrations"
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "logs": { "head_sampling_rate": 1 },
+    "traces": { "enabled": true, "head_sampling_rate": 0.05 }
+  }
+}

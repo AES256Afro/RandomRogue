@@ -18,10 +18,12 @@ struct Profile {
     int horizons = 0;    // sailed beyond the chart
     int guildmaster = 0; // took the chair
     int vendettas = 0;   // grudges settled
-    // Settings (R7). textSpeed/volume: 0 low, 1 normal, 2 high.
+    // Settings. textSpeed: 0 slow, 1 normal, 2 fast, 3 instant.
+    // volume: 0 low, 1 normal, 2 high.
     int textSpeed = 1;
     int volume = 2;
     bool musicOff = false;
+    bool reducedMotion = false;
     bool seenIntro = false;
 
     std::string toJson() const;

@@ -1,6 +1,7 @@
 build/
 build-*/
 .cache/
+**/.wrangler/
 *.exe
 *.wasm
 CMakeUserPresets.json
